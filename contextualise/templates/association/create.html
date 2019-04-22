@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}
+<script>
+document.getElementById('association-name').addEventListener('blur', (event) => {
+    var associationName = document.getElementById('association-name').value;
+    if (associationName !== "") {
+        axios.get('/api/get-slug?value=' + associationName)
+            .then(function (response) {
+                // Handle success
+                document.getElementById('association-identifier').value = response.data.slug;
+            })
+            .catch(function (error) {
+                // Handle error
+                console.log(error);
+            })
+            .then(function () {
+                // Always executed
+            });
+    }
+});
+
+var associationIdentifierInput = document.getElementById('association-identifier');
+
+document.getElementById('edit-identifier-button').addEventListener('click', (event) => {
+		if (associationIdentifierInput.readOnly) {
+				associationIdentifierInput.readOnly = false;
+				associationIdentifierInput.focus();
+				document.getElementById('edit-identifier-button').innerHTML = "Ok";
+		} else {
+				associationIdentifierInput.readOnly = true;
+				document.getElementById('edit-identifier-button').focus();
+				document.getElementById('edit-identifier-button').innerHTML = "Edit";
+		}
+});
+
+</script>
+
+{% if error %}
+<script>
+$('#advancedOptions').collapse('show');
+
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+	{{ topic.identifier|topic_name(topic_map.identifier) }}
+	<small class="text-muted">Create association</small>
+</h1>
+<hr/>
+<form
+	action="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+	autocomplete="off" method="post" role="form">
+	<div class="form-group">
+		<label for="association-dest-topic-ref">Destination topic</label>
+		<input class="form-control auto-complete" id="association-dest-topic-ref" name="association-dest-topic-ref"
+		       placeholder="Enter destination topic identifier" required
+		       type="text" value="{{ association_dest_topic_ref }}">
+		{% if error|bitwise_and(1) == 1 %}
+		<small class="text-danger">
+			A type with this identifier doesn't exist. Please provide an identifier for an existing type.
+		</small>
+		{% endif %}
+	</div>
+	<div class="form-group">
+		<label for="association-dest-role-spec">Destination role
+			<small class="text-info">&mdash; If no value is provided the default will be "related"</small>
+		</label>
+		<input class="form-control auto-complete" id="association-dest-role-spec" name="association-dest-role-spec"
+		       placeholder="Enter destination role identifier"
+		       type="text" value="{{ association_dest_role_spec }}">
+	</div>
+	<div class="form-group">
+		<label for="association-src-topic-ref">Source topic</label>
+		<input class="form-control" id="association-src-topic-ref" name="association-src-topic-ref"
+		       placeholder="Enter source topic identifier" readonly required
+		       tabindex="-1" type="text" value="{{ association_src_topic_ref }}">
+	</div>
+	<div class="form-group">
+		<label for="association-src-role-spec">Source role
+			<small class="text-info">&mdash; If no value is provided the default will be "related"</small>
+		</label>
+		<input class="form-control auto-complete" id="association-src-role-spec" name="association-src-role-spec"
+		       placeholder="Enter source role identifier"
+		       type="text" value="{{ association_src_role_spec }}">
+	</div>
+	<div class="form-group">
+		<label for="association-instance-of">Type
+			<small class="text-info">&mdash; If no value is provided the default will be "association"</small>
+		</label>
+		<input class="form-control auto-complete" id="association-instance-of" name="association-instance-of"
+		       placeholder="Enter type identifier"
+		       type="text" value="{{ association_instance_of }}">
+		{% if error|bitwise_and(8) == 8 %}
+		<small class="text-danger">
+			A type with this identifier doesn't exist. Please provide an identifier for an existing type.
+		</small>
+		{% endif %}
+	</div>
+	<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+	                                         data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+	<div class="collapse" id="advancedOptions">
+		<div class="card">
+			<div class="card-header">
+				Advanced options
+			</div>
+			<div class="card-body">
+				<div class="card-text">
+					<div class="form-group">
+						<label for="association-scope">Scope
+							<small class="text-info">&mdash; If no value is provided the default will be "*" (that is, Universal
+								scope)
+							</small>
+						</label>
+						<input class="form-control auto-complete" id="association-scope" name="association-scope"
+						       placeholder="Enter scope identifier"
+						       type="text" value="{{ association_scope }}">
+						{% if error|bitwise_and(16) == 16 %}
+						<small class="text-danger">
+							A scope with this identifier doesn't exist. Please provide an identifier for an existing scope.
+						</small>
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<label for="association-name">Name</label>
+						<input class="form-control" id="association-name" name="association-name" placeholder="Enter name"
+						       type="text" value="{{ association_name }}">
+					</div>
+					<div class="form-group">
+						<label for="association-identifier">Identifier</label>
+						<div class="input-group">
+							<input class="form-control" id="association-identifier" name="association-identifier"
+							       placeholder="Enter identifier"
+							       readonly type="text" value="{{ association_identifier }}">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">Edit</button>
+							</div>
+						</div>
+						{% if error|bitwise_and(32) == 32 %}
+						<small class="text-danger">
+							An association or topic with this identifier already exists. Please provide a different association
+							identifier.
+						</small>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br/>
+	</div>
+	<a class="btn btn-secondary"
+	   href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+	   role="button">Cancel</a>
+	<button class="btn btn-primary" type="submit">Create association</button>
+</form>
+<br/>
+{% endblock %}

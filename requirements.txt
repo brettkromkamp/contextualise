@@ -1,0 +1,8 @@
+pytest>=4.3.0
+topic-db>=0.7.1
+SQLAlchemy>=1.2.18
+Flask>=1.0.2
+Werkzeug>=0.14.1
+maya>=0.6.1
+mistune>=0.8.4
+python-slugify>=3.0.2

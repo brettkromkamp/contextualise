@@ -1,0 +1,60 @@
+{% extends "layout_maps.html" %}
+
+{% block title %}
+<title>My topic maps | Contextualise</title>
+{% endblock %}
+
+{% block maps_menu %}
+<a class="nav-link" href="{{ url_for('map.shared') }}">Shared maps</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col">
+		<h2>My maps</h2>
+		<br/>
+	</div>
+</div>
+{% if maps %}
+<div class="row">
+	<div class="col">
+		<div class="card-deck">
+			{% for map in maps %}
+			<div class="card" style="max-width: 24rem;">
+				<div class="card-body">
+					{% if map.shared %}
+					<h5 class="card-title">{{ map.name }}&nbsp;&nbsp;&nbsp;<span class="badge badge-success">Public</span></h5>
+					{% else %}
+					<h5 class="card-title">{{ map.name }}&nbsp;&nbsp;&nbsp;<span class="badge badge-info">Private</span>
+					</h5>
+					{% endif %}
+					<p class="card-text">{{ map.description }}</p>
+				</div>
+				<div class="card-footer">
+					<a class="card-link"
+					   href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
+					<a class="card-link" href="#">Index</a>
+					<a class="card-link" href="#">Notes</a>
+					<a class="card-link" href="#">Edit</a>
+					<a class="card-link" href="#">Delete</a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<br/>
+		<a class="btn btn-primary" href="#">Create map</a>
+	</div>
+</div>
+{% else %}
+<div class="row">
+	<div class="col">
+		<p>No topic maps. Click on the "Create map" button below to create a topic map.</p>
+		<a class="btn btn-primary" href="#">Create map</a>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

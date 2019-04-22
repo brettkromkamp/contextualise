@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}<title>Internal Server Error</title>{% endblock %}
+{% block body %}
+<h1>Internal Server Error</h1>
+<p>Something has gone wrong. Get in touch with Support if the problem persists. Find your way back <a
+		href="{{ url_for('map.index') }}">home.</a></p>
+{% endblock %}

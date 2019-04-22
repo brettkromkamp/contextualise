@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}
+<link href="https://unpkg.com/easymde/dist/easymde.min.css" rel="stylesheet">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<script>
+var editor = new EasyMDE({element: document.getElementById('note-text')});
+
+</script>
+
+{% if error %}
+<script>
+$('#advancedOptions').collapse('show');
+
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+	{{ topic.identifier|topic_name(topic_map.identifier) }}
+	<small class="text-muted">Add note</small>
+</h1>
+<hr/>
+<form
+	action="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+	autocomplete="off" method="post" role="form">
+	<div class="form-group">
+		<label for="note-title">Title</label>
+		<input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required
+		       type="text" value="{{ note_title }}">
+	</div>
+	<div class="form-group">
+		<label for="note-text">Text</label>
+		<textarea class="form-control" id="note-text" name="note-text">{{ note_text }}</textarea>
+		{% if error|bitwise_and(2) == 2 %}
+		<small class="text-danger">
+			Please provide a note text.
+		</small>
+		{% endif %}
+	</div>
+	<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+	                                         data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+	<div class="collapse" id="advancedOptions">
+		<div class="card">
+			<div class="card-header">
+				Advanced options
+			</div>
+			<div class="card-body">
+				<div class="card-text">
+					<div class="form-group">
+						<label for="note-scope">Scope
+							<small class="text-info">&mdash; If no value is provided the default will be "*" (that is, Universal
+								scope)
+							</small>
+						</label>
+						<input class="form-control auto-complete" id="note-scope" name="note-scope"
+						       placeholder="Enter scope identifier"
+						       type="text" value="{{ note_scope }}">
+						{% if error|bitwise_and(4) == 4 %}
+						<small class="text-danger">
+							A scope with this identifier doesn't exist. Please provide an identifier for an existing scope.
+						</small>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br/>
+	</div>
+	<a class="btn btn-secondary"
+	   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+	   role="button">Cancel</a>
+	<button class="btn btn-primary" type="submit">Add note</button>
+</form>
+<br/>
+{% endblock %}

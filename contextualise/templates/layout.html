@@ -1,0 +1,186 @@
+<!doctype html>
+<html class="h-100" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="Personal Knowledge Management System" name="description">
+    <meta content="Brett Kromkamp" name="author">
+    <meta content="Contextualise v1.0.0" name="generator">
+    {% block title %}{% endblock %}
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
+
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+    <link href="{{ url_for('static', filename='app.css') }}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Contextualise</a>
+            <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                    data-target="#navbars"
+                    data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbars">
+                {% if topic_map %}
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('map.shared') }}">Maps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Index</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Notes</a>
+                    </li>
+                    {% if current_user.id == topic_map.user_identifier %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Advanced search</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Quick help</a>
+                    </li>
+                    {% if topic.identifier != 'home' %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary"
+                           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+                           role="button">Home</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                {% if current_user.is_authenticated %}
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                           href="#" id="navbarDropdown" role="button">
+                            <strong>{{ current_user.email }}</strong>
+                        </a>
+                        <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Preferences</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
+                        </div>
+                    </li>
+                </ul>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="flex-shrink-0" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {% include "_messages.html" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-9">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li>
+                            {% if topic_map %}
+                            {% if topic_map.shared %}
+                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
+                                class="badge badge-success">Shared</span>
+                            {% else %}
+                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
+                                class="badge badge-info">Private</span>
+                            {% endif %}
+                            {% endif %}
+                            &nbsp;&mdash;&nbsp;
+                        </li>
+                        {% if session['breadcrumbs'] %}
+                        {% for breadcrumb in session['breadcrumbs'] %}
+                        {% if loop.index < session['breadcrumbs']|length %}
+                        <li class="breadcrumb-item"><a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
+                            breadcrumb|topic_name(topic_map.identifier) }}</a></li>
+                        {% else %}
+                        <li aria-current="page" class="breadcrumb-item active">{{
+                            breadcrumb|topic_name(topic_map.identifier) }}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </ol>
+                </nav>
+                {% block body %}
+                {% block content %}{% endblock %}
+                {% endblock %}
+            </div>
+            <div class="col-3">
+                {% block right_column %}{% endblock %}
+                <div class="input-group mb-3">
+                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
+                           id="goto-topic-identifier"
+                           placeholder="Enter topic identifier"
+                           type="text">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
+                                class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3">
+    <div class="container">
+		<span class="text-muted">Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
+                class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a web developer living in Norway  &mdash; Copyright &copy; 2019 by Brett Kromkamp</span>
+    </div>
+</footer>
+<script crossorigin="anonymous" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script
+        src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.1.0/dist/latest/bootstrap-autocomplete.min.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block javascript %}{% endblock %}
+<script>
+var urlParts = window.location.pathname.split('/');
+var mapIdentifier = urlParts[2];
+var getIdentifiersApiUrl = '/api/' + mapIdentifier +'/get-identifiers';
+
+$('.auto-complete').autoComplete({
+  resolverSettings: {
+      url: getIdentifiersApiUrl
+  }
+});
+
+document.getElementById('goto-button').addEventListener('click', (event) => {
+	var gotoTopicIdentifier = document.getElementById('goto-topic-identifier').value.trim();
+	var gotoUrl = window.location.href.replace('#', '');
+	gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
+	if (gotoTopicIdentifier) {
+		window.location.href = gotoUrl;
+	}
+});
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

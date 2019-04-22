@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic.first_base_name.name }} &mdash; Network | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" type="text/javascript"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css"/>
+
+<script>
+function searchArray(value, prop, arr) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][prop] === value) {
+            return arr[i];
+        }
+    }
+}
+
+var LOCAL_IP = '192.168.36.129';
+var LOCALHOST = 'http://' + LOCAL_IP + ':5000/';
+
+var nodes = null;
+var edges = null;
+var network = null;
+
+var urlParts = window.location.pathname.split('/');
+var mapIdentifier = urlParts[2];
+var topicIdentifier = urlParts[4];
+
+if (topicIdentifier !== "") {
+	var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier;
+	axios.get(getNetworkApiUrl)
+		.then(function (response) {
+			// Handle success
+			nodes = response.data[0];
+      edges = response.data[1];
+
+      nodes.forEach(function(node) {
+        node.font = {size: 20, color: '#666', face: 'nunito', strokeWidth: 6, strokeColor: '#fff'};
+        /*
+        var labelParts = node.label.split(' ');
+        var labelReplace = labelParts[0] + "\n";
+        labelParts.shift();
+        labelReplace += labelParts.join();
+        node.label = labelReplace;
+        */
+      });
+
+      // Instantiate network object
+      var container = document.getElementById('network-graph');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+
+      var options = {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        layout: { randomSeed: 2 },
+        interaction: { hover: true },
+        nodes: {
+            shape: 'dot'
+        },
+        edges: {
+          smooth: {
+            forceDirection: "none",
+            roundness: 0.7
+          }
+        },
+        physics: {
+          repulsion: {
+            springLength: 205
+          },
+          minVelocity: 0.75,
+          solver: "repulsion"
+        },
+        groups: {
+          active: {
+            color: {background: '#f5b7b1', border: '#78281f'}
+          },
+          topic: {
+            color: {background: '#a9dfbf', border: '#145a32'}
+          }
+        }
+      };
+
+      network = new vis.Network(container, data, options);
+      network.on("click", function(params) {
+        if (params.nodes[0] !== undefined) {
+		      var selectedNode = searchArray(params.nodes[0], 'id', nodes);
+		      if (selectedNode.id !== topicIdentifier) {
+						var networkGotoUrl = '/topics/' + mapIdentifier + '/view/' + selectedNode.id;
+						if (networkGotoUrl) {
+							window.location.href = networkGotoUrl;
+						}
+	        }
+        }
+      });
+		})
+		.catch(function (error) {
+			// Handle error
+			console.log(error);
+		})
+		.then(function () {
+			// Always executed
+	});
+}
+
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>{{ topic.first_base_name.name }}</h1>
+<p><em>{{ creation_date }}</em></p>
+<ul class="nav nav-tabs">
+	<li class="nav-item dropdown">
+		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+		   href="#"
+		   role="button">Topic</a>
+		<div class="dropdown-menu">
+			<a class="dropdown-item"
+			   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+			<div class="dropdown-divider"></div>
+			{% if current_user.id == topic_map.user_identifier %}
+			<a class="dropdown-item"
+			   href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+				topic</a>
+			<a class="dropdown-item"
+			   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+				topic</a>
+			<div class="dropdown-divider"></div>
+			{% endif %}
+			<a class="dropdown-item" href="#">View names</a>
+			{% if current_user.id == topic_map.user_identifier %}
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item"
+			   href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+				note</a>
+			<a class="dropdown-item" href="#">Add tag</a>
+			{% endif %}
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="#">View attributes</a>
+		</div>
+	</li>
+	<li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Images
+            {% if occurrences_stats['image'] > 0 %}
+            <span class="badge badge-primary">{{ occurrences_stats['image'] }}</span>
+            {% endif %}
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                image</a>
+        </div>
+    </li>
+	<li class="nav-item">
+		<a class="nav-link" href="#">Files
+			{% if occurrences_stats['file'] > 0 %}
+			<span class="badge badge-primary">{{ occurrences_stats['file'] }}</span>
+			{% endif %}
+		</a>
+	</li>
+	<li class="nav-item dropdown">
+		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+		   role="button">Links
+			{% if occurrences_stats['url'] > 0 %}
+			<span class="badge badge-primary">{{ occurrences_stats['url'] }}</span>
+			{% endif %}
+		</a>
+		<div class="dropdown-menu">
+			<a class="dropdown-item"
+			   href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item"
+			   href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+				link</a>
+		</div>
+	</li>
+	<li class="nav-item dropdown">
+		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+		   role="button">Videos
+			{% if occurrences_stats['video'] > 0 %}
+			<span class="badge badge-primary">{{ occurrences_stats['video'] }}</span>
+			{% endif %}
+		</a>
+		<div class="dropdown-menu">
+			<a class="dropdown-item"
+			   href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item"
+			   href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+				video</a>
+		</div>
+	</li>
+	{% if current_user.id == topic_map.user_identifier %}
+	<li class="nav-item dropdown">
+		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+		   role="button">Associations</a>
+		<div class="dropdown-menu">
+			<a class="dropdown-item"
+			   href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item"
+			   href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+				association</a>
+		</div>
+	</li>
+	{% endif %}
+	<li class="nav-item dropdown">
+		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+		   href="#"
+		   role="button">Visualisations</a>
+		<div class="dropdown-menu">
+			<a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View network</a>
+			<a class="dropdown-item" href="#">View tags</a>
+		</div>
+	</li>
+</ul>
+<div class="border rounded" id="network-graph"></div>
+{% endblock %}

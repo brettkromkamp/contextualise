@@ -1,0 +1,40 @@
+{% extends "layout_maps.html" %}
+
+{% block title %}
+<title>Shared topic maps | Contextualise</title>
+{% endblock %}
+
+{% block maps_menu %}
+<a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+{% endblock %}
+
+{% block content %}
+{% if maps %}
+<div class="row">
+    <div class="col">
+        <h2>Shared maps</h2>
+        <br/>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card-deck">
+            {% for map in maps %}
+            <div class="card" style="max-width: 24rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ map.name }}</h5>
+                    <p class="card-text">{{ map.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <a class="card-link"
+                       href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
+                    <a class="card-link" href="#">Index</a>
+                    <a class="card-link" href="#">Notes</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

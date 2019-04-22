@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+    <title>Contextualise</title>
+    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
+</head>
+<body class="text-center">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+        <div class="inner">
+            <h3 class="masthead-brand">Contextualise</h3>
+            <nav class="nav nav-masthead justify-content-center">
+                <a class="nav-link active" href="/">Welcome</a>
+                {% if current_user.is_authenticated %}
+                <a class="nav-link" href="{{ url_for('map.index') }}">Maps</a>
+                <a class="nav-link" href="{{ url_for('security.logout') }}">Log Out</a>
+                {% else %}
+                <a class="nav-link" href="{{ url_for('security.login') }}">Log In</a>
+                <a class="nav-link" href="{{ url_for('security.register') }}">Sign Up</a>
+                {% endif %}
+                <a class="nav-link" href="https://trello.com/b/43ZVFVWE/contextualise">Development</a>
+            </nav>
+        </div>
+    </header>
+    <main class="inner cover" role="main">
+        <h1 class="cover-heading">Contextualise</h1>
+        <p class="lead">Contextualise is a powerful &mdash;but, simple&mdash; knowledge management application for
+            personal
+            use.</p>
+        <p class="lead">
+            <a class="btn btn-lg btn-secondary" href="#">Learn more</a>
+        </p>
+    </main>
+    <footer class="mastfoot mt-auto">
+        <div class="inner">
+            <p class="text-muted">Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i>
+                and a lot
+                of <i
+                        class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a
+                web developer
+                living in Norway &mdash; Copyright &copy; 2019 by Brett Kromkamp</p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
