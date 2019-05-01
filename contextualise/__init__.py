@@ -168,3 +168,9 @@ def create_app(test_config=None):
     topic_store.init_app(app)
 
     return app
+
+
+# For debugging purposes (inside PyCharm)
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True, use_debugger=False, use_reloader=False, passthrough_errors=True, host='0.0.0.0')

@@ -1,5 +1,5 @@
-from datetime import datetime
 from collections import deque
+from datetime import datetime
 
 import maya
 import mistune
