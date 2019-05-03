@@ -45,8 +45,8 @@ def get_network(map_identifier, topic_identifier):
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 
     def build_network(inner_identifier):
-        base_name = tree[inner_identifier].topic.first_base_name.name
-        instance_of = tree[inner_identifier].topic.instance_of
+        base_name = tree[inner_identifier].payload.first_base_name.name
+        instance_of = tree[inner_identifier].payload.instance_of
         children = tree[inner_identifier].children
 
         group = instance_of
@@ -62,14 +62,16 @@ def get_network(map_identifier, topic_identifier):
         result[nodes].append(node)
 
         for child in children:
+            child_type_topic = topic_store.get_topic(map_identifier, child.type)
             edge = {
                 'from': inner_identifier,
-                'to': child,
+                'to': child.pointer,
+                'label': child_type_topic.first_base_name.name, 'font': {'align': 'horizontal'},
                 'arrows': 'to, from',
                 'color': {'color': '#666', 'opacity': 0.5}
             }
             result[edges].append(edge)
-            build_network(child)  # Recursive call.
+            build_network(child.pointer)  # Recursive call.
 
     if topic:
         tree = topic_store.get_topics_network(map_identifier, topic_identifier)

@@ -26,9 +26,9 @@ twelve years later: `Knowledge Management Using Topic Maps`_. If I remember corr
 is `Python`_ together with the `Flask`_ web development framework. What's more, after twelve years of using my own and
 other knowledge management tools, I have several improvements in mind for the next version (many of which are
 simplifications, for that matter). And perhaps one of the most important reasons for building a new personal management
-system is that this time around I want it to be open source: both Contextualise (the web front-end application) and
-`TopicDB`_ (the actual topic maps engine on top of which Contextualise is built --- also written by me) are licensed
-with the permissive open source `MIT license`_.
+system is that this time around I want it to be open source: both Contextualise (the web application) and `TopicDB`_
+(the actual topic maps engine on top of which Contextualise is built --- also written by me) are licensed with the
+permissive open source `MIT license`_.
 
 Topic maps are both powerful and conceptually simple and provide the underpinnings for extremely flexible knowledge
 management tools.
