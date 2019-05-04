@@ -49,12 +49,13 @@ def get_network(map_identifier, topic_identifier):
         instance_of = tree[inner_identifier].payload.instance_of
         children = tree[inner_identifier].children
 
-        group = instance_of
+        # group = instance_of
+        group = 'topic'
         if inner_identifier == topic_identifier:
             group = 'active'
         node = {
             'id': inner_identifier,
-            'label': base_name,
+            'label': base_name + ' [' + instance_of + ']',
             'group': group,
             'instanceOf': instance_of
         }
@@ -62,11 +63,11 @@ def get_network(map_identifier, topic_identifier):
         result[nodes].append(node)
 
         for child in children:
-            child_type_topic = topic_store.get_topic(map_identifier, child.type)
+            #child_type_topic = topic_store.get_topic(map_identifier, child.type)
             edge = {
                 'from': inner_identifier,
                 'to': child.pointer,
-                'label': child_type_topic.first_base_name.name, 'font': {'align': 'horizontal'},
+                'label': child.type, 'font': {'align': 'horizontal'},
                 'arrows': 'to, from',
                 'color': {'color': '#666', 'opacity': 0.5}
             }
