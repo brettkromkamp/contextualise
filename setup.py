@@ -30,6 +30,7 @@ setup(
     install_requires=[
         'flask',
         'flask-security',
+        'flask-sqlalchemy',
         'sqlalchemy',
         'bcrypt',
         'topic-db',
