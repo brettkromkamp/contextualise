@@ -16,6 +16,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint('topic', __name__)
 
+BREADCRUMBS_COUNT = 3
+
 
 @bp.route('/topics/<map_identifier>/view/<topic_identifier>')
 def view(map_identifier, topic_identifier):
@@ -67,7 +69,7 @@ def view(map_identifier, topic_identifier):
     # Breadcrumbs
     if 'breadcrumbs' not in session:
         session['breadcrumbs'] = []
-    breadcrumbs = deque(session['breadcrumbs'], 3)
+    breadcrumbs = deque(session['breadcrumbs'], BREADCRUMBS_COUNT)
     if topic_identifier in breadcrumbs:
         breadcrumbs.remove(topic_identifier)
     breadcrumbs.append(topic_identifier)

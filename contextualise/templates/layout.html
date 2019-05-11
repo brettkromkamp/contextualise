@@ -56,7 +56,8 @@
                 {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item dropdown">
-                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                           data-toggle="dropdown"
                            href="#" id="navbarDropdown" role="button">
                             <strong>{{ current_user.email }}</strong>
                         </a>
@@ -172,12 +173,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
-
-
-
-
-
 
 </script>
 </body>

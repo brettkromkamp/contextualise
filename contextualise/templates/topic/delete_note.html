@@ -16,46 +16,46 @@ var editor = new EasyMDE({element: document.getElementById('note-text'), toolbar
 
 {% block content %}
 <h1>
-	{{ topic.identifier|topic_name(topic_map.identifier) }}
-	<small class="text-muted">Delete note</small>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Delete note</small>
 </h1>
 <hr/>
 <form
-	action="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
-	method="post" role="form">
-	<div class="form-group">
-		<label for="note-title">Title</label>
-		<input aria-readonly="true" class="form-control" id="note-title" name="note-title" placeholder="Enter title"
-		       readonly
-		       type="text" value="{{ note_title }}">
-	</div>
-	<div class="form-group">
-		<label for="note-text">Text</label>
-		<textarea aria-readonly="true" class="form-control" disabled id="note-text" name="note-text" readonly>{{ note_text }}</textarea>
-	</div>
-	<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-	                                         data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
-	<div class="collapse" id="advancedOptions">
-		<div class="card">
-			<div class="card-header">
-				Advanced options
-			</div>
-			<div class="card-body">
-				<div class="card-text">
-					<div class="form-group">
-						<label for="note-scope">Scope</label>
-						<input aria-readonly="true" class="form-control" id="note-scope" name="note-scope"
-						       placeholder="Enter scope" readonly type="text" value="{{ note_scope }}">
-					</div>
-				</div>
-			</div>
-		</div>
-		<br/>
-	</div>
-	<a class="btn btn-secondary"
-	   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-	   role="button">Cancel</a>
-	<button class="btn btn-danger" type="submit">Delete note</button>
+        action="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
+        method="post" role="form">
+    <div class="form-group">
+        <label for="note-title">Title</label>
+        <input aria-readonly="true" class="form-control" id="note-title" name="note-title" placeholder="Enter title"
+               readonly
+               type="text" value="{{ note_title }}">
+    </div>
+    <div class="form-group">
+        <label for="note-text">Text</label>
+        <textarea aria-readonly="true" class="form-control" disabled id="note-text" name="note-text" readonly>{{ note_text }}</textarea>
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="note-scope">Scope</label>
+                        <input aria-readonly="true" class="form-control" id="note-scope" name="note-scope"
+                               placeholder="Enter scope" readonly type="text" value="{{ note_scope }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <a class="btn btn-secondary"
+       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-danger" type="submit">Delete note</button>
 </form>
 <br/>
 {% endblock %}

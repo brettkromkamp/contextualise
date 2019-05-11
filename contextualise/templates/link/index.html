@@ -15,7 +15,7 @@
            role="button">Topic</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-			   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+               href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
@@ -64,7 +64,8 @@
         </a>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
            role="button">Links
             {% if occurrences_stats['url'] > 0 %}
             <span class="badge badge-info">{{ occurrences_stats['url'] }}</span>
@@ -150,24 +151,24 @@
 </ul>
 {% if links %}
 <table class="table table-bordered">
-	<thead class="thead-light">
-	<tr>
-		<th scope="col">Title</th>
-		<th scope="col">Scope</th>
-		<th scope="col">Action</th>
-	</tr>
-	</thead>
-	<tbody>
-	{% for link in links %}
-	<tr>
-		<td><a href="{{ link.url }}" target="_blank">{{ link.title }}</a> <i
-			class="text-black-50 fas fa-external-link-square-alt"></i></td>
-		<td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
-			link.scope|topic_name(topic_map.identifier) }}</a></td>
-		<td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
-	</tr>
-	{% endfor %}
-	</tbody>
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Scope</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for link in links %}
+    <tr>
+        <td><a href="{{ link.url }}" target="_blank">{{ link.title }}</a> <i
+                class="text-black-50 fas fa-external-link-square-alt"></i></td>
+        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
+            link.scope|topic_name(topic_map.identifier) }}</a></td>
+        <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
 {% elif current_user.id == topic_map.user_identifier %}
 <p>This topic has no associated links. Click on the "Add link" button below to add a link.</p>
@@ -175,7 +176,7 @@
 {% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-primary"
    href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-	link</a>
+    link</a>
 <br/>
 <br/>
 {% endif %}
