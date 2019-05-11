@@ -176,7 +176,7 @@ def edit(map_identifier, topic_identifier):
 
     texts = [occurrence for occurrence in occurrences if occurrence.instance_of == 'text']
 
-    form_topic_text = texts[0].resource_data.decode() if texts else None
+    form_topic_text = texts[0].resource_data.decode() if texts else ''
     form_topic_instance_of = topic.instance_of
 
     error = 0

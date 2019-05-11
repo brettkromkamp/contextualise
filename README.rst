@@ -1,16 +1,16 @@
 Contextualise by Brett Kromkamp
 ===============================
 
-*Contextualise* is a simple, focused tool to help you to manage your personal knowledge. Contextualise’s
+``Contextualise`` is a simple, focused tool to help you to manage your personal knowledge. ``Contextualise``’s
 versatile underlying data structure, `topic maps`_, makes it straightforward to put your topics of interest and
 relevant information resources into context which in turn allows you to expand your knowledge without the risk of it
 becoming disjointed.
 
-Contextualise is particularly suited for managing information-heavy projects and activities consisting of (semi)
+``Contextualise`` is particularly suited for managing information-heavy projects and activities consisting of (semi)
 unstructured and widely diverse data --- think of studying in general, investigative journalism, `world building`_ (for
 books, movies or computer games) and many types of hobbies.
 
-Contextualise's main dependency is `TopicDB`_, an open source topic maps-based graph library.
+``Contextualise``'s main dependency is `TopicDB`_, an open source topic maps-based graph library.
 
 .. image:: resources/screenshot-2019-04-22.png
    :alt: Screen shot of Contextualise
@@ -26,8 +26,8 @@ twelve years later: `Knowledge Management Using Topic Maps`_. If I remember corr
 is `Python`_ together with the `Flask`_ web development framework. What's more, after twelve years of using my own and
 other knowledge management tools, I have several improvements in mind for the next version (many of which are
 simplifications, for that matter). And perhaps one of the most important reasons for building a new personal management
-system is that this time around I want it to be open source: both Contextualise (the web application) and `TopicDB`_
-(the actual topic maps engine on top of which Contextualise is built --- also written by me) are licensed with the
+system is that this time around I want it to be open source: both ``Contextualise`` (the web application) and ``TopicDB``
+(the actual topic maps engine on top of which ``Contextualise`` is built --- also written by me) are licensed with the
 permissive open source `MIT license`_.
 
 Topic maps are both powerful and conceptually simple and provide the underpinnings for extremely flexible knowledge
@@ -41,7 +41,7 @@ Pending.
 Installation
 ------------
 
-Contextualise officially supports Python 3.4–3.7.
+``Contextualise`` officially supports Python 3.6–3.7.
 
 Pending.
 

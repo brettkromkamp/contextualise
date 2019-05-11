@@ -13,40 +13,43 @@
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
-	<li class="nav-item dropdown">
-		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-		   href="#"
-		   role="button">Topic</a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item"
-			   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-			<div class="dropdown-divider"></div>
-			{% if current_user.id == topic_map.user_identifier %}
-			<a class="dropdown-item"
-			   href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-				topic</a>
-			<a class="dropdown-item"
-			   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-				topic</a>
-			<div class="dropdown-divider"></div>
-			{% endif %}
-			<a class="dropdown-item" href="#">View names</a>
-			{% if current_user.id == topic_map.user_identifier %}
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item"
-			   href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-				note</a>
-			<a class="dropdown-item" href="#">Add tag</a>
-			{% endif %}
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">View attributes</a>
-		</div>
-	</li>
-	<li class="nav-item dropdown">
+    {% if current_user.id == topic_map.user_identifier %}
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+           href="#"
+           role="button">Topic</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                topic</a>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                topic</a>
+            <a class="dropdown-item"
+               href="#">Delete topic</a>
+            {% if 'admin' in current_user.roles %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">View names</a>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                note</a>
+            <a class="dropdown-item" href="#">Add tag</a>
+            {% if 'admin' in current_user.roles %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">View attributes</a>
+            {% endif %}
+        </div>
+    </li>
+    <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Images
             {% if occurrences_stats['image'] > 0 %}
-            <span class="badge badge-primary">{{ occurrences_stats['image'] }}</span>
+            <span class="badge badge-info">{{ occurrences_stats['image'] }}</span>
             {% endif %}
         </a>
         <div class="dropdown-menu">
@@ -58,88 +61,129 @@
                 image</a>
         </div>
     </li>
-	<li class="nav-item">
-		<a class="nav-link" href="#">Files</a>
-	</li>
-	<li class="nav-item dropdown">
-		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button">Links
-			{% if occurrences_stats['url'] > 0 %}
-			<span class="badge badge-primary">{{ occurrences_stats['url'] }}</span>
-			{% endif %}
-		</a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item"
-			   href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item"
-			   href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-				link</a>
-		</div>
-	</li>
-	<li class="nav-item dropdown">
-		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-		   href="#"
-		   role="button">Videos</a>
-		<div class="dropdown-menu">
-			<a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item"
-			   href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-				video</a>
-		</div>
-	</li>
-	{% if current_user.id == topic_map.user_identifier %}
-	<li class="nav-item dropdown">
-		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button">Associations</a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item"
-			   href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item"
-			   href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-				association</a>
-		</div>
-	</li>
-	{% endif %}
-	<li class="nav-item dropdown">
-		<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button">Visualisations</a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item"
-			   href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-				network</a>
-			<a class="dropdown-item" href="#">View tags</a>
-		</div>
-	</li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Files
+            {% if occurrences_stats['file'] > 0 %}
+            <span class="badge badge-info">{{ occurrences_stats['file'] }}</span>
+            {% endif %}
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Links
+            {% if occurrences_stats['url'] > 0 %}
+            <span class="badge badge-info">{{ occurrences_stats['url'] }}</span>
+            {% endif %}
+        </a>
+        <div class="dropdown-menu">
+            <a aria-disabled="true" class="dropdown-item"
+               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+               tabindex="-1">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                link</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
+           role="button">Videos
+            {% if occurrences_stats['video'] > 0 %}
+            <span class="badge badge-info">{{ occurrences_stats['video'] }}</span>
+            {% endif %}
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item disabled"
+               href="#">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                video</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Associations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                association</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                graph</a>
+            <a class="dropdown-item" href="#">View tags</a>
+        </div>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Files</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active"
+           href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                graph</a>
+            <a class="dropdown-item" href="#">View tags</a>
+        </div>
+    </li>
+    {% endif %}
 </ul>
 {% if videos %}
 <table class="table table-bordered">
-	<thead class="thead-light">
-	<tr>
-		<th scope="col">Title</th>
-		<th scope="col">Scope</th>
-		<th scope="col">Action</th>
-	</tr>
-	</thead>
-	<tbody>
-	{% for video in videos %}
-	<tr>
-		<td><a data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a></td>
-		<td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
-			video.scope|topic_name(topic_map.identifier) }}</a></td>
-		<td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
-	</tr>
-	{% endfor %}
-	</tbody>
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Scope</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for video in videos %}
+    <tr>
+        <td><a data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a></td>
+        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
+            video.scope|topic_name(topic_map.identifier) }}</a></td>
+        <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
-{% else %}
+{% elif current_user.id == topic_map.user_identifier %}
 <p>This topic has no associated videos. Click on the "Add video" button below to add a video.</p>
 {% endif %}
+{% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-primary"
    href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-	video</a>
+    video</a>
 <br/>
 <br/>
+{% endif %}
 {% endblock %}

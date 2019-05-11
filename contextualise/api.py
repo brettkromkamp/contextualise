@@ -63,7 +63,7 @@ def get_network(map_identifier, topic_identifier):
         result[nodes].append(node)
 
         for child in children:
-            #child_type_topic = topic_store.get_topic(map_identifier, child.type)
+            # child_type_topic = topic_store.get_topic(map_identifier, child.type)
             edge = {
                 'from': inner_identifier,
                 'to': child.pointer,
@@ -76,7 +76,6 @@ def get_network(map_identifier, topic_identifier):
 
     if topic:
         tree = topic_store.get_topics_network(map_identifier, topic_identifier)
-        # tree.display(topic_identifier)
         if len(tree) > 1:
             nodes = 0
             edges = 1

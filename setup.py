@@ -17,7 +17,7 @@ with open(os.path.join(here, 'HISTORY.rst')) as f:
 
 setup(
     name='contextualise',
-    version='0.0.1',
+    version='0.3.0',
     description='Contextualise',
     long_description=README + '\n\n' + HISTORY,
     author='Brett Alistair Kromkamp',
@@ -38,4 +38,17 @@ setup(
         'mistune',
         'python-slugify'
     ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Framework :: Flask',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Education'
+    ]
 )

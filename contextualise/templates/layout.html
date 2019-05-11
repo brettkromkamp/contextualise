@@ -83,17 +83,16 @@
         </div>
         <div class="row">
             <div class="col-9">
+                {% if topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li>
-                            {% if topic_map %}
                             {% if topic_map.shared %}
                             <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
                                 class="badge badge-success">Shared</span>
                             {% else %}
                             <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
                                 class="badge badge-info">Private</span>
-                            {% endif %}
                             {% endif %}
                             &nbsp;&mdash;&nbsp;
                         </li>
@@ -112,6 +111,7 @@
                         {% endif %}
                     </ol>
                 </nav>
+                {% endif %}
                 {% block body %}
                 {% block content %}{% endblock %}
                 {% endblock %}
