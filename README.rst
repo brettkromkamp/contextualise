@@ -31,12 +31,31 @@ Feature Support
 
 Pending.
 
-Installation
-------------
+Install the Development Version
+-------------------------------
 
 ``Contextualise`` officially supports Python 3.6–3.7.
 
-Pending.
+If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version
+of ``Contextualise``.
+
+Before installing the development version, you may need to uninstall the standard version of ``Contextualise`` using
+``pip``::
+
+    $ pip uninstall contextualise
+
+Then do::
+
+    $ git clone https://github.com/brettkromkamp/contextualise
+    $ cd contextualise
+    $ pip install -e .
+
+The ``pip install -e .`` command allows you to follow the development branch as it changes by creating links in the
+right places and installing the command line scripts to the appropriate locations.
+
+Then, if you want to update ``Contextualise`` at any time, in the same directory do::
+
+    $ git pull
 
 First-Time Use
 --------------
