@@ -238,7 +238,7 @@
 {% for note in notes %}
 <div class="card border-warning">
     <div class="card-body text-secondary">
-        <h5 class="card-title">{{ note.title }}
+        <h5 class="card-title">{{ note.title }} &mdash;
             <small class="text-muted">{{ note.timestamp }}</small>
         </h5>
         <p class="card-text">{{ note.text|safe }}</p>

@@ -1,37 +1,30 @@
 Contextualise by Brett Kromkamp
 ===============================
 
-``Contextualise`` is a simple, focused tool to help you to manage your personal knowledge. ``Contextualise``’s
-versatile underlying data structure, `topic maps`_, makes it straightforward to put your topics of interest and
-relevant information resources into context which in turn allows you to expand your knowledge without the risk of it
-becoming disjointed.
+``Contextualise`` is a simple and flexible tool particularly suited for organising information-heavy projects and
+activities consisting of (semi) unstructured and widely diverse data and information resources --- think of
+investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer
+games) and many kinds of hobbies.
 
-``Contextualise`` is particularly suited for managing information-heavy projects and activities consisting of (semi)
-unstructured and widely diverse data --- think of studying in general, investigative journalism, `world building`_ (for
-books, movies or computer games) and many types of hobbies.
+``Contextualise``'s main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
+a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
-``Contextualise``'s main dependency is `TopicDB`_, an open source topic maps-based graph library.
+.. image:: resources/topic-maps.png
+   :alt: Topic maps with topics, associations and occurrences
 
-.. image:: resources/screenshot-2019-04-22.png
-   :alt: Screen shot of Contextualise
-
-*Screen shot of Contextualise*
+*Topic maps with topics, associations and occurrences*
 
 Why?
 ----
 
-I built and published my first personal knowledge management system in 2007 which I still use, almost unmodified,
-twelve years later: `Knowledge Management Using Topic Maps`_. If I remember correctly, it was built with
-`PHP version 5.2.5`_! Twelve years is an eternity in software terms. Nowadays, my preferred choice for web development
-is `Python`_ together with the `Flask`_ web development framework. What's more, after twelve years of using my own and
-other knowledge management tools, I have several improvements in mind for the next version (many of which are
-simplifications, for that matter). And perhaps one of the most important reasons for building a new personal management
-system is that this time around I want it to be open source: both ``Contextualise`` (the web application) and ``TopicDB``
-(the actual topic maps engine on top of which ``Contextualise`` is built --- also written by me) are licensed with the
-permissive open source `MIT license`_.
-
-Topic maps are both powerful and conceptually simple and provide the underpinnings for extremely flexible knowledge
-management tools.
+I built and published my first knowledge documentation tool in 2007 which I still use, almost unmodified, twelve years
+later: `Knowledge Management Using Topic Maps`_. If I remember correctly, it was built with `PHP version 5.2.5`_!
+Twelve years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
+with the `Flask`_ web development framework. What's more, after twelve years of using my own and other knowledge
+management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
+matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
+source: both ``Contextualise`` (the web application) and ``TopicDB`` (the actual topic maps engine on top of which
+``Contextualise`` is built --- also written by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
 ---------------
