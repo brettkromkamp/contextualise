@@ -159,4 +159,9 @@ def delete(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
-    return render_template('association/delete.html')
+    association = topic_store.get_association(map_identifier, association_identifier)
+
+    return render_template('association/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association)
