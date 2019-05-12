@@ -15,8 +15,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint('image', __name__)
 
-IMAGES_UPLOAD_FOLDER = 'static/resources/images'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+RESOURCES_DIRECTORY = 'static/resources/'
+EXTENSIONS_WHITELIST = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @bp.route('/images/<map_identifier>/<topic_identifier>')
@@ -99,7 +99,13 @@ def upload(map_identifier, topic_identifier):
                 'warning')
         else:
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(upload_file.filename)}"
-            file_path = os.path.join(bp.root_path, IMAGES_UPLOAD_FOLDER, image_file_name)
+
+            # Create the image directory for this topic map and topic if it doesn't already exist
+            image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            if not os.path.isdir(image_directory):
+                os.makedirs(image_directory)
+
+            file_path = os.path.join(image_directory, image_file_name)
             upload_file.save(file_path)
 
             image_occurrence = Occurrence(instance_of='image', topic_identifier=topic.identifier,
@@ -131,4 +137,4 @@ def get_file_extension(file_name):
 
 
 def allowed_file(file_name):
-    return get_file_extension(file_name) in ALLOWED_EXTENSIONS
+    return get_file_extension(file_name) in EXTENSIONS_WHITELIST

@@ -166,7 +166,9 @@
     <tbody>
     {% for image in images %}
     <tr>
-        <td><a data-fancybox="images" href="/static/resources/images/{{ image.url }}">{{ image.title }}</a></td>
+        <td><a data-fancybox="images"
+               href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{ image.title
+            }}</a></td>
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{
             image.scope|topic_name(topic_map.identifier) }}</a></td>
         <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
