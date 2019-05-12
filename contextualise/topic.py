@@ -408,7 +408,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
 
     form_note_title = note_occurrence.get_attribute_by_name('title').value
-    form_note_text = note_occurrence.resource_data.decode()
+    form_note_text = mistune.markdown(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     if request.method == 'POST':
