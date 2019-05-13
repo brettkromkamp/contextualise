@@ -12,7 +12,8 @@
     <small class="text-muted">Delete association</small>
 </h1>
 <hr/>
-<form method="post" role="form">
+<form action="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
+      method="post" role="form">
     <div class="form-group">
         <label>Members</label>
         <table class="table table-bordered table-sm">
@@ -40,9 +41,40 @@
         </table>
     </div>
     <div class="form-group">
-        <label>Type</label>
-        <input aria-readonly="true" class="form-control" readonly type="text"
+        <label for="association-instance-of">Type</label>
+        <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
+               readonly type="text"
                value="{{ association.instance_of|topic_name(topic_map.identifier) }}">
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="association-scope">Scope</label>
+                        <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope"
+                               readonly type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="association-name">Name</label>
+                        <input aria-readonly="true" class="form-control" id="association-name" name="association-name"
+                               readonly type="text" value="{{ association.first_base_name.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="association-identifier">Name</label>
+                        <input aria-readonly="true" class="form-control" id="association-identifier"
+                               name="association-identifier"
+                               readonly type="text" value="{{ association.identifier }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
     </div>
     <a class="btn btn-secondary"
        href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"

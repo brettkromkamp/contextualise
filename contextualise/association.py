@@ -161,6 +161,12 @@ def delete(map_identifier, topic_identifier, association_identifier):
 
     association = topic_store.get_association(map_identifier, association_identifier)
 
+    if request.method == 'POST':
+        topic_store.delete_association(map_identifier, association_identifier)
+        flash('Association successfully deleted.', 'warning')
+        return redirect(
+            url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
     return render_template('association/delete.html',
                            topic_map=topic_map,
                            topic=topic,
