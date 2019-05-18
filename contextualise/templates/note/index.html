@@ -1,0 +1,17 @@
+{% extends "layout_notes.html" %}
+
+{% block title %}
+<title>Notes | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block content %}
+{% if notes %}
+<br/>
+{% else %}
+<p>This map has no notes. Click on the "Add note" button below to create a note.</p>
+{% endif %}
+<a class="btn btn-primary"
+   href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
+<br/>
+<br/>
+{% endblock %}

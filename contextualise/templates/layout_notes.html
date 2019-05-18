@@ -34,9 +34,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Index</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
-                    </li>
                     {% if current_user.id == topic_map.user_identifier %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Advanced search</a>
@@ -83,53 +80,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-9">
-                {% if topic_map %}
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li>
-                            {% if topic_map.shared %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-success">Shared</span>
-                            {% else %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-info">Private</span>
-                            {% endif %}
-                            &nbsp;&mdash;&nbsp;
-                        </li>
-                        {% if session['breadcrumbs'] %}
-                        {% for breadcrumb in session['breadcrumbs'] %}
-                        {% if loop.index < session['breadcrumbs']|length %}
-                        <li class="breadcrumb-item"><a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                            breadcrumb|topic_name(topic_map.identifier) }}</a></li>
-                        {% else %}
-                        <li aria-current="page" class="breadcrumb-item active">{{
-                            breadcrumb|topic_name(topic_map.identifier) }}
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                        {% endif %}
-                    </ol>
-                </nav>
-                {% endif %}
+            <div class="col-12">
                 {% block body %}
                 {% block content %}{% endblock %}
                 {% endblock %}
-            </div>
-            <div class="col-3">
-                {% block right_column %}{% endblock %}
-                <div class="input-group mb-3">
-                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
-                           id="goto-topic-identifier"
-                           placeholder="Enter topic identifier"
-                           type="text">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
-                                class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -173,7 +127,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
 
 </script>
 </body>
