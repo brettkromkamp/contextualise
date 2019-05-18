@@ -11,14 +11,11 @@
 <script>
 var editor = new EasyMDE({element: document.getElementById('note-text')});
 
-
 </script>
 
 {% if error %}
 <script>
 $('#advancedOptions').collapse('show');
-
-
 
 </script>
 {% endif %}
@@ -30,9 +27,8 @@ $('#advancedOptions').collapse('show');
     <small class="text-muted">Add note</small>
 </h1>
 <hr/>
-<form
-        action="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        autocomplete="off" method="post" role="form">
+<form action="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+      autocomplete="off" method="post" role="form">
     <div class="form-group">
         <label for="note-title">Title</label>
         <input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required

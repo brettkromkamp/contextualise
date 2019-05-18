@@ -5,13 +5,34 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    <div class="col">
+        <h2>Notes</h2>
+        <br/>
+    </div>
+</div>
 {% if notes %}
-<br/>
+{% for note in notes %}
+<div class="card border-warning">
+    <div class="card-body text-secondary">
+        <h5 class="card-title">{{ note.title }} &mdash;
+            <small class="text-muted">{{ note.timestamp }}</small>
+        </h5>
+        <p class="card-text">{{ note.text|safe }}</p>
+        <a class="card-link" href="#">Edit</a>
+        <a class="card-link" href="#">Add to topic</a>
+        <a class="card-link" href="#">Convert to topic</a>
+        <a class="card-link" href="#">Delete</a>
+    </div>
+</div>
+{% endfor %}
 {% else %}
-<p>This map has no notes. Click on the "Add note" button below to create a note.</p>
+<div class="row">
+    <div class="col">
+        <p>This map has no notes. Click on the "Add note" button below to create a note.</p>
+        <a class="btn btn-primary"
+           href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
+    </div>
+</div>
 {% endif %}
-<a class="btn btn-primary"
-   href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
-<br/>
-<br/>
 {% endblock %}
