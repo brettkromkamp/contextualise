@@ -8,6 +8,7 @@
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
+    {% if current_user.id == topic_map.user_identifier %}
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
            href="#"
@@ -16,29 +17,32 @@
             <a class="dropdown-item"
                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
-            {% if current_user.id == topic_map.user_identifier %}
             <a class="dropdown-item"
                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
                 topic</a>
             <a class="dropdown-item"
                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
+            <a class="dropdown-item"
+               href="#">Delete topic</a>
+            {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            {% endif %}
             <a class="dropdown-item" href="#">View names</a>
-            {% if current_user.id == topic_map.user_identifier %}
+            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 note</a>
             <a class="dropdown-item" href="#">Add tag</a>
-            {% endif %}
+            {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">View attributes</a>
+            {% endif %}
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+           href="#"
            role="button">Images
             {% if occurrences_stats['image'] > 0 %}
             <span class="badge badge-info">{{ occurrences_stats['image'] }}</span>
@@ -68,9 +72,8 @@
             {% endif %}
         </a>
         <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item"
-               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-               tabindex="-1">View</a>
+            <a class="dropdown-item"
+               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
@@ -93,10 +96,8 @@
                 video</a>
         </div>
     </li>
-    {% if current_user.id == topic_map.user_identifier %}
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-           href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"
            role="button">Associations</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
@@ -106,17 +107,47 @@
                 association</a>
         </div>
     </li>
-    {% endif %}
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Visualisations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                network</a>
+                graph</a>
             <a class="dropdown-item" href="#">View tags</a>
         </div>
     </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active"
+           href="#">Images</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Files</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                graph</a>
+            <a class="dropdown-item" href="#">View tags</a>
+        </div>
+    </li>
+    {% endif %}
 </ul>
 {% if associations %}
 <table class="table table-bordered">
@@ -131,12 +162,12 @@
     <tbody>
     {% for association in associations %}
     <tr>
-        <td><a
-                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
-            association.instance_of|topic_name(topic_map.identifier) }}</a></td>
-        <td><a
-                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
-            association.scope|topic_name(topic_map.identifier) }}</a></td>
+        <td>
+            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
+                association.instance_of|topic_name(topic_map.identifier) }}</a></td>
+        <td>
+            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
+                association.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
             <table class="table table-bordered table-sm">
                 <thead class="thead-light">
@@ -148,13 +179,12 @@
                 <tbody>
                 {% for member in association.members %}
                 <tr>
-                    <td><a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
-                        member.role_spec|topic_name(topic_map.identifier) }}</a></td>
+                    <td>
+                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
+                            member.role_spec|topic_name(topic_map.identifier) }}</a></td>
                     <td>
                         {% for topic_ref in member.topic_refs %}
-                        <a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
                             topic_ref|topic_name(topic_map.identifier) }}</a><br/>
                         {% endfor %}
                     </td>
@@ -173,7 +203,7 @@
 </table>
 <br/>
 {% else %}
-<p>This topic does not play a role in any association. Click on the "Create assocation" button below to create an
+<p>This topic does not play a role in any association. Click on the "Create association" button below to create an
     association.</p>
 {% endif %}
 <a class="btn btn-primary"

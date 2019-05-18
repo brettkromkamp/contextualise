@@ -25,4 +25,7 @@ def shared():
 
     maps = topic_store.get_shared_topic_maps()
 
+    # Resetting breadcrumbs
+    session['breadcrumbs'] = []
+
     return render_template('map/shared.html', maps=maps)
