@@ -24,6 +24,9 @@ def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
+    if topic_map is None:
+        abort(404)
+
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
     if topic is None:
@@ -57,6 +60,9 @@ def index(map_identifier, topic_identifier):
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)

@@ -16,6 +16,9 @@ def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
+    if topic_map is None:
+        abort(404)
+
     if current_user.id != topic_map.user_identifier:
         abort(403)
 
@@ -44,6 +47,9 @@ def index(map_identifier, topic_identifier):
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
@@ -150,6 +156,9 @@ def create(map_identifier, topic_identifier):
 def delete(map_identifier, topic_identifier, association_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)

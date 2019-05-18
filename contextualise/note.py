@@ -20,6 +20,16 @@ def index(map_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
+    if topic_map is None:
+        abort(404)
+    else:
+        if not topic_map.shared:
+            if current_user.is_authenticated:  # User is logged in
+                if current_user.id != topic_map.user_identifier:
+                    abort(403)
+            else:  # User is *not* logged in
+                abort(403)
+
     topic = topic_store.get_topic(map_identifier, 'home')
 
     note_occurrences = topic_store.get_topic_occurrences(map_identifier, 'notes', 'note',
@@ -43,6 +53,9 @@ def index(map_identifier):
 def add(map_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
@@ -96,7 +109,7 @@ def add(map_identifier):
 
             flash('Note successfully added.', 'success')
             return redirect(
-                url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+                url_for('note.index', map_identifier=topic_map.identifier))
 
     return render_template('note/add.html',
                            error=error,

@@ -24,16 +24,19 @@ def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
-    if topic_map.shared:
-        if current_user.is_authenticated:  # User is logged in
-            if current_user.id != topic_map.user_identifier and topic_identifier == 'home':
-                flash('You are accessing a shared topic map of another user.', 'primary')
+    if topic_map is None:
+        abort(404)
     else:
-        if current_user.is_authenticated:  # User is logged in
-            if current_user.id != topic_map.user_identifier:
+        if topic_map.shared:
+            if current_user.is_authenticated:  # User is logged in
+                if current_user.id != topic_map.user_identifier and topic_identifier == 'home':
+                    flash('You are accessing a shared topic map of another user.', 'primary')
+        else:
+            if current_user.is_authenticated:  # User is logged in
+                if current_user.id != topic_map.user_identifier:
+                    abort(403)
+            else:  # User is *not* logged in
                 abort(403)
-        else:  # User is *not* logged in
-            abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
@@ -92,6 +95,9 @@ def view(map_identifier, topic_identifier):
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
@@ -164,6 +170,9 @@ def create(map_identifier, topic_identifier):
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
@@ -244,6 +253,9 @@ def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
+    if topic_map is None:
+        abort(404)
+
     if current_user.id != topic_map.user_identifier:
         abort(403)
 
@@ -312,6 +324,9 @@ def add_note(map_identifier, topic_identifier):
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
@@ -393,6 +408,9 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     if current_user.id != topic_map.user_identifier:
         abort(403)

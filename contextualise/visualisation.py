@@ -1,6 +1,7 @@
 import maya
 from flask import (Blueprint, render_template)
 from topicdb.core.store.retrievaloption import RetrievalOption
+from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
 
@@ -11,6 +12,9 @@ bp = Blueprint('visualisation', __name__)
 def network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)

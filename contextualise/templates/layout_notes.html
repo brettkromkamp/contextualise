@@ -34,6 +34,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Index</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+                    </li>
                     {% if current_user.id == topic_map.user_identifier %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Advanced search</a>
@@ -42,13 +45,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Quick help</a>
                     </li>
-                    {% if topic.identifier != 'home' %}
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary"
-                           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
-                           role="button">Home</a>
-                    </li>
-                    {% endif %}
                 </ul>
                 {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
@@ -80,7 +76,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col">
                 {% block body %}
                 {% block content %}{% endblock %}
                 {% endblock %}
