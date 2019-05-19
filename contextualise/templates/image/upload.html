@@ -9,10 +9,6 @@
 <script>
 $('#advancedOptions').collapse('show');
 
-
-
-
-
 </script>
 {% endif %}
 {% endblock %}
@@ -23,9 +19,8 @@ $('#advancedOptions').collapse('show');
     <small class="text-muted">Upload image</small>
 </h1>
 <hr/>
-<form
-        action="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        autocomplete="off" method="post" role="form" enctype="multipart/form-data">
+<form action="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+      autocomplete="off" enctype="multipart/form-data" method="post" role="form">
     <div class="form-group">
         <label for="image-title">Title</label>
         <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required
@@ -33,7 +28,7 @@ $('#advancedOptions').collapse('show');
     </div>
     <div class="form-group">
         <label for="image-file">File</label>
-        <input type="file" class="form-control-file" id="image-file" name="image-file">
+        <input class="form-control-file" id="image-file" name="image-file" type="file">
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             No file part.

@@ -36,6 +36,7 @@
 {% endblock %}
 
 {% block content %}
+<a name="page-top"></a>
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
@@ -231,11 +232,13 @@
 </ul>
 {% if text %}
 {{ text|safe }}
+<p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% endif %}
 {% if notes %}
 <hr/>
 <h5>Notes</h5>
 {% for note in notes %}
+<a name="note-{{note.identifier}}"></a>
 <div class="card border-warning">
     <div class="card-body text-secondary">
         <h5 class="card-title">{{ note.title }} &mdash;

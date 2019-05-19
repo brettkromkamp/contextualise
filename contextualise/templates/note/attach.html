@@ -1,19 +1,28 @@
-{% extends "layout.html" %}
+{% extends "layout_notes.html" %}
 
 {% block title %}
-<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+<title>Notes | {{ topic_map.name }}</title>
 {% endblock %}
-
-{% block javascript %}{% endblock %}
 
 {% block content %}
 <h1>
-    {{ topic.identifier|topic_name(topic_map.identifier) }}
-    <small class="text-muted">Delete note</small>
+    {{ topic_map.name }}
+    <small class="text-muted">Attach note</small>
 </h1>
 <hr/>
-<form action="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
-      method="post" role="form">
+<form action="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
+      autocomplete="off" method="post" role="form">
+    <div class="form-group">
+        <label for="note-topic-identifier">Topic</label>
+        <input class="form-control auto-complete" id="note-topic-identifier" name="note-topic-identifier"
+               placeholder="Enter topic identifier" required
+               type="text">
+        {% if error|bitwise_and(1) == 1 %}
+        <small class="text-danger">
+            A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
+        </small>
+        {% endif %}
+    </div>
     <div class="form-group">
         <label for="note-title"><strong>Title</strong></label>
         <input aria-readonly="true" class="form-control" id="note-title" name="note-title" readonly
@@ -43,9 +52,9 @@
         <br/>
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}"
        role="button">Cancel</a>
-    <button class="btn btn-danger" type="submit">Delete note</button>
+    <button class="btn btn-primary" type="submit">Attach note</button>
 </form>
 <br/>
 {% endblock %}

@@ -27,9 +27,8 @@ $('#advancedOptions').collapse('show');
     <small class="text-muted">Edit note</small>
 </h1>
 <hr/>
-<form
-        action="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
-        autocomplete="off" method="post" role="form">
+<form action="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
+      autocomplete="off" method="post" role="form">
     <div class="form-group">
         <label for="note-title">Title</label>
         <input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required

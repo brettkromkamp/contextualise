@@ -7,7 +7,9 @@
 {% block content %}
 <div class="row">
     <div class="col">
-        <h2>Notes &mdash; <small class="text-muted">{{ topic_map.name }}</small></h2>
+        <h2>Notes &mdash;
+            <small class="text-muted">{{ topic_map.name }}</small>
+        </h2>
         <br/>
     </div>
 </div>
@@ -22,7 +24,9 @@
                 </h5>
                 <p class="card-text">{{ note.text|safe }}</p>
                 <a class="card-link" href="#">Edit</a>
-                <a class="card-link" href="#">Move to topic</a>
+                <a class="card-link"
+                   href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
+                    to topic</a>
                 <a class="card-link" href="#">Convert to topic</a>
                 <a class="card-link" href="#">Delete</a>
             </div>

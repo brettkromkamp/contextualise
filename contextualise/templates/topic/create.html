@@ -56,9 +56,8 @@ $('#advancedOptions').collapse('show');
 {% block content %}
 <h1>Create topic</h1>
 <hr/>
-<form
-        action="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        autocomplete="off" method="post" role="form">
+<form action="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+      autocomplete="off" method="post" role="form">
     <div class="form-group">
         <label for="topic-name">Name</label>
         <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required

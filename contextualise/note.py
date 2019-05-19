@@ -118,3 +118,57 @@ def add(map_identifier):
                            note_title=form_note_title,
                            note_text=form_note_text,
                            note_scope=form_note_scope)
+
+
+@bp.route('/notes/<map_identifier>/attach/<note_identifier>', methods=('GET', 'POST'))
+@login_required
+def attach(map_identifier, note_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, 'home',
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
+                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_note_title = note_occurrence.get_attribute_by_name('title').value
+    form_note_text = mistune.markdown(note_occurrence.resource_data.decode())
+    form_note_scope = note_occurrence.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_note_topic_identifier = request.form['note-topic-identifier'].strip()
+
+        # Validate form inputs
+        if not topic_store.topic_exists(topic_map.identifier, form_note_topic_identifier):
+            error = error | 1
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            topic_store.update_occurrence_topic_identifier(map_identifier, note_identifier, form_note_topic_identifier)
+            flash('Note successfully attached.', 'success')
+            return redirect(
+                url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=form_note_topic_identifier))
+
+    return render_template('note/attach.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           note_identifier=note_occurrence.identifier,
+                           note_title=form_note_title,
+                           note_text=form_note_text,
+                           note_scope=form_note_scope)
