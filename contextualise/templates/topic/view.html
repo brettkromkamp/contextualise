@@ -36,7 +36,6 @@
 {% endblock %}
 
 {% block content %}
-<a name="page-top"></a>
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
@@ -253,5 +252,6 @@
 </div>
 <br/>
 {% endfor %}
+<p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% endif %}
 {% endblock %}

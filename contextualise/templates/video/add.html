@@ -22,12 +22,12 @@ $('#advancedOptions').collapse('show');
 <form action="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" method="post" role="form">
     <div class="form-group">
-        <label for="video-title">Title</label>
+        <label for="video-title"><strong>Title</strong></label>
         <input class="form-control" id="video-title" name="video-title" placeholder="Enter title" required
                type="text" value="{{ video_title }}">
     </div>
     <div class="form-group">
-        <label for="video-url">Link (URL)</label>
+        <label for="video-url"><strong>Link (URL)</strong></label>
         <input class="form-control" id="video-url" name="video-url" placeholder="Enter video link" required
                type="text" value="{{ video_url }}">
     </div>
@@ -41,10 +41,9 @@ $('#advancedOptions').collapse('show');
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="video-scope">Scope
+                        <label for="video-scope"><strong>Scope</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal
-                                scope)
+                                Universal scope)
                             </small>
                         </label>
                         <input class="form-control auto-complete" id="video-scope" name="video-scope"

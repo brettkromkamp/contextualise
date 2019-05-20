@@ -13,7 +13,7 @@
 <form action="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
       autocomplete="off" method="post" role="form">
     <div class="form-group">
-        <label for="note-topic-identifier">Topic</label>
+        <label for="note-topic-identifier"><strong>Topic</strong></label>
         <input class="form-control auto-complete" id="note-topic-identifier" name="note-topic-identifier"
                placeholder="Enter topic identifier" required
                type="text">
@@ -42,7 +42,7 @@
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="note-scope">Scope</label>
+                        <label for="note-scope"><strong>Scope</strong></label>
                         <input aria-readonly="true" class="form-control" id="note-scope" name="note-scope"
                                readonly type="text" value="{{ note_scope }}">
                     </div>

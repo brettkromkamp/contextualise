@@ -22,12 +22,12 @@ $('#advancedOptions').collapse('show');
 <form action="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" method="post" role="form">
     <div class="form-group">
-        <label for="link-title">Title</label>
+        <label for="link-title"><strong>Title</strong></label>
         <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required
                type="text" value="{{ link_title }}">
     </div>
     <div class="form-group">
-        <label for="link-url">Link (URL)</label>
+        <label for="link-url"><strong>Link (URL)</strong></label>
         <input class="form-control" id="link-url" name="link-url" placeholder="Enter link" required
                type="text" value="{{ link_url }}">
     </div>
@@ -41,10 +41,9 @@ $('#advancedOptions').collapse('show');
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="link-scope">Scope
+                        <label for="link-scope"><strong>Scope</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal
-                                scope)
+                                Universal scope)
                             </small>
                         </label>
                         <input class="form-control auto-complete" id="link-scope" name="link-scope"

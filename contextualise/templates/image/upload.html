@@ -22,12 +22,12 @@ $('#advancedOptions').collapse('show');
 <form action="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" enctype="multipart/form-data" method="post" role="form">
     <div class="form-group">
-        <label for="image-title">Title</label>
+        <label for="image-title"><strong>Title</strong></label>
         <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required
                type="text" value="{{ image_title }}">
     </div>
     <div class="form-group">
-        <label for="image-file">File</label>
+        <label for="image-file"><strong>File</strong></label>
         <input class="form-control-file" id="image-file" name="image-file" type="file">
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
@@ -55,10 +55,9 @@ $('#advancedOptions').collapse('show');
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="image-scope">Scope
+                        <label for="image-scope"><strong>Scope</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal
-                                scope)
+                                Universal scope)
                             </small>
                         </label>
                         <input class="form-control auto-complete" id="image-scope" name="image-scope"
