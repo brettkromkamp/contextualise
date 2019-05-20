@@ -7,6 +7,7 @@ from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
+from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievaloption import RetrievalOption
 from werkzeug.exceptions import abort
 
@@ -172,3 +173,87 @@ def attach(map_identifier, note_identifier):
                            note_title=form_note_title,
                            note_text=form_note_text,
                            note_scope=form_note_scope)
+
+
+@bp.route('/notes/<map_identifier>/convert/<note_identifier>', methods=('GET', 'POST'))
+@login_required
+def convert(map_identifier, note_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, 'home',
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
+                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    form_topic_name = ''
+    form_topic_identifier = ''
+
+    # Topic text will be the note's title and text concatenated
+    # TODO: Implement!
+    form_topic_text = ''
+
+    form_topic_instance_of = 'topic'
+
+    error = 0
+
+    if request.method == 'POST':
+        form_topic_identifier = request.form['topic-identifier'].strip()
+        form_topic_name = request.form['topic-name'].strip()
+        form_topic_text = request.form['topic-text']
+        form_topic_instance_of = request.form['topic-instance-of'].strip()
+
+        # If no values have been provided set their default values
+        if not form_topic_instance_of:
+            form_topic_instance_of = 'topic'
+
+        # Validate form inputs
+        if not form_topic_name:
+            error = error | 1
+        if topic_store.topic_exists(topic_map.identifier, form_topic_identifier):
+            error = error | 2
+        if not form_topic_identifier:
+            error = error | 4
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
+            error = error | 8
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
+            text_occurrence = Occurrence(instance_of='text', topic_identifier=new_topic.identifier,
+                                         resource_data=form_topic_text)
+            timestamp = str(datetime.now())
+            modification_attribute = Attribute('modification-timestamp', timestamp, new_topic.identifier,
+                                               data_type=DataType.TIMESTAMP)
+
+            # Persist objects to the topic store
+            topic_store.set_topic(topic_map.identifier, new_topic)
+            topic_store.set_occurrence(topic_map.identifier, text_occurrence)
+            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+
+            flash('Note successfully converted.', 'success')
+            return redirect(
+                url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier))
+
+    return render_template('note/convert.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           topic_name=form_topic_name,
+                           topic_identifier=form_topic_identifier,
+                           topic_text=form_topic_text,
+                           topic_instance_of=form_topic_instance_of,
+                           note_identifier=note_identifier)
