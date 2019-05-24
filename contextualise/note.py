@@ -190,18 +190,17 @@ def convert(map_identifier, note_identifier):
     topic = topic_store.get_topic(map_identifier, 'home',
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
 
-    note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
-                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
-                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
+    note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
+                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    note_title = note_occurrence.get_attribute_by_name('title').value
+
     form_topic_name = ''
     form_topic_identifier = ''
-
-    # Topic text will be the note's title and text concatenated
-    # TODO: Implement!
-    form_topic_text = ''
+    form_topic_text = "## " + note_title + "\n" + note_occurrence.resource_data.decode()
 
     form_topic_instance_of = 'topic'
 
@@ -243,6 +242,9 @@ def convert(map_identifier, note_identifier):
             topic_store.set_topic(topic_map.identifier, new_topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
             topic_store.set_attribute(topic_map.identifier, modification_attribute)
+
+            # Remove the original note occurrence
+            topic_store.delete_occurrence(topic_map.identifier, note_identifier)
 
             flash('Note successfully converted.', 'success')
             return redirect(
