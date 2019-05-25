@@ -6,7 +6,7 @@
 
 {% block right_column %}
 {% if associations %}
-<div class="card border-info bg-light">
+<div class="card border-warning bg-light">
     <div class="card-header">Related topics</div>
     <div class="card-body associations">
         <ul>
@@ -125,7 +125,7 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Images
             {% if occurrences_stats['image'] > 0 %}
-            <span class="badge badge-info">{{ occurrences_stats['image'] }}</span>
+            <span class="badge badge-warning">{{ occurrences_stats['image'] }}</span>
             {% endif %}
         </a>
         <div class="dropdown-menu">
@@ -140,7 +140,7 @@
     <li class="nav-item">
         <a class="nav-link" href="#">Files
             {% if occurrences_stats['file'] > 0 %}
-            <span class="badge badge-info">{{ occurrences_stats['file'] }}</span>
+            <span class="badge badge-warning">{{ occurrences_stats['file'] }}</span>
             {% endif %}
         </a>
     </li>
@@ -148,7 +148,7 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Links
             {% if occurrences_stats['url'] > 0 %}
-            <span class="badge badge-info">{{ occurrences_stats['url'] }}</span>
+            <span class="badge badge-warning">{{ occurrences_stats['url'] }}</span>
             {% endif %}
         </a>
         <div class="dropdown-menu">
@@ -164,7 +164,7 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Videos
             {% if occurrences_stats['video'] > 0 %}
-            <span class="badge badge-info">{{ occurrences_stats['video'] }}</span>
+            <span class="badge badge-warning">{{ occurrences_stats['video'] }}</span>
             {% endif %}
         </a>
         <div class="dropdown-menu">
@@ -238,7 +238,7 @@
 <h5>Notes</h5>
 {% for note in notes %}
 <a name="note-{{note.identifier}}"></a>
-<div class="card border-warning">
+<div class="card border-info">
     <div class="card-body text-secondary">
         <h5 class="card-title">{{ note.title }} &mdash;
             <small class="text-muted">{{ note.timestamp }}</small>

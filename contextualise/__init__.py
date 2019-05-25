@@ -53,7 +53,7 @@ def create_app(test_config=None):
         MAIL_USE_SSL=False,
         MAIL_USERNAME=email_username,
         MAIL_PASSWORD=email_password,
-        MAX_CONTENT_LENGTH=2 * 1024 * 1024  # 2 megabytes
+        MAX_CONTENT_LENGTH=4 * 1024 * 1024  # 4 megabytes (temporarily - will be 2)
     )
     mail = Mail(app)
 
@@ -81,18 +81,19 @@ def create_app(test_config=None):
     # HTTP error handlers
     def forbidden(e):
         return render_template('403.html'), 403
-
     app.register_error_handler(403, forbidden)
 
     def page_not_found(e):
         return render_template('404.html'), 404
-
     app.register_error_handler(404, page_not_found)
 
     def internal_server_error(e):
         return render_template('500.html'), 500
-
     app.register_error_handler(500, internal_server_error)
+
+    def request_entity_too_large(e):
+        return render_template('413.html'), 413
+    app.register_error_handler(413, request_entity_too_large)
 
     # Setup Flask-Security
     user_datastore = SQLAlchemySessionUserDatastore(user_store.db_session, user_models.User, user_models.Role)
