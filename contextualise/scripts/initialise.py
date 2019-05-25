@@ -11,7 +11,7 @@ import os
 from topicdb.core.store.topicstore import TopicStore
 
 
-SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), '../settings.ini')
+SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), '../../settings.ini')
 USER_IDENTIFIER_1 = 1
 USER_IDENTIFIER_2 = 2
 
