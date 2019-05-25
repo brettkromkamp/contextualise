@@ -201,6 +201,15 @@
 {% if text %}
 {{ text|safe }}
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
+{% else %}
+{% if current_user.id == topic_map.user_identifier %}
+<p>This topic has no text. Click on the "Edit topic" button below to add text to this topic.</p>
+<a class="btn btn-primary"
+   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+    topic</a>
+<br/>
+<br/>
+{% endif %}
 {% endif %}
 {% if notes %}
 <hr/>

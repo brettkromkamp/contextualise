@@ -121,7 +121,7 @@
             <div class="col-3">
                 {% if associations %}
                 <div class="card border-warning bg-light">
-                    <div class="card-header">Related topics</div>
+                    <h5 class="card-header">Related topics</h5>
                     <div class="card-body associations">
                         <ul>
                             {% for instance_of, roles in associations.dict.items() %}
@@ -158,6 +158,44 @@
                         </button>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">Action shortcuts</div>
+                    <div class="card-body">
+                        <ul class="nav flex-column">
+                            {% if current_user.id == topic_map.user_identifier %}
+                            <li class="nav-item">
+                                <a class="nav-link active"
+                                   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                                    topic</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                    note</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                    images</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">View files</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                    links</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                    videos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <br/>
             </div>
         </div>
     </div>
@@ -201,7 +239,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
 
 </script>
 </body>
