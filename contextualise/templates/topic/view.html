@@ -1,38 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout-2-columns.html" %}
 
 {% block title %}
 <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
-{% endblock %}
-
-{% block right_column %}
-{% if associations %}
-<div class="card border-warning bg-light">
-    <div class="card-header">Related topics</div>
-    <div class="card-body associations">
-        <ul>
-            {% for instance_of, roles in associations.dict.items() %}
-            <li>{{ instance_of|topic_name(topic_map.identifier) }}
-                <ul>
-                    {% for role, topic_refs in roles.items() %}
-                    <li>{{ role|topic_name(topic_map.identifier) }}
-                        <ul>
-                            {% for topic_ref in topic_refs %}
-                            <li>
-                                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                                    topic_ref|topic_name(topic_map.identifier) }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-<br/>
-{% endif %}
 {% endblock %}
 
 {% block content %}

@@ -119,7 +119,34 @@
                 {% endblock %}
             </div>
             <div class="col-3">
-                {% block right_column %}{% endblock %}
+                {% if associations %}
+                <div class="card border-warning bg-light">
+                    <div class="card-header">Related topics</div>
+                    <div class="card-body associations">
+                        <ul>
+                            {% for instance_of, roles in associations.dict.items() %}
+                            <li>{{ instance_of|topic_name(topic_map.identifier) }}
+                                <ul>
+                                    {% for role, topic_refs in roles.items() %}
+                                    <li>{{ role|topic_name(topic_map.identifier) }}
+                                        <ul>
+                                            {% for topic_ref in topic_refs %}
+                                            <li>
+                                                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <br/>
+                {% endif %}
                 <div class="input-group mb-3">
                     <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
                            id="goto-topic-identifier"
