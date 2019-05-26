@@ -187,12 +187,14 @@ def edit(map_identifier, topic_identifier):
 
     texts = [occurrence for occurrence in occurrences if occurrence.instance_of == 'text']
 
+    form_topic_name = topic.first_base_name.name
     form_topic_text = texts[0].resource_data.decode() if texts else ''
     form_topic_instance_of = topic.instance_of
 
     error = 0
 
     if request.method == 'POST':
+        form_topic_name = request.form['topic-name']
         form_topic_text = request.form['topic-text']
         form_topic_instance_of = request.form['topic-instance-of'].strip()
 
@@ -209,6 +211,10 @@ def edit(map_identifier, topic_identifier):
                 'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
                 'warning')
         else:
+            # Update topic's first base name if it has changed
+            if topic.first_base_name.name != form_topic_name:
+                topic_store.update_basename_name(map_identifier, topic.first_base_name.identifier, form_topic_name)
+
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
                 topic_store.update_topic_instance_of(map_identifier, topic.identifier, form_topic_instance_of)
@@ -241,7 +247,7 @@ def edit(map_identifier, topic_identifier):
                            error=error,
                            topic_map=topic_map,
                            topic=topic,
-                           topic_name=topic.first_base_name.name,
+                           topic_name=form_topic_name,
                            topic_identifier=topic.identifier,
                            topic_text=form_topic_text,
                            topic_instance_of=form_topic_instance_of)
