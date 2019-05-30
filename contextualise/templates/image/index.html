@@ -13,7 +13,6 @@
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
-    {% if current_user.id == topic_map.user_identifier %}
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
            href="#"
@@ -48,11 +47,7 @@
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
            href="#"
-           role="button">Images
-            {% if occurrences_stats['image'] > 0 %}
-            <span class="badge badge-warning">{{ occurrences_stats['image'] }}</span>
-            {% endif %}
-        </a>
+           role="button">Images</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
@@ -62,19 +57,11 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Files
-            {% if occurrences_stats['file'] > 0 %}
-            <span class="badge badge-warning">{{ occurrences_stats['file'] }}</span>
-            {% endif %}
-        </a>
+        <a class="nav-link" href="#">Files</a>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Links
-            {% if occurrences_stats['url'] > 0 %}
-            <span class="badge badge-warning">{{ occurrences_stats['url'] }}</span>
-            {% endif %}
-        </a>
+           role="button">Links</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
@@ -86,11 +73,7 @@
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Videos
-            {% if occurrences_stats['video'] > 0 %}
-            <span class="badge badge-warning">{{ occurrences_stats['video'] }}</span>
-            {% endif %}
-        </a>
+           role="button">Videos</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
@@ -106,53 +89,15 @@
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <a class="dropdown-item"
+               href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                graph</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
                 association</a>
         </div>
     </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                graph</a>
-            <a class="dropdown-item" href="#">View tags</a>
-        </div>
-    </li>
-    {% else %}
-    <li class="nav-item">
-        <a class="nav-link"
-           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active"
-           href="#">Images</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Files</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link"
-           href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link"
-           href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                graph</a>
-            <a class="dropdown-item" href="#">View tags</a>
-        </div>
-    </li>
-    {% endif %}
 </ul>
 {% if images %}
 <table class="table table-bordered">

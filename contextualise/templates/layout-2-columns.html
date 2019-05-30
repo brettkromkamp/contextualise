@@ -118,21 +118,13 @@
                 {% endblock %}
             </div>
             <div class="col-3">
-                <div class="input-group mb-3">
-                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
-                           id="goto-topic-identifier"
-                           placeholder="Enter topic identifier"
-                           type="text">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
-                                class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
                 {% if associations %}
-                <nav class="card">
-                    <div class="card-header"><strong>Related topics</strong></div>
-                    <div class="card-body associations">
+                <nav class="card border-warning">
+                    <div class="card-header"><strong>Related topics</strong> <small>[<a
+                            href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                        graph</a>]</small>
+                    </div>
+                    <div class="card-body list-card">
                         <ul>
                             {% for instance_of, roles in associations.dict.items() %}
                             <li>{{ instance_of|topic_name(topic_map.identifier) }}
@@ -157,9 +149,9 @@
                 </nav>
                 <br/>
                 {% endif %}
-                <div class="card">
+                <div class="card border-warning">
                     <div class="card-header"><strong>Resources</strong></div>
-                    <div class="card-body associations">
+                    <div class="card-body list-card">
                         <ul>
                             {% if occurrences['images'] %}
                             <li>Images
@@ -180,7 +172,8 @@
                                 <ul>
                                     {% for link in occurrences['links'] %}
                                     <li>
-                                        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a> <i
+                                            class="text-black-50 fas fa-external-link-square-alt"></i>
                                     </li>
                                     {% endfor %}
                                 </ul>
@@ -198,6 +191,18 @@
                             </li>
                             {% endif %}
                         </ul>
+                    </div>
+                </div>
+                <br/>
+                <div class="input-group mb-3">
+                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
+                           id="goto-topic-identifier"
+                           placeholder="Enter topic identifier"
+                           type="text">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
+                                class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
                 <!--
@@ -239,55 +244,6 @@
                     </div>
                 </div>
                 <br/>
-                -->
-                <!--
-                {% if occurrences['images'] %}
-                <div class="card">
-                    <div class="card-header"><strong>Images</strong></div>
-                    <div class="card-body">
-                        <ul class="nav flex-column">
-                            {% for image in occurrences['images'] %}
-                            <li class="nav-item">
-                                <a class="nav-link" data-fancybox="images"
-                                   href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
-                                    image.title
-                                    }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
-                {% if occurrences['links'] %}
-                <br/>
-                <div class="card">
-                    <div class="card-header"><strong>Links</strong></div>
-                    <div class="card-body">
-                        <ul class="nav flex-column">
-                            {% for link in occurrences['links'] %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ link.url }}" target="_blank">{{ link.title }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
-                {% if occurrences['videos'] %}
-                <br/>
-                <div class="card">
-                    <div class="card-header"><strong>Videos</strong></div>
-                    <div class="card-body">
-                        <ul class="nav flex-column">
-                            {% for video in occurrences['videos'] %}
-                            <li class="nav-item">
-                                <a class="nav-link" data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                {% endif %}
                 -->
             </div>
         </div>
@@ -331,9 +287,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
-
-
 
 
 </script>

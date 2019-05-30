@@ -161,9 +161,6 @@ def create_app(test_config=None):
     from contextualise import association
     app.register_blueprint(association.bp)
 
-    from contextualise import visualisation
-    app.register_blueprint(visualisation.bp)
-
     from contextualise import note
     app.register_blueprint(note.bp)
 
