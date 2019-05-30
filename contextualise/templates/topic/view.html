@@ -4,6 +4,11 @@
 <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
 {% endblock %}
 
+{% block javascript %}
+<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
@@ -151,6 +156,13 @@
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            {% if associations %}
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                graph</a>
+            {% else %}
+            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View graph</a>
+            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
@@ -198,8 +210,8 @@
     </li>
     {% endif %}
 </ul>
-{% if text %}
-{{ text|safe }}
+{% if occurrences['text'] %}
+{{ occurrences['text']|safe }}
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% else %}
 {% if current_user.id == topic_map.user_identifier %}
@@ -211,10 +223,10 @@
 <br/>
 {% endif %}
 {% endif %}
-{% if notes %}
+{% if occurrences['notes'] %}
 <hr/>
 <h5>Notes</h5>
-{% for note in notes %}
+{% for note in occurrences['notes'] %}
 <a name="note-{{note.identifier}}"></a>
 <div class="card border-info">
     <div class="card-body text-secondary">

@@ -75,7 +75,6 @@
         </div>
     </nav>
 </header>
-
 <main class="flex-shrink-0" role="main">
     <div class="container">
         <div class="row">
@@ -119,9 +118,20 @@
                 {% endblock %}
             </div>
             <div class="col-3">
+                <div class="input-group mb-3">
+                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
+                           id="goto-topic-identifier"
+                           placeholder="Enter topic identifier"
+                           type="text">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
+                                class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
                 {% if associations %}
-                <div class="card border-warning bg-light">
-                    <h5 class="card-header">Related topics</h5>
+                <nav class="card">
+                    <div class="card-header"><strong>Related topics</strong></div>
                     <div class="card-body associations">
                         <ul>
                             {% for instance_of, roles in associations.dict.items() %}
@@ -144,20 +154,53 @@
                             {% endfor %}
                         </ul>
                     </div>
-                </div>
+                </nav>
                 <br/>
                 {% endif %}
-                <div class="input-group mb-3">
-                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
-                           id="goto-topic-identifier"
-                           placeholder="Enter topic identifier"
-                           type="text">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
-                                class="fas fa-search"></i>
-                        </button>
+                <div class="card">
+                    <div class="card-header"><strong>Resources</strong></div>
+                    <div class="card-body associations">
+                        <ul>
+                            {% if occurrences['images'] %}
+                            <li>Images
+                                <ul>
+                                    {% for image in occurrences['images'] %}
+                                    <li>
+                                        <a data-fancybox="images"
+                                           href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                                            image.title
+                                            }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% if occurrences['links'] %}
+                            <li>Links
+                                <ul>
+                                    {% for link in occurrences['links'] %}
+                                    <li>
+                                        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% if occurrences['videos'] %}
+                            <li>Videos
+                                <ul>
+                                    {% for video in occurrences['videos'] %}
+                                    <li>
+                                        <a data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </div>
                 </div>
+                <!--
                 <div class="card">
                     <div class="card-header">Action shortcuts</div>
                     <div class="card-body">
@@ -196,11 +239,60 @@
                     </div>
                 </div>
                 <br/>
+                -->
+                <!--
+                {% if occurrences['images'] %}
+                <div class="card">
+                    <div class="card-header"><strong>Images</strong></div>
+                    <div class="card-body">
+                        <ul class="nav flex-column">
+                            {% for image in occurrences['images'] %}
+                            <li class="nav-item">
+                                <a class="nav-link" data-fancybox="images"
+                                   href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                                    image.title
+                                    }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                {% if occurrences['links'] %}
+                <br/>
+                <div class="card">
+                    <div class="card-header"><strong>Links</strong></div>
+                    <div class="card-body">
+                        <ul class="nav flex-column">
+                            {% for link in occurrences['links'] %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                {% if occurrences['videos'] %}
+                <br/>
+                <div class="card">
+                    <div class="card-header"><strong>Videos</strong></div>
+                    <div class="card-body">
+                        <ul class="nav flex-column">
+                            {% for video in occurrences['videos'] %}
+                            <li class="nav-item">
+                                <a class="nav-link" data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                -->
             </div>
         </div>
     </div>
 </main>
-
 <footer class="footer mt-auto py-3">
     <div class="container">
 		<span class="text-muted">Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
@@ -239,6 +331,10 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
+
+
+
+
 
 </script>
 </body>

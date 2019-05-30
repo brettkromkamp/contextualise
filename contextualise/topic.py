@@ -46,20 +46,57 @@ def view(map_identifier, topic_identifier):
     else:
         session.pop('inexistent_topic_identifier', None)
 
-    occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier,
-                                                    inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
-                                                    resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    topic_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier,
+                                                          inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
+                                                          resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    occurrences = {
+        'text': None,
+        'images': [],
+        'files': [],
+        'links': [],
+        'videos': [],
+        'notes': []
+    }
+    for occurrence in topic_occurrences:
+        if occurrence.instance_of == 'text':
+            occurrences['text'] = mistune.markdown(occurrence.resource_data.decode())
+        elif occurrence.instance_of == 'image':
+            occurrences['images'].append({
+                'title': occurrence.get_attribute_by_name('title').value,
+                'url': occurrence.resource_ref
+            })
+        elif occurrence.instance_of == 'file':
+            occurrences['files'].append({
+                'title': occurrence.get_attribute_by_name('title').value,
+                'url': occurrence.resource_ref
+            })
+        elif occurrence.instance_of == 'url':
+            occurrences['links'].append({
+                'title': occurrence.get_attribute_by_name('title').value,
+                'url': occurrence.resource_ref
+            })
+        elif occurrence.instance_of == 'video':
+            occurrences['videos'].append({
+                'title': occurrence.get_attribute_by_name('title').value,
+                'url': occurrence.resource_ref
+            })
+        elif occurrence.instance_of == 'note':
+            occurrences['notes'].append({'identifier': occurrence.identifier,
+                                         'title': occurrence.get_attribute_by_name('title').value,
+                                         'timestamp': maya.parse(
+                                             occurrence.get_attribute_by_name('modification-timestamp').value),
+                                         'text': mistune.markdown(occurrence.resource_data.decode())})
 
-    text_occurrences = [occurrence for occurrence in occurrences if occurrence.instance_of == 'text']
-    text = mistune.markdown(text_occurrences[0].resource_data.decode()) if text_occurrences else None
-    note_occurrences = [occurrence for occurrence in occurrences if occurrence.instance_of == 'note']
-
-    notes = []
-    for note_occurrence in note_occurrences:
-        notes.append({'identifier': note_occurrence.identifier,
-                      'title': note_occurrence.get_attribute_by_name('title').value,
-                      'timestamp': maya.parse(note_occurrence.get_attribute_by_name('modification-timestamp').value),
-                      'text': mistune.markdown(note_occurrence.resource_data.decode())})
+    # text_occurrences = [occurrence for occurrence in topic_occurrences if occurrence.instance_of == 'text']
+    # text = mistune.markdown(text_occurrences[0].resource_data.decode()) if text_occurrences else None
+    # note_occurrences = [occurrence for occurrence in occurrences if occurrence.instance_of == 'note']
+    #
+    # notes = []
+    # for note_occurrence in note_occurrences:
+    #     notes.append({'identifier': note_occurrence.identifier,
+    #                   'title': note_occurrence.get_attribute_by_name('title').value,
+    #                   'timestamp': maya.parse(note_occurrence.get_attribute_by_name('modification-timestamp').value),
+    #                   'text': mistune.markdown(note_occurrence.resource_data.decode())})
 
     occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
@@ -81,8 +118,7 @@ def view(map_identifier, topic_identifier):
     return render_template('topic/view.html',
                            topic_map=topic_map,
                            topic=topic,
-                           text=text,
-                           notes=notes,
+                           occurrences=occurrences,
                            associations=associations,
                            creation_date=creation_date,
                            modification_date=modification_date,
@@ -194,7 +230,7 @@ def edit(map_identifier, topic_identifier):
     error = 0
 
     if request.method == 'POST':
-        form_topic_name = request.form['topic-name']
+        form_topic_name = request.form['topic-name'].strip()
         form_topic_text = request.form['topic-text']
         form_topic_instance_of = request.form['topic-instance-of'].strip()
 
@@ -228,7 +264,7 @@ def edit(map_identifier, topic_identifier):
                                              resource_data=form_topic_text)
                 topic_store.set_occurrence(topic_map.identifier, text_occurrence)
 
-            # Replace the topic's modification (timestamp) attribute
+            # Update the topic's modification (timestamp) attribute
             timestamp = str(datetime.now())
             if topic.get_attribute_by_name('modification-timestamp'):
                 topic_store.update_attribute_value(topic_map.identifier,
