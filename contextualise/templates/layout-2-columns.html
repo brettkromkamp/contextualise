@@ -120,9 +120,8 @@
             <div class="col-3">
                 {% if associations %}
                 <nav class="card border-secondary">
-                    <div class="card-header"><strong>Related topics</strong> <small>&mdash; <a
-                            href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                        graph</a></small>
+                    <div class="card-header"><strong>Related topics</strong>
+                        &mdash; <a href="#" id="view-graph-link">View graph</a>
                     </div>
                     <div class="card-body list-card">
                         <ul>
@@ -159,7 +158,7 @@
                                 <ul>
                                     {% for image in occurrences['images'] %}
                                     <li>
-                                        <a data-fancybox="images" data-caption="{{ image.title }}"
+                                        <a data-caption="{{ image.title }}" data-fancybox="images"
                                            href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
                                             image.title
                                             }}</a>
@@ -185,7 +184,8 @@
                                 <ul>
                                     {% for video in occurrences['videos'] %}
                                     <li>
-                                        <a data-fancybox="gallery" data-caption="{{ video.title }}" href="{{ video.url }}">{{ video.title }}</a>
+                                        <a data-caption="{{ video.title }}" data-fancybox="gallery"
+                                           href="{{ video.url }}">{{ video.title }}</a>
                                     </li>
                                     {% endfor %}
                                 </ul>
@@ -289,7 +289,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
 
 </script>
 </body>

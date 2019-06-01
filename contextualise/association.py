@@ -179,27 +179,3 @@ def delete(map_identifier, topic_identifier, association_identifier):
                            topic_map=topic_map,
                            topic=topic,
                            association=association)
-
-
-@bp.route('/associations/<map_identifier>/network/<topic_identifier>')
-def network(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
-
-    if topic_map is None:
-        abort(404)
-
-    topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
-
-    occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
-
-    creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
-
-    return render_template('association/network.html',
-                           topic_map=topic_map,
-                           topic=topic,
-                           creation_date=creation_date,
-                           occurrences_stats=occurrences_stats)
-

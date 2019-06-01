@@ -7,9 +7,135 @@
 {% block javascript %}
 <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" type="text/javascript"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css"/>
+
+<script>
+function searchArray(value, prop, arr) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][prop] === value) {
+            return arr[i];
+        }
+    }
+}
+
+var nodes = null;
+var edges = null;
+
+var urlParts = window.location.pathname.split('/');
+var mapIdentifier = urlParts[2];
+var topicIdentifier = urlParts[4];
+
+$('#modalNetworkGraph').on('show.bs.modal', function (event) {
+    if (topicIdentifier !== "") {
+        var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier;
+        axios.get(getNetworkApiUrl)
+            .then(function (response) {
+                // Handle success
+                nodes = response.data[0];
+          edges = response.data[1];
+
+          nodes.forEach(function(node) {
+            node.font = {size: 20, color: '#666', face: 'nunito', strokeWidth: 6, strokeColor: '#fff'};
+          });
+
+          // Instantiate network object
+          var container = document.getElementById('network-graph');
+          var data = {
+            nodes: nodes,
+            edges: edges
+          };
+
+          var options = {
+            autoResize: true,
+            height: '100%',
+            width: '100%',
+            layout: { randomSeed: 2 },
+            interaction: { hover: true },
+            nodes: {
+                shape: 'dot'
+            },
+            edges: {
+              smooth: {
+                forceDirection: "none",
+                roundness: 0.7
+              }
+            },
+            physics: {
+              repulsion: {
+                springLength: 205
+              },
+              minVelocity: 0.75,
+              solver: "repulsion"
+            },
+            groups: {
+              active: {
+                color: {background: '#f5b7b1', border: '#78281f'}
+              },
+              topic: {
+                color: {background: '#a9dfbf', border: '#145a32'}
+              }
+            }
+          };
+
+          var network = new vis.Network(container, data, options);
+          network.on("click", function(params) {
+            if (params.nodes[0] !== undefined) {
+                  var selectedNode = searchArray(params.nodes[0], 'id', nodes);
+                  if (selectedNode.id !== topicIdentifier) {
+                            var networkGotoUrl = '/topics/' + mapIdentifier + '/view/' + selectedNode.id;
+                            if (networkGotoUrl) {
+                                window.location.href = networkGotoUrl;
+                            }
+                }
+            }
+          });
+          network.on("resize", function(params) {
+            network.fit();
+          });
+        })
+        .catch(function (error) {
+            // Handle error
+            console.log(error);
+        })
+        .then(function () {
+            // Always executed
+        });
+    }
+});
+
+$("#view-graph-link").click(function(e) {
+    e.preventDefault();
+
+    $('#modalNetworkGraph').modal();
+});
+
+</script>
 {% endblock %}
 
 {% block content %}
+<div aria-hidden="true" aria-labelledby="modalTitle" class="modal fade" id="modalNetworkGraph"
+     role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Network graph</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="border rounded" id="network-graph"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
@@ -140,13 +266,6 @@
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            {% if associations %}
-            <a class="dropdown-item"
-               href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                graph</a>
-            {% else %}
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View graph</a>
-            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
