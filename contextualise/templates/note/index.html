@@ -23,12 +23,14 @@
                     <small class="text-muted">{{ note.timestamp }}</small>
                 </h5>
                 <p class="card-text">{{ note.text|safe }}</p>
+                {% if current_user.id == topic_map.user_identifier %}
                 <a class="card-link" href="#">Edit</a>
                 <a class="card-link"
                    href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
                     to topic</a>
                 <a class="card-link" href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert to topic</a>
                 <a class="card-link" href="#">Delete</a>
+                {% endif %}
             </div>
         </div>
         <br/>

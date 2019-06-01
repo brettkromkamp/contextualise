@@ -128,13 +128,17 @@ $('#advancedOptions').collapse('show');
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="association-name"><strong>Name</strong></label>
+                        <label for="association-name"><strong>Name</strong>
+                            <small class="text-info">&mdash; If no value is provided the default will be "Undefined"</small>
+                        </label>
                         <input class="form-control" id="association-name" name="association-name"
                                placeholder="Enter name"
                                type="text" value="{{ association_name }}">
                     </div>
                     <div class="form-group">
-                        <label for="association-identifier"><strong>Identifier</strong></label>
+                        <label for="association-identifier"><strong>Identifier</strong>
+                            <small class="text-info">&mdash; An identifier will be automatically generated if one is not provided</small>
+                        </label>
                         <div class="input-group">
                             <input class="form-control" id="association-identifier" name="association-identifier"
                                    placeholder="Enter identifier"

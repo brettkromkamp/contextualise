@@ -37,7 +37,6 @@ def get_identifiers(map_identifier):
 
 
 @bp.route('/api/<map_identifier>/get-network/<topic_identifier>')
-@login_required
 def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
