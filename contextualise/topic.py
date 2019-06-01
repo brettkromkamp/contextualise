@@ -87,18 +87,7 @@ def view(map_identifier, topic_identifier):
                                              occurrence.get_attribute_by_name('modification-timestamp').value),
                                          'text': mistune.markdown(occurrence.resource_data.decode())})
 
-    # text_occurrences = [occurrence for occurrence in topic_occurrences if occurrence.instance_of == 'text']
-    # text = mistune.markdown(text_occurrences[0].resource_data.decode()) if text_occurrences else None
-    # note_occurrences = [occurrence for occurrence in occurrences if occurrence.instance_of == 'note']
-    #
-    # notes = []
-    # for note_occurrence in note_occurrences:
-    #     notes.append({'identifier': note_occurrence.identifier,
-    #                   'title': note_occurrence.get_attribute_by_name('title').value,
-    #                   'timestamp': maya.parse(note_occurrence.get_attribute_by_name('modification-timestamp').value),
-    #                   'text': mistune.markdown(note_occurrence.resource_data.decode())})
-
-    occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
@@ -122,8 +111,7 @@ def view(map_identifier, topic_identifier):
                            associations=associations,
                            creation_date=creation_date,
                            modification_date=modification_date,
-                           breadcrumbs=breadcrumbs,
-                           occurrences_stats=occurrences_stats)
+                           breadcrumbs=breadcrumbs)
 
 
 @bp.route('/topics/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))

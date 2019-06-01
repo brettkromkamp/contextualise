@@ -113,7 +113,7 @@
     <tbody>
     {% for video in videos %}
     <tr>
-        <td><a data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a></td>
+        <td><a data-fancybox="gallery" data-caption="{{ video.title }}" href="{{ video.url }}">{{ video.title }}</a></td>
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
             video.scope|topic_name(topic_map.identifier) }}</a></td>
         <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>

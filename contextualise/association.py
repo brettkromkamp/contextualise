@@ -29,7 +29,7 @@ def index(map_identifier, topic_identifier):
 
     associations = topic_store.get_topic_associations(map_identifier, topic_identifier)
 
-    occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
@@ -38,8 +38,7 @@ def index(map_identifier, topic_identifier):
                            topic_map=topic_map,
                            topic=topic,
                            associations=associations,
-                           creation_date=creation_date,
-                           occurrences_stats=occurrences_stats)
+                           creation_date=creation_date)
 
 
 @bp.route('/associations/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))

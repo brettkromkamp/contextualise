@@ -30,7 +30,7 @@
                 {% if topic_map %}
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('map.shared') }}">Maps</a>
+                        <a class="nav-link" href="{{ url_for('map.index') }}">Maps</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Index</a>
@@ -119,10 +119,10 @@
             </div>
             <div class="col-3">
                 {% if associations %}
-                <nav class="card border-warning">
-                    <div class="card-header"><strong>Related topics</strong> <small>[<a
+                <nav class="card border-secondary">
+                    <div class="card-header"><strong>Related topics</strong> <small>&mdash; <a
                             href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                        graph</a>]</small>
+                        graph</a></small>
                     </div>
                     <div class="card-body list-card">
                         <ul>
@@ -149,7 +149,8 @@
                 </nav>
                 <br/>
                 {% endif %}
-                <div class="card border-warning">
+                {% if occurrences['images'] or occurrences['files'] or occurrences['links'] or occurrences['videos']%}
+                <div class="card border-secondary">
                     <div class="card-header"><strong>Resources</strong></div>
                     <div class="card-body list-card">
                         <ul>
@@ -158,7 +159,7 @@
                                 <ul>
                                     {% for image in occurrences['images'] %}
                                     <li>
-                                        <a data-fancybox="images"
+                                        <a data-fancybox="images" data-caption="{{ image.title }}"
                                            href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
                                             image.title
                                             }}</a>
@@ -184,7 +185,7 @@
                                 <ul>
                                     {% for video in occurrences['videos'] %}
                                     <li>
-                                        <a data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a>
+                                        <a data-fancybox="gallery" data-caption="{{ video.title }}" href="{{ video.url }}">{{ video.title }}</a>
                                     </li>
                                     {% endfor %}
                                 </ul>
@@ -194,6 +195,7 @@
                     </div>
                 </div>
                 <br/>
+                {% endif %}
                 <div class="input-group mb-3">
                     <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
                            id="goto-topic-identifier"

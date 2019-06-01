@@ -40,7 +40,7 @@ def index(map_identifier, topic_identifier):
                       'scope': link_occurrence.scope,
                       'url': link_occurrence.resource_ref})
 
-    occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
@@ -49,8 +49,7 @@ def index(map_identifier, topic_identifier):
                            topic_map=topic_map,
                            topic=topic,
                            links=links,
-                           creation_date=creation_date,
-                           occurrences_stats=occurrences_stats)
+                           creation_date=creation_date)
 
 
 @bp.route('/links/<map_identifier>/add/<topic_identifier>', methods=('GET', 'POST'))
