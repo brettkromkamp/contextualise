@@ -91,9 +91,6 @@
         <div class="dropdown-menu">
             <a class="dropdown-item"
                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <a class="dropdown-item"
-               href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                graph</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create

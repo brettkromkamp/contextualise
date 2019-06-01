@@ -84,13 +84,6 @@
            role="button">Associations</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-            {% if associations %}
-            <a class="dropdown-item"
-               href="{{ url_for('association.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                graph</a>
-            {% else %}
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View graph</a>
-            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
