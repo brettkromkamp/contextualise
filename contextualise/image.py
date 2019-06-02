@@ -46,8 +46,6 @@ def index(map_identifier, topic_identifier):
                        'scope': image_occurrence.scope,
                        'url': image_occurrence.resource_ref})
 
-    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
-
     creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
 

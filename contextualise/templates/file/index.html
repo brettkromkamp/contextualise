@@ -1,13 +1,10 @@
 {% extends "layout-1-column.html" %}
 
 {% block title %}
-<title>{{ topic.first_base_name.name }} &mdash; Videos | {{ topic_map.name }}</title>
+<title>{{ topic.first_base_name.name }} &mdash; Files | {{ topic_map.name }}</title>
 {% endblock %}
 
-{% block javascript %}
-<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-{% endblock %}
+{% block javascript %}{% endblock %}
 
 {% block content %}
 <h1>{{ topic.first_base_name.name }}</h1>
@@ -57,11 +54,11 @@
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
            role="button">Files</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
@@ -72,9 +69,8 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Links</a>
         <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item"
-               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-               tabindex="-1">View</a>
+            <a class="dropdown-item"
+               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
@@ -82,12 +78,11 @@
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-           href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Videos</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item disabled"
-               href="#">View</a>
+            <a class="dropdown-item"
+               href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
@@ -107,7 +102,7 @@
         </div>
     </li>
 </ul>
-{% if videos %}
+{% if files %}
 <table class="table table-bordered">
     <thead class="thead-light">
     <tr>
@@ -117,23 +112,24 @@
     </tr>
     </thead>
     <tbody>
-    {% for video in videos %}
+    {% for file in files %}
     <tr>
-        <td><a data-fancybox="gallery" data-caption="{{ video.title }}" href="{{ video.url }}">{{ video.title }}</a></td>
-        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
-            video.scope|topic_name(topic_map.identifier) }}</a></td>
+        <td><a href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{ file.title
+            }}</a></td>
+        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{
+            file.scope|topic_name(topic_map.identifier) }}</a></td>
         <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
 {% elif current_user.id == topic_map.user_identifier %}
-<p>This topic has no associated videos. Click on the "Add video" button below to add a video.</p>
+<p>This topic has no associated files. Click on the "Upload file" button below to add an file.</p>
 {% endif %}
 {% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-primary"
-   href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-    video</a>
+   href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+    file</a>
 <br/>
 <br/>
 {% endif %}

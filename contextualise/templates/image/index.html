@@ -56,8 +56,17 @@
                 image</a>
         </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Files</a>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Files</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                file</a>
+        </div>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"

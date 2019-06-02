@@ -87,8 +87,6 @@ def view(map_identifier, topic_identifier):
                                              occurrence.get_attribute_by_name('modification-timestamp').value),
                                          'text': mistune.markdown(occurrence.resource_data.decode())})
 
-    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
-
     associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
     creation_date = maya.parse(topic.get_attribute_by_name('creation-timestamp').value)

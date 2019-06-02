@@ -167,6 +167,19 @@
                                 </ul>
                             </li>
                             {% endif %}
+                            {% if occurrences['files'] %}
+                            <li>Files
+                                <ul>
+                                    {% for file in occurrences['files'] %}
+                                    <li>
+                                        <a href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
+                                            file.title
+                                            }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
                             {% if occurrences['links'] %}
                             <li>Links
                                 <ul>
@@ -289,6 +302,7 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
+
 
 </script>
 </body>

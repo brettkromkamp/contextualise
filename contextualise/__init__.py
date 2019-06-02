@@ -152,6 +152,9 @@ def create_app(test_config=None):
     from contextualise import image
     app.register_blueprint(image.bp)
 
+    from contextualise import file
+    app.register_blueprint(file.bp)
+
     from contextualise import link
     app.register_blueprint(link.bp)
 
