@@ -13,8 +13,9 @@ def index():
 
     maps = topic_store.get_topic_maps(current_user.id)
 
-    # Resetting breadcrumbs
+    # Reset breadcrumbs and (current) scope/context
     session['breadcrumbs'] = []
+    session['current_scope'] = '*'
 
     return render_template('map/index.html', maps=maps)
 
@@ -25,7 +26,8 @@ def shared():
 
     maps = topic_store.get_shared_topic_maps()
 
-    # Resetting breadcrumbs
+    # Reset breadcrumbs and (current) scope/context
     session['breadcrumbs'] = []
+    session['current_scope'] = '*'
 
     return render_template('map/shared.html', maps=maps)

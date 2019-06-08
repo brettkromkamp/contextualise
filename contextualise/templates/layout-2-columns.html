@@ -87,16 +87,6 @@
                 {% if topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li>
-                            {% if topic_map.shared %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-success">Shared</span>
-                            {% else %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-info">Private</span>
-                            {% endif %}
-                            &nbsp;&mdash;&nbsp;
-                        </li>
                         {% if session['breadcrumbs'] %}
                         {% for breadcrumb in session['breadcrumbs'] %}
                         {% if loop.index < session['breadcrumbs']|length %}
@@ -118,6 +108,18 @@
                 {% endblock %}
             </div>
             <div class="col-3">
+                <div class="card border-secondary">
+                    <div class="card-header"><strong>Current map and context</strong></div>
+                    <div class="card-body list-card">
+                        <ul>
+                            <li>Map: <a href="#">{{ topic_map.name }}</a></li>
+                            <li>Context: <a
+                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <br/>
                 {% if associations %}
                 <nav class="card border-secondary">
                     <div class="card-header"><strong>Related topics</strong>
@@ -302,6 +304,7 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
+
 
 
 </script>

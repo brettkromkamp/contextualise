@@ -47,6 +47,7 @@ def view(map_identifier, topic_identifier):
         session.pop('inexistent_topic_identifier', None)
 
     topic_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier,
+                                                          scope=session['current_scope'],
                                                           inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
                                                           resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
     occurrences = {
@@ -102,6 +103,9 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session['breadcrumbs'] = list(breadcrumbs)
 
+    # Current scope (context)
+    current_scope = topic_store.get_topic(map_identifier, session['current_scope'])
+
     return render_template('topic/view.html',
                            topic_map=topic_map,
                            topic=topic,
@@ -109,7 +113,8 @@ def view(map_identifier, topic_identifier):
                            associations=associations,
                            creation_date=creation_date,
                            modification_date=modification_date,
-                           breadcrumbs=breadcrumbs)
+                           breadcrumbs=breadcrumbs,
+                           current_scope=current_scope)
 
 
 @bp.route('/topics/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))
@@ -470,3 +475,24 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
                            note_title=form_note_title,
                            note_text=form_note_text,
                            note_scope=form_note_scope)
+
+
+@bp.route('/topics/<map_identifier>/change-context/<topic_identifier>', methods=('GET', 'POST'))
+@login_required
+def change_context(map_identifier, topic_identifier,):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    if topic is None:
+        abort(404)
+
+    return render_template('topic/change_context.html')
