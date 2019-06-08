@@ -88,7 +88,7 @@ def view(map_identifier, topic_identifier):
                                              occurrence.get_attribute_by_name('modification-timestamp').value),
                                          'text': mistune.markdown(occurrence.resource_data.decode())})
 
-    associations = topic_store.get_association_groups(map_identifier, topic_identifier)
+    associations = topic_store.get_association_groups(map_identifier, topic_identifier, scope=session['current_scope'])
 
     creation_date = maya.parse(topic.get_attribute_by_name('creation-timestamp').value)
     modification_date_attribute = topic.get_attribute_by_name('modification-timestamp')
@@ -138,6 +138,7 @@ def create(map_identifier, topic_identifier):
     form_topic_identifier = ''
     form_topic_text = ''
     form_topic_instance_of = 'topic'
+    form_topic_text_scope = session['current_scope']
 
     error = 0
 
@@ -146,6 +147,7 @@ def create(map_identifier, topic_identifier):
         form_topic_name = request.form['topic-name'].strip()
         form_topic_text = request.form['topic-text']
         form_topic_instance_of = request.form['topic-instance-of'].strip()
+        form_topic_text_scope = request.form['topic-text-scope'].strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -160,6 +162,8 @@ def create(map_identifier, topic_identifier):
             error = error | 4
         if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
             error = error | 8
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_text_scope):
+            error = error | 16
 
         if error != 0:
             flash(
@@ -168,6 +172,7 @@ def create(map_identifier, topic_identifier):
         else:
             new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
             text_occurrence = Occurrence(instance_of='text', topic_identifier=new_topic.identifier,
+                                         scope=form_topic_text_scope,
                                          resource_data=form_topic_text)
             timestamp = str(datetime.now())
             modification_attribute = Attribute('modification-timestamp', timestamp, new_topic.identifier,
@@ -189,7 +194,8 @@ def create(map_identifier, topic_identifier):
                            topic_name=form_topic_name,
                            topic_identifier=form_topic_identifier,
                            topic_text=form_topic_text,
-                           topic_instance_of=form_topic_instance_of)
+                           topic_instance_of=form_topic_instance_of,
+                           topic_text_scope=form_topic_text_scope)
 
 
 @bp.route('/topics/<map_identifier>/edit/<topic_identifier>', methods=('GET', 'POST'))
@@ -210,6 +216,7 @@ def edit(map_identifier, topic_identifier):
         abort(404)
 
     occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier,
+                                                    scope=session['current_scope'],
                                                     inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA)
 
     texts = [occurrence for occurrence in occurrences if occurrence.instance_of == 'text']
@@ -217,6 +224,7 @@ def edit(map_identifier, topic_identifier):
     form_topic_name = topic.first_base_name.name
     form_topic_text = texts[0].resource_data.decode() if texts else ''
     form_topic_instance_of = topic.instance_of
+    form_topic_text_scope = texts[0].scope if texts else session['current_scope']  # Should it be '*'?
 
     error = 0
 
@@ -224,6 +232,7 @@ def edit(map_identifier, topic_identifier):
         form_topic_name = request.form['topic-name'].strip()
         form_topic_text = request.form['topic-text']
         form_topic_instance_of = request.form['topic-instance-of'].strip()
+        form_topic_text_scope = request.form['topic-text-scope'].strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -232,6 +241,8 @@ def edit(map_identifier, topic_identifier):
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
             error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_text_scope):
+            error = error | 2
 
         if error != 0:
             flash(
@@ -252,6 +263,7 @@ def edit(map_identifier, topic_identifier):
                 topic_store.update_occurrence_data(map_identifier, texts[0].identifier, form_topic_text)
             else:
                 text_occurrence = Occurrence(instance_of='text', topic_identifier=topic.identifier,
+                                             scope=form_topic_text_scope,
                                              resource_data=form_topic_text)
                 topic_store.set_occurrence(topic_map.identifier, text_occurrence)
 
@@ -277,7 +289,8 @@ def edit(map_identifier, topic_identifier):
                            topic_name=form_topic_name,
                            topic_identifier=topic.identifier,
                            topic_text=form_topic_text,
-                           topic_instance_of=form_topic_instance_of)
+                           topic_instance_of=form_topic_instance_of,
+                           topic_text_scope=form_topic_text_scope)
 
 
 @bp.route('/topics/<map_identifier>/add-note/<topic_identifier>', methods=('GET', 'POST'))
@@ -477,9 +490,9 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/topics/<map_identifier>/change-context/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/<map_identifier>/change-context/<topic_identifier>/<scope_identifier>', methods=('GET', 'POST'))
 @login_required
-def change_context(map_identifier, topic_identifier,):
+def change_context(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
@@ -495,4 +508,33 @@ def change_context(map_identifier, topic_identifier,):
     if topic is None:
         abort(404)
 
-    return render_template('topic/change_context.html')
+    form_scope = scope_identifier
+
+    error = 0
+
+    if request.method == 'POST':
+        form_scope = request.form['new-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_scope:
+            form_scope = '*'  # Universal scope/context
+
+        # Validate form inputs
+        if not topic_store.topic_exists(topic_map.identifier, form_scope):
+            error = error | 1
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            session['current_scope'] = form_scope
+            flash('Context successfully changed.', 'success')
+            return redirect(
+                url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('topic/change_context.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           scope_identifier=form_scope)

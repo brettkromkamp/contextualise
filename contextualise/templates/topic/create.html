@@ -108,6 +108,21 @@ $('#advancedOptions').collapse('show');
                         </small>
                         {% endif %}
                     </div>
+                    <div class="form-group">
+                        <label for="topic-text-scope"><strong>Text context</strong>
+                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
+                                Universal context)</small>
+                        </label>
+                        <input class="form-control auto-complete" id="topic-text-scope" name="topic-text-scope"
+                               placeholder="Enter context identifier"
+                               type="text" value="{{ topic_text_scope }}">
+                        {% if error|bitwise_and(16) == 16 %}
+                        <small class="text-danger">
+                            A context with this identifier doesn't exist. Please provide an identifier for an existing
+                            context.
+                        </small>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

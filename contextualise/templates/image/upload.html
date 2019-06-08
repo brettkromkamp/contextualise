@@ -57,16 +57,16 @@ $('#advancedOptions').collapse('show');
                     <div class="form-group">
                         <label for="image-scope"><strong>Context</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal scope)
+                                Universal context)
                             </small>
                         </label>
                         <input class="form-control auto-complete" id="image-scope" name="image-scope"
-                               placeholder="Enter scope identifier"
+                               placeholder="Enter context identifier"
                                type="text" value="{{ image_scope }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
-                            A scope with this identifier doesn't exist. Please provide an identifier for an existing
-                            scope.
+                            A context with this identifier doesn't exist. Please provide an identifier for an existing
+                            context.
                         </small>
                         {% endif %}
                     </div>

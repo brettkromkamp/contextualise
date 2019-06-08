@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout-1-column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Change context</small>
+</h1>
+<hr/>
+<form action="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=scope_identifier) }}"
+      autocomplete="off" method="post" role="form">
+    <div class="form-group">
+        <label for="current-context"><strong>Current context</strong></label>
+        <input aria-readonly="true" class="form-control" id="current-context" name="current-context" readonly
+               type="text" value="{{ scope_identifier|topic_name(topic_map.identifier) }}">
+    </div>
+    <div class="form-group">
+        <label for="new-scope"><strong>New context</strong>
+            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
+                Universal context)
+            </small>
+        </label>
+        <input class="form-control auto-complete" id="new-scope" name="new-scope"
+               placeholder="Enter context identifier"
+               type="text" value="{{ scope_identifier }}">
+        {% if error|bitwise_and(1) == 1 %}
+        <small class="text-danger">
+            A context with this identifier doesn't exist. Please provide an identifier for an existing
+            context.
+        </small>
+        {% endif %}
+    </div>
+    <a class="btn btn-secondary"
+       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-primary" type="submit">Change context</button>
+</form>
+<br/>
+{% endblock %}

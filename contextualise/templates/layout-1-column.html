@@ -87,16 +87,6 @@
                 {% if topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li>
-                            {% if topic_map.shared %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-success">Shared</span>
-                            {% else %}
-                            <a href="#">{{ topic_map.name }}</a>&nbsp;&nbsp;<span
-                                class="badge badge-info">Private</span>
-                            {% endif %}
-                            &nbsp;&mdash;&nbsp;
-                        </li>
                         {% if session['breadcrumbs'] %}
                         {% for breadcrumb in session['breadcrumbs'] %}
                         {% if loop.index < session['breadcrumbs']|length %}

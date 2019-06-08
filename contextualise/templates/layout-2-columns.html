@@ -109,12 +109,14 @@
             </div>
             <div class="col-3">
                 <div class="card border-secondary">
-                    <div class="card-header"><strong>Current map and context</strong></div>
+                    <div class="card-header"><strong>Context</strong> &mdash; <a
+                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
+                        context</a></div>
                     <div class="card-body list-card">
                         <ul>
                             <li>Map: <a href="#">{{ topic_map.name }}</a></li>
                             <li>Context: <a
-                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                                 session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                         </ul>
                     </div>
@@ -222,46 +224,6 @@
                         </button>
                     </div>
                 </div>
-                <!--
-                <div class="card">
-                    <div class="card-header">Action shortcuts</div>
-                    <div class="card-body">
-                        <ul class="nav flex-column">
-                            {% if current_user.id == topic_map.user_identifier %}
-                            <li class="nav-item">
-                                <a class="nav-link active"
-                                   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                                    topic</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                                    note</a>
-                            </li>
-                            {% endif %}
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                                    images</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">View files</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                                    links</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                                    videos</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <br/>
-                -->
             </div>
         </div>
     </div>
@@ -304,8 +266,6 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
-
-
 
 </script>
 </body>
