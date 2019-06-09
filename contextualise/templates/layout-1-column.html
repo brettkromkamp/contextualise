@@ -140,15 +140,6 @@ $('.auto-complete').autoComplete({
   }
 });
 
-document.getElementById('goto-button').addEventListener('click', (event) => {
-	var gotoTopicIdentifier = document.getElementById('goto-topic-identifier').value.trim();
-	var gotoUrl = window.location.href.replace('#', '');
-	gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
-	if (gotoTopicIdentifier) {
-		window.location.href = gotoUrl;
-	}
-});
-
 </script>
 </body>
 </html>

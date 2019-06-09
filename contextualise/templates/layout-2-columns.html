@@ -146,7 +146,7 @@
                 {% if associations %}
                 <nav class="card border-secondary">
                     <div class="card-header"><strong>Related topics</strong>
-                        &mdash; <a href="#" id="view-graph-link">View graph</a>
+                        &mdash; <a href="#" id="view-graph-link" data-scope-identifier="{{ session['current_scope'] }}">View graph</a>
                     </div>
                     <div class="card-body list-card">
                         <ul>
@@ -158,13 +158,13 @@
                                         <ul>
                                             {% for topic_ref in topic_refs %}
                                             <li>
-                                            {% if session['current_scope'] == '*' %}
+                                                {% if session['current_scope'] == '*' %}
                                                 <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
                                                     topic_ref|topic_name(topic_map.identifier) }}</a>
-                                            {% else %}
+                                                {% else %}
                                                 <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
                                                     topic_ref|topic_name(topic_map.identifier) }}</a>
-                                            {% endif %}
+                                                {% endif %}
                                             </li>
                                             {% endfor %}
                                         </ul>
@@ -284,17 +284,16 @@ $('.auto-complete').autoComplete({
   }
 });
 
-document.getElementById('goto-button').addEventListener('click', (event) => {
-	var gotoTopicIdentifier = document.getElementById('goto-topic-identifier').value.trim();
-	var gotoUrl = window.location.href.replace('#', '');
-	gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
-	if (gotoTopicIdentifier) {
-		window.location.href = gotoUrl;
-	}
-});
-
-
-
+if (typeof document.getElementById('goto-button') != undefined) {
+    document.getElementById('goto-button').addEventListener('click', (event) => {
+        var gotoTopicIdentifier = document.getElementById('goto-topic-identifier').value.trim();
+        var gotoUrl = window.location.href.replace('#', '');
+        gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
+        if (gotoTopicIdentifier) {
+            window.location.href = gotoUrl;
+        }
+    });
+}
 </script>
 </body>
 </html>

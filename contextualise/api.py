@@ -49,6 +49,8 @@ def get_network(map_identifier, topic_identifier):
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 
+    scope_identifier = request.args.get('context', default='*', type=str)
+
     def build_network(inner_identifier):
         base_name = tree[inner_identifier].payload.first_base_name.name
         instance_of = tree[inner_identifier].payload.instance_of
@@ -80,7 +82,8 @@ def get_network(map_identifier, topic_identifier):
             build_network(child.pointer)  # Recursive call.
 
     if topic:
-        tree = topic_store.get_topics_network(map_identifier, topic_identifier)
+        tree = topic_store.get_topics_network(map_identifier, topic_identifier,
+                                              scope=scope_identifier)
         if len(tree) > 1:
             nodes = 0
             edges = 1

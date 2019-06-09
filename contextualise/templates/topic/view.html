@@ -27,9 +27,13 @@ var urlParts = window.location.pathname.split('/');
 var mapIdentifier = urlParts[2];
 var topicIdentifier = urlParts[4];
 
+var viewGraphLink = document.getElementById('view-graph-link');
+var scopeIdentifier = typeof viewGraphLink.dataset.scopeIdentifier !== "undefined" ? viewGraphLink.dataset.scopeIdentifier : '*';
+
 $('#modalNetworkGraph').on('show.bs.modal', function (event) {
     if (topicIdentifier !== "") {
-        var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier;
+        var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier + '?context=' + scopeIdentifier;
+        console.log(getNetworkApiUrl);
         axios.get(getNetworkApiUrl)
             .then(function (response) {
                 // Handle success
@@ -110,7 +114,6 @@ $("#view-graph-link").click(function(e) {
 
     $('#modalNetworkGraph').modal();
 });
-
 
 </script>
 {% endblock %}
