@@ -48,9 +48,15 @@
                     </li>
                     {% if topic.identifier != 'home' %}
                     <li class="nav-item">
+                        {% if session['current_scope'] == '*' %}
                         <a class="btn btn-outline-primary"
                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
                            role="button">Home</a>
+                        {% else %}
+                        <a class="btn btn-outline-primary"
+                           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', context=session['current_scope']) }}"
+                           role="button">Home</a>
+                        {% endif %}
                     </li>
                     {% endif %}
                 </ul>
@@ -90,9 +96,14 @@
                         {% if session['breadcrumbs'] %}
                         {% for breadcrumb in session['breadcrumbs'] %}
                         {% if loop.index < session['breadcrumbs']|length %}
-                        <li class="breadcrumb-item"><a
+                        <li class="breadcrumb-item">{% if session['current_scope'] == '*' %}<a
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                            breadcrumb|topic_name(topic_map.identifier) }}</a></li>
+                            breadcrumb|topic_name(topic_map.identifier) }}</a>
+                            {% else %}<a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, context=session['current_scope']) }}">{{
+                                breadcrumb|topic_name(topic_map.identifier) }}</a>
+                            {% endif %}
+                        </li>
                         {% else %}
                         <li aria-current="page" class="breadcrumb-item active">{{
                             breadcrumb|topic_name(topic_map.identifier) }}
@@ -109,15 +120,25 @@
             </div>
             <div class="col-3">
                 <div class="card border-secondary">
+                    {% if current_user.id == topic_map.user_identifier %}
                     <div class="card-header"><strong>Context</strong> &mdash; <a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
                         context</a></div>
+                    {% else %}
+                    <div class="card-header"><strong>Context</strong></div>
+                    {% endif %}
                     <div class="card-body list-card">
                         <ul>
                             <li>Map: <a href="#">{{ topic_map.name }}</a></li>
+                            {% if session['current_scope'] == '*' %}
                             <li>Context: <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                                 session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                            {% else %}
+                            <li>Context: <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -137,8 +158,13 @@
                                         <ul>
                                             {% for topic_ref in topic_refs %}
                                             <li>
+                                            {% if session['current_scope'] == '*' %}
                                                 <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
                                                     topic_ref|topic_name(topic_map.identifier) }}</a>
+                                            {% else %}
+                                                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
+                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
+                                            {% endif %}
                                             </li>
                                             {% endfor %}
                                         </ul>
@@ -266,6 +292,8 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
+
+
 
 </script>
 </body>

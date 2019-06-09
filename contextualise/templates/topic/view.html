@@ -111,6 +111,7 @@ $("#view-graph-link").click(function(e) {
     $('#modalNetworkGraph').modal();
 });
 
+
 </script>
 {% endblock %}
 
@@ -169,9 +170,16 @@ $("#view-graph-link").click(function(e) {
                     </tr>
                     <tr>
                         <th scope="row">Instance of</th>
-                        <td><a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
-                            topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                        <td>
+                            {% if session['current_scope'] == '*' %}
+                            <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                            {% else %}
+                            <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>

@@ -46,6 +46,11 @@ def view(map_identifier, topic_identifier):
     else:
         session.pop('inexistent_topic_identifier', None)
 
+    # If a context has been specified in the URL, then use that to set the context
+    scope_identifier = request.args.get('context', type=str)
+    if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
+        session['current_scope'] = scope_identifier
+
     topic_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier,
                                                           scope=session['current_scope'],
                                                           inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
@@ -103,9 +108,6 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session['breadcrumbs'] = list(breadcrumbs)
 
-    # Current scope (context)
-    current_scope = topic_store.get_topic(map_identifier, session['current_scope'])
-
     return render_template('topic/view.html',
                            topic_map=topic_map,
                            topic=topic,
@@ -113,8 +115,7 @@ def view(map_identifier, topic_identifier):
                            associations=associations,
                            creation_date=creation_date,
                            modification_date=modification_date,
-                           breadcrumbs=breadcrumbs,
-                           current_scope=current_scope)
+                           breadcrumbs=breadcrumbs)
 
 
 @bp.route('/topics/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))

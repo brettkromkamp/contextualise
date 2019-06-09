@@ -35,7 +35,11 @@
                         <a class="nav-link" href="#">Index</a>
                     </li>
                     <li class="nav-item">
+                        {% if session['current_scope'] == '*' %}
                         <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+                        {% else %}
+                        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', context=session['current_scope']) }}">Home</a>
+                        {% endif %}
                     </li>
                     {% if current_user.id == topic_map.user_identifier %}
                     <li class="nav-item">
