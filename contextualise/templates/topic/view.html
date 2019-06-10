@@ -33,7 +33,7 @@ var scopeIdentifier = typeof viewGraphLink.dataset.scopeIdentifier !== "undefine
 $('#modalNetworkGraph').on('show.bs.modal', function (event) {
     if (topicIdentifier !== "") {
         var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier + '?context=' + scopeIdentifier;
-        console.log(getNetworkApiUrl);
+
         axios.get(getNetworkApiUrl)
             .then(function (response) {
                 // Handle success
