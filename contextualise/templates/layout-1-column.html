@@ -54,6 +54,7 @@
                     </li>
                     {% endif %}
                 </ul>
+                {% endif %}
                 {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item dropdown">
@@ -69,7 +70,6 @@
                         </div>
                     </li>
                 </ul>
-                {% endif %}
                 {% endif %}
             </div>
         </div>
