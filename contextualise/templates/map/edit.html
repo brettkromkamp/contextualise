@@ -1,10 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Title</title>
-</head>
-<body>
+{% extends "layout-1-column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>Edit map | Contextualise</title>
+{% endblock %}
+
+{% block content %}
+<h1>{{ topic_map.name }}
+    <small class="text-muted">Edit map</small>
+</h1>
+<hr/>
+<form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}"
+      autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+    <div class="form-group">
+        <label for="map-name"><strong>Name</strong></label>
+        <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required
+               type="text" value="{{ map_name }}">
+    </div>
+    <div class="form-group">
+        <label for="map-description"><strong>Description</strong></label>
+        <textarea class="form-control" id="map-description" name="map-description"
+                  rows="3">{{ map_description }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="map-image-file"><strong>Image</strong></label>
+        {% if topic_map.image_path %}
+        <br/>
+        <img src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
+        <br/>
+        <br/>
+        {% endif %}
+        <input accept=".jpg,.jpeg,.png" class="form-control-file" id="map-image-file" name="map-image-file" type="file">
+        {% if error|bitwise_and(1) == 1 %}
+        <small class="text-danger">
+            No file part.
+        </small>
+        {% endif %}
+        {% if error|bitwise_and(2) == 2 %}
+        <small class="text-danger">
+            No file selected.
+        </small>
+        {% endif %}
+        {% if error|bitwise_and(4) == 4 %}
+        <small class="text-danger">
+            Unsupported file type; that is, not of type PNG or JPG.
+        </small>
+        {% endif %}
+    </div>
+    <strong>Access?</strong>
+    {% if map_shared %}
+    <div class="form-check">
+        <input class="form-check-input" id="shared-radio-1" name="map-shared" type="radio" value="0">
+        <label class="form-check-label" for="shared-radio-1">
+            Private
+        </label>
+    </div>
+    <div class="form-check">
+        <input checked class="form-check-input" id="shared-radio-2" name="map-shared" type="radio" value="1">
+        <label class="form-check-label" for="shared-radio-2">
+            Shared
+        </label>
+    </div>
+    {% else %}
+    <div class="form-check">
+        <input checked class="form-check-input" id="shared-radio-1" name="map-shared" type="radio" value="0">
+        <label class="form-check-label" for="shared-radio-1">
+            Private
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" id="shared-radio-2" name="map-shared" type="radio" value="1">
+        <label class="form-check-label" for="shared-radio-2">
+            Shared
+        </label>
+    </div>
+    {% endif %}
+    <br/>
+    <a class="btn btn-secondary"
+       href="{{ url_for('map.index') }}"
+       role="button">Cancel</a>
+    <button class="btn btn-primary" type="submit">Update map</button>
+</form>
+<br/>
+{% endblock %}

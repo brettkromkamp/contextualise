@@ -46,7 +46,7 @@
                        href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                     <a class="card-link" href="#">Index</a>
                     <a class="card-link" href="{{ url_for('note.index', map_identifier=map['identifier']) }}">Notes</a>
-                    <a class="card-link" href="#">Edit</a>
+                    <a class="card-link" href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>
                     <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
                 </div>
             </div>

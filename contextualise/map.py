@@ -136,6 +136,39 @@ def delete(map_identifier):
                            topic_map=topic_map)
 
 
+@bp.route('/maps/edit/<map_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    form_map_name = topic_map.name
+    form_map_description = topic_map.description
+    form_map_image_path = topic_map.image_path
+    form_map_shared = topic_map.shared
+
+    error = 0
+
+    if request.method == 'POST':
+        form_map_name = request.form['map-name'].strip()
+        form_map_description = request.form['map-description'].strip()
+        form_map_shared = True if request.form['map-shared'] == '1' else False
+
+    return render_template('map/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           map_name=form_map_name,
+                           map_description=form_map_description,
+                           map_shared=form_map_shared)
+
+
 # ========== HELPER METHODS ==========
 
 def get_file_extension(file_name):
