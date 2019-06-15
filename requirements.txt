@@ -1,4 +1,4 @@
-pytest>=4.5.0
+pytest>=4.6.3
 topic-db>=0.7.1
 SQLAlchemy>=1.3.3
 Flask>=1.0.3

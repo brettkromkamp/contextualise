@@ -21,6 +21,11 @@
         <div class="card-deck">
             {% for map in maps %}
             <div class="card" style="max-width: 24rem;">
+                {% if map.image_path %}
+                <img src="/static/resources/{{ map.identifier }}/{{ map.image_path }}" class="card-img-top" alt="{{ map.name }}">
+                {% else %}
+                <img src="https://picsum.photos/640/360" class="card-img-top" alt="{{ map.name }}">
+                {% endif %}
                 <div class="card-body">
                     {% if map.shared %}
                     <h5 class="card-title">{{ map.name }}&nbsp;&nbsp;&nbsp;<span
@@ -49,6 +54,8 @@
         <br/>
         <a class="btn btn-primary"
            href="{{ url_for('map.create') }}">Create map</a>
+        <br/>
+        <br/>
     </div>
 </div>
 {% else %}

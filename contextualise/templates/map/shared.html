@@ -21,6 +21,11 @@
         <div class="card-deck">
             {% for map in maps %}
             <div class="card" style="max-width: 24rem;">
+                {% if map.image_path %}
+                <img src="/static/resources/{{ map.identifier }}/{{ map.image_path }}" class="card-img-top" alt="{{ map.name }}">
+                {% else %}
+                <img src="https://picsum.photos/640/360" class="card-img-top" alt="{{ map.name }}">
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ map.name }}</h5>
                     <p class="card-text">{{ map.description }}</p>
