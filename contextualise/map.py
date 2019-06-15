@@ -1,8 +1,10 @@
 import os
+import shutil
 import uuid
 
 from flask import (Blueprint, session, request, flash, render_template, url_for)
 from flask_security import login_required, current_user
+from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
 from contextualise.topic_store import get_topic_store
@@ -83,12 +85,12 @@ def create():
                 topic_store.initialise_topic_map(map_identifier)
 
                 # Create the directory for this topic map
-                image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
-                if not os.path.isdir(image_directory):
-                    os.makedirs(image_directory)
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+                if not os.path.isdir(topic_map_directory):
+                    os.makedirs(topic_map_directory)
 
                 # Upload the image for the topic map to the map's directory
-                file_path = os.path.join(image_directory, image_file_name)
+                file_path = os.path.join(topic_map_directory, image_file_name)
                 upload_file.save(file_path)
 
                 flash('Map successfully created.', 'success')
@@ -103,6 +105,35 @@ def create():
                            map_name=form_map_name,
                            map_description=form_map_description,
                            map_shared=form_map_shared)
+
+
+@bp.route('/maps/delete/<map_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    if request.method == 'POST':
+        # Remove map from topic store
+        topic_store.delete_topic_map(map_identifier)
+
+        # Delete the map's directory
+        topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+        if os.path.isdir(topic_map_directory):
+            shutil.rmtree(topic_map_directory)
+
+        flash('Map successfully deleted.', 'success')
+        return redirect(url_for('map.index'))
+
+    return render_template('map/delete.html',
+                           topic_map=topic_map)
 
 
 # ========== HELPER METHODS ==========

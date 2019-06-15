@@ -18,20 +18,25 @@
 {% if maps %}
 <div class="row">
     <div class="col">
-        <div class="card-deck">
+        <div class="card-columns">
             {% for map in maps %}
-            <div class="card" style="max-width: 24rem;">
+            <div class="card">
                 {% if map.image_path %}
-                <img src="/static/resources/{{ map.identifier }}/{{ map.image_path }}" class="card-img-top" alt="{{ map.name }}">
+                <img alt="{{ map.name }}" class="card-img-top"
+                     src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                 {% else %}
-                <img src="https://picsum.photos/640/360" class="card-img-top" alt="{{ map.name }}">
+                <img alt="{{ map.name }}" class="card-img-top" src="https://picsum.photos/640/360">
                 {% endif %}
                 <div class="card-body">
                     {% if map.shared %}
-                    <h5 class="card-title">{{ map.name }}&nbsp;&nbsp;&nbsp;<span
-                            class="badge badge-success">Public</span></h5>
+                    <h5 class="card-title">{{ map.name }}
+                        <br/>
+                        <span class="badge badge-success">Public</span>
+                    </h5>
                     {% else %}
-                    <h5 class="card-title">{{ map.name }}&nbsp;&nbsp;&nbsp;<span class="badge badge-info">Private</span>
+                    <h5 class="card-title">{{ map.name }}
+                        <br/>
+                        <span class="badge badge-info">Private</span>
                     </h5>
                     {% endif %}
                     <p class="card-text">{{ map.description }}</p>
@@ -42,7 +47,7 @@
                     <a class="card-link" href="#">Index</a>
                     <a class="card-link" href="{{ url_for('note.index', map_identifier=map['identifier']) }}">Notes</a>
                     <a class="card-link" href="#">Edit</a>
-                    <a class="card-link" href="#">Delete</a>
+                    <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
                 </div>
             </div>
             {% endfor %}

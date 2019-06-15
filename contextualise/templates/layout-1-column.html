@@ -46,7 +46,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Quick help</a>
                     </li>
-                    {% if topic.identifier != 'home' %}
+                    {% if topic and topic.identifier != 'home' %}
                     <li class="nav-item">
                         <a class="btn btn-outline-primary"
                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
@@ -84,7 +84,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                {% if topic_map %}
+                {% if topic and topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         {% if session['breadcrumbs'] %}

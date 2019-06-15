@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Title</title>
-</head>
-<body>
+{% extends "layout-1-column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>Delete map | Contextualise</title>
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic_map.name }}
+    <small class="text-muted">Delete map</small>
+</h1>
+<hr/>
+<p class="text-danger">Once you delete a topic map, there is no going back. Please be certain.</p>
+<form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
+    <div class="form-group">
+        <label for="map-name"><strong>Name</strong></label>
+        <input aria-readonly="true" class="form-control" id="map-name" name="map_name" readonly
+               type="text" value="{{ topic_map.name }}">
+    </div>
+	<div class="form-group">
+        <label><strong>Text</strong></label><br/>
+        {{ topic_map.description|safe }}
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('map.index') }}" role="button">Cancel</a>
+    <button class="btn btn-danger" type="submit">Delete map</button>
+</form>
+<br/>
+{% endblock %}
