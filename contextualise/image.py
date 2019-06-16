@@ -81,6 +81,7 @@ def upload(map_identifier, topic_identifier):
     if request.method == 'POST':
         form_image_title = request.form['image-title'].strip()
         form_image_scope = request.form['image-scope'].strip()
+        form_upload_file = request.files['image-file'] if 'image-file' in request.files else None
 
         # If no values have been provided set their default values
         if not form_image_scope:
@@ -89,13 +90,12 @@ def upload(map_identifier, topic_identifier):
         # Validate form inputs
         if not form_image_title:
             error = error | 1
-        if 'image-file' not in request.files:
+        if not form_upload_file:
             error = error | 2
         else:
-            upload_file = request.files['image-file']
-            if upload_file.filename == '':
+            if form_upload_file.filename == '':
                 error = error | 4
-            elif not allowed_file(upload_file.filename):
+            elif not allowed_file(form_upload_file.filename):
                 error = error | 8
         if not topic_store.topic_exists(topic_map.identifier, form_image_scope):
             error = error | 16
@@ -105,7 +105,7 @@ def upload(map_identifier, topic_identifier):
                 'An error occurred when uploading the image. Please review the warnings and fix accordingly.',
                 'warning')
         else:
-            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(upload_file.filename)}"
+            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create the image directory for this topic map and topic if it doesn't already exist
             image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
@@ -113,7 +113,7 @@ def upload(map_identifier, topic_identifier):
                 os.makedirs(image_directory)
 
             file_path = os.path.join(image_directory, image_file_name)
-            upload_file.save(file_path)
+            form_upload_file.save(file_path)
 
             image_occurrence = Occurrence(instance_of='image', topic_identifier=topic.identifier,
                                           scope=form_image_scope,

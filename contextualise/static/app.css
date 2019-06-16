@@ -30,3 +30,8 @@ main > .container {
     width: 100%;
     height: 460px;
 }
+
+.map-image {
+    width: 100%;
+    max-width: 320px;
+}

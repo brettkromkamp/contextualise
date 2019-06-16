@@ -25,16 +25,11 @@
         <label for="map-image-file"><strong>Image</strong></label>
         {% if topic_map.image_path %}
         <br/>
-        <img src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
+        <img class="map-image img-thumbnail" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
         <br/>
         <br/>
         {% endif %}
         <input accept=".jpg,.jpeg,.png" class="form-control-file" id="map-image-file" name="map-image-file" type="file">
-        {% if error|bitwise_and(1) == 1 %}
-        <small class="text-danger">
-            No file part.
-        </small>
-        {% endif %}
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             No file selected.

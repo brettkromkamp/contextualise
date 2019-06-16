@@ -21,6 +21,11 @@
         <label><strong>Text</strong></label><br/>
         {{ topic_map.description|safe }}
     </div>
+    <div class="form-group">
+        <label><strong>Image</strong></label>
+        <br/>
+        <img class="map-image img-thumbnail" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
+    </div>
     <a class="btn btn-secondary" href="{{ url_for('map.index') }}" role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete map</button>
 </form>

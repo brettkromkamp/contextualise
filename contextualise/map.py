@@ -57,17 +57,17 @@ def create():
         form_map_name = request.form['map-name'].strip()
         form_map_description = request.form['map-description'].strip()
         form_map_shared = True if request.form['map-shared'] == '1' else False
+        form_upload_file = request.files['map-image-file'] if 'map-image-file' in request.files else None
 
         # Validate form inputs
         if not form_map_name:
             error = error | 1
-        if 'map-image-file' not in request.files:
+        if not form_upload_file:
             error = error | 2
         else:
-            upload_file = request.files['map-image-file']
-            if upload_file.filename == '':
+            if form_upload_file.filename == '':
                 error = error | 4
-            elif not allowed_file(upload_file.filename):
+            elif not allowed_file(form_upload_file.filename):
                 error = error | 8
 
         if error != 0:
@@ -75,7 +75,7 @@ def create():
                 'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
                 'warning')
         else:
-            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(upload_file.filename)}"
+            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create and initialise the topic map
             map_identifier = topic_store.set_topic_map(current_user.id, form_map_name, form_map_description,
@@ -91,7 +91,7 @@ def create():
 
                 # Upload the image for the topic map to the map's directory
                 file_path = os.path.join(topic_map_directory, image_file_name)
-                upload_file.save(file_path)
+                form_upload_file.save(file_path)
 
                 flash('Map successfully created.', 'success')
             else:
@@ -151,7 +151,6 @@ def edit(map_identifier):
 
     form_map_name = topic_map.name
     form_map_description = topic_map.description
-    form_map_image_path = topic_map.image_path
     form_map_shared = topic_map.shared
 
     error = 0
@@ -160,6 +159,40 @@ def edit(map_identifier):
         form_map_name = request.form['map-name'].strip()
         form_map_description = request.form['map-description'].strip()
         form_map_shared = True if request.form['map-shared'] == '1' else False
+        form_upload_file = request.files['map-image-file'] if 'map-image-file' in request.files else None
+
+        # Validate form inputs
+        if not form_map_name:
+            error = error | 1
+        if form_upload_file:
+            if form_upload_file.filename == '':
+                error = error | 2
+            elif not allowed_file(form_upload_file.filename):
+                error = error | 4
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            if form_upload_file:
+                # Upload the image for the topic map to the map's directory
+                image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+                file_path = os.path.join(topic_map_directory, image_file_name)
+                form_upload_file.save(file_path)
+
+                # TODO: Remove the map's previous image
+            else:
+                image_file_name = topic_map.image_path
+
+            # Update the topic map
+            topic_store.update_topic_map(map_identifier, form_map_name, form_map_description, image_file_name,
+                                         initialised=False, shared=form_map_shared,
+                                         promoted=False)
+
+            flash('Map successfully created.', 'success')
+        return redirect(url_for('map.index'))
 
     return render_template('map/edit.html',
                            error=error,
