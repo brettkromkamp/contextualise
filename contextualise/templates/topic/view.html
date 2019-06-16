@@ -216,7 +216,7 @@ $("#view-graph-link").click(function(e) {
                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
             <a class="dropdown-item"
-               href="#">Delete topic</a>
+               href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete topic</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">View names</a>

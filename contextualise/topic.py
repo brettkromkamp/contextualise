@@ -1,3 +1,5 @@
+import os
+import shutil
 from collections import deque
 from datetime import datetime
 
@@ -10,12 +12,14 @@ from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.topicstoreerror import TopicStoreError
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
 
 bp = Blueprint('topic', __name__)
 
+RESOURCES_DIRECTORY = 'static/resources/'
 BREADCRUMBS_COUNT = 3
 
 
@@ -292,6 +296,48 @@ def edit(map_identifier, topic_identifier):
                            topic_text=form_topic_text,
                            topic_instance_of=form_topic_instance_of,
                            topic_text_scope=form_topic_text_scope)
+
+
+@bp.route('/topics/<map_identifier>/delete/<topic_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    if request.method == 'POST':
+        try:
+            # Remove the topic from the topic store
+            topic_store.delete_topic(map_identifier, topic_identifier)
+
+            # Remove the topic's resources directory
+            topic_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            if os.path.isdir(topic_directory):
+                shutil.rmtree(topic_directory)
+        except TopicStoreError:
+            flash(
+                'Topic not deleted. Certain predefined topics are required for Contextualise to function correctly. Perhaps, you attempted to delete one of those topics.',
+                'warning')
+            return redirect(
+                url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_identifier))
+
+        flash('Topic successfully deleted.', 'success')
+        return redirect(
+            url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home'))
+
+    return render_template('topic/delete.html',
+                           topic_map=topic_map,
+                           topic=topic)
 
 
 @bp.route('/topics/<map_identifier>/add-note/<topic_identifier>', methods=('GET', 'POST'))
