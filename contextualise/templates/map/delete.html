@@ -14,7 +14,7 @@
 <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
-        <input aria-readonly="true" class="form-control" id="map-name" name="map_name" readonly
+        <input aria-readonly="true" class="form-control" id="map-name" name="map-name" readonly
                type="text" value="{{ topic_map.name }}">
     </div>
     <div class="form-group">

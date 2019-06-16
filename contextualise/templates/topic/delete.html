@@ -12,9 +12,35 @@
     <small class="text-muted">Delete topic</small>
 </h1>
 <hr/>
-<p class="text-danger">Deleting a topic also deletes its associations and resources. Once you delete a topic, there is no going back. Please be certain.</p>
+<p class="text-danger">Deleting a topic also deletes its associations and resources. Once you delete a topic, there is
+    no going back. Please be certain.</p>
 <form action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       method="post" role="form">
+    <div class="form-group">
+        <label for="topic-name"><strong>Name</strong></label>
+        <input aria-readonly="true" class="form-control" id="topic-name" name="topic-name" readonly
+               type="text" value="{{ topic.first_base_name.name }}">
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="topic-instance-of"><strong>Type</strong></label>
+                        <input aria-readonly="true" class="form-control" id="topic-instance-of" name="topic-instance-of"
+                               readonly type="text" value="{{ topic.instance_of|topic_name(topic_map.identifier) }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+
     <a class="btn btn-secondary"
        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
        role="button">Cancel</a>

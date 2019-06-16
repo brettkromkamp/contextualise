@@ -160,7 +160,7 @@ $("#view-graph-link").click(function(e) {
                     </thead>
                     <tbody>
                     <tr>
-                        <th scope="row">Topic identifier</th>
+                        <th scope="row">Identifier</th>
                         <td>
                             {{ topic.identifier }}
                         </td>
@@ -172,7 +172,7 @@ $("#view-graph-link").click(function(e) {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Instance of</th>
+                        <th scope="row">Type</th>
                         <td>
                             {% if session['current_scope'] == '*' %}
                             <a
