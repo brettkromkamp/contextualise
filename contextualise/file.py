@@ -80,6 +80,7 @@ def upload(map_identifier, topic_identifier):
     if request.method == 'POST':
         form_file_title = request.form['file-title'].strip()
         form_file_scope = request.form['file-scope'].strip()
+        form_upload_file = request.files['file-file'] if 'file-file' in request.files else None
 
         # If no values have been provided set their default values
         if not form_file_scope:
@@ -88,11 +89,10 @@ def upload(map_identifier, topic_identifier):
         # Validate form inputs
         if not form_file_title:
             error = error | 1
-        if 'file-file' not in request.files:
+        if not form_upload_file:
             error = error | 2
         else:
-            upload_file = request.files['file-file']
-            if upload_file.filename == '':
+            if form_upload_file.filename == '':
                 error = error | 4
         if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
             error = error | 8
@@ -102,7 +102,7 @@ def upload(map_identifier, topic_identifier):
                 'An error occurred when uploading the file. Please review the warnings and fix accordingly.',
                 'warning')
         else:
-            file_extension = get_file_extension(upload_file.filename)
+            file_extension = get_file_extension(form_upload_file.filename)
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
             form_file_title = f"{form_file_title} (.{file_extension})"
 
@@ -112,7 +112,7 @@ def upload(map_identifier, topic_identifier):
                 os.makedirs(file_directory)
 
             file_path = os.path.join(file_directory, file_file_name)
-            upload_file.save(file_path)
+            form_upload_file.save(file_path)
 
             file_occurrence = Occurrence(instance_of='file', topic_identifier=topic.identifier,
                                          scope=form_file_scope,

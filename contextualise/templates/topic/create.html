@@ -64,6 +64,24 @@ $('#advancedOptions').collapse('show');
                type="text" value="{{ topic_name }}">
     </div>
     <div class="form-group">
+        <label for="topic-identifier"><strong>Identifier</strong></label>
+        <div class="input-group">
+            <input class="form-control" id="topic-identifier" name="topic-identifier"
+                   placeholder="Enter identifier"
+                   readonly required type="text" value="{{ topic_identifier }}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">
+                    Edit
+                </button>
+            </div>
+        </div>
+        {% if error|bitwise_and(2) == 2 %}
+        <small class="text-danger">
+            A topic with this identifier already exists. Please provide a different topic identifier.
+        </small>
+        {% endif %}
+    </div>
+    <div class="form-group">
         <label for="topic-text"><strong>Text</strong></label>
         <textarea class="form-control" id="topic-text" name="topic-text" rows="8">{{ topic_text }}</textarea>
     </div>
@@ -76,24 +94,6 @@ $('#advancedOptions').collapse('show');
             </div>
             <div class="card-body">
                 <div class="card-text">
-                    <div class="form-group">
-                        <label for="topic-identifier"><strong>Identifier</strong></label>
-                        <div class="input-group">
-                            <input class="form-control" id="topic-identifier" name="topic-identifier"
-                                   placeholder="Enter identifier"
-                                   readonly required type="text" value="{{ topic_identifier }}">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">
-                                    Edit
-                                </button>
-                            </div>
-                        </div>
-                        {% if error|bitwise_and(2) == 2 %}
-                        <small class="text-danger">
-                            A topic with this identifier already exists. Please provide a different topic identifier.
-                        </small>
-                        {% endif %}
-                    </div>
                     <div class="form-group">
                         <label for="topic-instance-of"><strong>Type</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "topic"</small>

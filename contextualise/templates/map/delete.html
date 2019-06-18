@@ -10,7 +10,8 @@
     <small class="text-muted">Delete map</small>
 </h1>
 <hr/>
-<p class="text-danger">Once you delete a topic map, there is no going back. Please be certain.</p>
+<p class="text-danger">Deleting a topic map also deletes its resources. Once you delete a topic map, there is no going
+    back. Please be certain.</p>
 <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
@@ -24,7 +25,9 @@
     <div class="form-group">
         <label><strong>Image</strong></label>
         <br/>
-        <img class="map-image img-thumbnail" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
+        <img alt="{{ map_name }}"
+             class="map-image img-thumbnail" class="img-thumbnail"
+             src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
     </div>
     <a class="btn btn-secondary" href="{{ url_for('map.index') }}" role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete map</button>
