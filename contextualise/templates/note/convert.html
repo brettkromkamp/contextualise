@@ -61,6 +61,7 @@ $('#advancedOptions').collapse('show');
 <hr/>
 <form action="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
         <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required

@@ -14,6 +14,7 @@
 <hr/>
 <form action="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
       method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label><strong>Members</strong></label>
         <table class="table table-bordered table-sm">

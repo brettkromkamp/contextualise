@@ -12,6 +12,7 @@
 </div>
 <form action="{{ url_for_security('login') }}" class="form-signin" method="POST" name="login_user_form">
     {{ login_user_form.hidden_tag() }}
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <h1 class="h3 mb-3 font-weight-normal">Log In</h1>
     <label class="sr-only" for="email">Email address</label>
     <input autofocus class="form-control" id="email" name="email" placeholder="Email address" required type="email">

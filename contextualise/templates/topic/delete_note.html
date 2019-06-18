@@ -14,6 +14,7 @@
 <hr/>
 <form action="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
       method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="note-title"><strong>Title</strong></label>
         <input aria-readonly="true" class="form-control" id="note-title" name="note-title" readonly

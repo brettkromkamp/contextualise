@@ -11,11 +11,13 @@
 <script>
 var editor = new EasyMDE({element: document.getElementById('note-text')});
 
+
 </script>
 
 {% if error %}
 <script>
 $('#advancedOptions').collapse('show');
+
 
 </script>
 {% endif %}
@@ -29,6 +31,7 @@ $('#advancedOptions').collapse('show');
 <hr/>
 <form action="{{ url_for('note.add', map_identifier=topic_map.identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="note-title"><strong>Title</strong></label>
         <input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required

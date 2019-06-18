@@ -13,6 +13,7 @@
 <p class="text-danger">Deleting a topic map also deletes its resources. Once you delete a topic map, there is no going
     back. Please be certain.</p>
 <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
         <input aria-readonly="true" class="form-control" id="map-name" name="map-name" readonly

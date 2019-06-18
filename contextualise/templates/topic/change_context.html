@@ -12,6 +12,7 @@
 <hr/>
 <form action="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=scope_identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="current-context"><strong>Current context</strong></label>
         <input aria-readonly="true" class="form-control" id="current-context" name="current-context" readonly

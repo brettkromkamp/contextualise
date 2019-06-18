@@ -9,6 +9,7 @@
 <hr/>
 <form action="{{ url_for('map.create') }}"
       autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
         <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required

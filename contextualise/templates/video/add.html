@@ -21,6 +21,7 @@ $('#advancedOptions').collapse('show');
 <hr/>
 <form action="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="video-title"><strong>Title</strong></label>
         <input class="form-control" id="video-title" name="video-title" placeholder="Enter title" required

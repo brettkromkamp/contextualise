@@ -12,6 +12,7 @@
 <hr/>
 <form action="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="note-topic-identifier"><strong>Topic</strong></label>
         <input class="form-control auto-complete" id="note-topic-identifier" name="note-topic-identifier"

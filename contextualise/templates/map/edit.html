@@ -11,6 +11,7 @@
 <hr/>
 <form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}"
       autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
         <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required
@@ -25,7 +26,9 @@
         <label for="map-image-file"><strong>Image</strong></label>
         {% if topic_map.image_path %}
         <br/>
-        <img class="map-image img-thumbnail" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}" alt="{{ map_name }}" class="img-thumbnail">
+        <img alt="{{ map_name }}"
+             class="map-image img-thumbnail" class="img-thumbnail"
+             src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
         <br/>
         <br/>
         {% endif %}

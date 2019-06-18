@@ -21,6 +21,7 @@ $('#advancedOptions').collapse('show');
 <hr/>
 <form action="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="file-title"><strong>Title</strong></label>
         <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required

@@ -29,6 +29,7 @@ $('#advancedOptions').collapse('show');
 <hr/>
 <form action="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
         <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required
@@ -64,7 +65,8 @@ $('#advancedOptions').collapse('show');
                     <div class="form-group">
                         <label for="topic-text-scope"><strong>Text context</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal context)</small>
+                                Universal context)
+                            </small>
                         </label>
                         <input class="form-control auto-complete" id="topic-text-scope" name="topic-text-scope"
                                placeholder="Enter context identifier"

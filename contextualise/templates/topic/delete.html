@@ -16,6 +16,7 @@
     no going back. Please be certain.</p>
 <form action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
         <input aria-readonly="true" class="form-control" id="topic-name" name="topic-name" readonly
