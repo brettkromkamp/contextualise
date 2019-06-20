@@ -332,8 +332,7 @@ def delete(map_identifier, topic_identifier):
                 url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_identifier))
 
         flash('Topic successfully deleted.', 'success')
-        return redirect(
-            url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home'))
+        return redirect(url_for('map.index'))
 
     return render_template('topic/delete.html',
                            topic_map=topic_map,
