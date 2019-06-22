@@ -150,7 +150,7 @@ def create(map_identifier, topic_identifier):
     if request.method == 'POST':
         form_topic_identifier = request.form['topic-identifier'].strip()
         form_topic_name = request.form['topic-name'].strip()
-        form_topic_text = request.form['topic-text']
+        form_topic_text = request.form['topic-text'].strip()
         form_topic_instance_of = request.form['topic-instance-of'].strip()
         form_topic_text_scope = request.form['topic-text-scope'].strip()
 
@@ -235,7 +235,7 @@ def edit(map_identifier, topic_identifier):
 
     if request.method == 'POST':
         form_topic_name = request.form['topic-name'].strip()
-        form_topic_text = request.form['topic-text']
+        form_topic_text = request.form['topic-text'].strip()
         form_topic_instance_of = request.form['topic-instance-of'].strip()
         form_topic_text_scope = request.form['topic-text-scope'].strip()
 
@@ -364,7 +364,7 @@ def add_note(map_identifier, topic_identifier):
 
     if request.method == 'POST':
         form_note_title = request.form['note-title'].strip()
-        form_note_text = request.form['note-text']
+        form_note_text = request.form['note-text'].strip()
         form_note_scope = request.form['note-scope'].strip()
 
         # If no values have been provided set their default values
@@ -441,7 +441,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
     if request.method == 'POST':
         form_note_title = request.form['note-title'].strip()
-        form_note_text = request.form['note-text']
+        form_note_text = request.form['note-text'].strip()
         form_note_scope = request.form['note-scope'].strip()
 
         # If no values have been provided set their default values

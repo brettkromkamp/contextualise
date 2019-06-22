@@ -74,7 +74,7 @@ def add(map_identifier):
 
     if request.method == 'POST':
         form_note_title = request.form['note-title'].strip()
-        form_note_text = request.form['note-text']
+        form_note_text = request.form['note-text'].strip()
         form_note_scope = request.form['note-scope'].strip()
 
         # If no values have been provided set their default values

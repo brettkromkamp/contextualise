@@ -22,9 +22,14 @@
             {% for map in maps %}
             <div class="card">
                 {% if map.image_path %}
-                <img src="/static/resources/{{ map.identifier }}/{{ map.image_path }}" class="card-img-top" alt="{{ map.name }}">
+                <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                    <img alt="{{ map.name }}" class="card-img-top"
+                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                </a>
                 {% else %}
-                <img src="https://picsum.photos/640/360" class="card-img-top" alt="{{ map.name }}">
+                <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                    <img alt="{{ map.name }}" class="card-img-top" src="https://picsum.photos/640/360">
+                </a>
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ map.name }}</h5>
