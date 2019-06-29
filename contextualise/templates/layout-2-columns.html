@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-9">
+            <div class="col-8">
                 {% if topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -118,8 +118,19 @@
                 {% block content %}{% endblock %}
                 {% endblock %}
             </div>
-            <div class="col-3">
-                <div class="card border-secondary">
+            <div class="col-4">
+                <div class="input-group mb-3">
+                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
+                           id="goto-topic-identifier"
+                           placeholder="Enter topic identifier"
+                           type="text">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
+                                class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
                     <div class="card-header"><strong>Context</strong> &mdash; <a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
@@ -145,7 +156,7 @@
                 </div>
                 <br/>
                 {% if associations %}
-                <nav class="card border-secondary">
+                <nav class="card bg-light">
                     <div class="card-header"><strong>Related topics</strong>
                         &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
                             graph</a>
@@ -181,7 +192,7 @@
                 <br/>
                 {% endif %}
                 {% if occurrences['images'] or occurrences['files'] or occurrences['links'] or occurrences['videos']%}
-                <div class="card border-secondary">
+                <div class="card bg-light">
                     <div class="card-header"><strong>Resources</strong></div>
                     <div class="card-body list-card">
                         <ul>
@@ -238,27 +249,15 @@
                         </ul>
                     </div>
                 </div>
-                <br/>
                 {% endif %}
-                <div class="input-group mb-3">
-                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
-                           id="goto-topic-identifier"
-                           placeholder="Enter topic identifier"
-                           type="text">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
-                                class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </main>
 <footer class="footer mt-auto py-3">
     <div class="container">
-		<span class="text-muted">Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
-                class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a web developer living in Norway  &mdash; Copyright &copy; 2019 by Brett Kromkamp</span>
+		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
+                class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019 by Brett Kromkamp</small></span>
     </div>
 </footer>
 <script crossorigin="anonymous" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
