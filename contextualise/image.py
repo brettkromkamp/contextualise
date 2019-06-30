@@ -56,7 +56,7 @@ def index(map_identifier, topic_identifier):
                            creation_date=creation_date)
 
 
-@bp.route('/images/<map_identifier>/upload/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/images/upload/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -134,6 +134,122 @@ def upload(map_identifier, topic_identifier):
                            topic_map=topic_map,
                            topic=topic,
                            image_title=form_image_title,
+                           image_scope=form_image_scope)
+
+
+@bp.route('/images/edit/<map_identifier>/<topic_identifier>/<image_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit(map_identifier, topic_identifier, image_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    image_occurrence = topic_store.get_occurrence(map_identifier, image_identifier,
+                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_image_title = image_occurrence.get_attribute_by_name('title').value
+    form_image_resource_ref = image_occurrence.resource_ref
+    form_image_scope = image_occurrence.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_image_title = request.form['image-title'].strip()
+        form_image_scope = request.form['image-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_image_scope:
+            form_image_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_image_title:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_image_scope):
+            error = error | 2
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update image's title if it has changed
+            if image_occurrence.get_attribute_by_name('title').value != form_image_title:
+                topic_store.update_attribute_value(topic_map.identifier,
+                                                   image_occurrence.get_attribute_by_name('title').identifier,
+                                                   form_image_title)
+
+            # Update image's scope if it has changed
+            if image_occurrence.scope != form_image_scope:
+                topic_store.update_occurrence_scope(map_identifier, image_occurrence.identifier, form_image_scope)
+
+            flash('Image successfully updated.', 'success')
+            return redirect(
+                url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('image/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           image_identifier=image_occurrence.identifier,
+                           image_title=form_image_title,
+                           image_resource_ref=form_image_resource_ref,
+                           image_scope=form_image_scope)
+
+
+@bp.route('/images/delete/<map_identifier>/<topic_identifier>/<image_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier, topic_identifier, image_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    image_occurrence = topic_store.get_occurrence(map_identifier, image_identifier,
+                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_image_title = image_occurrence.get_attribute_by_name('title').value
+    form_image_resource_ref = image_occurrence.resource_ref
+    form_image_scope = image_occurrence.scope
+
+    if request.method == 'POST':
+        # Delete image occurrence from topic store
+        topic_store.delete_occurrence(map_identifier, image_occurrence.identifier)
+
+        # Delete image from file system
+        image_file_path = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier,
+                                       image_occurrence.resource_ref)
+        if os.path.exists(image_file_path):
+            os.remove(image_file_path)
+
+        flash('Image successfully deleted.', 'warning')
+        return redirect(
+            url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('image/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           image_identifier=image_occurrence.identifier,
+                           image_title=form_image_title,
+                           image_resource_ref=form_image_resource_ref,
                            image_scope=form_image_scope)
 
 

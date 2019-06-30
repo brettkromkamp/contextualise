@@ -52,7 +52,7 @@ def index(map_identifier, topic_identifier):
                            creation_date=creation_date)
 
 
-@bp.route('/videos/<map_identifier>/add/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/videos/add/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()

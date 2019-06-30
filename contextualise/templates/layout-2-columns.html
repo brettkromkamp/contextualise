@@ -275,8 +275,8 @@
 {% block javascript %}{% endblock %}
 <script>
 var urlParts = window.location.pathname.split('/');
-var mapIdentifier = urlParts[2];
-var getIdentifiersApiUrl = '/api/' + mapIdentifier +'/get-identifiers';
+var mapIdentifier = urlParts[3];
+var getIdentifiersApiUrl = '/api/get-identifiers/' + mapIdentifier;
 
 $('.auto-complete').autoComplete({
   resolverSettings: {

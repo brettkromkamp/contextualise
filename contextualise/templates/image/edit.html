@@ -1,0 +1,75 @@
+{% extends "layout-1-column.html" %}
+
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}
+{% if error %}
+<script>
+$('#advancedOptions').collapse('show');
+
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Edit image</small>
+</h1>
+<hr/>
+<form action="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image_identifier) }}"
+      autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="image-title">Title</label>
+        <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required
+               type="text" value="{{ image_title }}">
+    </div>
+    <div class="form-group">
+        <label><strong>Image</strong></label>
+        <br/>
+        <img alt="{{ image_title }}"
+             class="map-image img-thumbnail" class="img-thumbnail"
+             src="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image_resource_ref }}">
+        <br/>
+        <br/>
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="image-scope">Context
+                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
+                                Universal context)
+                            </small>
+                        </label>
+                        <input class="form-control auto-complete" id="image-scope" name="image-scope"
+                               placeholder="Enter context identifier"
+                               type="text" value="{{ image_scope }}">
+                        {% if error|bitwise_and(2) == 2 %}
+                        <small class="text-danger">
+                            A context with this identifier doesn't exist. Please provide an identifier for an existing
+                            context.
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <a class="btn btn-secondary"
+       href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-primary" type="submit">Update image</button>
+</form>
+<br/>
+{% endblock %}

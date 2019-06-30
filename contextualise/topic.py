@@ -23,7 +23,7 @@ RESOURCES_DIRECTORY = 'static/resources/'
 BREADCRUMBS_COUNT = 3
 
 
-@bp.route('/topics/<map_identifier>/view/<topic_identifier>')
+@bp.route('/topics/view/<map_identifier>/<topic_identifier>')
 def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -122,7 +122,7 @@ def view(map_identifier, topic_identifier):
                            breadcrumbs=breadcrumbs)
 
 
-@bp.route('/topics/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/create/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -203,7 +203,7 @@ def create(map_identifier, topic_identifier):
                            topic_text_scope=form_topic_text_scope)
 
 
-@bp.route('/topics/<map_identifier>/edit/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/edit/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -298,7 +298,7 @@ def edit(map_identifier, topic_identifier):
                            topic_text_scope=form_topic_text_scope)
 
 
-@bp.route('/topics/<map_identifier>/delete/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/delete/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -339,7 +339,7 @@ def delete(map_identifier, topic_identifier):
                            topic=topic)
 
 
-@bp.route('/topics/<map_identifier>/add-note/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/add-note/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -411,7 +411,7 @@ def add_note(map_identifier, topic_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/topics/<map_identifier>/edit-note/<topic_identifier>/<note_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>', methods=('GET', 'POST'))
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
@@ -481,7 +481,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
             if note_occurrence.scope != form_note_scope:
                 topic_store.update_occurrence_scope(map_identifier, note_occurrence.identifier, form_note_scope)
 
-            flash('Note successfully edited.', 'success')
+            flash('Note successfully updated.', 'success')
             return redirect(
                 url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
 
@@ -495,7 +495,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/topics/<map_identifier>/delete-note/<topic_identifier>/<note_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>', methods=('GET', 'POST'))
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
@@ -536,7 +536,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/topics/<map_identifier>/change-context/<topic_identifier>/<scope_identifier>', methods=('GET', 'POST'))
+@bp.route('/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>', methods=('GET', 'POST'))
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()

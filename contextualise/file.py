@@ -55,7 +55,7 @@ def index(map_identifier, topic_identifier):
                            creation_date=creation_date)
 
 
-@bp.route('/files/<map_identifier>/upload/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/files/upload/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()

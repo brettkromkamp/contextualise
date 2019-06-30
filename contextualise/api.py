@@ -19,7 +19,7 @@ def get_slug():
     })
 
 
-@bp.route('/api/<map_identifier>/get-identifiers')
+@bp.route('/api/get-identifiers/<map_identifier>')
 @login_required
 def get_identifiers(map_identifier):
     topic_store = get_topic_store()
@@ -36,7 +36,7 @@ def get_identifiers(map_identifier):
     return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10))
 
 
-@bp.route('/api/<map_identifier>/get-network/<topic_identifier>')
+@bp.route('/api/get-network/<map_identifier>/<topic_identifier>')
 def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)

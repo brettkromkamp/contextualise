@@ -16,7 +16,7 @@ from contextualise.topic_store import get_topic_store
 bp = Blueprint('note', __name__)
 
 
-@bp.route('/notes/<map_identifier>/index')
+@bp.route('/notes/index/<map_identifier>')
 def index(map_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -49,7 +49,7 @@ def index(map_identifier):
                            notes=notes)
 
 
-@bp.route('/notes/<map_identifier>/add', methods=('GET', 'POST'))
+@bp.route('/notes/add/<map_identifier>', methods=('GET', 'POST'))
 @login_required
 def add(map_identifier):
     topic_store = get_topic_store()
@@ -121,7 +121,7 @@ def add(map_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/notes/<map_identifier>/attach/<note_identifier>', methods=('GET', 'POST'))
+@bp.route('/notes/attach/<map_identifier>/<note_identifier>', methods=('GET', 'POST'))
 @login_required
 def attach(map_identifier, note_identifier):
     topic_store = get_topic_store()
@@ -175,7 +175,7 @@ def attach(map_identifier, note_identifier):
                            note_scope=form_note_scope)
 
 
-@bp.route('/notes/<map_identifier>/convert/<note_identifier>', methods=('GET', 'POST'))
+@bp.route('/notes/convert/<map_identifier>/<note_identifier>', methods=('GET', 'POST'))
 @login_required
 def convert(map_identifier, note_identifier):
     topic_store = get_topic_store()

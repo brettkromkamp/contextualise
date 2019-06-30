@@ -28,11 +28,13 @@ var mapIdentifier = urlParts[2];
 var topicIdentifier = urlParts[4];
 
 var viewGraphLink = document.getElementById('view-graph-link');
-var scopeIdentifier = typeof viewGraphLink.dataset.scopeIdentifier !== "undefined" ? viewGraphLink.dataset.scopeIdentifier : '*';
+if (viewGraphLink) {
+    var scopeIdentifier = typeof viewGraphLink.dataset.scopeIdentifier !== "undefined" ? viewGraphLink.dataset.scopeIdentifier : '*';
+}
 
 $('#modalNetworkGraph').on('show.bs.modal', function (event) {
     if (topicIdentifier !== "") {
-        var getNetworkApiUrl = '/api/' + mapIdentifier +'/get-network/' + topicIdentifier + '?context=' + scopeIdentifier;
+        var getNetworkApiUrl = '/api/get-network/' + mapIdentifier + '/' + topicIdentifier + '?context=' + scopeIdentifier;
 
         axios.get(getNetworkApiUrl)
             .then(function (response) {

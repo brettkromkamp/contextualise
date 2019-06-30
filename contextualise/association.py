@@ -41,7 +41,7 @@ def index(map_identifier, topic_identifier):
                            creation_date=creation_date)
 
 
-@bp.route('/associations/<map_identifier>/create/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/associations/create/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -149,7 +149,7 @@ def create(map_identifier, topic_identifier):
                            association_identifier=form_association_identifier)
 
 
-@bp.route('/associations/<map_identifier>/delete/<topic_identifier>/<association_identifier>',
+@bp.route('/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>',
           methods=('GET', 'POST'))
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
