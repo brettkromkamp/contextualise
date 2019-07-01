@@ -107,7 +107,7 @@ def add(map_identifier, topic_identifier):
             topic_store.set_occurrence(topic_map.identifier, video_occurrence)
             topic_store.set_attribute(topic_map.identifier, title_attribute)
 
-            flash('Video video successfully added.', 'success')
+            flash('Video link successfully added.', 'success')
             return redirect(
                 url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
 
