@@ -16,16 +16,16 @@ $('#advancedOptions').collapse('show');
 {% block content %}
 <h1>
     {{ topic.identifier|topic_name(topic_map.identifier) }}
-    <small class="text-muted">Edit link</small>
+    <small class="text-muted">Edit file</small>
 </h1>
 <hr/>
-<form action="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link_identifier) }}"
+<form action="{{ url_for('file.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file_identifier) }}"
       autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
-        <label for="link-title">Title</label>
-        <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required
-               type="text" value="{{ link_title }}">
+        <label for="file-title">Title</label>
+        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required
+               type="text" value="{{ file_title }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
                                              data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
@@ -37,14 +37,14 @@ $('#advancedOptions').collapse('show');
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="link-scope">Context
+                        <label for="file-scope">Context
                             <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="link-scope" name="link-scope"
+                        <input class="form-control auto-complete" id="file-scope" name="file-scope"
                                placeholder="Enter context identifier"
-                               type="text" value="{{ link_scope }}">
+                               type="text" value="{{ file_scope }}">
                         {% if error|bitwise_and(2) == 2 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -58,9 +58,9 @@ $('#advancedOptions').collapse('show');
         <br/>
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
        role="button">Cancel</a>
-    <button class="btn btn-primary" type="submit">Update link</button>
+    <button class="btn btn-primary" type="submit">Update file</button>
 </form>
 <br/>
 {% endblock %}

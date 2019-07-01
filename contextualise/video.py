@@ -40,7 +40,7 @@ def index(map_identifier, topic_identifier):
                        'scope': video_occurrence.scope,
                        'url': video_occurrence.resource_ref})
 
-    #occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    # occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
@@ -107,7 +107,7 @@ def add(map_identifier, topic_identifier):
             topic_store.set_occurrence(topic_map.identifier, video_occurrence)
             topic_store.set_attribute(topic_map.identifier, title_attribute)
 
-            flash('Video link successfully added.', 'success')
+            flash('Video video successfully added.', 'success')
             return redirect(
                 url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
 
@@ -117,4 +117,110 @@ def add(map_identifier, topic_identifier):
                            topic=topic,
                            video_title=form_video_title,
                            video_url=form_video_url,
+                           video_scope=form_video_scope)
+
+
+@bp.route('/videos/edit/<map_identifier>/<topic_identifier>/<video_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit(map_identifier, topic_identifier, video_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    video_occurrence = topic_store.get_occurrence(map_identifier, video_identifier,
+                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_video_title = video_occurrence.get_attribute_by_name('title').value
+    form_video_scope = video_occurrence.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_video_title = request.form['video-title'].strip()
+        form_video_scope = request.form['video-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_video_scope:
+            form_video_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_video_title:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_video_scope):
+            error = error | 2
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update video's title if it has changed
+            if video_occurrence.get_attribute_by_name('title').value != form_video_title:
+                topic_store.update_attribute_value(topic_map.identifier,
+                                                   video_occurrence.get_attribute_by_name('title').identifier,
+                                                   form_video_title)
+
+            # Update video's scope if it has changed
+            if video_occurrence.scope != form_video_scope:
+                topic_store.update_occurrence_scope(map_identifier, video_occurrence.identifier, form_video_scope)
+
+            flash('Video link successfully updated.', 'success')
+            return redirect(
+                url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('video/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           video_identifier=video_occurrence.identifier,
+                           video_title=form_video_title,
+                           video_scope=form_video_scope)
+
+
+@bp.route('/videos/delete/<map_identifier>/<topic_identifier>/<video_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier, topic_identifier, video_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    video_occurrence = topic_store.get_occurrence(map_identifier, video_identifier,
+                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_video_title = video_occurrence.get_attribute_by_name('title').value
+    form_video_scope = video_occurrence.scope
+
+    if request.method == 'POST':
+        # Delete video occurrence from topic store
+        topic_store.delete_occurrence(map_identifier, video_occurrence.identifier)
+
+        flash('Video link successfully deleted.', 'warning')
+        return redirect(
+            url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('video/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           video_identifier=video_occurrence.identifier,
+                           video_title=form_video_title,
                            video_scope=form_video_scope)

@@ -119,10 +119,14 @@
     <tbody>
     {% for video in videos %}
     <tr>
-        <td><a data-fancybox="gallery" data-caption="{{ video.title }}" href="{{ video.url }}">{{ video.title }}</a></td>
+        <td><a data-caption="{{ video.title }}" data-fancybox="gallery" href="{{ video.url }}">{{ video.title }}</a>
+        </td>
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
             video.scope|topic_name(topic_map.identifier) }}</a></td>
-        <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
+        <td>
+            <a href="{{ url_for('video.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                href="{{ url_for('video.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Delete</a>
+        </td>
     </tr>
     {% endfor %}
     </tbody>
@@ -133,7 +137,7 @@
 {% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-primary"
    href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-    video</a>
+    video link</a>
 <br/>
 <br/>
 {% endif %}

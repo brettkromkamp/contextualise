@@ -136,6 +136,118 @@ def upload(map_identifier, topic_identifier):
                            file_scope=form_file_scope)
 
 
+@bp.route('/files/edit/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit(map_identifier, topic_identifier, file_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    file_occurrence = topic_store.get_occurrence(map_identifier, file_identifier,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_file_title = file_occurrence.get_attribute_by_name('title').value
+    form_file_scope = file_occurrence.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_file_title = request.form['file-title'].strip()
+        form_file_scope = request.form['file-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_file_scope:
+            form_file_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_file_title:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
+            error = error | 2
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update file's title if it has changed
+            if file_occurrence.get_attribute_by_name('title').value != form_file_title:
+                topic_store.update_attribute_value(topic_map.identifier,
+                                                   file_occurrence.get_attribute_by_name('title').identifier,
+                                                   form_file_title)
+
+            # Update file's scope if it has changed
+            if file_occurrence.scope != form_file_scope:
+                topic_store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
+
+            flash('File successfully updated.', 'success')
+            return redirect(
+                url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('file/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           file_identifier=file_occurrence.identifier,
+                           file_title=form_file_title,
+                           file_scope=form_file_scope)
+
+
+@bp.route('/files/delete/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier, topic_identifier, file_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    file_occurrence = topic_store.get_occurrence(map_identifier, file_identifier,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_file_title = file_occurrence.get_attribute_by_name('title').value
+    form_file_scope = file_occurrence.scope
+
+    if request.method == 'POST':
+        # Delete file occurrence from topic store
+        topic_store.delete_occurrence(map_identifier, file_occurrence.identifier)
+
+        # Delete file from file system
+        file_file_path = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier,
+                                      file_occurrence.resource_ref)
+        if os.path.exists(file_file_path):
+            os.remove(file_file_path)
+
+        flash('File successfully deleted.', 'warning')
+        return redirect(
+            url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('file/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           file_identifier=file_occurrence.identifier,
+                           file_title=form_file_title,
+                           file_scope=form_file_scope)
+
+
 # ========== HELPER METHODS ==========
 
 def get_file_extension(file_name):

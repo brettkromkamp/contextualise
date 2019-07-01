@@ -118,7 +118,10 @@
             }}</a></td>
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{
             file.scope|topic_name(topic_map.identifier) }}</a></td>
-        <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
+        <td>
+            <a href="{{ url_for('file.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                href="{{ url_for('file.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Delete</a>
+        </td>
     </tr>
     {% endfor %}
     </tbody>
