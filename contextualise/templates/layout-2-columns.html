@@ -43,9 +43,6 @@
                         <a class="nav-link" href="#">Advanced search</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Quick help</a>
-                    </li>
                     {% if topic.identifier != 'home' %}
                     <li class="nav-item">
                         {% if session['current_scope'] == '*' %}
@@ -60,6 +57,12 @@
                     </li>
                     {% endif %}
                 </ul>
+                <form autocomplete="off" class="form-inline my-2 my-md-0">
+                    <input aria-label="Enter topic identifier" class="form-control mr-sm-2 auto-complete"
+                           id="goto-topic-identifier" placeholder="Enter topic identifier"
+                           type="text">
+                    <button class="btn btn-outline-success my-2 my-sm-0" id="goto-button" type="reset">Go to</button>
+                </form>
                 {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item dropdown">
@@ -119,17 +122,6 @@
                 {% endblock %}
             </div>
             <div class="col-4">
-                <div class="input-group mb-3">
-                    <input aria-describedby="button-addon" aria-label="Search" class="form-control auto-complete"
-                           id="goto-topic-identifier"
-                           placeholder="Enter topic identifier"
-                           type="text">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="goto-button" type="button"><i
-                                class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
                 <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
                     <div class="card-header"><strong>Context</strong> &mdash; <a
@@ -256,7 +248,8 @@
 </main>
 <footer class="footer mt-auto py-3">
     <div class="container">
-		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
+		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
+                                                                             style="color:#c91818;"></i> and a lot of <i
                 class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019 by Brett Kromkamp</small></span>
     </div>
 </footer>
@@ -290,6 +283,7 @@ if (typeof document.getElementById('goto-button') != undefined) {
         var gotoUrl = window.location.href.replace('#', '');
         gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
         if (gotoTopicIdentifier) {
+            console.log("Going...");
             window.location.href = gotoUrl;
         }
     });
