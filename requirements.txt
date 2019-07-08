@@ -1,11 +1,11 @@
-pytest>=4.6.3
+pytest>=5.0.1
 topic-db>=0.7.1
-SQLAlchemy>=1.3.3
-Flask>=1.0.3
+SQLAlchemy>=1.3.5
+Flask>=1.1.0
 Flask-SQLAlchemy>=2.4.0
 flask-seasurf>=0.2.2
-bcrypt>=3.1.6
-Werkzeug>=0.15.2
+bcrypt>=3.1.7
+Werkzeug>=0.15.4
 maya>=0.6.1
 mistune>=0.8.4
 python-slugify>=3.0.2

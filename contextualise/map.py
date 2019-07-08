@@ -189,7 +189,7 @@ def edit(map_identifier):
             # Update the topic map
             promoted = form_map_shared and topic_map.promoted
             topic_store.update_topic_map(map_identifier, form_map_name, form_map_description, image_file_name,
-                                         initialised=False, shared=form_map_shared,
+                                         shared=form_map_shared,
                                          promoted=promoted)
 
             flash('Map successfully created.', 'success')

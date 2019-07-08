@@ -90,7 +90,7 @@ $('#modalNetworkGraph').on('show.bs.modal', function (event) {
             if (params.nodes[0] !== undefined) {
                   var selectedNode = searchArray(params.nodes[0], 'id', nodes);
                   if (selectedNode.id !== topicIdentifier) {
-                            var networkGotoUrl = '/topics/' + mapIdentifier + '/view/' + selectedNode.id;
+                            var networkGotoUrl = '/topics/view/' + mapIdentifier + '/' + selectedNode.id;
                             if (networkGotoUrl) {
                                 window.location.href = networkGotoUrl;
                             }
