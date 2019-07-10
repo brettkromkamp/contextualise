@@ -124,11 +124,11 @@
             <div class="col-4">
                 <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
-                    <div class="card-header"><strong>Context</strong> &mdash; <a
+                    <div class="card-header"><strong>Map and context</strong> &mdash; <a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
                         context</a></div>
                     {% else %}
-                    <div class="card-header"><strong>Context</strong></div>
+                    <div class="card-header"><strong>Map and context</strong></div>
                     {% endif %}
                     <div class="card-body list-card">
                         <ul>
@@ -185,7 +185,7 @@
                 {% endif %}
                 {% if occurrences['images'] or occurrences['files'] or occurrences['links'] or occurrences['videos']%}
                 <div class="card bg-light">
-                    <div class="card-header"><strong>Resources</strong></div>
+                    <div class="card-header"><strong>Topic resources</strong></div>
                     <div class="card-body list-card">
                         <ul>
                             {% if occurrences['images'] %}
