@@ -1,10 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout_1_column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}
+{% if error %}
+<script>
+$('#advancedOptions').collapse('show');
+
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Upload 3D content</small>
+</h1>
+<hr/>
+<form action="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+      autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="three-d-title"><strong>Title</strong></label>
+        <input class="form-control" id="three-d-title" name="three-d-title" placeholder="Enter title" required
+               type="text" value="{{ three_d_title }}">
+    </div>
+    <strong>Type?</strong>
+    <div class="form-check">
+        <input checked class="form-check-input" id="type-radio-1" name="three-d-type" type="radio" value="0">
+        <label class="form-check-label" for="type-radio-1">
+            Standard 3D scene
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" id="type-radio-2" name="three-d-type" type="radio" value="1">
+        <label class="form-check-label" for="type-radio-2">
+            Augmented Reality (AR) scene
+        </label>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="three-d-file"><strong>File</strong></label>
+        <input accept=".jpg,.jpeg,.png,.gif" class="form-control-file" id="three-d-file" name="three-d-file" type="file">
+        {% if error|bitwise_and(2) == 2 %}
+        <small class="text-danger">
+            No file part.
+        </small>
+        {% endif %}
+        {% if error|bitwise_and(4) == 4 %}
+        <small class="text-danger">
+            No file selected.
+        </small>
+        {% endif %}
+        {% if error|bitwise_and(8) == 8 %}
+        <small class="text-danger">
+            Unsupported file type; that is, not of type PNG, JPG or GIF.
+        </small>
+        {% endif %}
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="three-d-scope"><strong>Context</strong>
+                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
+                                Universal context)
+                            </small>
+                        </label>
+                        <input class="form-control auto-complete" id="three-d-scope" name="three-d-scope"
+                               placeholder="Enter context identifier"
+                               type="text" value="{{ three_d_scope }}">
+                        {% if error|bitwise_and(16) == 16 %}
+                        <small class="text-danger">
+                            A context with this identifier doesn't exist. Please provide an identifier for an existing
+                            context.
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <a class="btn btn-secondary"
+       href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-primary" type="submit">Upload 3D content</button>
+</form>
+<br/>
+{% endblock %}

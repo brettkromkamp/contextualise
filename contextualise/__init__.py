@@ -173,6 +173,9 @@ def create_app(test_config=None):
     from contextualise import note
     app.register_blueprint(note.bp)
 
+    from contextualise import three_d
+    app.register_blueprint(three_d.bp)
+
     # Add topic store
     from contextualise import topic_store
     topic_store.init_app(app)
