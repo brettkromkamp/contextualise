@@ -7,6 +7,17 @@
 {% block javascript %}
 <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script>
+$('[data-fancybox]').fancybox({
+	toolbar  : false,
+	smallBtn : true,
+	iframe : {
+		preload : false
+	}
+})
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -117,7 +128,7 @@
         </div>
     </li>
 </ul>
-{% if images %}
+{% if files %}
 <table class="table table-bordered">
     <thead class="thead-light">
     <tr>
@@ -127,16 +138,15 @@
     </tr>
     </thead>
     <tbody>
-    {% for image in images %}
+    {% for file in files %}
     <tr>
-        <td><a data-caption="{{ image.title }}" data-fancybox="images"
-               href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{ image.title
+        <td><a data-fancybox data-type="iframe" data-src="/static/3d-view.html?3d-file={{ file.url }}" href="javascript:;">{{ file.title
             }}</a></td>
-        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{
-            image.scope|topic_name(topic_map.identifier) }}</a></td>
+        <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{
+            file.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
-            <a href="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-                href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>
+            <a href="{{ url_for('file.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                href="{{ url_for('file.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Delete</a>
         </td>
     </tr>
     {% endfor %}

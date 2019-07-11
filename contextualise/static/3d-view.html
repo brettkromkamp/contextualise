@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<style>
+	body {
+        margin: 0;
+        overflow: hidden;
+    }
+	</style>
+	<title>3D Scene Viewer | Contextualise</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="UTF-8" />
+	<script src="three.js/build/three.min.js"></script>
+	<script src="three.js/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="three.js/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+	<canvas id="contextualise-canvas"></canvas>
+	<script>
+		'use strict';
+
+		console.log(window.location.href);
+
+		// SETUP
+		window.addEventListener('resize', onWindowResize, false);
+
+		// RENDERER
+		var renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('contextualise-canvas'), antialias: true });
+		renderer.setClearColor(0x000000);
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		// SCENE
+		var scene = new THREE.Scene();
+
+		// CAMERA
+		var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
+		camera.position.set(45, 45, 45);
+		camera.lookAt(0, 0, 0);
+		scene.add(camera);
+
+		// CONTROLS
+		var controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enableDamping = true;
+		controls.dampingFactor = 0.75;
+		controls.screenSpacePanning = false;
+		controls.minDistance = 1;
+		controls.maxDistance = 50;
+		controls.maxPolarAngle = Math.PI / 2;
+
+		// LIGHTS
+		var directionalLight1 = new THREE.DirectionalLight();
+		directionalLight1.position.set(5, 5, 5);
+		scene.add(directionalLight1);
+
+		var directionalLight2 = new THREE.DirectionalLight();
+		directionalLight2.position.set(-5, 5, -5);
+		scene.add(directionalLight2);
+
+		// MODELS AND LOADER
+		var loader = new THREE.GLTFLoader();
+
+		loader.load('./resources/2/home/c6efa8fc-1c77-461f-a75d-7fff06cbba90.glb', function (gltf) { // Alternative file (exported from Blender): atlas.gltf
+			scene.add(gltf.scene);
+		});
+
+		// RENDER LOOP
+		animate();
+
+		function animate() {
+			controls.update(); // Only required if controls.enableDamping = true, or if controls.autoRotate = true.
+
+			renderer.render(scene, camera);
+			requestAnimationFrame(animate);
+		}
+
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+		}
+	</script>
+</body>
+
+</html>

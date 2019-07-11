@@ -19,7 +19,7 @@ RESOURCES_DIRECTORY = 'static/resources/'
 EXTENSIONS_WHITELIST = {'gltf', 'glb'}
 
 
-@bp.route('/three-d/<map_identifier>/<topic_identifier>')
+@bp.route('/3d/<map_identifier>/<topic_identifier>')
 @login_required
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -36,7 +36,7 @@ def index(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    file_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier, 'file',
+    file_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier, '3d-scene',
                                                          resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
 
     files = []
@@ -51,10 +51,12 @@ def index(map_identifier, topic_identifier):
 
     return render_template('three_d/index.html',
                            topic_map=topic_map,
-                           topic=topic)
+                           topic=topic,
+                           files=files,
+                           creation_date=creation_date)
 
 
-@bp.route('/three-d/upload/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
+@bp.route('/3d/upload/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -71,18 +73,56 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    # TODO
+    form_file_title = ''
+    form_file_scope = '*'
 
     error = 0
 
     if request.method == 'POST':
-        # TODO
+        form_file_title = request.form['file-title'].strip()
+        form_file_scope = request.form['file-scope'].strip()
+        form_upload_file = request.files['file-file'] if 'file-file' in request.files else None
+
+        # If no values have been provided set their default values
+        if not form_file_scope:
+            form_file_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_file_title:
+            error = error | 1
+        if not form_upload_file:
+            error = error | 2
+        else:
+            if form_upload_file.filename == '':
+                error = error | 4
+        if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
+            error = error | 8
+
         if error != 0:
             flash(
                 'An error occurred when uploading the 3D content. Please review the warnings and fix accordingly.',
                 'warning')
         else:
-            # TODO
+            file_extension = get_file_extension(form_upload_file.filename)
+            file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
+
+            # Create the file directory for this topic map and topic if it doesn't already exist
+            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            if not os.path.isdir(file_directory):
+                os.makedirs(file_directory)
+
+            file_path = os.path.join(file_directory, file_file_name)
+            form_upload_file.save(file_path)
+
+            file_occurrence = Occurrence(instance_of='3d-scene', topic_identifier=topic.identifier,
+                                         scope=form_file_scope,
+                                         resource_ref=file_file_name)
+            title_attribute = Attribute('title', form_file_title, file_occurrence.identifier,
+                                        data_type=DataType.STRING)
+
+            # Persist objects to the topic store
+            topic_store.set_occurrence(topic_map.identifier, file_occurrence)
+            topic_store.set_attribute(topic_map.identifier, title_attribute)
 
             flash('3D content successfully uploaded.', 'success')
             return redirect(
@@ -91,10 +131,12 @@ def upload(map_identifier, topic_identifier):
     return render_template('three_d/upload.html',
                            error=error,
                            topic_map=topic_map,
-                           topic=topic)
+                           topic=topic,
+                           file_title=form_file_title,
+                           file_scope=form_file_scope)
 
 
-@bp.route('/three-d/edit/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
+@bp.route('/3d/edit/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
     topic_store = get_topic_store()
@@ -139,7 +181,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
                            topic=topic)
 
 
-@bp.route('/three-d/delete/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
+@bp.route('/3d/delete/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
     topic_store = get_topic_store()
