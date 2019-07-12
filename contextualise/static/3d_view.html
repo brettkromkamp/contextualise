@@ -21,7 +21,20 @@
 	<script>
 		'use strict';
 
-		console.log(window.location.href);
+		function getUrlParams(url) {
+			var params = {};
+			(url + '?').split('?')[1].split('&').forEach(function (pair) {
+				pair = (pair + '=').split('=').map(decodeURIComponent);
+				if (pair[0].length) {
+					params[pair[0]] = pair[1];
+				}
+			});
+			return params;
+		}
+
+		var mapIdentifier = getUrlParams(window.location)['map_identifier'];
+		var topicIdentifier = getUrlParams(window.location)['topic_identifier'];
+		var fileIdentifier = getUrlParams(window.location)['file_identifier'];
 
 		// SETUP
 		window.addEventListener('resize', onWindowResize, false);
@@ -34,6 +47,7 @@
 
 		// SCENE
 		var scene = new THREE.Scene();
+		scene.background = new THREE.Color(0xffffff);
 
 		// CAMERA
 		var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
@@ -61,8 +75,9 @@
 
 		// MODELS AND LOADER
 		var loader = new THREE.GLTFLoader();
+		var gltfUrl = "./resources/" + mapIdentifier + "/" + topicIdentifier + "/" + fileIdentifier;
 
-		loader.load('./resources/2/home/c6efa8fc-1c77-461f-a75d-7fff06cbba90.glb', function (gltf) { // Alternative file (exported from Blender): atlas.gltf
+		loader.load(gltfUrl, function (gltf) {
 			scene.add(gltf.scene);
 		});
 

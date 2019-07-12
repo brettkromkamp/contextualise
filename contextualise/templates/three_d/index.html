@@ -16,6 +16,7 @@ $('[data-fancybox]').fancybox({
 		preload : false
 	}
 })
+
 </script>
 
 {% endblock %}
@@ -140,7 +141,9 @@ $('[data-fancybox]').fancybox({
     <tbody>
     {% for file in files %}
     <tr>
-        <td><a data-fancybox data-type="iframe" data-src="/static/3d-view.html?3d-file={{ file.url }}" href="javascript:;">{{ file.title
+        <td><a data-fancybox data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ file.url }}"
+               data-type="iframe"
+               href="javascript:;">{{ file.title
             }}</a></td>
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{
             file.scope|topic_name(topic_map.identifier) }}</a></td>
@@ -153,7 +156,8 @@ $('[data-fancybox]').fancybox({
     </tbody>
 </table>
 {% elif current_user.id == topic_map.user_identifier %}
-<p>This topic has no associated 3D content. Click on the "Upload 3D content" button below to add (<a href="https://www.khronos.org/gltf/">glTF</a>-based) 3D content.</p>
+<p>This topic has no associated 3D content. Click on the "Upload 3D content" button below to add (<a
+        href="https://www.khronos.org/gltf/">glTF</a>-based) 3D content.</p>
 {% endif %}
 {% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-primary"

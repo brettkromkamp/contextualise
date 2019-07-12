@@ -189,34 +189,46 @@
                     <div class="card-body list-card">
                         <ul>
                             {% if occurrences['images'] %}
-                            <li>Images
+                            <li><a href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
                                 <ul>
                                     {% for image in occurrences['images'] %}
                                     <li>
                                         <a data-caption="{{ image.title }}" data-fancybox="images"
                                            href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
-                                            image.title
-                                            }}</a>
+                                            image.title }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% if occurrences['3d-scenes'] %}
+                            <li><a href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                                <ul>
+                                    {% for scene in occurrences['3d-scenes'] %}
+                                    <li>
+                                        <a data-fancybox
+                                           data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
+                                           data-type="iframe"
+                                           href="javascript:;">{{ scene.title }}</a>
                                     </li>
                                     {% endfor %}
                                 </ul>
                             </li>
                             {% endif %}
                             {% if occurrences['files'] %}
-                            <li>Files
+                            <li><a href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
                                 <ul>
                                     {% for file in occurrences['files'] %}
                                     <li>
                                         <a href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
-                                            file.title
-                                            }}</a>
+                                            file.title }}</a>
                                     </li>
                                     {% endfor %}
                                 </ul>
                             </li>
                             {% endif %}
                             {% if occurrences['links'] %}
-                            <li>Links
+                            <li><a href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
                                 <ul>
                                     {% for link in occurrences['links'] %}
                                     <li>
@@ -227,7 +239,7 @@
                             </li>
                             {% endif %}
                             {% if occurrences['videos'] %}
-                            <li>Videos
+                            <li><a href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
                                 <ul>
                                     {% for video in occurrences['videos'] %}
                                     <li>
@@ -288,6 +300,8 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
+
+
 
 </script>
 </body>

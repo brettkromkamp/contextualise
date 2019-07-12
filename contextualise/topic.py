@@ -62,6 +62,7 @@ def view(map_identifier, topic_identifier):
     occurrences = {
         'text': None,
         'images': [],
+        '3d-scenes': [],
         'files': [],
         'links': [],
         'videos': [],
@@ -72,6 +73,11 @@ def view(map_identifier, topic_identifier):
             occurrences['text'] = mistune.markdown(occurrence.resource_data.decode())
         elif occurrence.instance_of == 'image':
             occurrences['images'].append({
+                'title': occurrence.get_attribute_by_name('title').value,
+                'url': occurrence.resource_ref
+            })
+        elif occurrence.instance_of == '3d-scene':
+            occurrences['3d-scenes'].append({
                 'title': occurrence.get_attribute_by_name('title').value,
                 'url': occurrence.resource_ref
             })
