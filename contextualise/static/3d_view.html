@@ -40,9 +40,16 @@
 		window.addEventListener('resize', onWindowResize, false);
 
 		// RENDERER
-		var renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('contextualise-canvas'), antialias: true });
-		renderer.setClearColor(0x000000);
-		renderer.setPixelRatio(window.devicePixelRatio);
+		var renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById('contextualise-canvas'),
+            antialias: true,
+            alpha: true
+        });
+        renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
+        renderer.autoClear = false;
+        renderer.setClearColor(0x000000, 0.0);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // PCFShadowMap
 		renderer.setSize(window.innerWidth, window.innerHeight);
 
 		// SCENE
@@ -50,9 +57,9 @@
 		scene.background = new THREE.Color(0xffffff);
 
 		// CAMERA
-		var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
+		var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
 		camera.position.set(45, 45, 45);
-		camera.lookAt(0, 0, 0);
+		camera.lookAt(new THREE.Vector3());
 		scene.add(camera);
 
 		// CONTROLS
@@ -65,19 +72,33 @@
 		controls.maxPolarAngle = Math.PI / 2;
 
 		// LIGHTS
-		var directionalLight1 = new THREE.DirectionalLight();
-		directionalLight1.position.set(5, 5, 5);
-		scene.add(directionalLight1);
+		var light1 = new THREE.PointLight(0xffffff, 2.5, 0, 2);
+        light1.position.set(80, 80, 80);
+        scene.add(light1); // See URL: https://stackoverflow.com/questions/20469637/three-js-no-update-of-scene-lighting-when-light-moving
 
-		var directionalLight2 = new THREE.DirectionalLight();
-		directionalLight2.position.set(-5, 5, -5);
-		scene.add(directionalLight2);
+        light1.castShadow = true;
+        light1.shadow.mapSize.width = 1024;
+        light1.shadow.mapSize.height = 1024;
+        light1.shadow.camera.near = 0.5;
+        light1.shadow.camera.far = 500;
+        light1.shadow.bias = -0.0015;
+
+        var light2 = new THREE.AmbientLight(0x404040, 1); // Soft white light
+        scene.add(light2);
 
 		// MODELS AND LOADER
 		var loader = new THREE.GLTFLoader();
 		var gltfUrl = "./resources/" + mapIdentifier + "/" + topicIdentifier + "/" + fileIdentifier;
 
 		loader.load(gltfUrl, function (gltf) {
+		    /*
+		    gltf.scenes[0].traverse(function (child) {
+                if (child.material && child.material.map) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            */
 			scene.add(gltf.scene);
 		});
 

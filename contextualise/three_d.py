@@ -153,23 +153,42 @@ def edit(map_identifier, topic_identifier, file_identifier):
     if topic is None:
         abort(404)
 
-    # TODO
+    file_occurrence = topic_store.get_occurrence(map_identifier, file_identifier,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_file_title = file_occurrence.get_attribute_by_name('title').value
+    form_file_scope = file_occurrence.scope
 
     error = 0
 
     if request.method == 'POST':
-        # TODO
+        form_file_title = request.form['file-title'].strip()
+        form_file_scope = request.form['file-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_file_scope:
+            form_file_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_file_title:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
+            error = error | 2
 
         if error != 0:
             flash(
                 'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
                 'warning')
         else:
-            # Update title if it has changed
-            # TODO
+            # Update file's title if it has changed
+            if file_occurrence.get_attribute_by_name('title').value != form_file_title:
+                topic_store.update_attribute_value(topic_map.identifier,
+                                                   file_occurrence.get_attribute_by_name('title').identifier,
+                                                   form_file_title)
 
-            # Update scope if it has changed
-            # TODO
+            # Update file's scope if it has changed
+            if file_occurrence.scope != form_file_scope:
+                topic_store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
 
             flash('3D content successfully updated.', 'success')
             return redirect(
@@ -178,7 +197,10 @@ def edit(map_identifier, topic_identifier, file_identifier):
     return render_template('three_d/edit.html',
                            error=error,
                            topic_map=topic_map,
-                           topic=topic)
+                           topic=topic,
+                           file_identifier=file_occurrence.identifier,
+                           file_title=form_file_title,
+                           file_scope=form_file_scope)
 
 
 @bp.route('/3d/delete/<map_identifier>/<topic_identifier>/<file_identifier>', methods=('GET', 'POST'))
@@ -198,10 +220,21 @@ def delete(map_identifier, topic_identifier, file_identifier):
     if topic is None:
         abort(404)
 
-    # TODO
+    file_occurrence = topic_store.get_occurrence(map_identifier, file_identifier,
+                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    form_file_title = file_occurrence.get_attribute_by_name('title').value
+    form_file_scope = file_occurrence.scope
 
     if request.method == 'POST':
-        # TODO
+        # Delete file occurrence from topic store
+        topic_store.delete_occurrence(map_identifier, file_occurrence.identifier)
+
+        # Delete file from file system
+        file_file_path = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier,
+                                      file_occurrence.resource_ref)
+        if os.path.exists(file_file_path):
+            os.remove(file_file_path)
 
         flash('3D content successfully deleted.', 'warning')
         return redirect(
@@ -209,7 +242,10 @@ def delete(map_identifier, topic_identifier, file_identifier):
 
     return render_template('three_d/delete.html',
                            topic_map=topic_map,
-                           topic=topic)
+                           topic=topic,
+                           file_identifier=file_occurrence.identifier,
+                           file_title=form_file_title,
+                           file_scope=form_file_scope)
 
 
 # ========== HELPER METHODS ==========

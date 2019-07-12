@@ -183,13 +183,17 @@
                 </nav>
                 <br/>
                 {% endif %}
-                {% if occurrences['images'] or occurrences['files'] or occurrences['links'] or occurrences['videos']%}
+                {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
                 <div class="card bg-light">
                     <div class="card-header"><strong>Topic resources</strong></div>
                     <div class="card-body list-card">
                         <ul>
                             {% if occurrences['images'] %}
-                            <li><a href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                            <li>{% if current_user.id == topic_map.user_identifier %}
+                                <a href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                                {% else %}
+                                Images
+                                {% endif %}
                                 <ul>
                                     {% for image in occurrences['images'] %}
                                     <li>
@@ -202,7 +206,11 @@
                             </li>
                             {% endif %}
                             {% if occurrences['3d-scenes'] %}
-                            <li><a href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                            <li>{% if current_user.id == topic_map.user_identifier %}
+                                <a href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                                {% else %}
+                                3D
+                                {% endif %}
                                 <ul>
                                     {% for scene in occurrences['3d-scenes'] %}
                                     <li>
@@ -216,7 +224,11 @@
                             </li>
                             {% endif %}
                             {% if occurrences['files'] %}
-                            <li><a href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+                            <li>{% if current_user.id == topic_map.user_identifier %}
+                                <a href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+                                {% else %}
+                                Files
+                                {% endif %}
                                 <ul>
                                     {% for file in occurrences['files'] %}
                                     <li>
@@ -228,7 +240,11 @@
                             </li>
                             {% endif %}
                             {% if occurrences['links'] %}
-                            <li><a href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                            <li>{% if current_user.id == topic_map.user_identifier %}
+                                <a href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                                {% else %}
+                                Links
+                                {% endif %}
                                 <ul>
                                     {% for link in occurrences['links'] %}
                                     <li>
@@ -239,7 +255,11 @@
                             </li>
                             {% endif %}
                             {% if occurrences['videos'] %}
-                            <li><a href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                            <li>{% if current_user.id == topic_map.user_identifier %}
+                                <a href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                                {% else %}
+                                Videos
+                                {% endif %}
                                 <ul>
                                     {% for video in occurrences['videos'] %}
                                     <li>

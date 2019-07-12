@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout_1_column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Delete 3D content</small>
+</h1>
+<hr/>
+<form action="{{ url_for('three_d.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file_identifier) }}"
+      method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="file-title"><strong>Title</strong></label>
+        <input aria-readonly="true" class="form-control" id="file-title" name="file-title" readonly
+               type="text" value="{{ file_title }}">
+    </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="file-scope"><strong>Context</strong></label>
+                        <input aria-readonly="true" class="form-control" id="file-scope" name="file-scope"
+                               readonly type="text" value="{{ file_scope }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <a class="btn btn-secondary"
+       href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-danger" type="submit">Delete 3D content</button>
+</form>
+<br/>
+{% endblock %}
