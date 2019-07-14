@@ -12,7 +12,7 @@ from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievaloption import RetrievalOption
-from topicdb.core.store.topicstoreerror import TopicStoreError
+from topicdb.core.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -330,7 +330,7 @@ def delete(map_identifier, topic_identifier):
             topic_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
             if os.path.isdir(topic_directory):
                 shutil.rmtree(topic_directory)
-        except TopicStoreError:
+        except TopicDbError:
             flash(
                 'Topic not deleted. Certain predefined topics are required for Contextualise to function correctly. Perhaps, you attempted to delete one of those topics.',
                 'warning')
