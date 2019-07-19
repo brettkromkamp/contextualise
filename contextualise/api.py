@@ -79,7 +79,7 @@ def get_network(map_identifier, topic_identifier):
                 'color': {'color': '#666', 'opacity': 0.5}
             }
             result[edges].append(edge)
-            build_network(child.pointer)  # Recursive call.
+            build_network(child.pointer)  # Recursive call
 
     if topic:
         tree = topic_store.get_topics_network(map_identifier, topic_identifier,
@@ -87,7 +87,7 @@ def get_network(map_identifier, topic_identifier):
         if len(tree) > 1:
             nodes = 0
             edges = 1
-            result = ([], [])  # The result is a tuple containing two lists of dictionaries.
+            result = ([], [])  # The result is a tuple containing two lists of dictionaries
             build_network(topic_identifier)
             return jsonify(result)
         else:

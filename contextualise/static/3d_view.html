@@ -46,10 +46,11 @@
             alpha: true
         });
         renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
-        renderer.autoClear = false;
-        renderer.setClearColor(0x000000, 0.0);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // PCFShadowMap
+        renderer.physicallyCorrectLights = true;
+        renderer.gammaOutput = true;
+        renderer.gammaFactor = 2.2;
+        renderer.setClearColor(0xcccccc);
+        renderer.setPixelRatio(window.devicePixelRatio);
 		renderer.setSize(window.innerWidth, window.innerHeight);
 
 		// SCENE
