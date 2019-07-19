@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic.first_base_name.name }}</h1>
+<h1>
+    {{ topic.first_base_name.name }}
+    <small class="text-muted">Images</small>
+</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
@@ -136,7 +139,9 @@
             image.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
             <a href="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-                href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>
+                href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                href="{{ url_for('attribute.index_entity', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=image.identifier, type='image') }}">View
+            attributes</a>
         </td>
     </tr>
     {% endfor %}

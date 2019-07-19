@@ -1,11 +1,14 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-<title>{{ topic.first_base_name.name }} &mdash; Videos | {{ topic_map.name }}</title>
+<title>{{ topic.first_base_name.name }} &mdash; Links | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic.first_base_name.name }}</h1>
+<h1>
+    {{ topic.first_base_name.name }}
+    <small class="text-muted">Links</small>
+</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">

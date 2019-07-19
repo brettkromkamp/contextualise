@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic.first_base_name.name }}</h1>
+<h1>
+    {{ topic.first_base_name.name }}
+    <small class="text-muted">Associations</small>
+</h1>
 <p><em>{{ creation_date }}</em></p>
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
