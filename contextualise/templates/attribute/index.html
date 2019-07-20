@@ -34,7 +34,6 @@
         <th scope="col">Value</th>
         <th scope="col">Data Type</th>
         <th scope="col">Scope</th>
-        <th scope="col">Language</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -49,9 +48,6 @@
         <td>
             <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.scope) }}">{{
                 attribute.scope|topic_name(topic_map.identifier) }}</a></td>
-        <td>
-            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.language) }}">{{
-                attribute.language|topic_name(topic_map.identifier) }}</a></td>
         <td><a href="#">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Delete</a></td>
     </tr>
     {% endfor %}
@@ -62,10 +58,17 @@
 {% endif %}
 {% if current_user.id == topic_map.user_identifier %}
 <a class="btn btn-secondary"
-       href="{{ url_for(return_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Return</a>
+   href="{{ url_for(return_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+   role="button">Return</a>
+{% if entity_type == 'topic' %}
 <a class="btn btn-primary"
-   href="#">Add attribute</a>
+   href="{{ url_for('attribute.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+    attribute</a>
+{% else %}
+<a class="btn btn-primary"
+   href="{{ url_for('attribute.add_entity', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}">Add
+    attribute</a>
+{% endif %}
 <br/>
 <br/>
 {% endif %}
