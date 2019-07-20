@@ -139,7 +139,7 @@
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
             video.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
-            <a href="{{ url_for('video.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+            <a href="{{ url_for('video.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                 href="{{ url_for('video.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Delete</a>
         </td>
     </tr>

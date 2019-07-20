@@ -52,7 +52,7 @@ def index(map_identifier, topic_identifier):
 
 @bp.route('/attributes/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>')
 @login_required
-def index_entity(map_identifier, topic_identifier, entity_identifier, entity_type):
+def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
@@ -165,14 +165,16 @@ def add(map_identifier, topic_identifier):
             return redirect(
                 url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
 
+    entity_type = 'topic'
     data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
     post_url = 'attribute.add'
-    cancel_url = 'topic.view'
+    cancel_url = 'attribute.index'
 
     return render_template('attribute/add.html',
                            error=error,
                            topic_map=topic_map,
                            topic=topic,
+                           entity_type=entity_type,
                            data_types=data_types,
                            post_url=post_url,
                            cancel_url=cancel_url,
@@ -181,10 +183,11 @@ def add(map_identifier, topic_identifier):
                            attribute_type=form_attribute_type,
                            attribute_scope=form_attribute_scope)
 
+
 @bp.route('/attributes/add/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>',
           methods=('GET', 'POST'))
 @login_required
-def add_entity(map_identifier, topic_identifier, entity_identifier, entity_type):
+def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
@@ -206,3 +209,63 @@ def add_entity(map_identifier, topic_identifier, entity_identifier, entity_type)
 
     if entity is None:
         abort(404)
+
+    form_attribute_name = ''
+    form_attribute_value = ''
+    form_attribute_type = ''
+    form_attribute_scope = '*'
+
+    error = 0
+
+    if request.method == 'POST':
+        form_attribute_name = request.form['attribute-name'].strip()
+        form_attribute_value = request.form['attribute-value'].strip()
+        form_attribute_type = request.form['attribute-type']
+        form_attribute_scope = request.form['attribute-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_attribute_scope:
+            form_attribute_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_attribute_name:
+            error = error | 1
+        if not form_attribute_value:
+            error = error | 2
+        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+            error = error | 4
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            attribute = Attribute(form_attribute_name, form_attribute_value, entity.identifier,
+                                  data_type=DataType[form_attribute_type])
+
+            # Persist objects to the topic store
+            topic_store.set_attribute(topic_map.identifier, attribute)
+
+            flash('Attribute successfully added.', 'success')
+            return redirect(
+                url_for('attribute.entity_index', map_identifier=topic_map.identifier,
+                        topic_identifier=topic.identifier, entity_identifier=entity.identifier,
+                        entity_type=entity_type))
+
+    data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
+    post_url = 'attribute.entity_add'
+    cancel_url = 'attribute.entity_index'
+
+    return render_template('attribute/add.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           entity=entity,
+                           entity_type=entity_type,
+                           data_types=data_types,
+                           post_url=post_url,
+                           cancel_url=cancel_url,
+                           attribute_name=form_attribute_name,
+                           attribute_value=form_attribute_value,
+                           attribute_type=form_attribute_type,
+                           attribute_scope=form_attribute_scope)

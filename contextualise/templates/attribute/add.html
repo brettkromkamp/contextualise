@@ -9,6 +9,10 @@
 <script>
 $('#advancedOptions').collapse('show');
 
+
+
+
+
 </script>
 {% endif %}
 {% endblock %}
@@ -19,8 +23,13 @@ $('#advancedOptions').collapse('show');
     <small class="text-muted">Add attribute</small>
 </h1>
 <hr/>
+{% if entity_type == 'topic' %}
 <form action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
       autocomplete="off" method="post" role="form">
+{% else %}
+<form action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}"
+      autocomplete="off" method="post" role="form">
+{% endif %}
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="attribute-name"><strong>Name</strong></label>
@@ -36,12 +45,13 @@ $('#advancedOptions').collapse('show');
         <label for="attribute-type">Type</label>
         <select class="form-control" id="attribute-type" name="attribute-type">
             {% for value, display in data_types %}
-            <option value="{{ value }}" {% if value == attribute_type %} selected {% endif %}>{{ display }}</option>
+            <option value="{{ value }}" {% if value== attribute_type %} selected {% endif %}>{{ display }}</option>
             {% endfor %}
         </select>
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
+    </p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -51,7 +61,8 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="attribute-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
+                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that
+                                is,
                                 Universal context)
                             </small>
                         </label>
@@ -60,7 +71,8 @@ $('#advancedOptions').collapse('show');
                                type="text" value="{{ attribute_scope }}">
                         {% if error|bitwise_and(4) == 4 %}
                         <small class="text-danger">
-                            A context with this identifier doesn't exist. Please provide an identifier for an existing
+                            A context with this identifier doesn't exist. Please provide an identifier for an
+                            existing
                             context.
                         </small>
                         {% endif %}
@@ -70,9 +82,15 @@ $('#advancedOptions').collapse('show');
         </div>
         <br/>
     </div>
+    {% if entity_type == 'topic' %}
     <a class="btn btn-secondary"
        href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
        role="button">Cancel</a>
+    {% else %}
+    <a class="btn btn-secondary"
+       href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}"
+       role="button">Cancel</a>
+    {% endif %}
     <button class="btn btn-primary" type="submit">Add attribute</button>
 </form>
 <br/>

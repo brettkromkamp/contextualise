@@ -132,7 +132,7 @@
         <td><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
             link.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
-            <a href="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+            <a href="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                 href="{{ url_for('link.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Delete</a>
         </td>
     </tr>
