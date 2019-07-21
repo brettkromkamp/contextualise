@@ -48,7 +48,15 @@
         <td>
             <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.scope) }}">{{
                 attribute.scope|topic_name(topic_map.identifier) }}</a></td>
-        <td><a href="#">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#">Delete</a></td>
+        <td><a href="#">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+            {% if entity_type == 'topic' %}
+            <a
+                href="{{ url_for('attribute.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}">Delete</a>
+            {% else %}
+            <a
+                href="{{ url_for('attribute.entity_delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}">Delete</a>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
     </tbody>

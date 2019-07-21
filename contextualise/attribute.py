@@ -269,3 +269,117 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
                            attribute_value=form_attribute_value,
                            attribute_type=form_attribute_type,
                            attribute_scope=form_attribute_scope)
+
+
+@bp.route('/attributes/delete/<map_identifier>/<topic_identifier>/<attribute_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete(map_identifier, topic_identifier, attribute_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    if attribute is None:
+        abort(404)
+
+    form_attribute_name = attribute.name
+    form_attribute_value = attribute.value
+    form_attribute_type = str(attribute.data_type).capitalize()
+    form_attribute_scope = attribute.scope
+
+    if request.method == 'POST':
+        # Delete attribute from topic store
+        topic_store.delete_attribute(map_identifier, attribute.identifier)
+
+        flash('Attribute successfully deleted.', 'warning')
+        return redirect(
+            url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    entity_type = 'topic'
+    post_url = 'attribute.delete'
+    cancel_url = 'attribute.index'
+
+    return render_template('attribute/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           attribute=attribute,
+                           entity_type=entity_type,
+                           post_url=post_url,
+                           cancel_url=cancel_url,
+                           attribute_name=form_attribute_name,
+                           attribute_value=form_attribute_value,
+                           attribute_type=form_attribute_type,
+                           attribute_scope=form_attribute_scope)
+
+
+@bp.route(
+    '/attributes/delete/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>',
+    methods=('GET', 'POST'))
+@login_required
+def entity_delete(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    entity = topic_store.get_association(map_identifier, entity_identifier,
+                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if entity is None:
+        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
+
+    if entity is None:
+        abort(404)
+
+    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    if attribute is None:
+        abort(404)
+
+    form_attribute_name = attribute.name
+    form_attribute_value = attribute.value
+    form_attribute_type = str(attribute.data_type).capitalize()
+    form_attribute_scope = attribute.scope
+
+    if request.method == 'POST':
+        # Delete attribute from topic store
+        topic_store.delete_attribute(map_identifier, attribute.identifier)
+
+        flash('Attribute successfully deleted.', 'warning')
+        return redirect(
+            url_for('attribute.entity_index', map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier, entity_identifier=entity.identifier,
+                    entity_type=entity_type))
+
+    post_url = 'attribute.entity_delete'
+    cancel_url = 'attribute.entity_index'
+
+    return render_template('attribute/delete.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           entity=entity,
+                           attribute=attribute,
+                           entity_type=entity_type,
+                           post_url=post_url,
+                           cancel_url=cancel_url,
+                           attribute_name=form_attribute_name,
+                           attribute_value=form_attribute_value,
+                           attribute_type=form_attribute_type,
+                           attribute_scope=form_attribute_scope)
