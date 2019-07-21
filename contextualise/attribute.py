@@ -166,7 +166,6 @@ def add(map_identifier, topic_identifier):
                 url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
 
     entity_type = 'topic'
-    data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
     post_url = 'attribute.add'
     cancel_url = 'attribute.index'
 
@@ -175,7 +174,6 @@ def add(map_identifier, topic_identifier):
                            topic_map=topic_map,
                            topic=topic,
                            entity_type=entity_type,
-                           data_types=data_types,
                            post_url=post_url,
                            cancel_url=cancel_url,
                            attribute_name=form_attribute_name,
@@ -252,7 +250,6 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
                         topic_identifier=topic.identifier, entity_identifier=entity.identifier,
                         entity_type=entity_type))
 
-    data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
     post_url = 'attribute.entity_add'
     cancel_url = 'attribute.entity_index'
 
@@ -260,6 +257,179 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
                            error=error,
                            topic_map=topic_map,
                            topic=topic,
+                           entity=entity,
+                           entity_type=entity_type,
+                           post_url=post_url,
+                           cancel_url=cancel_url,
+                           attribute_name=form_attribute_name,
+                           attribute_value=form_attribute_value,
+                           attribute_type=form_attribute_type,
+                           attribute_scope=form_attribute_scope)
+
+
+@bp.route('/attributes/edit/<map_identifier>/<topic_identifier>/<attribute_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit(map_identifier, topic_identifier, attribute_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    if attribute is None:
+        abort(404)
+
+    form_attribute_name = attribute.name
+    form_attribute_value = attribute.value
+    form_attribute_type = str(attribute.data_type).capitalize()
+    form_attribute_scope = attribute.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_attribute_name = request.form['attribute-name'].strip()
+        form_attribute_value = request.form['attribute-value'].strip()
+        form_attribute_type = request.form['attribute-type']
+        form_attribute_scope = request.form['attribute-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_attribute_scope:
+            form_attribute_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_attribute_name:
+            error = error | 1
+        if not form_attribute_value:
+            error = error | 2
+        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+            error = error | 4
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update the attribute by deleting the existing attribute and adding a new one
+            topic_store.delete_attribute(map_identifier, attribute.identifier)
+            updated_attribute = Attribute(form_attribute_name, form_attribute_value, topic.identifier,
+                                          data_type=DataType[form_attribute_type])
+            topic_store.set_attribute(topic_map.identifier, updated_attribute)
+
+            flash('Attribute successfully updated.', 'success')
+            return redirect(
+                url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    entity_type = 'topic'
+    data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
+    post_url = 'attribute.edit'
+    cancel_url = 'attribute.index'
+
+    return render_template('attribute/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           attribute=attribute,
+                           entity_type=entity_type,
+                           data_types=data_types,
+                           post_url=post_url,
+                           cancel_url=cancel_url,
+                           attribute_name=form_attribute_name,
+                           attribute_value=form_attribute_value,
+                           attribute_type=form_attribute_type,
+                           attribute_scope=form_attribute_scope)
+
+
+@bp.route(
+    '/attributes/edit/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>',
+    methods=('GET', 'POST'))
+@login_required
+def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    entity = topic_store.get_association(map_identifier, entity_identifier,
+                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if entity is None:
+        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
+
+    if entity is None:
+        abort(404)
+
+    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    if attribute is None:
+        abort(404)
+
+    form_attribute_name = attribute.name
+    form_attribute_value = attribute.value
+    form_attribute_type = str(attribute.data_type).capitalize()
+    form_attribute_scope = attribute.scope
+
+    error = 0
+
+    if request.method == 'POST':
+        form_attribute_name = request.form['attribute-name'].strip()
+        form_attribute_value = request.form['attribute-value'].strip()
+        form_attribute_type = request.form['attribute-type']
+        form_attribute_scope = request.form['attribute-scope'].strip()
+
+        # If no values have been provided set their default values
+        if not form_attribute_scope:
+            form_attribute_scope = '*'  # Universal scope
+
+        # Validate form inputs
+        if not form_attribute_name:
+            error = error | 1
+        if not form_attribute_value:
+            error = error | 2
+        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+            error = error | 4
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update the attribute by deleting the existing attribute and adding a new one
+            topic_store.delete_attribute(map_identifier, attribute.identifier)
+            updated_attribute = Attribute(form_attribute_name, form_attribute_value, entity.identifier,
+                                          data_type=DataType[form_attribute_type])
+            topic_store.set_attribute(topic_map.identifier, updated_attribute)
+
+            flash('Attribute successfully updated.', 'success')
+            return redirect(
+                url_for('attribute.entity_index', map_identifier=topic_map.identifier,
+                        topic_identifier=topic.identifier, entity_identifier=entity.identifier,
+                        entity_type=entity_type))
+
+    data_types = [('STRING', 'String'), ('NUMBER', 'Number'), ('TIMESTAMP', 'Timestamp'), ('BOOLEAN', 'Boolean')]
+    post_url = 'attribute.entity_edit'
+    cancel_url = 'attribute.entity_index'
+
+    return render_template('attribute/edit.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           attribute=attribute,
                            entity=entity,
                            entity_type=entity_type,
                            data_types=data_types,

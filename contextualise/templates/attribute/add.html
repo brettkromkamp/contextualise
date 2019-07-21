@@ -40,9 +40,10 @@ $('#advancedOptions').collapse('show');
     <div class="form-group">
         <label for="attribute-type">Type</label>
         <select class="form-control" id="attribute-type" name="attribute-type">
-            {% for value, display in data_types %}
-            <option value="{{ value }}" {% if value== attribute_type %} selected {% endif %}>{{ display }}</option>
-            {% endfor %}
+            <option value="STRING">String</option>
+            <option value="NUMBER">Number</option>
+            <option value="TIMESTAMP">Timestamp</option>
+            <option value="BOOLEAN">Boolean</option>
         </select>
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"

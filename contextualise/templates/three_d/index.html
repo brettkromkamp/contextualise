@@ -153,6 +153,10 @@ $('[data-fancybox]').fancybox({
         <td>
             <a href="{{ url_for('three_d.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                 href="{{ url_for('three_d.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Delete</a>
+            {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=file.identifier, entity_type='3d-scene') }}">View
+            attributes</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

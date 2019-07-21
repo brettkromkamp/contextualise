@@ -43,7 +43,9 @@
             <a class="dropdown-item" href="#">Add tag</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View attributes</a>
+            <a class="dropdown-item"
+               href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                attributes</a>
             {% endif %}
         </div>
     </li>
@@ -139,9 +141,11 @@
             image.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
             <a href="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>
+            {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                 href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=image.identifier, entity_type='image') }}">View
             attributes</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}
