@@ -55,7 +55,9 @@ $('[data-fancybox]').fancybox({
             <a class="dropdown-item" href="#">Add tag</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View attributes</a>
+            <a class="dropdown-item"
+               href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                attributes</a>
             {% endif %}
         </div>
     </li>

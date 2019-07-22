@@ -38,7 +38,9 @@
             <a class="dropdown-item" href="#">Add tag</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View attributes</a>
+            <a class="dropdown-item"
+               href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                attributes</a>
             {% endif %}
         </div>
     </li>
@@ -104,7 +106,8 @@
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
            role="button">Associations</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
@@ -160,8 +163,11 @@
             </table>
         </td>
         <td>
-            <a class="card-link"
-               href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
+            <a href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
+            {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=association.identifier, entity_type='association') }}">View
+            attributes</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

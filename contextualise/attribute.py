@@ -23,6 +23,8 @@ def index(map_identifier, topic_identifier):
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
@@ -60,6 +62,8 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
@@ -118,6 +122,8 @@ def add(map_identifier, topic_identifier):
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
@@ -193,6 +199,8 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
@@ -278,6 +286,8 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
@@ -360,6 +370,8 @@ def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_i
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
@@ -452,6 +464,8 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
                                   resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
@@ -504,6 +518,8 @@ def entity_delete(map_identifier, topic_identifier, entity_identifier, attribute
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
