@@ -1,3 +1,4 @@
+import maya
 from flask import (Blueprint, render_template, request, flash, url_for)
 from flask_login import current_user
 from flask_security import login_required
@@ -41,6 +42,9 @@ def index(map_identifier, topic_identifier):
                            'type': str(entity_attribute.data_type).lower(),
                            'scope': entity_attribute.scope})
 
+    creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
+
     entity_type = 'topic'
     return_url = 'topic.view'
 
@@ -49,7 +53,8 @@ def index(map_identifier, topic_identifier):
                            topic=topic,
                            entity_type=entity_type,
                            return_url=return_url,
-                           attributes=attributes)
+                           attributes=attributes,
+                           creation_date=creation_date,)
 
 
 @bp.route('/attributes/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>')
@@ -103,13 +108,17 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
                            'type': str(entity_attribute.data_type).lower(),
                            'scope': entity_attribute.scope})
 
+    creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
+
     return render_template('attribute/index.html',
                            topic_map=topic_map,
                            topic=topic,
                            entity=entity,
                            entity_type=entity_type,
                            return_url=return_url,
-                           attributes=attributes)
+                           attributes=attributes,
+                           creation_date=creation_date)
 
 
 @bp.route('/attributes/add/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))

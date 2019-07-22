@@ -123,6 +123,9 @@ $("#view-graph-link").click(function(e) {
     $('#modalNetworkGraph').modal();
 });
 
+
+
+
 </script>
 {% endblock %}
 
@@ -174,21 +177,28 @@ $("#view-graph-link").click(function(e) {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">First name</th>
+                        {% if topic.base_names|length > 1 %}
+                        <th scope="row">Names</th>
+                        <td>
+                            {% for base_name in topic.base_names %}
+                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
+                            {% endfor %}
+                        </td>
+                        {% else %}
+                        <th scope="row">Name</th>
                         <td>
                             {{ topic.first_base_name.name}}
                         </td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <th scope="row">Type</th>
                         <td>
                             {% if session['current_scope'] == '*' %}
-                            <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
                                 topic.instance_of|topic_name(topic_map.identifier) }}</a>
                             {% else %}
-                            <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
                                 topic.instance_of|topic_name(topic_map.identifier) }}</a>
                             {% endif %}
                         </td>
@@ -224,10 +234,13 @@ $("#view-graph-link").click(function(e) {
                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
             <a class="dropdown-item"
-               href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete topic</a>
+               href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                topic</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View names</a>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                names</a>
             {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
@@ -236,7 +249,9 @@ $("#view-graph-link").click(function(e) {
             <a class="dropdown-item" href="#">Add tag</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View attributes</a>
+            <a class="dropdown-item"
+               href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                attributes</a>
             {% endif %}
         </div>
     </li>

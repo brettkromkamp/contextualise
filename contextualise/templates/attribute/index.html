@@ -4,7 +4,6 @@
 <title>{{ topic.first_base_name.name }} &mdash; Attributes | {{ topic_map.name }}</title>
 {% endblock %}
 
-
 {% block javascript %}{% endblock %}
 
 {% block content %}
@@ -26,6 +25,7 @@
     <small class="text-muted">Association attributes</small>
     {% endif %}
 </h1>
+<p><em>{{ creation_date }}</em></p>
 {% if attributes %}
 <table class="table table-bordered">
     <thead class="thead-light">

@@ -8,6 +8,7 @@ import mistune
 from flask import (Blueprint, session, flash, render_template, request, url_for, redirect)
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
+from topicdb.core.models.basename import BaseName
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
@@ -262,7 +263,7 @@ def edit(map_identifier, topic_identifier):
         else:
             # Update topic's first base name if it has changed
             if topic.first_base_name.name != form_topic_name:
-                topic_store.update_basename_name(map_identifier, topic.first_base_name.identifier, form_topic_name)
+                topic_store.update_basename(map_identifier, topic.first_base_name.identifier, form_topic_name)
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
@@ -540,6 +541,168 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
                            note_title=form_note_title,
                            note_text=form_note_text,
                            note_scope=form_note_scope)
+
+
+@bp.route('/topics/view-names/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
+@login_required
+def view_names(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+
+    if topic is None:
+        abort(404)
+
+    creation_date_attribute = topic.get_attribute_by_name('creation-timestamp')
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else 'Undefined'
+
+    return render_template('topic/view_names.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           creation_date=creation_date)
+
+
+@bp.route('/topics/add-name/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
+@login_required
+def add_name(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    form_topic_name = ''
+
+    error = 0
+
+    if request.method == 'POST':
+        form_topic_name = request.form['topic-name'].strip()
+
+        # Validate form inputs
+        if not form_topic_name:
+            error = error | 1
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            base_name = BaseName(form_topic_name)
+            topic_store.set_basename(map_identifier, topic.identifier, base_name)
+
+            flash('Name successfully added.', 'success')
+            return redirect(
+                url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('topic/add_name.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           topic_name=form_topic_name)
+
+
+@bp.route('/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>', methods=('GET', 'POST'))
+@login_required
+def edit_name(map_identifier, topic_identifier, name_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+    if 'admin' not in current_user.roles:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    form_topic_name = topic.get_base_name(name_identifier).name
+
+    error = 0
+
+    if request.method == 'POST':
+        form_topic_name = request.form['topic-name'].strip()
+
+        # Validate form inputs
+        if not form_topic_name:
+            error = error | 1
+
+        if error != 0:
+            flash(
+                'An error occurred when submitting the form. Please review the warnings and fix accordingly.',
+                'warning')
+        else:
+            # Update name if required
+            if form_topic_name != topic.get_base_name(name_identifier).name:
+                topic_store.update_basename(map_identifier, name_identifier, form_topic_name)
+
+            flash('Name successfully updated.', 'success')
+            return redirect(
+                url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('topic/edit_name.html',
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           topic_name=form_topic_name,
+                           name_identifier=name_identifier)
+
+
+@bp.route('/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>', methods=('GET', 'POST'))
+@login_required
+def delete_name(map_identifier, topic_identifier, name_identifier):
+    topic_store = get_topic_store()
+    topic_map = topic_store.get_topic_map(map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, topic_identifier,
+                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    form_topic_name = topic.get_base_name(name_identifier).name
+
+    if request.method == 'POST':
+        topic_store.delete_basename(map_identifier, name_identifier)
+
+        flash('Name successfully deleted.', 'warning')
+        return redirect(
+            url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier))
+
+    return render_template('topic/delete_name.html',
+                           topic_map=topic_map,
+                           topic=topic,
+                           topic_name=form_topic_name,
+                           name_identifier=name_identifier)
 
 
 @bp.route('/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>', methods=('GET', 'POST'))
