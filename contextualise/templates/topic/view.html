@@ -11,6 +11,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" type="text/javascript"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css"/>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.3/jsrender.min.js"></script>
+
 <script>
 $('[data-fancybox]').fancybox({
 	iframe : {
@@ -30,6 +32,11 @@ $('#knowledge-graph-search').on('click', function (event) {
         .then(function (response) {
         // Handle success
         console.log(response);
+
+        var template = $.templates("#knowledgeGraphTemplate");
+        var data = {name: response.data.name};
+        var html = template.render(data);
+        $("#knowledgeGraphResult").html(html);
     })
     .catch(function (error) {
         // Handle error
@@ -392,22 +399,27 @@ $("#view-graph-link").click(function(e) {
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% endif %}
 
-<!-- Modal -->
+<!-- Knowledge Graph modal -->
+<script id="knowledgeGraphTemplate" type="text/x-jsrender">
+{% raw %}
+  <div class="modal-header">
+    <h5 class="modal-title" id="knowledgeGraphLabel">{{:name}}</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    ...
+  </div>
+{% endraw %}
+</script>
+
 <div class="modal fade" id="knowledgeGraphModal" tabindex="-1" role="dialog" aria-labelledby="knowledgeGraphLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="knowledgeGraphLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
+      <div id="knowledgeGraphResult"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

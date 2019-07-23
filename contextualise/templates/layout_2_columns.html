@@ -315,13 +315,10 @@ if (typeof document.getElementById('goto-button') != undefined) {
         var gotoUrl = window.location.href.replace('#', '');
         gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
         if (gotoTopicIdentifier) {
-            console.log("Going...");
             window.location.href = gotoUrl;
         }
     });
 }
-
-
 
 </script>
 </body>
