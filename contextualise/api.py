@@ -129,13 +129,16 @@ def get_knowledge_graph():
     }
     response = requests.get(service_url, params=params).json()
     data = response['itemListElement'][0]['result']
-    result = {'type': data['@type'],
-              'name': data['name'],
-              'shortDescription': data['description'],
-              'detailedDescription': data['detailedDescription']['articleBody'],
-              'image': data['image']['url'],
-              'urls': [
-                  data['detailedDescription']['url'],
-                  data['url']
-              ]}
+    try:
+        result = {'type': data['@type'],
+                  'name': data['name'],
+                  'shortDescription': data['description'],
+                  'detailedDescription': data['detailedDescription']['articleBody'],
+                  'image': data['image']['contentUrl'],
+                  'urls': [
+                      data['detailedDescription']['url'],
+                      data['url']
+                  ]}
+    except KeyError:
+        abort(404)
     return jsonify(result)

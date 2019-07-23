@@ -22,7 +22,6 @@ $('[data-fancybox]').fancybox({
 
 $('#knowledge-graph-search').on('click', function (event) {
     var knowledgeGraphLink = document.getElementById('knowledge-graph-search');
-    console.log(knowledgeGraphLink);
     if (knowledgeGraphLink) {
         var knowledgeGraphQuery = knowledgeGraphLink.dataset.query;
     }
@@ -31,12 +30,26 @@ $('#knowledge-graph-search').on('click', function (event) {
     axios.get(getNetworkApiUrl)
         .then(function (response) {
         // Handle success
-        console.log(response);
 
         var template = $.templates("#knowledgeGraphTemplate");
-        var data = {name: response.data.name};
+        var data = {
+            name: response.data.name,
+            shortDescription: response.data.shortDescription,
+            image: response.data.image,
+            detailedDescription: response.data.detailedDescription,
+            url1: {
+                domain: domainFromUrl(response.data.urls[0]),
+                url: response.data.urls[0]
+            },
+            url2: {
+                domain: domainFromUrl(response.data.urls[1]),
+                url: response.data.urls[1]
+            }
+        };
         var html = template.render(data);
         $("#knowledgeGraphResult").html(html);
+
+        $('#knowledgeGraphModal').modal();
     })
     .catch(function (error) {
         // Handle error
@@ -45,9 +58,19 @@ $('#knowledge-graph-search').on('click', function (event) {
     .then(function () {
         // Always executed
     });
-
-    $('#knowledgeGraphModal').modal();
 });
+
+function domainFromUrl(url) {
+    var result
+    var match
+    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+        result = match[1]
+        if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+            result = match[1]
+        }
+    }
+    return result
+}
 
 function searchArray(value, prop, arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -184,7 +207,8 @@ $("#view-graph-link").click(function(e) {
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
                                            data-toggle="collapse" href="#advancedProperties"> Properties</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     {% if knowledge_graph_query %}<i
-        class="fas fa-search"></i> <a id="knowledge-graph-search" href="#" data-query="{{ knowledge_graph_query }}"> Knowledge graph</a>
+            class="fas fa-search"></i> <a data-query="{{ knowledge_graph_query }}" href="#" id="knowledge-graph-search">
+        Knowledge graph</a>
     {% endif %}
 </p>
 <div class="collapse" id="advancedProperties">
@@ -409,19 +433,28 @@ $("#view-graph-link").click(function(e) {
     </button>
   </div>
   <div class="modal-body">
-    ...
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8"><strong>{{:name}} &mdash; {{:shortDescription}}</strong><br/><br/>{{:detailedDescription}}</div>
+          <div class="col-md-4 ml-auto"><img class="img-thumbnail" src="{{:image}}"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-8"><br/><a target="_blank" href="{{:url1['url']}}">{{:url1['domain']}}</a><br/><a target="_blank" href="{{:url2['url']}}">{{:url2['domain']}}</a></div>
+          <div class="col-md-4 ml-auto"></div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
   </div>
 {% endraw %}
+
 </script>
 
-<div class="modal fade" id="knowledgeGraphModal" tabindex="-1" role="dialog" aria-labelledby="knowledgeGraphLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div id="knowledgeGraphResult"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+<div aria-hidden="true" aria-labelledby="knowledgeGraphLabel" class="modal fade" id="knowledgeGraphModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="knowledgeGraphResult"></div>
     </div>
-  </div>
 </div>
 {% endblock %}
