@@ -71,7 +71,8 @@ def view(map_identifier, topic_identifier):
     }
     for occurrence in topic_occurrences:
         if occurrence.instance_of == 'text':
-            occurrences['text'] = mistune.markdown(occurrence.resource_data.decode())
+            if occurrence.resource_data:
+                occurrences['text'] = mistune.markdown(occurrence.resource_data.decode())
         elif occurrence.instance_of == 'image':
             occurrences['images'].append({
                 'title': occurrence.get_attribute_by_name('title').value,
@@ -119,6 +120,9 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session['breadcrumbs'] = list(breadcrumbs)
 
+    knowledge_graph_query = topic.get_attribute_by_name('knowledge-graph-query').value if topic.get_attribute_by_name(
+        'knowledge-graph-query') else None
+
     return render_template('topic/view.html',
                            topic_map=topic_map,
                            topic=topic,
@@ -126,7 +130,8 @@ def view(map_identifier, topic_identifier):
                            associations=associations,
                            creation_date=creation_date,
                            modification_date=modification_date,
-                           breadcrumbs=breadcrumbs)
+                           breadcrumbs=breadcrumbs,
+                           knowledge_graph_query=knowledge_graph_query)
 
 
 @bp.route('/topics/create/<map_identifier>/<topic_identifier>', methods=('GET', 'POST'))
@@ -190,10 +195,14 @@ def create(map_identifier, topic_identifier):
             modification_attribute = Attribute('modification-timestamp', timestamp, new_topic.identifier,
                                                data_type=DataType.TIMESTAMP)
 
+            query_attribute = Attribute('knowledge-graph-query', form_topic_name.lower(), new_topic.identifier,
+                                        data_type=DataType.STRING)
+
             # Persist objects to the topic store
             topic_store.set_topic(topic_map.identifier, new_topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
             topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(topic_map.identifier, query_attribute)
 
             flash('Topic successfully created.', 'success')
             return redirect(

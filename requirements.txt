@@ -8,5 +8,6 @@ flask-seasurf>=0.2.2
 bcrypt>=3.1.7
 Werkzeug>=0.15.5
 maya>=0.6.1
+requests>=2.22.0
 mistune>=0.8.4
 python-slugify>=3.0.2

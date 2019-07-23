@@ -18,6 +18,30 @@ $('[data-fancybox]').fancybox({
 	}
 });
 
+$('#knowledge-graph-search').on('click', function (event) {
+    var knowledgeGraphLink = document.getElementById('knowledge-graph-search');
+    console.log(knowledgeGraphLink);
+    if (knowledgeGraphLink) {
+        var knowledgeGraphQuery = knowledgeGraphLink.dataset.query;
+    }
+    var getNetworkApiUrl = '/api/get-knowledge-graph' + '?q=' + knowledgeGraphQuery;
+
+    axios.get(getNetworkApiUrl)
+        .then(function (response) {
+        // Handle success
+        console.log(response);
+    })
+    .catch(function (error) {
+        // Handle error
+        console.log(error);
+    })
+    .then(function () {
+        // Always executed
+    });
+
+    $('#knowledgeGraphModal').modal();
+});
+
 function searchArray(value, prop, arr) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i][prop] === value) {
@@ -123,9 +147,6 @@ $("#view-graph-link").click(function(e) {
     $('#modalNetworkGraph').modal();
 });
 
-
-
-
 </script>
 {% endblock %}
 
@@ -154,7 +175,11 @@ $("#view-graph-link").click(function(e) {
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
-                                           data-toggle="collapse" href="#advancedProperties"> Properties</a></p>
+                                           data-toggle="collapse" href="#advancedProperties"> Properties</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% if knowledge_graph_query %}<i
+        class="fas fa-search"></i> <a id="knowledge-graph-search" href="#" data-query="{{ knowledge_graph_query }}"> Knowledge graph</a>
+    {% endif %}
+</p>
 <div class="collapse" id="advancedProperties">
     <div class="card">
         <div class="card-header">
@@ -181,7 +206,8 @@ $("#view-graph-link").click(function(e) {
                         <th scope="row">Names</th>
                         <td>
                             {% for base_name in topic.base_names %}
-                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
+                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
+                            endif %}
                             {% endfor %}
                         </td>
                         {% else %}
@@ -365,4 +391,25 @@ $("#view-graph-link").click(function(e) {
 {% endfor %}
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="knowledgeGraphModal" tabindex="-1" role="dialog" aria-labelledby="knowledgeGraphLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="knowledgeGraphLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

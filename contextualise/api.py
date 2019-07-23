@@ -1,3 +1,7 @@
+import configparser
+import os
+
+import requests
 from flask import (Blueprint, request, jsonify)
 from flask_security import login_required, current_user
 from slugify import slugify
@@ -6,6 +10,13 @@ from werkzeug.exceptions import abort
 from contextualise.topic_store import get_topic_store
 
 bp = Blueprint('api', __name__)
+
+SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), '../settings.ini')
+
+config = configparser.ConfigParser()
+config.read(SETTINGS_FILE_PATH)
+
+KNOWLEDGE_GRAPH_API_KEY = config['API']['KnowledgeGraph']
 
 
 @bp.route('/api/get-slug')
@@ -102,3 +113,29 @@ def get_network(map_identifier, topic_identifier):
             "code": 404,
             "message": "Topic not found"
         })
+
+
+@bp.route('/api/get-knowledge-graph')
+@login_required
+def get_knowledge_graph():
+    query = request.args.get('q').lower()
+
+    service_url = 'https://kgsearch.googleapis.com/v1/entities:search'
+    params = {
+        'query': query,
+        'limit': 1,
+        'indent': True,
+        'key': KNOWLEDGE_GRAPH_API_KEY,
+    }
+    response = requests.get(service_url, params=params).json()
+    data = response['itemListElement'][0]['result']
+    result = {'type': data['@type'],
+              'name': data['name'],
+              'shortDescription': data['description'],
+              'detailedDescription': data['detailedDescription']['articleBody'],
+              'image': data['image']['url'],
+              'urls': [
+                  data['detailedDescription']['url'],
+                  data['url']
+              ]}
+    return jsonify(result)
