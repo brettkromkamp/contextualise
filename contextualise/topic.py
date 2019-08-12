@@ -243,9 +243,9 @@ def edit(map_identifier, topic_identifier):
     texts = [occurrence for occurrence in occurrences if occurrence.instance_of == 'text']
 
     form_topic_name = topic.first_base_name.name
-    form_topic_text = texts[0].resource_data.decode() if texts[0].resource_data else ''
+    form_topic_text = texts[0].resource_data.decode() if len(texts) > 0 and texts[0].resource_data else ''
     form_topic_instance_of = topic.instance_of
-    form_topic_text_scope = texts[0].scope if texts else session['current_scope']  # Should it be '*'?
+    form_topic_text_scope = texts[0].scope if len(texts) > 0 else session['current_scope']  # Should it be '*'?
 
     error = 0
 
@@ -280,7 +280,7 @@ def edit(map_identifier, topic_identifier):
 
             # If the topic has an existing text occurrence update it, otherwise create a new text occurrence
             # and persist it
-            if texts:
+            if len(texts) > 0:
                 topic_store.update_occurrence_data(map_identifier, texts[0].identifier, form_topic_text)
             else:
                 text_occurrence = Occurrence(instance_of='text', topic_identifier=topic.identifier,
