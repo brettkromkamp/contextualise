@@ -5,7 +5,7 @@ from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
-from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -26,12 +26,12 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     link_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier, 'url',
-                                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     links = []
     for link_occurrence in link_occurrences:
@@ -65,7 +65,7 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -133,12 +133,12 @@ def edit(map_identifier, topic_identifier, link_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     link_occurrence = topic_store.get_occurrence(map_identifier, link_identifier,
-                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                 resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     form_link_title = link_occurrence.get_attribute_by_name('title').value
     form_link_scope = link_occurrence.scope
@@ -200,12 +200,12 @@ def delete(map_identifier, topic_identifier, link_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     link_occurrence = topic_store.get_occurrence(map_identifier, link_identifier,
-                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                 resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     form_link_title = link_occurrence.get_attribute_by_name('title').value
     form_link_scope = link_occurrence.scope

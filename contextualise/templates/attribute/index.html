@@ -41,7 +41,7 @@
     {% for attribute in attributes %}
     <tr>
         <td>{{ attribute.name }}</td>
-        <td>{{ attribute.value }}</td>
+        <td style="max-width: 36em;">{{ attribute.value }}</td>
         <td>
             <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.type) }}">{{
                 attribute.type|topic_name(topic_map.identifier) }}</a></td>

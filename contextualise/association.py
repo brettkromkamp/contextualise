@@ -2,7 +2,7 @@ import maya
 from flask import (Blueprint, flash, render_template, request, url_for, redirect)
 from flask_security import login_required, current_user
 from topicdb.core.models.association import Association
-from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -23,7 +23,7 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -54,7 +54,7 @@ def create(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -163,7 +163,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 

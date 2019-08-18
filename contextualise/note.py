@@ -8,7 +8,7 @@ from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
-from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -34,8 +34,8 @@ def index(map_identifier):
     topic = topic_store.get_topic(map_identifier, 'home')
 
     note_occurrences = topic_store.get_topic_occurrences(map_identifier, 'notes', 'note',
-                                                         inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
-                                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                         inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+                                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     notes = []
     for note_occurrence in note_occurrences:
         notes.append({'identifier': note_occurrence.identifier,
@@ -62,7 +62,7 @@ def add(map_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, 'home',
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -134,13 +134,13 @@ def attach(map_identifier, note_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, 'home',
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
-                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
-                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                 inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+                                                 resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     form_note_title = note_occurrence.get_attribute_by_name('title').value
     form_note_text = mistune.markdown(note_occurrence.resource_data.decode())
@@ -188,14 +188,14 @@ def convert(map_identifier, note_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, 'home',
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     if topic is None:
         abort(404)
 
     note_occurrence = topic_store.get_occurrence(map_identifier, note_identifier,
-                                                 inline_resource_data=RetrievalOption.INLINE_RESOURCE_DATA,
-                                                 resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                 inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+                                                 resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     note_title = note_occurrence.get_attribute_by_name('title').value
 
     form_topic_name = ''

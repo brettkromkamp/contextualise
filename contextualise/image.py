@@ -8,7 +8,7 @@ from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
-from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -32,12 +32,12 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     image_occurrences = topic_store.get_topic_occurrences(map_identifier, topic_identifier, 'image',
-                                                          resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                          resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     images = []
     for image_occurrence in image_occurrences:
@@ -69,7 +69,7 @@ def upload(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -150,12 +150,12 @@ def edit(map_identifier, topic_identifier, image_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     image_occurrence = topic_store.get_occurrence(map_identifier, image_identifier,
-                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     form_image_title = image_occurrence.get_attribute_by_name('title').value
     form_image_resource_ref = image_occurrence.resource_ref
@@ -219,12 +219,12 @@ def delete(map_identifier, topic_identifier, image_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     image_occurrence = topic_store.get_occurrence(map_identifier, image_identifier,
-                                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     form_image_title = image_occurrence.get_attribute_by_name('title').value
     form_image_resource_ref = image_occurrence.resource_ref

@@ -4,7 +4,7 @@ from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
-from topicdb.core.store.retrievaloption import RetrievalOption
+from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -28,7 +28,7 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -72,12 +72,12 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(map_identifier, entity_identifier,
-                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
 
@@ -136,7 +136,7 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -213,12 +213,12 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(map_identifier, entity_identifier,
-                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
 
@@ -299,7 +299,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -384,12 +384,12 @@ def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_i
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(map_identifier, entity_identifier,
-                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
 
@@ -477,7 +477,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -532,12 +532,12 @@ def entity_delete(map_identifier, topic_identifier, entity_identifier, attribute
         abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier,
-                                  resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                  resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(map_identifier, entity_identifier,
-                                         resolve_attributes=RetrievalOption.RESOLVE_ATTRIBUTES)
+                                         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
 
