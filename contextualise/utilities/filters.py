@@ -15,5 +15,5 @@ def bitwise_and(value1, value2):
 
 
 def register_filters(app):
-    app.jinja_env.filters['topic_name'] = topic_name
-    app.jinja_env.filters['bitwise_and'] = bitwise_and
+    app.jinja_env.filters["topic_name"] = topic_name
+    app.jinja_env.filters["bitwise_and"] = bitwise_and

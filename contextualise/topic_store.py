@@ -11,16 +11,18 @@ from topicdb.core.store.topicstore import TopicStore
 
 
 def get_topic_store():
-    if 'topicstore' not in g:
-        g.topic_store = TopicStore(current_app.config['TOPIC_STORE_USER'],
-                                   current_app.config['TOPIC_STORE_PASSWORD'],
-                                   dbname=current_app.config['TOPIC_STORE_DBNAME'])
+    if "topicstore" not in g:
+        g.topic_store = TopicStore(
+            current_app.config["TOPIC_STORE_USER"],
+            current_app.config["TOPIC_STORE_PASSWORD"],
+            dbname=current_app.config["TOPIC_STORE_DBNAME"],
+        )
         g.topic_store.open()
     return g.topic_store
 
 
 def close_topic_store(e=None):
-    topic_store = g.pop('topicstore', None)
+    topic_store = g.pop("topicstore", None)
     if topic_store is not None:
         topic_store.close()
 
