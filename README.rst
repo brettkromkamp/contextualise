@@ -17,14 +17,14 @@ a way to describe complex relationships between abstract concepts and real-world
 Why?
 ----
 
-I built and published my first knowledge documentation tool in 2007 which I still use, almost unmodified, twelve years
-later: `Knowledge Management Using Topic Maps`_. If I remember correctly, it was built with `PHP version 5.2.5`_!
-Twelve years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
-with the `Flask`_ web development framework. What's more, after twelve years of using my own and other knowledge
-management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
-matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
-source: both ``Contextualise`` (the web application) and ``TopicDB`` (the actual topic maps engine on top of which
-``Contextualise`` is built --- also written by me) are licensed with the permissive open source `MIT license`_.
+I built and published my first knowledge documentation tool in 2007 which I was still using until very recently, almost
+unmodified, twelve years later. If I remember correctly, it was built with `PHP version 5.2.5`_! Twelve years is an
+eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together with the `Flask`_
+web development framework. What's more, after twelve years of using my own and other knowledge management tools, I have
+several improvements in mind for the next version (many of which are simplifications, for that matter). And perhaps one
+of the most important reasons for building a new tool like this is that I want it to be open source: both
+``Contextualise`` (the web application) and ``TopicDB`` (the actual topic maps engine on top of which ``Contextualise``
+is built --- also written by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
 ---------------
