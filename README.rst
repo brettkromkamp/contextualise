@@ -12,11 +12,6 @@ games) and many kinds of hobbies.
 ``Contextualise``'s main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
-.. image:: resources/topic-maps.png
-   :alt: Topic maps with topics, associations and occurrences
-
-*Topic maps with topics, associations and occurrences*
-
 Why?
 ----
 
