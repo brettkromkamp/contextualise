@@ -6,6 +6,9 @@ activities consisting of (semi) unstructured and widely diverse data and informa
 investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer
 games) and many kinds of hobbies.
 
+.. image:: resources/topic-view.png
+   :alt: Contextualise's topic view
+
 ``Contextualise``'s main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
