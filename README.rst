@@ -42,10 +42,9 @@ Install the Development Version
 If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version
 of ``Contextualise``.
 
-Before installing the development version, you may need to uninstall the standard version of ``Contextualise`` using
-``pip``::
-
-    $ pip uninstall contextualise
+Certain build prerequisites need to met including the presence of a C compiler, the Python
+header files, the ``libpq`` header files and the ``pg_config`` program as outlined, here: `Build
+prerequisites <http://initd.org/psycopg/docs/install.html#build-prerequisites>`_.
 
 Then do::
 
@@ -59,6 +58,11 @@ right places and installing the command line scripts to the appropriate location
 Then, if you want to update ``Contextualise`` at any time, in the same directory do::
 
     $ git pull
+
+After having installed Contextualise, you would have to separately install and configure the PostgreSQL database. Brief
+instructions on how to do so are provided, here: `Setting up the TopicDB
+database <https://gist.github.com/brettkromkamp/87aaa99b056578ff1dc23a43a49aca89>`_. You need to ensure that the
+database username, password and database name match with the ``settings.ini`` file in the project's root folder.
 
 First-Time Use
 --------------
