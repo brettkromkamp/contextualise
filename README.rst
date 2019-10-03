@@ -82,6 +82,10 @@ page.
 .. image:: resources/welcome-page.png
    :alt: The Contextualise welcome page
 
+Flask's built-in server is not suitable for production purposes. Take a look at Flask's own `documentation
+<https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_ for properly running a Flask application in
+production.
+
 First-Time Use
 --------------
 
