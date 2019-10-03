@@ -76,7 +76,8 @@ You should see something similar to the following in the terminal::
     * Debugger is active!
     * Debugger PIN: 521-258-444
 
-Opening the browser and navigating to http://127.0.0.1:5000/ should result in showing the application's *welcome* page.
+Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *welcome*
+page.
 
 .. image:: resources/welcome-page.png
    :alt: The Contextualise welcome page
