@@ -31,12 +31,14 @@ setup(
         'flask',
         'flask-security',
         'flask-sqlalchemy',
+        'flask-seasurf',
         'sqlalchemy',
         'bcrypt',
         'topic-db',
         'maya',
         'mistune',
-        'python-slugify'
+        'python-slugify',
+        'requests'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
