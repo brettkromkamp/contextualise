@@ -54,10 +54,32 @@ Then, if you want to update ``Contextualise`` at any time, in the same directory
 
     $ git pull
 
-After having installed Contextualise, you would have to separately install and configure the PostgreSQL database. Brief
+After having installed ``Contextualise``, you would have to separately install and configure the PostgreSQL database. Brief
 instructions on how to do so are provided, here: `Setting up the TopicDB
 database <https://gist.github.com/brettkromkamp/87aaa99b056578ff1dc23a43a49aca89>`_. You need to ensure that the
 database username, password and database name match with the ``settings.ini`` file in the project's root folder.
+
+Finally, to run the application in **development** mode you need to change to the project's top-level directory and set
+two environment variables followed by running the ``flask`` command with the ``run`` parameter::
+
+    $ export FLASK_APP=contextualise
+    $ export FLASK_ENV=development
+    $ flask run
+
+You should see something similar to the following in the terminal::
+
+    * Serving Flask app "contextualise" (lazy loading)
+    * Environment: development
+    * Debug mode: on
+    * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+    * Restarting with stat
+    * Debugger is active!
+    * Debugger PIN: 521-258-444
+
+Opening the browser and navigating to http://127.0.0.1:5000/ should result in showing the application's *welcome* page.
+
+.. image:: resources/welcome-page.png
+   :alt: The Contextualise welcome page
 
 First-Time Use
 --------------
