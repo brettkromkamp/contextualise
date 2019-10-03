@@ -2,7 +2,7 @@ Contextualise by Brett Kromkamp
 ===============================
 
 ``Contextualise`` is a simple and flexible tool particularly suited for organising information-heavy projects and
-activities consisting of (semi) unstructured and widely diverse data and information resources --- think of
+activities consisting of unstructured and widely diverse data and information resources -- think of
 investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer
 games) and many kinds of hobbies.
 
@@ -22,7 +22,7 @@ web development framework. What's more, after twelve years of using my own and o
 several improvements in mind for the next version (many of which are simplifications, for that matter). And perhaps one
 of the most important reasons for building a new tool like this is that I want it to be open source: both
 ``Contextualise`` (the web application) and ``TopicDB`` (the actual topic maps engine on top of which ``Contextualise``
-is built --- also written by me) are licensed with the permissive open source `MIT license`_.
+is built -- also written by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
 ---------------
@@ -76,11 +76,11 @@ You should see something similar to the following in the terminal::
     * Debugger is active!
     * Debugger PIN: 521-258-444
 
-Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *welcome*
+Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *Welcome*
 page.
 
 .. image:: resources/welcome-page.png
-   :alt: The Contextualise welcome page
+   :alt: The Contextualise Welcome page
 
 Flask's built-in server is not suitable for production purposes. Take a look at Flask's own `documentation
 <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_ for properly running a Flask application in
