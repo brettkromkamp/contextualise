@@ -30,14 +30,13 @@ RUN        git clone https://github.com/psycopg/psycopg2 && \
 # Install Contextualise from the source code
 COPY       . ./
 
-
 # Install requirements
 WORKDIR    /contextualise
 COPY       . ./
 RUN        pip install --user -r requirements.txt
 RUN        pip install --user ./
-RUN        export FLASK_APP=contextualise && \
-           export FLASK_ENV=development && \
-           python -m flask run
 
-# ENTRYPOINT ["flask", "run"]
+ENV        FLASK_APP contextualise
+ENV        FLASK_ENV development
+
+CMD python -m flask run
