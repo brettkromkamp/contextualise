@@ -90,7 +90,7 @@ Docker
 --------------
 Support for running contextualise within Docker is still in development. To run it from the root of a local clone of the source.
 
-1. Create a `settings.ini` file in the root, e.g.,::
+1. Create a ``settings.ini`` file in the root, e.g.,::
 
     [DATABASE]
     Username = docker
