@@ -18,12 +18,13 @@ RUN        pip install -r requirements.txt
 
 # Install Contextualise from the source code
 COPY       . ./
-RUN        python setup.py install
 RUN        pip install -e .
 
 RUN        apt update && apt install -y gcc git python-dev libpq-dev
 
 RUN        git clone https://github.com/psycopg/psycopg2 && \
-           cd psycopg2
+           cd psycopg2 && \
+           python setup.py build && \
+           python setup.py install
 
 ENTRYPOINT ["contextualize"]
