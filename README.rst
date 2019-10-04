@@ -86,6 +86,26 @@ Flask's built-in server is not suitable for production purposes. Take a look at 
 <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_ for properly running a Flask application in
 production.
 
+Docker
+--------------
+Support for running contextualise within Docker is still in development. To run it from the root of a local clone of the source.
+
+1. Create a `settings.ini` file in the root, e.g.,::
+
+    [DATABASE]
+    Username = docker
+    Password = docker
+    Database = docker
+
+    [EMAIL]
+    Username = changeme
+    Password = changeme
+    Server = mail.changeme.com
+    Sender = Change Me
+
+2. Run ``docker image build -t brettkromkamp/contextualise .``
+3. Run ``docker container run -it --rm -p 5000:5000 brettkromkamp/contextualise``
+
 First-Time Use
 --------------
 
