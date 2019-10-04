@@ -33,8 +33,8 @@ COPY       . ./
 # Install basic requirements
 WORKDIR    /contextualise
 COPY       requirements.txt ./
-RUN        pip install --user -r requirements.txt
-RUN        pip install -e .
+RUN        pip install --user -r requirements.txt && \
+           pip install ./
 
 RUN        export FLASK_APP=contextualise && \
            export FLASK_ENV=development && \
