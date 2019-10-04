@@ -13,19 +13,31 @@ ENV        PYTHONUNBUFFERED=1
 
 RUN        apt update && apt install -y gcc git python-dev libpq-dev postgresql postgresql-contrib
 
-# Install basic requirements
-WORKDIR    /contextualise
-COPY       requirements.txt ./
-RUN        pip install -r requirements.txt
+USER       postgres
 
-# Install Contextualise from the source code
-COPY       . ./
-RUN        pip install -e .
+# Create PostgreSQL role named "docker" with "docker" as the password
+# Then create a database "docker" owned by the "docker" role.
+RUN        /etc/init.d/postgresql start && \
+           psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" && \
+           createdb -O docker docker # && \
+           # psql -h localhost -U docker -d docker -a -f topicmap-definition.sql
 
 RUN        git clone https://github.com/psycopg/psycopg2 && \
            cd psycopg2 && \
            python setup.py build && \
            python setup.py install
 
-#ENTRYPOINT ["contextualize"]
-ENTRYPOINT ["bash"]
+# Install Contextualise from the source code
+COPY       . ./
+
+# Install basic requirements
+WORKDIR    /contextualise
+COPY       requirements.txt ./
+RUN        pip install --user -r requirements.txt
+RUN        pip install -e .
+
+RUN        export FLASK_APP=contextualise && \
+           export FLASK_ENV=development && \
+           flask run
+
+#ENTRYPOINT ["bash"]
