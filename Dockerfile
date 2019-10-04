@@ -30,11 +30,13 @@ RUN        git clone https://github.com/psycopg/psycopg2 && \
 # Install Contextualise from the source code
 COPY       . ./
 
-# Install basic requirements
+
+# Install requirements
 WORKDIR    /contextualise
 COPY       . ./
-RUN        pip install --user -r requirements.txt && \
-           python setup.py install
+RUN        pip install --user -r requirements.txt
+RUN        pip install --user ./
+
 
 RUN        export FLASK_APP=contextualise && \
            export FLASK_ENV=development && \
