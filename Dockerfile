@@ -11,6 +11,8 @@ LABEL      app.name="Contextualise" \
 # Enable unbuffered STDOUT logging
 ENV        PYTHONUNBUFFERED=1
 
+RUN        apt update && apt install -y gcc git python-dev libpq-dev postgresql postgresql-contrib
+
 # Install basic requirements
 WORKDIR    /contextualise
 COPY       requirements.txt ./
@@ -20,11 +22,10 @@ RUN        pip install -r requirements.txt
 COPY       . ./
 RUN        pip install -e .
 
-RUN        apt update && apt install -y gcc git python-dev libpq-dev
-
 RUN        git clone https://github.com/psycopg/psycopg2 && \
            cd psycopg2 && \
            python setup.py build && \
            python setup.py install
 
-ENTRYPOINT ["contextualize"]
+#ENTRYPOINT ["contextualize"]
+ENTRYPOINT ["bash"]
