@@ -89,7 +89,7 @@ production.
 Docker
 --------------
 Support for running Contextualise within `Docker <https://www.docker.com/>`_ is still in development. To run it from the
-root of a local clone of the source.
+root of a local clone of the source:
 
 1. Create a ``settings.ini`` file in the root, e.g.,::
 
