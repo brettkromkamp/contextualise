@@ -1,7 +1,7 @@
 Contextualise by Brett Kromkamp
 ===============================
 
-``Contextualise`` is a simple and flexible tool particularly suited for organising information-heavy projects and
+Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of
 investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer
 games) and many kinds of hobbies.
@@ -9,7 +9,7 @@ games) and many kinds of hobbies.
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
 
-``Contextualise``'s main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
+Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
 Why?
@@ -21,7 +21,7 @@ eternity in software terms. Nowadays, my preferred choice for web development is
 web development framework. What's more, after twelve years of using my own and other knowledge management tools, I have
 several improvements in mind for the next version (many of which are simplifications, for that matter). And perhaps one
 of the most important reasons for building a new tool like this is that I want it to be open source: both
-``Contextualise`` (the web application) and ``TopicDB`` (the actual topic maps engine on top of which ``Contextualise``
+Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
 is built -- also written by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
@@ -32,10 +32,10 @@ Pending.
 Install the Development Version
 -------------------------------
 
-``Contextualise`` officially supports Python 3.6–3.7.
+Contextualise officially supports Python 3.6–3.7.
 
 If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version
-of ``Contextualise``.
+of Contextualise.
 
 Certain build prerequisites need to met including the presence of a C compiler, the Python
 header files, the ``libpq`` header files and the ``pg_config`` program as outlined, here: `Build
@@ -50,11 +50,11 @@ Then do::
 The ``pip install -e .`` command allows you to follow the development branch as it changes by creating links in the
 right places and installing the command line scripts to the appropriate locations.
 
-Then, if you want to update ``Contextualise`` at any time, in the same directory do::
+Then, if you want to update Contextualise at any time, in the same directory do::
 
     $ git pull
 
-After having installed ``Contextualise``, you would have to separately install and configure the PostgreSQL database. Brief
+After having installed Contextualise, you would have to separately install and configure the PostgreSQL database. Brief
 instructions on how to do so are provided, here: `Setting up the TopicDB
 database <https://gist.github.com/brettkromkamp/87aaa99b056578ff1dc23a43a49aca89>`_. You need to ensure that the
 database username, password and database name match with the ``settings.ini`` file in the project's root folder.
@@ -88,7 +88,8 @@ production.
 
 Docker
 --------------
-Support for running contextualise within Docker is still in development. To run it from the root of a local clone of the source.
+Support for running Contextualise within `Docker <https://www.docker.com/>`_ is still in development. To run it from the
+root of a local clone of the source.
 
 1. Create a ``settings.ini`` file in the root, e.g.,::
 
