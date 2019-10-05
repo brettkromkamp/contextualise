@@ -134,10 +134,6 @@ def create_app(test_config=None):
             user_datastore.create_user(
                 email="multi@contextualise.io", password="Passw0rd1"
             )
-        if not user_datastore.get_user("infographics@contextualise.io"):
-            user_datastore.create_user(
-                email="infographics@contextualise.io", password="Passw0rd1"
-            )
 
         user_store.db_session.commit()
 
@@ -147,8 +143,6 @@ def create_app(test_config=None):
 
         user_datastore.add_role_to_user("multi@contextualise.io", "user")
         user_datastore.add_role_to_user("multi@contextualise.io", "admin")
-
-        user_datastore.add_role_to_user("infographics@contextualise.io", "admin")
 
         user_store.db_session.commit()
 

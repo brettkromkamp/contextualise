@@ -91,7 +91,7 @@ Docker
 Support for running Contextualise within `Docker <https://www.docker.com/>`_ is still in development. To run it from the
 root of a local clone of the source:
 
-1. Create a ``settings.ini`` file in the root, e.g.,::
+1. Create a ``settings.ini`` file in the root, for example,::
 
     [DATABASE]
     Username = docker
@@ -110,7 +110,10 @@ root of a local clone of the source:
 First-Time Use
 --------------
 
-Pending.
+Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application for testing
+purposes. To log in as the admin user, provide the following credentials:
+``admin@contextualise.io`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the
+following credentials: ``user@contextualise.io`` (user name) and ``Passw0rd1`` (password).
 
 Tutorial
 --------
