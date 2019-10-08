@@ -15,6 +15,8 @@ def get_topic_store():
         g.topic_store = TopicStore(
             current_app.config["TOPIC_STORE_USER"],
             current_app.config["TOPIC_STORE_PASSWORD"],
+            host=current_app.config["TOPIC_STORE_HOST"],
+            port=current_app.config["TOPIC_STORE_PORT"],
             dbname=current_app.config["TOPIC_STORE_DBNAME"],
         )
         g.topic_store.open()

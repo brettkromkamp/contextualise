@@ -25,6 +25,8 @@ config.read(SETTINGS_FILE_PATH)
 database_username = config["DATABASE"]["Username"]
 database_password = config["DATABASE"]["Password"]
 database_name = config["DATABASE"]["Database"]
+database_host = config["DATABASE"]["Host"]
+database_port = config["DATABASE"]["Port"]
 email_username = config["EMAIL"]["Username"]
 email_password = config["EMAIL"]["Password"]
 email_server = config["EMAIL"]["Server"]
@@ -42,6 +44,8 @@ def create_app(test_config=None):
         TOPIC_STORE_USER=database_username,
         TOPIC_STORE_PASSWORD=database_password,
         TOPIC_STORE_DBNAME=database_name,
+        TOPIC_STORE_HOST=database_host,
+        TOPIC_STORE_PORT=database_port,
         SECURITY_PASSWORD_SALT="fff78df7dffdb745be561d9d8075c69ce6a6b4a8c8bce17377601a66fed72542",
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
