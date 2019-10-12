@@ -38,7 +38,8 @@ setup(
         'maya',
         'mistune',
         'python-slugify',
-        'requests'
+        'requests',
+        'gunicorn'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

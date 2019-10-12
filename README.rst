@@ -12,9 +12,9 @@ games) and many kinds of hobbies.
 *Contextualise's topic view*
 
 .. image:: resources/graph-view.png
-   :alt: Contextualise's interactive graph view (for navigation purposes)
+   :alt: Contextualise's interactive network graph view (for navigation purposes)
 
-*Contextualise's interactive graph view (for navigation purposes)*
+*Contextualise's interactive network graph view (for navigation purposes)*
 
 Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
@@ -89,12 +89,19 @@ page.
 .. image:: resources/welcome-page.png
    :alt: The Contextualise Welcome page
 
-Flask's built-in server is not suitable for production purposes. Take a look at Flask's own `documentation
-<https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_ for properly running a Flask application in
-production.
+*The Contextualise Welcome page*
+
+Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run
+Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python WSGI HTTP server::
+
+    $ gunicorn -w 4 -b 0.0.0.0:5000 "contextualise:create_app()"
+
+For further information for properly running a flask application in production, take a look at Flask's own
+`documentation <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_.
 
 Docker
 ------
+
 Support for running Contextualise within `Docker <https://www.docker.com/>`_ is still in development. To run it from the
 root of a local clone of the source:
 
