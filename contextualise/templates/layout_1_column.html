@@ -18,7 +18,7 @@
 <header>
     <a name="page-top"></a>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="/">Contextualise</a>
             <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                     data-target="#navbars"
@@ -73,14 +73,14 @@
     </nav>
 </header>
 <main class="flex-shrink-0" role="main">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col">
                 {% include "_messages.html" %}
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-12">
                 {% if topic and topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -108,7 +108,7 @@
     </div>
 </main>
 <footer class="footer mt-auto py-3">
-    <div class="container">
+    <div class="container-fluid">
 		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
                 class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019 by Brett Kromkamp</small></span>
     </div>
