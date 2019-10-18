@@ -35,3 +35,7 @@ main > .container-fluid {
     width: 100%;
     max-width: 320px;
 }
+
+#goto-topic-identifier {
+    width: 20em;
+}
