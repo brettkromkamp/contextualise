@@ -139,6 +139,15 @@ Documentation
 
 Pending.
 
+Miscellaneous
+-------------
+
+Currently, I am using Contextualise to manage my worldbuilding efforts for my `Codex 
+Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_ project. 
+
+.. image:: resources/codex-roboticus1.png
+   :alt: Codex Roboticus
+
 How to Contribute
 -----------------
 
