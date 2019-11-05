@@ -61,9 +61,10 @@ def view(map_identifier, topic_identifier):
         session.pop("inexistent_topic_identifier", None)
 
     # Determine if (active) scope filtering has been specified in the URL
-    scope_filtered = request.args.get("filter", default=1, type=int)
-    if session["scope_filter"] != scope_filtered:
+    scope_filtered = request.args.get("filter", type=int)
+    if scope_filtered is not None:
         session["scope_filter"] = scope_filtered
+    scope_filtered = session["scope_filter"]
 
     # If a context has been specified in the URL, then use that to set the context
     scope_identifier = request.args.get("context", type=str)
@@ -187,7 +188,7 @@ def view(map_identifier, topic_identifier):
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
-        knowledge_graph_query=knowledge_graph_query,
+        knowledge_graph_query=knowledge_graph_query
     )
 
 

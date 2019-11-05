@@ -125,162 +125,164 @@
                 <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
                     <div class="card-header"><strong>Context</strong> &mdash; <a
-                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
-                        context</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                         {% if session['scope_filter'] == 1 %}
-                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable context filtering</a></div>
-                        {% else %}
-                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable context filtering</a></div>
-                        {% endif %}
+                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
+                            filtering</a></div>
                     {% else %}
-                    <div class="card-header"><strong>Context</strong></div>
-                    {% endif %}
-                    <div class="card-body list-card">
-                        <ul>
-                            <li>Map: <a href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">{{
-                                topic_map.name }}</a></li>
-                            {% if session['current_scope'] == '*' %}
-                            <li>Context: <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
-                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
-                            {% else %}
-                            <li>Context: <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
-                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-                <br/>
-                {% if associations %}
-                <nav class="card bg-light">
-                    <div class="card-header"><strong>Related topics</strong>
-                        &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
-                            graph</a>
-                    </div>
-                    <div class="card-body list-card">
-                        <ul>
-                            {% for instance_of, roles in associations.dict.items() %}
-                            <li>{{ instance_of|topic_name(topic_map.identifier) }}
-                                <ul>
-                                    {% for role, topic_refs in roles.items() %}
-                                    <li>{{ role|topic_name(topic_map.identifier) }}
-                                        <ul>
-                                            {% for topic_ref in topic_refs %}
-                                            <li>
-                                                {% if session['current_scope'] == '*' %}
-                                                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
-                                                {% else %}
-                                                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
-                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
-                                                {% endif %}
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </nav>
-                <br/>
+                    <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
+                        filtering</a></div>
                 {% endif %}
-                {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
-                <div class="card bg-light">
-                    <div class="card-header"><strong>Topic resources</strong></div>
-                    <div class="card-body list-card">
-                        <ul>
-                            {% if occurrences['images'] %}
-                            <li>{% if current_user.id == topic_map.user_identifier %}
-                                <a href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
-                                {% else %}
-                                Images
-                                {% endif %}
-                                <ul>
-                                    {% for image in occurrences['images'] %}
-                                    <li>
-                                        <a data-caption="{{ image.title }}" data-fancybox="images"
-                                           href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
-                                            image.title }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                            {% if occurrences['3d-scenes'] %}
-                            <li>{% if current_user.id == topic_map.user_identifier %}
-                                <a href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
-                                {% else %}
-                                3D
-                                {% endif %}
-                                <ul>
-                                    {% for scene in occurrences['3d-scenes'] %}
-                                    <li>
-                                        <a data-fancybox
-                                           data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
-                                           data-type="iframe"
-                                           href="javascript:;">{{ scene.title }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                            {% if occurrences['files'] %}
-                            <li>{% if current_user.id == topic_map.user_identifier %}
-                                <a href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
-                                {% else %}
-                                Files
-                                {% endif %}
-                                <ul>
-                                    {% for file in occurrences['files'] %}
-                                    <li>
-                                        <a href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
-                                            file.title }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                            {% if occurrences['links'] %}
-                            <li>{% if current_user.id == topic_map.user_identifier %}
-                                <a href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
-                                {% else %}
-                                Links
-                                {% endif %}
-                                <ul>
-                                    {% for link in occurrences['links'] %}
-                                    <li>
-                                        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                            {% if occurrences['videos'] %}
-                            <li>{% if current_user.id == topic_map.user_identifier %}
-                                <a href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
-                                {% else %}
-                                Videos
-                                {% endif %}
-                                <ul>
-                                    {% for video in occurrences['videos'] %}
-                                    <li>
-                                        <a data-caption="{{ video.title }}" data-fancybox="gallery"
-                                           href="{{ video.url }}">{{ video.title }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
+                {% else %}
+                <div class="card-header"><strong>Context</strong></div>
                 {% endif %}
+                <div class="card-body list-card">
+                    <ul>
+                        <li>Map: <a href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">{{
+                            topic_map.name }}</a></li>
+                        {% if session['current_scope'] == '*' %}
+                        <li>Context: <a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                            session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                        {% else %}
+                        <li>Context: <a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                            session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
+            <br/>
+            {% if associations %}
+            <nav class="card bg-light">
+                <div class="card-header"><strong>Related topics</strong>
+                    &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
+                        graph</a>
+                </div>
+                <div class="card-body list-card">
+                    <ul>
+                        {% for instance_of, roles in associations.dict.items() %}
+                        <li>{{ instance_of|topic_name(topic_map.identifier) }}
+                            <ul>
+                                {% for role, topic_refs in roles.items() %}
+                                <li>{{ role|topic_name(topic_map.identifier) }}
+                                    <ul>
+                                        {% for topic_ref in topic_refs %}
+                                        <li>
+                                            {% if session['current_scope'] == '*' %}
+                                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                                                topic_ref|topic_name(topic_map.identifier) }}</a>
+                                            {% else %}
+                                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
+                                                topic_ref|topic_name(topic_map.identifier) }}</a>
+                                            {% endif %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+            <br/>
+            {% endif %}
+            {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or
+            occurrences['videos'] %}
+            <div class="card bg-light">
+                <div class="card-header"><strong>Topic resources</strong></div>
+                <div class="card-body list-card">
+                    <ul>
+                        {% if occurrences['images'] %}
+                        <li>{% if current_user.id == topic_map.user_identifier %}
+                            <a href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                            {% else %}
+                            Images
+                            {% endif %}
+                            <ul>
+                                {% for image in occurrences['images'] %}
+                                <li>
+                                    <a data-caption="{{ image.title }}" data-fancybox="images"
+                                       href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                                        image.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if occurrences['3d-scenes'] %}
+                        <li>{% if current_user.id == topic_map.user_identifier %}
+                            <a href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                            {% else %}
+                            3D
+                            {% endif %}
+                            <ul>
+                                {% for scene in occurrences['3d-scenes'] %}
+                                <li>
+                                    <a data-fancybox
+                                       data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
+                                       data-type="iframe"
+                                       href="javascript:;">{{ scene.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if occurrences['files'] %}
+                        <li>{% if current_user.id == topic_map.user_identifier %}
+                            <a href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+                            {% else %}
+                            Files
+                            {% endif %}
+                            <ul>
+                                {% for file in occurrences['files'] %}
+                                <li>
+                                    <a href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
+                                        file.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if occurrences['links'] %}
+                        <li>{% if current_user.id == topic_map.user_identifier %}
+                            <a href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                            {% else %}
+                            Links
+                            {% endif %}
+                            <ul>
+                                {% for link in occurrences['links'] %}
+                                <li>
+                                    <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if occurrences['videos'] %}
+                        <li>{% if current_user.id == topic_map.user_identifier %}
+                            <a href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                            {% else %}
+                            Videos
+                            {% endif %}
+                            <ul>
+                                {% for video in occurrences['videos'] %}
+                                <li>
+                                    <a data-caption="{{ video.title }}" data-fancybox="gallery"
+                                       href="{{ video.url }}">{{ video.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
         </div>
+    </div>
     </div>
 </main>
 <footer class="footer mt-auto py-3">
@@ -324,6 +326,8 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
+
+
 
 </script>
 </body>

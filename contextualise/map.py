@@ -25,6 +25,7 @@ def index():
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
     session["current_scope"] = "*"
+    session["scope_filter"] = 1
 
     return render_template("map/index.html", maps=maps)
 
