@@ -39,6 +39,7 @@ def shared():
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
     session["current_scope"] = "*"
+    session["scope_filter"] = 1
 
     return render_template("map/shared.html", maps=maps)
 
