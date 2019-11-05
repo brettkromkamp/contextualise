@@ -124,11 +124,16 @@
             <div class="col-md-4">
                 <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
-                    <div class="card-header"><strong>Map and context</strong> &mdash; <a
+                    <div class="card-header"><strong>Context</strong> &mdash; <a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
-                        context</a></div>
+                        context</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                        {% if session['scope_filter'] == 1 %}
+                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable context filtering</a></div>
+                        {% else %}
+                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable context filtering</a></div>
+                        {% endif %}
                     {% else %}
-                    <div class="card-header"><strong>Map and context</strong></div>
+                    <div class="card-header"><strong>Context</strong></div>
                     {% endif %}
                     <div class="card-body list-card">
                         <ul>

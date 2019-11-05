@@ -60,18 +60,31 @@ def view(map_identifier, topic_identifier):
     else:
         session.pop("inexistent_topic_identifier", None)
 
+    # Determine if (active) scope filtering has been specified in the URL
+    scope_filtered = request.args.get("filter", default=1, type=int)
+    if session["scope_filter"] != scope_filtered:
+        session["scope_filter"] = scope_filtered
+
     # If a context has been specified in the URL, then use that to set the context
     scope_identifier = request.args.get("context", type=str)
     if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
         session["current_scope"] = scope_identifier
 
-    topic_occurrences = topic_store.get_topic_occurrences(
-        map_identifier,
-        topic_identifier,
-        scope=session["current_scope"],
-        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    if scope_filtered:
+        topic_occurrences = topic_store.get_topic_occurrences(
+            map_identifier,
+            topic_identifier,
+            scope=session["current_scope"],
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    else:
+        topic_occurrences = topic_store.get_topic_occurrences(
+            map_identifier,
+            topic_identifier,
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
     occurrences = {
         "text": None,
         "images": [],
@@ -133,10 +146,14 @@ def view(map_identifier, topic_identifier):
                     "text": mistune.markdown(occurrence.resource_data.decode()),
                 }
             )
-
-    associations = topic_store.get_association_groups(
-        map_identifier, topic_identifier, scope=session["current_scope"]
-    )
+    if scope_filtered:
+        associations = topic_store.get_association_groups(
+            map_identifier, topic_identifier, scope=session["current_scope"]
+        )
+    else:
+        associations = topic_store.get_association_groups(
+            map_identifier, topic_identifier
+        )
 
     creation_date = maya.parse(topic.get_attribute_by_name("creation-timestamp").value)
     modification_date_attribute = topic.get_attribute_by_name("modification-timestamp")
