@@ -39,7 +39,7 @@ Pending.
 Install the Development Version
 -------------------------------
 
-Contextualise officially supports Python 3.6–3.7.
+Contextualise officially supports Python 3.6–3.8.
 
 If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version
 of Contextualise.
@@ -94,7 +94,7 @@ page.
 Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run
 Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python WSGI HTTP server::
 
-    $ gunicorn -w 4 -b 0.0.0.0:5000 "contextualise:create_app()"
+    $ gunicorn -w 4 -b 0.0.0.0:5000 contextualise.wsgi:app
 
 For further information for properly running a flask application in production, take a look at Flask's own
 `documentation <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_.
