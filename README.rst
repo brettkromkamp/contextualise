@@ -142,8 +142,8 @@ Pending.
 Miscellaneous
 -------------
 
-Currently, I am using Contextualise for worldbuilding purposes of the `Codex
-Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_ fictional universe.
+Currently, I am using Contextualise for worldbuilding purposes of the Brave Robot fictional universe including its `Codex
+Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_.
 
 .. image:: resources/codex-roboticus1.png
    :alt: Codex Roboticus
