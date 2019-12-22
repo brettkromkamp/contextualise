@@ -188,7 +188,7 @@ def view(map_identifier, topic_identifier):
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
-        knowledge_graph_query=knowledge_graph_query
+        knowledge_graph_query=knowledge_graph_query,
     )
 
 

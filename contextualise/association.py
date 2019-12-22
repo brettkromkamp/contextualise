@@ -74,8 +74,8 @@ def create(map_identifier, topic_identifier):
 
     form_association_instance_of = "association"
     form_association_src_topic_ref = (
-        topic_identifier
-    )  # The current topic is the 'source' topic
+        topic_identifier  # The current topic is the 'source' topic
+    )
     form_association_src_role_spec = "related"
     form_association_dest_topic_ref = ""
     form_association_dest_role_spec = "related"
