@@ -46,7 +46,9 @@ $('[data-fancybox]').fancybox({
                href="#">Delete topic</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View names</a>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                names</a>
             {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
@@ -146,7 +148,8 @@ $('[data-fancybox]').fancybox({
     <tbody>
     {% for file in files %}
     <tr>
-        <td><a data-fancybox data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ file.url }}"
+        <td><a data-fancybox
+               data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ file.url }}"
                data-type="iframe"
                href="javascript:;">{{ file.title
             }}</a></td>
