@@ -35,8 +35,8 @@ def view(map_identifier, topic_identifier):
         if topic_map.shared:
             if current_user.is_authenticated:  # User is logged in
                 if (
-                    current_user.id != topic_map.user_identifier
-                    and topic_identifier == "home"
+                        current_user.id != topic_map.user_identifier
+                        and topic_identifier == "home"
                 ):
                     flash(
                         "You are accessing a shared topic map of another user.",
@@ -49,17 +49,6 @@ def view(map_identifier, topic_identifier):
             else:  # User is *not* logged in
                 abort(403)
 
-    topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        session["inexistent_topic_identifier"] = topic_identifier
-        abort(404)
-    else:
-        session.pop("inexistent_topic_identifier", None)
-
     # Determine if (active) scope filtering has been specified in the URL
     scope_filtered = request.args.get("filter", type=int)
     if scope_filtered is not None:
@@ -70,6 +59,27 @@ def view(map_identifier, topic_identifier):
     scope_identifier = request.args.get("context", type=str)
     if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
         session["current_scope"] = scope_identifier
+
+    # Get topic
+    if scope_filtered:
+        topic = topic_store.get_topic(
+            map_identifier,
+            topic_identifier,
+            scope=session["current_scope"],
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    else:
+        topic = topic_store.get_topic(
+            map_identifier,
+            topic_identifier,
+            scope=session["current_scope"],
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    if topic is None:
+        session["inexistent_topic_identifier"] = topic_identifier
+        abort(404)
+    else:
+        session.pop("inexistent_topic_identifier", None)
 
     if scope_filtered:
         topic_occurrences = topic_store.get_topic_occurrences(
@@ -811,15 +821,19 @@ def add_name(map_identifier, topic_identifier):
         abort(404)
 
     form_topic_name = ""
+    form_topic_name_scope = "*"
 
     error = 0
 
     if request.method == "POST":
         form_topic_name = request.form["topic-name"].strip()
+        form_topic_name_scope = request.form["topic-name-scope"].strip()
 
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_name_scope):
+            error = error | 2
 
         if error != 0:
             flash(
@@ -827,7 +841,7 @@ def add_name(map_identifier, topic_identifier):
                 "warning",
             )
         else:
-            base_name = BaseName(form_topic_name)
+            base_name = BaseName(form_topic_name, scope=form_topic_name_scope)
             topic_store.set_basename(map_identifier, topic.identifier, base_name)
 
             flash("Name successfully added.", "success")
@@ -845,6 +859,7 @@ def add_name(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_name=form_topic_name,
+        topic_name_scope=form_topic_name_scope
     )
 
 
@@ -874,15 +889,19 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         abort(404)
 
     form_topic_name = topic.get_base_name(name_identifier).name
+    form_topic_name_scope = topic.get_base_name(name_identifier).scope
 
     error = 0
 
     if request.method == "POST":
         form_topic_name = request.form["topic-name"].strip()
+        form_topic_name_scope = request.form["topic-name-scope"].strip()
 
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_name_scope):
+            error = error | 2
 
         if error != 0:
             flash(
@@ -891,9 +910,10 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
             )
         else:
             # Update name if required
-            if form_topic_name != topic.get_base_name(name_identifier).name:
+            if form_topic_name != topic.get_base_name(
+                    name_identifier).name or form_topic_name_scope != topic.get_base_name(name_identifier).scope:
                 topic_store.update_basename(
-                    map_identifier, name_identifier, form_topic_name
+                    map_identifier, name_identifier, form_topic_name, scope=form_topic_name_scope
                 )
 
             flash("Name successfully updated.", "success")
@@ -911,6 +931,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_name=form_topic_name,
+        topic_name_scope=form_topic_name_scope,
         name_identifier=name_identifier,
     )
 
@@ -939,6 +960,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         abort(404)
 
     form_topic_name = topic.get_base_name(name_identifier).name
+    form_topic_name_scope = topic.get_base_name(name_identifier).scope
 
     if request.method == "POST":
         topic_store.delete_basename(map_identifier, name_identifier)
@@ -957,6 +979,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_name=form_topic_name,
+        topic_name_scope=form_topic_name_scope,
         name_identifier=name_identifier,
     )
 

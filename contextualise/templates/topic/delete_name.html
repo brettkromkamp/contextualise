@@ -20,6 +20,25 @@
         <input class="form-control" id="topic-name" name="topic-name" readonly
                type="text" value="{{ topic_name }}">
     </div>
+    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+    <div class="collapse" id="advancedOptions">
+        <div class="card">
+            <div class="card-header">
+                Advanced options
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label for="link-scope"><strong>Context</strong></label>
+                        <input aria-readonly="true" class="form-control" id="topic-name-scope" name="topic-name-scope"
+                               readonly type="text" value="{{ topic_name_scope }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
     <a class="btn btn-secondary"
        href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
        role="button">Cancel</a>

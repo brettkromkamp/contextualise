@@ -16,6 +16,7 @@
     <thead class="thead-light">
     <tr>
         <th scope="col">Name</th>
+        <th scope="col">Scope</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -23,6 +24,9 @@
     {% for base_name in topic.base_names %}
     <tr>
         <td>{{ base_name.name }}</td>
+        <td><a
+                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=base_name.scope) }}">{{
+            base_name.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
             <a href="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                 href="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Delete</a>
