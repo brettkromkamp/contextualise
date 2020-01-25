@@ -18,9 +18,9 @@
 {% if maps %}
 <div class="row">
     <div class="col">
-        <div class="card-columns">
+        <div class="card-deck">
             {% for map in maps %}
-            <div class="card ">
+            <div class="card" style="max-width: 24rem;">
                 {% if map.image_path %}
                 <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
                     <img alt="{{ map.name }}" class="card-img-top"
