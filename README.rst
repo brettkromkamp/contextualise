@@ -12,9 +12,14 @@ games) and many kinds of hobbies.
 *Contextualise's topic view*
 
 .. image:: resources/graph-view.png
-   :alt: Contextualise's interactive network graph view (for navigation purposes)
+   :alt: Contextualise's interactive network graph view (allowing for navigation between topics)
 
-*Contextualise's interactive network graph view (for navigation purposes)*
+*Contextualise's interactive network graph view (allowing for navigation between topics)*
+
+.. image:: resources/interactive-3d-viewer.png
+   :alt: Contextualise's interactive 3D viewer
+
+*Contextualise's interactive 3D viewer*
 
 Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
