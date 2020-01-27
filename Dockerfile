@@ -39,4 +39,4 @@ RUN        pip install --user ./
 ENV        FLASK_APP contextualise
 ENV        FLASK_ENV development
 
-CMD python -m flask run
+CMD python -m flask run --host 0.0.0.0

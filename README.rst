@@ -116,6 +116,8 @@ root of a local clone of the source:
     Username = docker
     Password = docker
     Database = docker
+    Host = localhost
+    Port = 5432
 
     [EMAIL]
     Username = changeme
