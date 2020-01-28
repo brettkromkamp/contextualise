@@ -14,52 +14,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.3/jsrender.min.js"></script>
 
 <script>
-$('[data-fancybox]').fancybox({
-	iframe : {
-		preload : false
-	}
-});
-
-$('#knowledge-graph-search').on('click', function (event) {
-    var knowledgeGraphLink = document.getElementById('knowledge-graph-search');
-    if (knowledgeGraphLink) {
-        var knowledgeGraphQuery = knowledgeGraphLink.dataset.query;
-    }
-    var getNetworkApiUrl = '/api/get-knowledge-graph' + '?q=' + knowledgeGraphQuery;
-
-    axios.get(getNetworkApiUrl)
-        .then(function (response) {
-        // Handle success
-
-        var template = $.templates("#knowledgeGraphTemplate");
-        var data = {
-            name: response.data.name,
-            shortDescription: response.data.shortDescription,
-            image: response.data.image,
-            detailedDescription: response.data.detailedDescription,
-            url1: {
-                domain: domainFromUrl(response.data.urls[0]),
-                url: response.data.urls[0]
-            },
-            url2: {
-                domain: domainFromUrl(response.data.urls[1]),
-                url: response.data.urls[1]
-            }
-        };
-        var html = template.render(data);
-        $("#knowledgeGraphResult").html(html);
-
-        $('#knowledgeGraphModal').modal();
-    })
-    .catch(function (error) {
-        // Handle error
-        console.log(error);
-    })
-    .then(function () {
-        // Always executed
-    });
-});
-
 function domainFromUrl(url) {
     var result
     var match
@@ -422,39 +376,4 @@ $("#view-graph-link").click(function(e) {
 {% endfor %}
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
 {% endif %}
-
-<!-- Knowledge Graph modal -->
-<script id="knowledgeGraphTemplate" type="text/x-jsrender">
-{% raw %}
-  <div class="modal-header">
-    <h5 class="modal-title" id="knowledgeGraphLabel">{{:name}}</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-8"><strong>{{:name}} &mdash; {{:shortDescription}}</strong><br/><br/>{{:detailedDescription}}</div>
-          <div class="col-md-4 ml-auto"><img class="img-thumbnail" src="{{:image}}"></div>
-        </div>
-        <div class="row">
-          <div class="col-md-8"><br/><a target="_blank" href="{{:url1['url']}}">{{:url1['domain']}}</a><br/><a target="_blank" href="{{:url2['url']}}">{{:url2['domain']}}</a></div>
-          <div class="col-md-4 ml-auto"></div>
-        </div>
-      </div>
-  </div>
-  <div class="modal-footer">
-      <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-  </div>
-{% endraw %}
-
-</script>
-
-<div aria-hidden="true" aria-labelledby="knowledgeGraphLabel" class="modal fade" id="knowledgeGraphModal" role="dialog"
-     tabindex="-1">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" id="knowledgeGraphResult"></div>
-    </div>
-</div>
 {% endblock %}

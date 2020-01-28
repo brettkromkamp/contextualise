@@ -13,11 +13,6 @@ bp = Blueprint("api", __name__)
 
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
-config = configparser.ConfigParser()
-config.read(SETTINGS_FILE_PATH)
-
-KNOWLEDGE_GRAPH_API_KEY = config["API"]["KnowledgeGraph"]
-
 
 @bp.route("/api/get-slug")
 @login_required
@@ -111,31 +106,3 @@ def get_network(map_identifier, topic_identifier):
             )
     else:
         return jsonify({"status": "error", "code": 404, "message": "Topic not found"})
-
-
-@bp.route("/api/get-knowledge-graph")
-@login_required
-def get_knowledge_graph():
-    query = request.args.get("q").lower()
-
-    service_url = "https://kgsearch.googleapis.com/v1/entities:search"
-    params = {
-        "query": query,
-        "limit": 1,
-        "indent": True,
-        "key": KNOWLEDGE_GRAPH_API_KEY,
-    }
-    response = requests.get(service_url, params=params).json()
-    data = response["itemListElement"][0]["result"]
-    try:
-        result = {
-            "type": data["@type"],
-            "name": data["name"],
-            "shortDescription": data["description"],
-            "detailedDescription": data["detailedDescription"]["articleBody"],
-            "image": data["image"]["contentUrl"],
-            "urls": [data["detailedDescription"]["url"], data["url"]],
-        }
-    except KeyError:
-        abort(404)
-    return jsonify(result)

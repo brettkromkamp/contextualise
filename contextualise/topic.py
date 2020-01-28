@@ -183,12 +183,6 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session["breadcrumbs"] = list(breadcrumbs)
 
-    knowledge_graph_query = (
-        topic.get_attribute_by_name("knowledge-graph-query").value
-        if topic.get_attribute_by_name("knowledge-graph-query")
-        else None
-    )
-
     return render_template(
         "topic/view.html",
         topic_map=topic_map,
@@ -197,8 +191,7 @@ def view(map_identifier, topic_identifier):
         associations=associations,
         creation_date=creation_date,
         modification_date=modification_date,
-        breadcrumbs=breadcrumbs,
-        knowledge_graph_query=knowledge_graph_query,
+        breadcrumbs=breadcrumbs
     )
 
 
@@ -274,13 +267,6 @@ def create(map_identifier, topic_identifier):
                 timestamp,
                 new_topic.identifier,
                 data_type=DataType.TIMESTAMP,
-            )
-
-            query_attribute = Attribute(
-                "knowledge-graph-query",
-                form_topic_name.lower(),
-                new_topic.identifier,
-                data_type=DataType.STRING,
             )
 
             # Persist objects to the topic store
