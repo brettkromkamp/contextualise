@@ -163,7 +163,7 @@ def create(map_identifier, topic_identifier):
             association = Association(
                 identifier=form_association_identifier,
                 instance_of=form_association_instance_of,
-                base_name=form_association_name,
+                name=form_association_name,
                 scope=form_association_scope,
                 src_topic_ref=form_association_src_topic_ref,
                 dest_topic_ref=form_association_dest_topic_ref,
