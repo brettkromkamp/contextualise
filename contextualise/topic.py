@@ -273,7 +273,6 @@ def create(map_identifier, topic_identifier):
             topic_store.set_topic(topic_map.identifier, new_topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
             topic_store.set_attribute(topic_map.identifier, modification_attribute)
-            topic_store.set_attribute(topic_map.identifier, query_attribute)
 
             flash("Topic successfully created.", "success")
             return redirect(
