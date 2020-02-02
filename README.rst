@@ -53,15 +53,15 @@ The list below provides an overview of some of Contextualise's existing features
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 
-For a more exhaustive list of missing features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
-
 **Missing Version 1.0 Features**
 
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
 * Google Maps support
 * `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing to navigate between topics using a visual timeline component
-* WikiMedia integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
+* WikiMedia API integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
+
+For a more exhaustive list of missing features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
 
 Install the Development Version
 -------------------------------
