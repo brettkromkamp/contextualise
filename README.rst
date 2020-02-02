@@ -45,7 +45,7 @@ The list below provides an overview of some of Contextualise's existing features
 * Support for multiple (self-contained) topic maps
 * Support for both private and public topic maps
 * Extensive support for notes including the ability to attach a note to an existing topic and convert a note into a topic
-* `Markdown<https://daringfireball.net/projects/markdown/syntax>`_-based text editor for topic text and notes
+* `Markdown <https://daringfireball.net/projects/markdown/syntax>`_-based text editor for topic text and notes
 * The ability to attach files (including images, PDFs, and so forth) to topics
 * The ability to attach (glTF-based) 3D models to topics with an interactive 3D model viewer
 * Powerful (semantic) and self-referential associations with the ability to create typed associations with role-based members
