@@ -60,6 +60,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Google Maps support
 * `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing to navigate between topics using a visual timeline component
 * WikiMedia API integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
+* Semantic tagging
 
 For a more exhaustive list of missing features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
 
