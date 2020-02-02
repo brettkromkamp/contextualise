@@ -38,7 +38,7 @@ is built -- also written by me) are licensed with the permissive open source `MI
 
 Feature Support
 ---------------
-The list below provides an overview of some of Contextualise's existing features (but, by no means all of them):
+The following provides an overview of Contextualis's existing (and planned) feature set:
 
 **Existing Features**
 
