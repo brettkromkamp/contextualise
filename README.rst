@@ -38,8 +38,35 @@ is built -- also written by me) are licensed with the permissive open source `MI
 
 Feature Support
 ---------------
+The list below provides an overview of some of Contextualise's existing features (but, by no means all of them):
 
-Pending.
+**Existing Features**
+
+* Support for multiple (self-contained) topic maps
+* Support for both private and public topic maps
+* Extensive support for notes
+   * Attach a note to an existing topic
+   * Convert a note into a topic
+* Markdown-based text editor for topic text and notes
+* The ability to attach files (including images, PDFs, and so forth) to topics
+* The ability to attach (glTF-based) 3D models to topics
+   * Interactive 3D model viewer
+* Powerful (semantic) and self-referential associations
+   * The ability to create typed associations
+   * Role-based members
+* Flexible filtering of topic occurrences and associations by scope (i.e., context)
+* Interactive visual network graph of related topics (allowing navigation between topics)
+* Auto-complete on all form fields that expect a topic reference
+
+For a more exhaustive list of missing features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
+
+**Missing Version 1.0 Features**
+
+* `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
+* Full-text search
+* Google Maps support
+* `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing to navigate between topics using a visual timeline component
+* WikiMedia integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
 
 Install the Development Version
 -------------------------------
