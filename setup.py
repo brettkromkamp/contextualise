@@ -38,7 +38,6 @@ setup(
         'maya',
         'mistune',
         'python-slugify',
-        'requests',
         'gunicorn'
     ],
     classifiers=[

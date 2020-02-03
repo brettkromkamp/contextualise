@@ -1,7 +1,5 @@
-import configparser
 import os
 
-import requests
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
 from slugify import slugify
