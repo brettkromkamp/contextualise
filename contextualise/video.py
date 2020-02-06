@@ -1,5 +1,5 @@
 import maya
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, session, render_template, request, flash, url_for, redirect
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
@@ -91,7 +91,7 @@ def add(map_identifier, topic_identifier):
 
     form_video_title = ""
     form_video_url = ""
-    form_video_scope = "*"
+    form_video_scope = session["current_scope"]
 
     error = 0
 

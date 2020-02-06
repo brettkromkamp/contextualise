@@ -1,5 +1,5 @@
 import maya
-from flask import Blueprint, render_template, request, flash, url_for
+from flask import Blueprint, session, render_template, request, flash, url_for
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
@@ -179,7 +179,7 @@ def add(map_identifier, topic_identifier):
     form_attribute_name = ""
     form_attribute_value = ""
     form_attribute_type = ""
-    form_attribute_scope = "*"
+    form_attribute_scope = session["current_scope"]
 
     error = 0
 

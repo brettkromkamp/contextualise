@@ -141,12 +141,12 @@
                         <li>Map: <a href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">{{
                             topic_map.name }}</a></li>
                         {% if session['current_scope'] == '*' %}
-                        <li>Context: <a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                        <li>Context: <a style="font-size: 105%;" class="badge badge-primary"
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                         {% else %}
-                        <li>Context: <a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                        <li>Context: <a style="font-size: 105%;" class="badge badge-warning"
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                         {% endif %}
                     </ul>
@@ -328,6 +328,7 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
+
 
 
 

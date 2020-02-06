@@ -2,7 +2,7 @@ from datetime import datetime
 
 import maya
 import mistune
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
@@ -80,7 +80,7 @@ def add(map_identifier):
 
     form_note_title = ""
     form_note_text = ""
-    form_note_scope = "*"
+    form_note_scope = session["current_scope"]
 
     error = 0
 

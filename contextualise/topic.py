@@ -5,6 +5,7 @@ from datetime import datetime
 
 import maya
 import mistune
+from contextualise.topic_store import get_topic_store
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
@@ -15,8 +16,6 @@ from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievalmode import RetrievalMode
 from topicdb.core.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
-
-from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("topic", __name__)
 
@@ -106,7 +105,7 @@ def view(map_identifier, topic_identifier):
         "notes": [],
     }
     for occurrence in topic_occurrences:
-        if occurrence.instance_of == "text":
+        if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
             if occurrence.resource_data:
                 occurrences["text"] = mistune.markdown(
                     occurrence.resource_data.decode()
@@ -324,7 +323,8 @@ def edit(map_identifier, topic_identifier):
     )
 
     texts = [
-        occurrence for occurrence in occurrences if occurrence.instance_of == "text"
+        occurrence for occurrence in occurrences if
+        occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]
     ]
 
     form_topic_name = topic.first_base_name.name
@@ -376,7 +376,7 @@ def edit(map_identifier, topic_identifier):
 
             # If the topic has an existing text occurrence update it, otherwise create a new text occurrence
             # and persist it
-            if len(texts) > 0:
+            if len(texts) > 0 and form_topic_text_scope == session["current_scope"]:
                 topic_store.update_occurrence_data(
                     map_identifier, texts[0].identifier, form_topic_text
                 )
@@ -502,7 +502,7 @@ def add_note(map_identifier, topic_identifier):
 
     form_note_title = ""
     form_note_text = ""
-    form_note_scope = "*"
+    form_note_scope = session["current_scope"]
 
     error = 0
 
@@ -806,7 +806,7 @@ def add_name(map_identifier, topic_identifier):
         abort(404)
 
     form_topic_name = ""
-    form_topic_name_scope = "*"
+    form_topic_name_scope = session["current_scope"]
 
     error = 0
 

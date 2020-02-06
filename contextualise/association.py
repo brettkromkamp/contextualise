@@ -1,5 +1,5 @@
 import maya
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.association import Association
 from topicdb.core.store.retrievalmode import RetrievalMode
@@ -79,7 +79,7 @@ def create(map_identifier, topic_identifier):
     form_association_src_role_spec = "related"
     form_association_dest_topic_ref = ""
     form_association_dest_role_spec = "related"
-    form_association_scope = "*"  # Universal scope
+    form_association_scope = session["current_scope"]
     form_association_name = ""
     form_association_identifier = ""
 

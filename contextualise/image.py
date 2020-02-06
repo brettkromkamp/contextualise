@@ -2,7 +2,7 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, session, render_template, request, flash, url_for, redirect
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
@@ -94,7 +94,7 @@ def upload(map_identifier, topic_identifier):
         abort(404)
 
     form_image_title = ""
-    form_image_scope = "*"
+    form_image_scope = session["current_scope"]
 
     error = 0
 
