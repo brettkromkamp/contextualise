@@ -89,6 +89,19 @@ Then, if you want to update Contextualise at any time, in the same directory do:
 
     $ git pull
 
+`TopicDB`_, the topic maps engine on top of which Contextualise is built is regularly updated. However, the version
+of TopicDB published on `PyPI <https://pypi.org/project/topic-db/>`_ could lag behind. For that reason, it is
+recommended that you also install TopicDB directly from GitHub::
+
+    $ pip uninstall topic-db
+    $ git clone https://github.com/brettkromkamp/topic-db.git
+    $ cd topic-db
+    $ pip install -e .
+
+Then, if you want to update TopicDB at any time, in the same directory do::
+
+    $ git pull
+
 After having installed Contextualise, you would have to separately install and configure the PostgreSQL database. Brief
 instructions on how to do so are provided, here: `Setting up the TopicDB
 database <https://gist.github.com/brettkromkamp/87aaa99b056578ff1dc23a43a49aca89>`_. You need to ensure that the
