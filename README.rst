@@ -146,13 +146,13 @@ Docker
 Support for running Contextualise within `Docker <https://www.docker.com/>`_ is still in development. To run it from the
 root of a local clone of the source:
 
-1. Create a ``settings.ini`` file in the root, for example::
+1. Copy ``settings-docker-sample.ini`` to ``settings.ini`` file in the root and replace your email settings. For example::
 
     [DATABASE]
-    Username = docker
-    Password = docker
-    Database = docker
-    Host = localhost
+    Username = postgres
+    Password = postgres
+    Database = postgres
+    Host = db
     Port = 5432
 
     [EMAIL]
@@ -161,8 +161,7 @@ root of a local clone of the source:
     Server = mail.changeme.com
     Sender = Change Me
 
-2. Run ``docker image build -t brettkromkamp/contextualise .``
-3. Run ``docker container run -it --rm -p 5000:5000 brettkromkamp/contextualise``
+2. Run ``docker-compose-up``
 
 First-Time Use
 --------------

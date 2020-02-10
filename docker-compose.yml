@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./sql_init.sh:/docker-entrypoint-initdb.d/init_user_db.sh
+      - ./postgres-data:/var/lib/postgresql/data
+  web:
+    build: .
+    command: python -m flask run --host 0.0.0.0
+    volumes:
+      - .:/contextualise
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db

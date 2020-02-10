@@ -11,17 +11,6 @@ LABEL      app.name="Contextualise" \
 # Enable unbuffered STDOUT logging
 ENV        PYTHONUNBUFFERED=1
 
-RUN        apt update && apt install -y gcc git python-dev libpq-dev postgresql postgresql-contrib
-
-USER       postgres
-
-# Create PostgreSQL role named "docker" with "docker" as the password
-# Then create a database "docker" owned by the "docker" role.
-RUN        /etc/init.d/postgresql start && \
-           psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" && \
-           createdb -O docker docker # && \
-           # psql -h localhost -U docker -d docker -a -f topicmap-definition.sql
-
 RUN        git clone https://github.com/psycopg/psycopg2 && \
            cd psycopg2 && \
            python setup.py build && \
@@ -35,8 +24,9 @@ WORKDIR    /contextualise
 COPY       . ./
 RUN        pip install --user -r requirements.txt
 RUN        pip install --user ./
-
+RUN        pip uninstall topic-db -y
+RUN        git clone https://github.com/brettkromkamp/topic-db.git
+RUN        pip install --user -r ./topic-db/requirements.txt
+RUN        pip install --user ./topic-db
 ENV        FLASK_APP contextualise
 ENV        FLASK_ENV development
-
-CMD python -m flask run --host 0.0.0.0
