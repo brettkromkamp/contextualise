@@ -24,6 +24,9 @@ WORKDIR    /contextualise
 COPY       . ./
 RUN        pip install --user -r requirements.txt
 RUN        pip install --user ./
-
+RUN        pip uninstall topic-db -y
+RUN        git clone https://github.com/brettkromkamp/topic-db.git
+RUN        pip install --user -r ./topic-db/requirements.txt
+RUN        pip install --user ./topic-db
 ENV        FLASK_APP contextualise
 ENV        FLASK_ENV development
