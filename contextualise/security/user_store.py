@@ -20,9 +20,10 @@ config.read(SETTINGS_FILE_PATH)
 database_username = config["DATABASE"]["Username"]
 database_password = config["DATABASE"]["Password"]
 database_name = config["DATABASE"]["Database"]
+database_host = config["DATABASE"]["Host"]
 
 engine = create_engine(
-    f"postgresql://{database_username}:{database_password}@localhost/{database_name}",
+    f"postgresql://{database_username}:{database_password}@{database_host}/{database_name}",
     pool_size=10,
     max_overflow=20,
     convert_unicode=True,
