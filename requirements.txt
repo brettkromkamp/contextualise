@@ -1,11 +1,11 @@
 topic-db>=1.0.0
-SQLAlchemy>=1.3.12
+SQLAlchemy>=1.3.13
 Flask>=1.1.1
 Flask-SQLAlchemy>=2.4.1
 Flask-Security-Too>=3.3.2
 flask-seasurf>=0.2.2
 bcrypt>=3.1.7
-Werkzeug>=0.16.0
+Werkzeug>=1.0.0
 maya>=0.6.1
 mistune>=0.8.4
 python-slugify>=4.0.0

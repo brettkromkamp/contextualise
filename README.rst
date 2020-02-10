@@ -1,5 +1,5 @@
-Contextualise by Brett Kromkamp
-===============================
+Contextualise: Manage Your Knowledge
+====================================
 
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of
