@@ -156,7 +156,7 @@
             {% if associations %}
             <nav class="card bg-light">
                 <div class="card-header"><strong>Related topics</strong>
-                    &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
+                    &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" data-scope-filtered="{{ session['scope_filter'] }}" href="#" id="view-graph-link">View
                         graph</a>
                 </div>
                 <div class="card-body list-card">
@@ -328,12 +328,6 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
-
-
-
-
-
-
 
 </script>
 </body>
