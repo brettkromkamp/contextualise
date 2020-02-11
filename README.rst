@@ -161,7 +161,7 @@ root of a local clone of the source:
     Server = mail.changeme.com
     Sender = Change Me
 
-2. Run ``docker-compose-up``
+2. Run ``docker-compose up``
 
 First-Time Use
 --------------
