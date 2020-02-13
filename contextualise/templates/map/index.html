@@ -18,42 +18,37 @@
 {% if maps %}
 <div class="row">
     <div class="col">
-        <div class="card-deck">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Access</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for map in maps %}
-            <div class="card" style="max-width: 24rem;">
-                {% if map.image_path %}
-                <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
-                    <img alt="{{ map.name }}" class="card-img-top"
-                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
-                </a>
-                {% else %}
-                <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
-                    <img alt="{{ map.name }}" class="card-img-top" src="https://picsum.photos/640/360">
-                </a>
-                {% endif %}
-                <div class="card-body">
+            <tr>
+                <th class="align-middle" scope="row" style="min-width: 16em;"><a
+                        href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">{{
+                    map.name }}</a></th>
+                <td class="align-middle">
                     {% if map.shared %}
-                    <h5 class="card-title">{{ map.name }}
-                        <br/>
-                        <span class="badge badge-success">Public</span>
-                    </h5>
+                    <span class="badge badge-pill badge-success">Public</span>
                     {% else %}
-                    <h5 class="card-title">{{ map.name }}
-                        <br/>
-                        <span class="badge badge-info">Private</span>
-                    </h5>
+                    <span class="badge badge-pill badge-secondary">Private</span>
                     {% endif %}
-                    <p class="card-text">{{ map.description }}</p>
-                </div>
-                <div class="card-footer">
-                    <a class="card-link"
-                       href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
-                    <a class="card-link" href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>
-                    <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
-                </div>
-            </div>
+                </td>
+                <td>{{ map.description }}</td>
+                <td style="min-width: 8em;" class="align-middle">
+                    <a href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
+                </td>
+            </tr>
             {% endfor %}
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 <div class="row">

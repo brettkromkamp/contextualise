@@ -38,11 +38,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
                     </li>
+                    <!--
                     {% if current_user.id == topic_map.user_identifier %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Advanced search</a>
                     </li>
                     {% endif %}
+                    -->
                     {% if topic and topic.identifier != 'home' %}
                     <li class="nav-item">
                         <a class="btn btn-outline-primary"
