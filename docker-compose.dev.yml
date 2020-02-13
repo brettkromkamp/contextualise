@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  web:
+    volumes:
+      - '.:/usr/src/app'
+    environment:
+      FLASK_ENV: development
+    command: python -m flask run --host 0.0.0.0

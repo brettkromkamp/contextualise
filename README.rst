@@ -161,7 +161,9 @@ root of a local clone of the source:
     Server = mail.changeme.com
     Sender = Change Me
 
-2. Run ``docker-compose up``
+2. Run ``docker-compose up --build`` for a production like deployment running behind ``gunicorn`` in an immutable image
+   so any source code changes require a rebuild. If, however, you want a more dynamic environment for development
+   add in the development config file with ``docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build`` where source changes occur immediately within the image. Modifying ``requirements.txt`` requires a rebuild of the image however.
 
 First-Time Use
 --------------

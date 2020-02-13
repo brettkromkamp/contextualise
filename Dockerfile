@@ -1,32 +1,32 @@
-FROM       python:3
+FROM python:3
 
-# Add some metadata
-LABEL      app.name="Contextualise" \
-           app.description="A simple and flexible tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources" \
-           app.license="MIT License" \
-           app.license.url="https://github.com/brettkromkamp/contextualise/blob/master/LICENSE" \
-           app.repo.url="https://github.com/brettkromkamp/contextualise" \
-           app.authors="Brett Kromkamp <@brettkromkamp>"
+# Metadata
+LABEL \
+  app.name="Contextualise" \
+  app.description="A simple and flexible tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources" \
+  app.license="MIT License" \
+  app.license.url="https://github.com/brettkromkamp/contextualise/blob/master/LICENSE" \
+  app.repo.url="https://github.com/brettkromkamp/contextualise" \
+  app.authors="Brett Kromkamp <@brettkromkamp>"
 
-# Enable unbuffered STDOUT logging
-ENV        PYTHONUNBUFFERED=1
+# Fetch just the dependencies, caches on the contents of requirements.txt
+WORKDIR /usr/src/app
+COPY ./requirements.txt ./
+RUN pip install --user git+https://github.com/brettkromkamp/topic-db.git \
+ && pip install --user -r requirements.txt
 
-RUN        git clone https://github.com/psycopg/psycopg2 && \
-           cd psycopg2 && \
-           python setup.py build && \
-           python setup.py install
+# Copy in the rest of the project and dependencies
+COPY . .
+RUN test -f settings.ini || cp settings-docker-sample.ini settings.ini
 
-# Install Contextualise from the source code
-COPY       . ./
+# Config for python and the app
+ENV \
+  PYTHONUNBUFFERED=1 \
+  PYTHONDONTWRITEBYTECODE=1 \
+  FLASK_APP=contextualise \
+  FLASK_ENV=production \
+  PATH=$PATH:/root/.local/bin
 
-# Install requirements
-WORKDIR    /contextualise
-COPY       . ./
-RUN        pip install --user -r requirements.txt
-RUN        pip install --user ./
-RUN        pip uninstall topic-db -y
-RUN        git clone https://github.com/brettkromkamp/topic-db.git
-RUN        pip install --user -r ./topic-db/requirements.txt
-RUN        pip install --user ./topic-db
-ENV        FLASK_APP contextualise
-ENV        FLASK_ENV development
+# Execute via gunicorn by default
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "contextualise.wsgi:app"]
+EXPOSE 5000
