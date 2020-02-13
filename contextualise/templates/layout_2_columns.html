@@ -143,12 +143,12 @@
                         <li>Map: <a href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">{{
                             topic_map.name }}</a></li>
                         {% if session['current_scope'] == '*' %}
-                        <li>Context: <a style="font-size: 105%;" class="badge badge-primary"
-                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                        <li>Context: <a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                         {% else %}
-                        <li>Context: <a style="font-size: 105%;" class="badge badge-warning"
-                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                        <li>Context: <a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                         {% endif %}
                     </ul>
@@ -158,7 +158,8 @@
             {% if associations %}
             <nav class="card bg-light">
                 <div class="card-header"><strong>Related topics</strong>
-                    &mdash; <a data-scope-identifier="{{ session['current_scope'] }}" data-scope-filtered="{{ session['scope_filter'] }}" href="#" id="view-graph-link">View
+                    &mdash; <a data-scope-filtered="{{ session['scope_filter'] }}"
+                               data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
                         graph</a>
                 </div>
                 <div class="card-body list-card">
@@ -291,7 +292,7 @@
     <div class="container">
 		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
                                                                              style="color:#c91818;"></i> and a lot of <i
-                class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</small></span>
+                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</small></span>
     </div>
 </footer>
 <script
@@ -330,6 +331,7 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
+
 
 </script>
 </body>
