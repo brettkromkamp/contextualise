@@ -18,7 +18,7 @@
 <header>
     <a name="page-top"></a>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" href="/">Contextualise</a>
             <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                     data-target="#navbars"
@@ -38,11 +38,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
                     </li>
+                    <!--
                     {% if current_user.id == topic_map.user_identifier %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Advanced search</a>
                     </li>
                     {% endif %}
+                    -->
                     {% if topic.identifier != 'home' %}
                     <li class="nav-item">
                         {% if session['current_scope'] == '*' %}
@@ -85,7 +87,7 @@
     </nav>
 </header>
 <main class="flex-shrink-0" role="main">
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 {% include "_messages.html" %}
@@ -286,7 +288,7 @@
     </div>
 </main>
 <footer class="footer mt-auto py-3">
-    <div class="container-fluid">
+    <div class="container">
 		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
                                                                              style="color:#c91818;"></i> and a lot of <i
                 class="fas fa-coffee"></i> by <a href="https://twitter.com/brettkromkamp">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</small></span>
