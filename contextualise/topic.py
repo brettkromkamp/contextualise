@@ -754,8 +754,6 @@ def view_names(map_identifier, topic_identifier):
 
     if current_user.id != topic_map.user_identifier:
         abort(403)
-    if "admin" not in current_user.roles:
-        abort(403)
 
     topic = topic_store.get_topic(
         map_identifier,
@@ -793,8 +791,6 @@ def add_name(map_identifier, topic_identifier):
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -861,8 +857,6 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         abort(404)
 
     if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
         abort(403)
 
     topic = topic_store.get_topic(

@@ -248,12 +248,10 @@ $("#view-graph-link").click(function(e) {
             <a class="dropdown-item"
                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
                 topic</a>
-            {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 names</a>
-            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
