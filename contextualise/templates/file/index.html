@@ -29,12 +29,10 @@
                 topic</a>
             <a class="dropdown-item"
                href="#">Delete topic</a>
-            {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 names</a>
-            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
