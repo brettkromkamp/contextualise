@@ -41,7 +41,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         DEBUG=False,
         # TODO: Replace in production 'secrets.token_hex()'
-        SECRET_KEY=secrets.token_hex(),
+        SECRET_KEY="6d67cace9a6e4525e2b945191ad8f1d4702c3186ea914ca80db86adb258bd850",
         TOPIC_STORE_USER=database_username,
         TOPIC_STORE_PASSWORD=database_password,
         TOPIC_STORE_DBNAME=database_name,
