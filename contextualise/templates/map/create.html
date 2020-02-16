@@ -39,6 +39,7 @@
         </small>
         {% endif %}
     </div>
+    {% if 'admin' in current_user.roles %}
     <strong>Access?</strong>
     <div class="form-check">
         <input checked class="form-check-input" id="shared-radio-1" name="map-shared" type="radio" value="0">
@@ -52,6 +53,7 @@
             Shared
         </label>
     </div>
+    {% endif %}
     <br/>
     <a class="btn btn-secondary"
        href="{{ url_for('map.index') }}"
