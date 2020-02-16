@@ -7,13 +7,12 @@ Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
 
 import configparser
 import os
-import secrets
 
 from flask import Flask
 from flask import render_template
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
-from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered
+from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, hash_password
 
 from contextualise.security import user_store, user_models
 from contextualise.utilities import filters
@@ -40,14 +39,13 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DEBUG=False,
-        # TODO: Replace in production 'secrets.token_hex()'
-        SECRET_KEY="6d67cace9a6e4525e2b945191ad8f1d4702c3186ea914ca80db86adb258bd850",
+        SECRET_KEY=os.environ.get("SECRET_KEY", 'ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34'),
         TOPIC_STORE_USER=database_username,
         TOPIC_STORE_PASSWORD=database_password,
         TOPIC_STORE_DBNAME=database_name,
         TOPIC_STORE_HOST=database_host,
         TOPIC_STORE_PORT=database_port,
-        SECURITY_PASSWORD_SALT="fff78df7dffdb745be561d9d8075c69ce6a6b4a8c8bce17377601a66fed72542",
+        SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", '139687009245803364536588051620840970665'),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
         SECURITY_CHANGEABLE=True,
@@ -129,26 +127,17 @@ def create_app(test_config=None):
         # Create users
         if not user_datastore.get_user("admin@contextualise.dev"):
             user_datastore.create_user(
-                email="admin@contextualise.dev", password="Passw0rd1"
+                email="admin@contextualise.dev", password=hash_password("Passw0rd1")
             )
         if not user_datastore.get_user("user@contextualise.dev"):
             user_datastore.create_user(
-                email="user@contextualise.dev", password="Passw0rd1"
+                email="user@contextualise.dev", password=hash_password("Passw0rd1")
             )
-        if not user_datastore.get_user("multi@contextualise.dev"):
-            user_datastore.create_user(
-                email="multi@contextualise.dev", password="Passw0rd1"
-            )
-
         user_store.db_session.commit()
 
         # Assign roles
         user_datastore.add_role_to_user("user@contextualise.dev", "user")
         user_datastore.add_role_to_user("admin@contextualise.dev", "admin")
-
-        user_datastore.add_role_to_user("multi@contextualise.dev", "user")
-        user_datastore.add_role_to_user("multi@contextualise.dev", "admin")
-
         user_store.db_session.commit()
 
     @app.teardown_request
