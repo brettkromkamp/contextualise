@@ -94,7 +94,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 {% if topic_map %}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -119,6 +119,15 @@
                     </ol>
                 </nav>
                 {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% block menu %}{% endblock %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
                 {% block body %}
                 {% block content %}{% endblock %}
                 {% endblock %}
@@ -292,7 +301,7 @@
     <div class="container">
 		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
                                                                              style="color:#c91818;"></i> and a lot of <i
-                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</small></span>
+                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
     </div>
 </footer>
 <script
@@ -331,8 +340,6 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
-
-
 </script>
 </body>
 </html>

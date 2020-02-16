@@ -16,17 +16,10 @@ $('[data-fancybox]').fancybox({
 		preload : false
 	}
 })
-
 </script>
-
 {% endblock %}
 
-{% block content %}
-<h1>
-    {{ topic.first_base_name.name }}
-    <small class="text-muted">3D content</small>
-</h1>
-<p><em>{{ creation_date }}</em></p>
+{% block menu %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
@@ -134,6 +127,15 @@ $('[data-fancybox]').fancybox({
         </div>
     </li>
 </ul>
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.first_base_name.name }}
+    <small class="text-muted">3D content</small>
+</h1>
+<p><em>{{ creation_date }}</em></p>
+<hr/>
 {% if files %}
 <table class="table table-bordered">
     <thead class="thead-light">

@@ -135,101 +135,7 @@ $("#view-graph-link").click(function(e) {
 </script>
 {% endblock %}
 
-{% block content %}
-<div aria-hidden="true" aria-labelledby="modalTitle" class="modal fade" id="modalNetworkGraph"
-     role="dialog"
-     tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalCenterTitle">{{ topic.first_base_name.name }}<small> &mdash; Network graph</small></h5>
-                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="border rounded" id="network-graph"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h1>{{ topic.first_base_name.name }}</h1>
-<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
-        class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
-                                           data-toggle="collapse" href="#advancedProperties"> Properties</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    {% if knowledge_graph_query %}<i
-            class="fas fa-search"></i> <a data-query="{{ knowledge_graph_query }}" href="#" id="knowledge-graph-search">
-        Knowledge graph</a>
-    {% endif %}
-</p>
-<div class="collapse" id="advancedProperties">
-    <div class="card">
-        <div class="card-header">
-            Properties
-        </div>
-        <div class="card-body">
-            <div class="card-text">
-                <table class="table table-bordered table-sm">
-                    <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">Identifier</th>
-                        <td>
-                            {{ topic.identifier }}
-                        </td>
-                    </tr>
-                    <tr>
-                        {% if topic.base_names|length > 1 %}
-                        <th scope="row">Names</th>
-                        <td>
-                            {% for base_name in topic.base_names %}
-                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
-                            endif %}
-                            {% endfor %}
-                        </td>
-                        {% else %}
-                        <th scope="row">Name</th>
-                        <td>
-                            {{ topic.first_base_name.name}}
-                        </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th scope="row">Type</th>
-                        <td>
-                            {% if session['current_scope'] == '*' %}
-                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
-                            {% else %}
-                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Creation timestamp</th>
-                        <td>{{ creation_date }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Modification timestamp</th>
-                        <td>{{ modification_date }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <br/>
-</div>
+{% block menu %}
 {% if current_user.id == topic_map.user_identifier %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
@@ -339,6 +245,104 @@ $("#view-graph-link").click(function(e) {
     </li>
 </ul>
 {% endif %}
+{% endblock %}
+
+{% block content %}
+<div aria-hidden="true" aria-labelledby="modalTitle" class="modal fade" id="modalNetworkGraph"
+     role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">{{ topic.first_base_name.name }}<small> &mdash; Network graph</small></h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="border rounded" id="network-graph"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1>{{ topic.first_base_name.name }}</h1>
+<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
+        class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
+                                           data-toggle="collapse" href="#advancedProperties"> Properties</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% if knowledge_graph_query %}<i
+            class="fas fa-search"></i> <a data-query="{{ knowledge_graph_query }}" href="#" id="knowledge-graph-search">
+        Knowledge graph</a>
+    {% endif %}
+</p>
+<div class="collapse" id="advancedProperties">
+    <div class="card">
+        <div class="card-header">
+            Properties
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">Identifier</th>
+                        <td>
+                            {{ topic.identifier }}
+                        </td>
+                    </tr>
+                    <tr>
+                        {% if topic.base_names|length > 1 %}
+                        <th scope="row">Names</th>
+                        <td>
+                            {% for base_name in topic.base_names %}
+                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
+                            endif %}
+                            {% endfor %}
+                        </td>
+                        {% else %}
+                        <th scope="row">Name</th>
+                        <td>
+                            {{ topic.first_base_name.name}}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td>
+                            {% if session['current_scope'] == '*' %}
+                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                            {% else %}
+                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Creation timestamp</th>
+                        <td>{{ creation_date }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Modification timestamp</th>
+                        <td>{{ modification_date }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br/>
+</div>
+<hr />
 {% if occurrences['text'] %}
 {{ occurrences['text']|safe }}
 <p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>

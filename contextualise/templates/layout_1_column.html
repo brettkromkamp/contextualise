@@ -77,7 +77,7 @@
 <main class="flex-shrink-0" role="main">
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-md-12">
                 {% include "_messages.html" %}
             </div>
         </div>
@@ -102,6 +102,15 @@
                     </ol>
                 </nav>
                 {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% block menu %}{% endblock %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 {% block body %}
                 {% block content %}{% endblock %}
                 {% endblock %}
@@ -113,7 +122,7 @@
     <div class="container">
 		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
                                                                              style="color:#c91818;"></i> and a lot of <i
-                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway  &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</small></span>
+                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
     </div>
 </footer>
 <script
