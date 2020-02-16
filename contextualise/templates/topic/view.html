@@ -132,6 +132,8 @@ $("#view-graph-link").click(function(e) {
     $('#modalNetworkGraph').modal();
 });
 
+
+
 </script>
 {% endblock %}
 
@@ -254,7 +256,8 @@ $("#view-graph-link").click(function(e) {
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCenterTitle">{{ topic.first_base_name.name }}<small> &mdash; Network graph</small></h5>
+                <h5 class="modal-title" id="modalCenterTitle">{{ topic.first_base_name.name }}<small> &mdash; Network
+                    graph</small></h5>
                 <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -270,13 +273,9 @@ $("#view-graph-link").click(function(e) {
 </div>
 
 <h1>{{ topic.first_base_name.name }}</h1>
-<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<i
+<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
-                                           data-toggle="collapse" href="#advancedProperties"> Properties</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    {% if knowledge_graph_query %}<i
-            class="fas fa-search"></i> <a data-query="{{ knowledge_graph_query }}" href="#" id="knowledge-graph-search">
-        Knowledge graph</a>
-    {% endif %}
+                                           data-toggle="collapse" href="#advancedProperties"> Properties</a></small>
 </p>
 <div class="collapse" id="advancedProperties">
     <div class="card">
@@ -342,10 +341,10 @@ $("#view-graph-link").click(function(e) {
     </div>
     <br/>
 </div>
-<hr />
+<hr/>
 {% if occurrences['text'] %}
 {{ occurrences['text']|safe }}
-<p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
+<p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
 {% else %}
 {% if current_user.id == topic_map.user_identifier %}
 <p>This topic has no text. Click on the "Edit topic" button below to add text to this topic.</p>
@@ -377,6 +376,6 @@ $("#view-graph-link").click(function(e) {
 </div>
 <br/>
 {% endfor %}
-<p><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></p>
+<p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
 {% endif %}
 {% endblock %}

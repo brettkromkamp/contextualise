@@ -135,14 +135,16 @@
             <div class="col-md-4">
                 <div class="card bg-light">
                     {% if current_user.id == topic_map.user_identifier %}
-                    <div class="card-header"><strong>Context</strong> &mdash; <a
-                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <div class="card-header"><strong>Context</strong> &mdash; <small><a
+                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></small>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                         {% if session['scope_filter'] == 1 %}
-                        <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
-                            filtering</a></div>
+                        <small><a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
+                            filtering</a></small></div>
                     {% else %}
-                    <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
-                        filtering</a></div>
+                    <small><a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
+                        filtering</a></small></div>
                 {% endif %}
                 {% else %}
                 <div class="card-header"><strong>Context</strong></div>
@@ -167,9 +169,10 @@
             {% if associations %}
             <nav class="card bg-light">
                 <div class="card-header"><strong>Related topics</strong>
-                    &mdash; <a data-scope-filtered="{{ session['scope_filter'] }}"
-                               data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
-                        graph</a>
+                    &mdash; <small><a data-scope-filtered="{{ session['scope_filter'] }}"
+                                      data-scope-identifier="{{ session['current_scope'] }}" href="#"
+                                      id="view-graph-link">View
+                        graph</a></small>
                 </div>
                 <div class="card-body list-card">
                     <ul>
@@ -299,8 +302,8 @@
 </main>
 <footer class="footer mt-auto py-3">
     <div class="container">
-		<span class="text-muted"><small>Contextualise is handcrafted with <i class="fas fa-heart"
-                                                                             style="color:#c91818;"></i> and a lot of <i
+		<span class="text-muted"><small><a href="/">Contextualise</a> is handcrafted with <i class="fas fa-heart"
+                                                                                             style="color:#c91818;"></i> and a lot of <i
                 class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
     </div>
 </footer>
@@ -340,6 +343,7 @@ if (typeof document.getElementById('goto-button') != undefined) {
         }
     });
 }
+
 </script>
 </body>
 </html>
