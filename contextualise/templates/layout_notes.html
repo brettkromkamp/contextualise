@@ -32,9 +32,6 @@
                         <a class="nav-link" href="{{ url_for('map.index') }}">Maps</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Index</a>
-                    </li>
-                    <li class="nav-item">
                         {% if session['current_scope'] == '*' %}
                         <a class="nav-link"
                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
@@ -43,11 +40,6 @@
                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', context=session['current_scope']) }}">Home</a>
                         {% endif %}
                     </li>
-                    {% if current_user.id == topic_map.user_identifier %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Advanced search</a>
-                    </li>
-                    {% endif %}
                 </ul>
                 {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
@@ -59,6 +51,11 @@
                         </a>
                         <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                             <a class="dropdown-item" href="#">Preferences</a>
+                            <div class="dropdown-divider"></div>
+                            {% if current_user.id == topic_map.user_identifier %}
+                            <a class="dropdown-item" href="#">Advanced search</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="#">Topics index</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
                         </div>

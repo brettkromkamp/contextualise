@@ -33,18 +33,8 @@
                         <a class="nav-link" href="{{ url_for('map.index') }}">Maps</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Index</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
                     </li>
-                    <!--
-                    {% if current_user.id == topic_map.user_identifier %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Advanced search</a>
-                    </li>
-                    {% endif %}
-                    -->
                     {% if topic and topic.identifier != 'home' %}
                     <li class="nav-item">
                         <a class="btn btn-outline-primary"
@@ -64,6 +54,11 @@
                         </a>
                         <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                             <a class="dropdown-item" href="#">Preferences</a>
+                            <div class="dropdown-divider"></div>
+                            {% if current_user.id == topic_map.user_identifier %}
+                            <a class="dropdown-item" href="#">Advanced search</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="#">Topics index</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
                         </div>
