@@ -4,6 +4,13 @@
 
 {% block content %}
 {% include "security/_messages.html" %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <strong>Here be dragons!</strong> Contextualise is in its alpha stage of development, so it is not advised to use it
+    for anything other than testing purposes. Data could be irrevocably lost!
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <form action="{{ url_for_security('register') }}" class="form-signin" method="POST" name="register_user_form">
     {{ register_user_form.hidden_tag() }}
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
