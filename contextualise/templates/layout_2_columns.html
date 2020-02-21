@@ -49,13 +49,13 @@
                     </li>
                     {% endif %}
                 </ul>
+                {% if current_user.is_authenticated %}
                 <form autocomplete="off" class="form-inline my-2 my-md-0">
                     <input aria-label="Enter topic identifier" class="form-control mr-sm-2 auto-complete"
                            id="goto-topic-identifier" placeholder="Enter topic identifier"
                            type="text">
                     <button class="btn btn-outline-success my-2 my-sm-0" id="goto-button" type="reset">Go to</button>
                 </form>
-                {% if current_user.is_authenticated %}
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
