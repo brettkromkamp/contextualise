@@ -46,6 +46,15 @@
                         </div>
                     </li>
                 </ul>
+                {% else %}
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('security.login') }}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign Up</a>
+                    </li>
+                </ul>
                 {% endif %}
             </div>
         </div>
