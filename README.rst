@@ -2,9 +2,13 @@ Contextualise: Manage Your Knowledge
 ====================================
 
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
-activities consisting of unstructured and widely diverse data and information resources -- think of
-investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer
-games) and many kinds of hobbies.
+activities consisting of unstructured and widely diverse data and information resources -- think of investigative
+journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and
+many kinds of hobbies.
+
+    On a side note, an **alpha** version of Contextualise is already available at `Contextualise.dev <https://contextualise.dev/>`_.
+    It is not advised, at this stage, to use Contextualise for anything other than testing purposes. Data could be
+    irrevocably lost!
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
@@ -27,13 +31,13 @@ a way to describe complex relationships between abstract concepts and real-world
 Why?
 ----
 
-I built and published my first knowledge documentation tool in 2007 which I was still using until very recently, almost
-unmodified, twelve years later. If I remember correctly, it was built with `PHP version 5.2.5`_! Twelve years is an
-eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together with the `Flask`_
-web development framework. What's more, after twelve years of using my own and other knowledge management tools, I have
-several improvements in mind for the next version (many of which are simplifications, for that matter). And perhaps one
-of the most important reasons for building a new tool like this is that I want it to be open source: both
-Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
+I built and published my first (topic maps-based) knowledge documentation tool in 2006 which I was still using until
+quite recently, almost unmodified, thirteen years later. If I remember correctly, it was built with `PHP version 5.2.5`_!
+Thirteen years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
+with the `Flask`_ web development framework. What's more, after thirteen years of using my own and other knowledge
+management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
+matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
+source: both Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
 is built -- also written by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
@@ -43,13 +47,13 @@ The following provides an overview of Contextualise's existing (and planned) fea
 **Existing Features**
 
 * Support for multiple (self-contained) topic maps
-* Support for both private and public topic maps
+* Support for both private and public topic maps (the latter of which is not available to non-admin users until support to deal with `inappropriate content <https://github.com/brettkromkamp/contextualise/issues/9>`_ is in place)
 * Extensive support for notes including the ability to attach a note to an existing topic and convert a note into a topic
 * `Markdown`_-based text editor for topic text and notes
 * The ability to attach files (including images, PDFs, and so forth) to topics
 * The ability to attach (`glTF`_-based) 3D models to topics with an accompanying interactive 3D model viewer
 * Powerful (semantic) associations with the ability to create typed associations with role-based members
-* Flexible filtering of topic occurrences and associations by scope (that is, context)
+* Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 
@@ -57,8 +61,8 @@ The following provides an overview of Contextualise's existing (and planned) fea
 
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
-* Google Maps support
-* `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing to navigate between topics using a visual timeline component
+* Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand
+* `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing for the navigation between topics using a visual timeline component
 * WikiMedia API integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
 * Semantic tagging
 
@@ -133,7 +137,7 @@ page.
 *The Contextualise Welcome page*
 
 Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run
-Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python WSGI HTTP server::
+Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python `WSGI <https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ HTTP server::
 
     $ gunicorn -w 4 -b 0.0.0.0:5000 contextualise.wsgi:app
 
