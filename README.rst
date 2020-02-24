@@ -10,6 +10,8 @@ many kinds of hobbies.
     It is not advised, at this stage, to use Contextualise for anything other than testing purposes. Data could be
     irrevocably lost!
 
+    A combined Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
 
@@ -51,7 +53,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Extensive support for notes including the ability to attach a note to an existing topic and convert a note into a topic
 * `Markdown`_-based text editor for topic text and notes
 * The ability to attach files (including images, PDFs, and so forth) to topics
-* The ability to attach (`glTF`_-based) 3D models to topics with an accompanying interactive 3D model viewer
+* The ability to attach (`glTF`_-based) 3D scenes to topics with an accompanying interactive 3D model viewer
 * Powerful (semantic) associations with the ability to create typed associations with role-based members
 * Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
 * Interactive visual network graph of related topics (allowing navigation between topics)
@@ -180,7 +182,7 @@ following credentials: ``user@contextualise.io`` and ``Passw0rd1``.
 Tutorial
 --------
 
-Pending.
+A combined Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
 Documentation
 -------------
