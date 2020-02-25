@@ -179,7 +179,7 @@ def edit(map_identifier):
     if request.method == "POST":
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
-        form_map_shared = True if request.form["map-shared"] == "1" else False
+        form_map_shared = True if request.form.get("map-shared") == "1" else False
         form_upload_file = (
             request.files["map-image-file"]
             if "map-image-file" in request.files
