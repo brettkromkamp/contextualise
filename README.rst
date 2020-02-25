@@ -6,11 +6,11 @@ activities consisting of unstructured and widely diverse data and information re
 journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and
 many kinds of hobbies.
 
-    On a side note, an **alpha** version of Contextualise is already available at `Contextualise.dev <https://contextualise.dev/>`_.
+    On a side note, an **alpha** version of Contextualise is already available at `https://contextualise.dev <https://contextualise.dev/>`_.
     It is not advised, at this stage, to use Contextualise for anything other than testing purposes. Data could be
     irrevocably lost!
 
-    A combined Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+    A Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
@@ -59,7 +59,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 
-**Missing Version 1.0 Features**
+**Post Version 1.0 Features**
 
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
@@ -68,7 +68,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * WikiMedia API integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
 * Semantic tagging
 
-For a more exhaustive list of missing features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
+For a more exhaustive list of planned features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
 
 Install the Development Version
 -------------------------------
@@ -182,7 +182,7 @@ following credentials: ``user@contextualise.io`` and ``Passw0rd1``.
 Tutorial
 --------
 
-A combined Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+A Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
 Documentation
 -------------
