@@ -39,3 +39,7 @@ main > .container {
 #goto-topic-identifier {
     width: 20em;
 }
+
+.contextualise-card {
+    background-color: #f0f8ff;
+}

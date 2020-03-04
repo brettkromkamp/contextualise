@@ -120,6 +120,9 @@
                 class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
     </div>
 </footer>
+{% if current_user.id == topic_map.user_identifier %}
+<script src="{{ url_for('static', filename='mousetrap.min.js') }}"></script>
+{% endif %}
 <script
         crossorigin="anonymous"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -147,5 +150,50 @@ $('.auto-complete').autoComplete({
 });
 
 </script>
+{% if current_user.id == topic_map.user_identifier %}
+<script>
+var urlParts = window.location.pathname.split('/');
+var mapIdentifier = urlParts[2];
+var topicIdentifier = urlParts[3];
+
+Mousetrap.bind('t v', function() { // View-topic keyboard shortcut
+    var viewTopicUrl = "/topics/view/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewTopicUrl;
+});
+Mousetrap.bind('t c', function() { // Create-topic keyboard shortcut
+    var createTopicUrl = "/topics/create/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = createTopicUrl;
+});
+Mousetrap.bind('t e', function() { // Edit-topic keyboard shortcut
+    var editTopicUrl = "/topics/edit/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = editTopicUrl;
+});
+
+Mousetrap.bind('i v', function() { // View-images keyboard shortcut
+    var viewImagesUrl = "/images/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewImagesUrl;
+});
+Mousetrap.bind('3 v', function() { // View-3D resources keyboard shortcut
+    var view3dUrl = "/3d/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = view3dUrl;
+});
+Mousetrap.bind('f v', function() { // View-files keyboard shortcut
+    var viewFilesUrl = "/files/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewFilesUrl;
+});
+Mousetrap.bind('l v', function() { // View-links keyboard shortcut
+    var viewLinksUrl = "/links/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewLinksUrl;
+});
+Mousetrap.bind('v v', function() { // View-videos keyboard shortcut
+    var viewVideosUrl = "/videos/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewVideosUrl;
+});
+Mousetrap.bind('a v', function() { // View-associations keyboard shortcut
+    var viewAssociationsUrl = "/associations/" + mapIdentifier + "/" + topicIdentifier;
+    window.location.href = viewAssociationsUrl;
+});
+</script>
+{% endif %}
 </body>
 </html>

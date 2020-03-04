@@ -147,7 +147,7 @@
                 {% endblock %}
             </div>
             <div class="col-md-4">
-                <div class="card bg-light">
+                <div class="card contextualise-card">
                     {% if current_user.id == topic_map.user_identifier %}
                     <div class="card-header"><strong>Context</strong> &mdash; <small><a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></small>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
@@ -181,7 +181,7 @@
             </div>
             <br/>
             {% if associations %}
-            <nav class="card bg-light">
+            <nav class="card contextualise-card">
                 <div class="card-header"><strong>Related topics</strong>
                     &mdash; <small><a data-scope-filtered="{{ session['scope_filter'] }}"
                                       data-scope-identifier="{{ session['current_scope'] }}" href="#"
@@ -220,7 +220,7 @@
             {% endif %}
             {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or
             occurrences['videos'] %}
-            <div class="card bg-light">
+            <div class="card contextualise-card">
                 <div class="card-header"><strong>Topic resources</strong></div>
                 <div class="card-body list-card">
                     <ul>
