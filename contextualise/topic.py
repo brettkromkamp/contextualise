@@ -233,6 +233,8 @@ def create(map_identifier, topic_identifier):
         # If no values have been provided set their default values
         if not form_topic_instance_of:
             form_topic_instance_of = "topic"
+        if not form_topic_text_scope:
+            form_topic_text_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_topic_name:
@@ -350,6 +352,8 @@ def edit(map_identifier, topic_identifier):
         # If no values have been provided set their default values
         if not form_topic_instance_of:
             form_topic_instance_of = "topic"
+        if not form_topic_text_scope:
+            form_topic_text_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
