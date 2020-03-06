@@ -12,6 +12,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("attribute", __name__)
 
+UNIVERSAL_SCOPE = "*"
+
 
 @bp.route("/attributes/<map_identifier>/<topic_identifier>")
 @login_required
@@ -191,7 +193,7 @@ def add(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = "*"  # Universal scope
+            form_attribute_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_attribute_name:
@@ -284,7 +286,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     form_attribute_name = ""
     form_attribute_value = ""
     form_attribute_type = ""
-    form_attribute_scope = "*"
+    form_attribute_scope = UNIVERSAL_SCOPE
 
     error = 0
 
@@ -296,7 +298,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = "*"  # Universal scope
+            form_attribute_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_attribute_name:
@@ -396,7 +398,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = "*"  # Universal scope
+            form_attribute_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_attribute_name:
@@ -519,7 +521,7 @@ def entity_edit(
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = "*"  # Universal scope
+            form_attribute_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_attribute_name:

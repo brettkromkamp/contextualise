@@ -21,6 +21,7 @@ bp = Blueprint("topic", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
 BREADCRUMBS_COUNT = 3
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/topics/view/<map_identifier>/<topic_identifier>")
@@ -513,7 +514,7 @@ def add_note(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = "*"  # Universal scope
+            form_note_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_note_title:
@@ -618,7 +619,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = "*"  # Universal scope
+            form_note_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_note_title:
@@ -996,7 +997,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
 
         # If no values have been provided set their default values
         if not form_scope:
-            form_scope = "*"  # Universal scope/context
+            form_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_scope):

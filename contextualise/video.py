@@ -12,6 +12,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("video", __name__)
 
+UNIVERSAL_SCOPE = "*"
+
 
 @bp.route("/videos/<map_identifier>/<topic_identifier>")
 @login_required
@@ -102,7 +104,7 @@ def add(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_video_scope:
-            form_video_scope = "*"  # Universal scope
+            form_video_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_video_title:
@@ -195,7 +197,7 @@ def edit(map_identifier, topic_identifier, video_identifier):
 
         # If no values have been provided set their default values
         if not form_video_scope:
-            form_video_scope = "*"  # Universal scope
+            form_video_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_video_title:

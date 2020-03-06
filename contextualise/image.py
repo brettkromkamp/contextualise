@@ -17,6 +17,7 @@ bp = Blueprint("image", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
 EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg", "gif"}
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/images/<map_identifier>/<topic_identifier>")
@@ -107,7 +108,7 @@ def upload(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_image_scope:
-            form_image_scope = "*"  # Universal scope
+            form_image_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_image_title:
@@ -219,7 +220,7 @@ def edit(map_identifier, topic_identifier, image_identifier):
 
         # If no values have been provided set their default values
         if not form_image_scope:
-            form_image_scope = "*"  # Universal scope
+            form_image_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_image_title:

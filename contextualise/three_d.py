@@ -17,6 +17,7 @@ bp = Blueprint("three_d", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
 EXTENSIONS_WHITELIST = {"gltf", "glb"}
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/3d/<map_identifier>/<topic_identifier>")
@@ -107,7 +108,7 @@ def upload(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = "*"  # Universal scope
+            form_file_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_file_title:
@@ -215,7 +216,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = "*"  # Universal scope
+            form_file_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_file_title:

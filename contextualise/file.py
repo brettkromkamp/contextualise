@@ -16,6 +16,7 @@ from contextualise.topic_store import get_topic_store
 bp = Blueprint("file", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/files/<map_identifier>/<topic_identifier>")
@@ -106,7 +107,7 @@ def upload(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = "*"  # Universal scope
+            form_file_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_file_title:
@@ -215,7 +216,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = "*"  # Universal scope
+            form_file_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_file_title:

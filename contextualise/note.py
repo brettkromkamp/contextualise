@@ -15,6 +15,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("note", __name__)
 
+UNIVERSAL_SCOPE = "*"
+
 
 @bp.route("/notes/index/<map_identifier>")
 def index(map_identifier):
@@ -91,7 +93,7 @@ def add(map_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = "*"  # Universal scope
+            form_note_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not form_note_title:

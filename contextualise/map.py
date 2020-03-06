@@ -13,6 +13,7 @@ bp = Blueprint("map", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
 EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg"}
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/maps/")
@@ -24,7 +25,7 @@ def index():
 
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
-    session["current_scope"] = "*"
+    session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
     return render_template("map/index.html", maps=maps)
@@ -38,7 +39,7 @@ def shared():
 
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
-    session["current_scope"] = "*"
+    session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
     return render_template("map/shared.html", maps=maps)

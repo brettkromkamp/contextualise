@@ -9,6 +9,8 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("association", __name__)
 
+UNIVERSAL_SCOPE = "*"
+
 
 @bp.route("/associations/<map_identifier>/<topic_identifier>")
 @login_required
@@ -109,7 +111,7 @@ def create(map_identifier, topic_identifier):
         if not form_association_instance_of:
             form_association_instance_of = "association"
         if not form_association_scope:
-            form_association_scope = "*"  # Universal scope
+            form_association_scope = UNIVERSAL_SCOPE
         if not form_association_name:
             form_association_name = "Undefined"
 
@@ -139,7 +141,7 @@ def create(map_identifier, topic_identifier):
             )
         ):
             error = error | 8
-        if form_association_scope != "*" and not topic_store.topic_exists(
+        if form_association_scope != UNIVERSAL_SCOPE and not topic_store.topic_exists(
             topic_map.identifier, form_association_scope
         ):
             error = error | 16
