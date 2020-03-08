@@ -53,7 +53,12 @@ def view(map_identifier, topic_identifier):
     scope_filtered = request.args.get("filter", type=int)
     if scope_filtered is not None:
         session["scope_filter"] = scope_filtered
-    scope_filtered = session["scope_filter"]
+    if "scope_filter" in session:
+        scope_filtered = session["scope_filter"]
+    else:
+        session["breadcrumbs"] = []
+        session["current_scope"] = UNIVERSAL_SCOPE
+        session["scope_filter"] = 1
 
     # If a context has been specified in the URL, then use that to set the context
     scope_identifier = request.args.get("context", type=str)
