@@ -39,13 +39,13 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DEBUG=False,
-        SECRET_KEY=os.environ.get("SECRET_KEY", 'ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34'),
+        SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
         TOPIC_STORE_USER=database_username,
         TOPIC_STORE_PASSWORD=database_password,
         TOPIC_STORE_DBNAME=database_name,
         TOPIC_STORE_HOST=database_host,
         TOPIC_STORE_PORT=database_port,
-        SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", '139687009245803364536588051620840970665'),
+        SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
         SECURITY_CHANGEABLE=True,
@@ -106,9 +106,7 @@ def create_app(test_config=None):
     app.register_error_handler(413, request_entity_too_large)
 
     # Setup Flask-Security
-    user_datastore = SQLAlchemySessionUserDatastore(
-        user_store.db_session, user_models.User, user_models.Role
-    )
+    user_datastore = SQLAlchemySessionUserDatastore(user_store.db_session, user_models.User, user_models.Role)
     security = Security(app, user_datastore)
 
     @user_registered.connect_via(app)
@@ -127,13 +125,9 @@ def create_app(test_config=None):
 
         # Create users
         if not user_datastore.get_user("admin@contextualise.dev"):
-            user_datastore.create_user(
-                email="admin@contextualise.dev", password=hash_password("Passw0rd1")
-            )
+            user_datastore.create_user(email="admin@contextualise.dev", password=hash_password("Passw0rd1"))
         if not user_datastore.get_user("user@contextualise.dev"):
-            user_datastore.create_user(
-                email="user@contextualise.dev", password=hash_password("Passw0rd1")
-            )
+            user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
         user_store.db_session.commit()
 
         # Assign roles
@@ -205,9 +199,5 @@ def create_app(test_config=None):
 if __name__ == "__main__":
     app = create_app()
     app.run(
-        debug=True,
-        use_debugger=False,
-        use_reloader=False,
-        passthrough_errors=True,
-        host="0.0.0.0",
+        debug=True, use_debugger=False, use_reloader=False, passthrough_errors=True, host="0.0.0.0",
     )

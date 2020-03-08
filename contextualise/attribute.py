@@ -30,9 +30,7 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -52,11 +50,7 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = (
-        maya.parse(creation_date_attribute.value)
-        if creation_date_attribute
-        else "Undefined"
-    )
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     entity_type = "topic"
     return_url = "topic.view"
@@ -72,9 +66,7 @@ def index(map_identifier, topic_identifier):
     )
 
 
-@bp.route(
-    "/attributes/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>"
-)
+@bp.route("/attributes/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>")
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
     topic_store = get_topic_store()
@@ -89,17 +81,13 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(
-        map_identifier,
-        entity_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
@@ -136,11 +124,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = (
-        maya.parse(creation_date_attribute.value)
-        if creation_date_attribute
-        else "Undefined"
-    )
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "attribute/index.html",
@@ -154,9 +138,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     )
 
 
-@bp.route(
-    "/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
-)
+@bp.route("/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -171,9 +153,7 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -210,10 +190,7 @@ def add(map_identifier, topic_identifier):
             )
         else:
             attribute = Attribute(
-                form_attribute_name,
-                form_attribute_value,
-                topic.identifier,
-                data_type=DataType[form_attribute_type],
+                form_attribute_name, form_attribute_value, topic.identifier, data_type=DataType[form_attribute_type],
             )
 
             # Persist objects to the topic store
@@ -221,11 +198,7 @@ def add(map_identifier, topic_identifier):
 
             flash("Attribute successfully added.", "success")
             return redirect(
-                url_for(
-                    "attribute.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     entity_type = "topic"
@@ -248,8 +221,7 @@ def add(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/attributes/add/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>",
-    methods=("GET", "POST"),
+    "/attributes/add/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
@@ -265,17 +237,13 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(
-        map_identifier,
-        entity_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
@@ -315,10 +283,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             )
         else:
             attribute = Attribute(
-                form_attribute_name,
-                form_attribute_value,
-                entity.identifier,
-                data_type=DataType[form_attribute_type],
+                form_attribute_name, form_attribute_value, entity.identifier, data_type=DataType[form_attribute_type],
             )
 
             # Persist objects to the topic store
@@ -355,8 +320,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 
 
 @bp.route(
-    "/attributes/edit/<map_identifier>/<topic_identifier>/<attribute_identifier>",
-    methods=("GET", "POST"),
+    "/attributes/edit/<map_identifier>/<topic_identifier>/<attribute_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, attribute_identifier):
@@ -372,9 +336,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -417,20 +379,13 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
             # Update the attribute by deleting the existing attribute and adding a new one
             topic_store.delete_attribute(map_identifier, attribute.identifier)
             updated_attribute = Attribute(
-                form_attribute_name,
-                form_attribute_value,
-                topic.identifier,
-                data_type=DataType[form_attribute_type],
+                form_attribute_name, form_attribute_value, topic.identifier, data_type=DataType[form_attribute_type],
             )
             topic_store.set_attribute(topic_map.identifier, updated_attribute)
 
             flash("Attribute successfully updated.", "success")
             return redirect(
-                url_for(
-                    "attribute.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     entity_type = "topic"
@@ -466,11 +421,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 )
 @login_required
 def entity_edit(
-    map_identifier,
-    topic_identifier,
-    entity_identifier,
-    attribute_identifier,
-    entity_type,
+    map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
 ):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -484,17 +435,13 @@ def entity_edit(
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(
-        map_identifier,
-        entity_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
@@ -540,10 +487,7 @@ def entity_edit(
             # Update the attribute by deleting the existing attribute and adding a new one
             topic_store.delete_attribute(map_identifier, attribute.identifier)
             updated_attribute = Attribute(
-                form_attribute_name,
-                form_attribute_value,
-                entity.identifier,
-                data_type=DataType[form_attribute_type],
+                form_attribute_name, form_attribute_value, entity.identifier, data_type=DataType[form_attribute_type],
             )
             topic_store.set_attribute(topic_map.identifier, updated_attribute)
 
@@ -586,8 +530,7 @@ def entity_edit(
 
 
 @bp.route(
-    "/attributes/delete/<map_identifier>/<topic_identifier>/<attribute_identifier>",
-    methods=("GET", "POST"),
+    "/attributes/delete/<map_identifier>/<topic_identifier>/<attribute_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, attribute_identifier):
@@ -603,9 +546,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -625,11 +566,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 
         flash("Attribute successfully deleted.", "warning")
         return redirect(
-            url_for(
-                "attribute.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+            url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
         )
 
     entity_type = "topic"
@@ -657,11 +594,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 )
 @login_required
 def entity_delete(
-    map_identifier,
-    topic_identifier,
-    entity_identifier,
-    attribute_identifier,
-    entity_type,
+    map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
 ):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -675,17 +608,13 @@ def entity_delete(
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(
-        map_identifier,
-        entity_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)

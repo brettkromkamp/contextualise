@@ -48,18 +48,12 @@ def index(map_identifier):
             {
                 "identifier": note_occurrence.identifier,
                 "title": note_occurrence.get_attribute_by_name("title").value,
-                "timestamp": maya.parse(
-                    note_occurrence.get_attribute_by_name(
-                        "modification-timestamp"
-                    ).value
-                ),
+                "timestamp": maya.parse(note_occurrence.get_attribute_by_name("modification-timestamp").value),
                 "text": mistune.markdown(note_occurrence.resource_data.decode()),
             }
         )
 
-    return render_template(
-        "note/index.html", topic_map=topic_map, topic=topic, notes=notes
-    )
+    return render_template("note/index.html", topic_map=topic_map, topic=topic, notes=notes)
 
 
 @bp.route("/notes/add/<map_identifier>", methods=("GET", "POST"))
@@ -74,9 +68,7 @@ def add(map_identifier):
     if current_user.id != topic_map.user_identifier:
         abort(403)
 
-    topic = topic_store.get_topic(
-        map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES
-    )
+    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -110,23 +102,14 @@ def add(map_identifier):
             )
         else:
             note_occurrence = Occurrence(
-                instance_of="note",
-                topic_identifier="notes",
-                scope=form_note_scope,
-                resource_data=form_note_text,
+                instance_of="note", topic_identifier="notes", scope=form_note_scope, resource_data=form_note_text,
             )
             title_attribute = Attribute(
-                "title",
-                form_note_title,
-                note_occurrence.identifier,
-                data_type=DataType.STRING,
+                "title", form_note_title, note_occurrence.identifier, data_type=DataType.STRING,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp",
-                timestamp,
-                note_occurrence.identifier,
-                data_type=DataType.TIMESTAMP,
+                "modification-timestamp", timestamp, note_occurrence.identifier, data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -160,9 +143,7 @@ def attach(map_identifier, note_identifier):
     if current_user.id != topic_map.user_identifier:
         abort(403)
 
-    topic = topic_store.get_topic(
-        map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES
-    )
+    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -183,9 +164,7 @@ def attach(map_identifier, note_identifier):
         form_note_topic_identifier = request.form["note-topic-identifier"].strip()
 
         # Validate form inputs
-        if not topic_store.topic_exists(
-            topic_map.identifier, form_note_topic_identifier
-        ):
+        if not topic_store.topic_exists(topic_map.identifier, form_note_topic_identifier):
             error = error | 1
 
         if error != 0:
@@ -194,16 +173,10 @@ def attach(map_identifier, note_identifier):
                 "warning",
             )
         else:
-            topic_store.update_occurrence_topic_identifier(
-                map_identifier, note_identifier, form_note_topic_identifier
-            )
+            topic_store.update_occurrence_topic_identifier(map_identifier, note_identifier, form_note_topic_identifier)
             flash("Note successfully attached.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=form_note_topic_identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=form_note_topic_identifier,)
             )
 
     return render_template(
@@ -230,9 +203,7 @@ def convert(map_identifier, note_identifier):
     if current_user.id != topic_map.user_identifier:
         abort(403)
 
-    topic = topic_store.get_topic(
-        map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES
-    )
+    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     if topic is None:
         abort(404)
@@ -279,20 +250,13 @@ def convert(map_identifier, note_identifier):
                 "warning",
             )
         else:
-            new_topic = Topic(
-                form_topic_identifier, form_topic_instance_of, form_topic_name
-            )
+            new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
             text_occurrence = Occurrence(
-                instance_of="text",
-                topic_identifier=new_topic.identifier,
-                resource_data=form_topic_text,
+                instance_of="text", topic_identifier=new_topic.identifier, resource_data=form_topic_text,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp",
-                timestamp,
-                new_topic.identifier,
-                data_type=DataType.TIMESTAMP,
+                "modification-timestamp", timestamp, new_topic.identifier, data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -305,11 +269,7 @@ def convert(map_identifier, note_identifier):
 
             flash("Note successfully converted.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=new_topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier,)
             )
 
     return render_template(

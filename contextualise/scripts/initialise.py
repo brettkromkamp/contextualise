@@ -25,11 +25,7 @@ database_port = config["DATABASE"]["Port"]
 
 # Instantiate and open topic store, create and subsequently populate topic maps.
 with TopicStore(
-    database_username,
-    database_password,
-    host=database_host,
-    port=database_port,
-    dbname=database_name,
+    database_username, database_password, host=database_host, port=database_port, dbname=database_name,
 ) as store:
     store.set_topic_map(
         USER_IDENTIFIER_1,

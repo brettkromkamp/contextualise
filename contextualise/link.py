@@ -28,18 +28,13 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     link_occurrences = topic_store.get_topic_occurrences(
-        map_identifier,
-        topic_identifier,
-        "url",
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, "url", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     links = []
@@ -56,18 +51,10 @@ def index(map_identifier, topic_identifier):
     # occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = (
-        maya.parse(creation_date_attribute.value)
-        if creation_date_attribute
-        else "Undefined"
-    )
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
-        "link/index.html",
-        topic_map=topic_map,
-        topic=topic,
-        links=links,
-        creation_date=creation_date,
+        "link/index.html", topic_map=topic_map, topic=topic, links=links, creation_date=creation_date,
     )
 
 
@@ -84,9 +71,7 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -121,16 +106,10 @@ def add(map_identifier, topic_identifier):
             )
         else:
             link_occurrence = Occurrence(
-                instance_of="url",
-                topic_identifier=topic.identifier,
-                scope=form_link_scope,
-                resource_ref=form_link_url,
+                instance_of="url", topic_identifier=topic.identifier, scope=form_link_scope, resource_ref=form_link_url,
             )
             title_attribute = Attribute(
-                "title",
-                form_link_title,
-                link_occurrence.identifier,
-                data_type=DataType.STRING,
+                "title", form_link_title, link_occurrence.identifier, data_type=DataType.STRING,
             )
 
             # Persist objects to the topic store
@@ -139,11 +118,7 @@ def add(map_identifier, topic_identifier):
 
             flash("Link successfully added.", "success")
             return redirect(
-                url_for(
-                    "link.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("link.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -158,8 +133,7 @@ def add(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/links/edit/<map_identifier>/<topic_identifier>/<link_identifier>",
-    methods=("GET", "POST"),
+    "/links/edit/<map_identifier>/<topic_identifier>/<link_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, link_identifier):
@@ -173,17 +147,13 @@ def edit(map_identifier, topic_identifier, link_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     link_occurrence = topic_store.get_occurrence(
-        map_identifier,
-        link_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, link_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_link_title = link_occurrence.get_attribute_by_name("title").value
@@ -214,24 +184,16 @@ def edit(map_identifier, topic_identifier, link_identifier):
             # Update link's title if it has changed
             if link_occurrence.get_attribute_by_name("title").value != form_link_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier,
-                    link_occurrence.get_attribute_by_name("title").identifier,
-                    form_link_title,
+                    topic_map.identifier, link_occurrence.get_attribute_by_name("title").identifier, form_link_title,
                 )
 
             # Update link's scope if it has changed
             if link_occurrence.scope != form_link_scope:
-                topic_store.update_occurrence_scope(
-                    map_identifier, link_occurrence.identifier, form_link_scope
-                )
+                topic_store.update_occurrence_scope(map_identifier, link_occurrence.identifier, form_link_scope)
 
             flash("Link successfully updated.", "success")
             return redirect(
-                url_for(
-                    "link.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("link.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -246,8 +208,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
 
 
 @bp.route(
-    "/links/delete/<map_identifier>/<topic_identifier>/<link_identifier>",
-    methods=("GET", "POST"),
+    "/links/delete/<map_identifier>/<topic_identifier>/<link_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, link_identifier):
@@ -261,17 +222,13 @@ def delete(map_identifier, topic_identifier, link_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     link_occurrence = topic_store.get_occurrence(
-        map_identifier,
-        link_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, link_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_link_title = link_occurrence.get_attribute_by_name("title").value
@@ -282,13 +239,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
         topic_store.delete_occurrence(map_identifier, link_occurrence.identifier)
 
         flash("Link successfully deleted.", "warning")
-        return redirect(
-            url_for(
-                "link.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
-        )
+        return redirect(url_for("link.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
 
     return render_template(
         "link/delete.html",

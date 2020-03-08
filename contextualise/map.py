@@ -60,11 +60,7 @@ def create():
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
         form_map_shared = True if request.form.get("map-shared") == "1" else False
-        form_upload_file = (
-            request.files["map-image-file"]
-            if "map-image-file" in request.files
-            else None
-        )
+        form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
         if not form_map_name:
@@ -83,9 +79,7 @@ def create():
                 "warning",
             )
         else:
-            image_file_name = (
-                f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-            )
+            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create and initialise the topic map
             map_identifier = topic_store.set_topic_map(
@@ -101,9 +95,7 @@ def create():
                 topic_store.initialise_topic_map(map_identifier)
 
                 # Create the directory for this topic map
-                topic_map_directory = os.path.join(
-                    bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-                )
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
                 if not os.path.isdir(topic_map_directory):
                     os.makedirs(topic_map_directory)
 
@@ -146,9 +138,7 @@ def delete(map_identifier):
         topic_store.delete_topic_map(map_identifier)
 
         # Delete the map's directory
-        topic_map_directory = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-        )
+        topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
         if os.path.isdir(topic_map_directory):
             shutil.rmtree(topic_map_directory)
 
@@ -181,11 +171,7 @@ def edit(map_identifier):
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
         form_map_shared = True if request.form.get("map-shared") == "1" else False
-        form_upload_file = (
-            request.files["map-image-file"]
-            if "map-image-file" in request.files
-            else None
-        )
+        form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
         if not form_map_name:
@@ -205,9 +191,7 @@ def edit(map_identifier):
             if form_upload_file:
                 # Upload the image for the topic map to the map's directory
                 image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-                topic_map_directory = os.path.join(
-                    bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-                )
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
                 file_path = os.path.join(topic_map_directory, image_file_name)
                 form_upload_file.save(file_path)
 

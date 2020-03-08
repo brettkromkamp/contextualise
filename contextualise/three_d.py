@@ -33,18 +33,13 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrences = topic_store.get_topic_occurrences(
-        map_identifier,
-        topic_identifier,
-        "3d-scene",
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, "3d-scene", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     files = []
@@ -59,18 +54,10 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = (
-        maya.parse(creation_date_attribute.value)
-        if creation_date_attribute
-        else "Undefined"
-    )
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
-        "three_d/index.html",
-        topic_map=topic_map,
-        topic=topic,
-        files=files,
-        creation_date=creation_date,
+        "three_d/index.html", topic_map=topic_map, topic=topic, files=files, creation_date=creation_date,
     )
 
 
@@ -87,9 +74,7 @@ def upload(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -102,9 +87,7 @@ def upload(map_identifier, topic_identifier):
     if request.method == "POST":
         form_file_title = request.form["file-title"].strip()
         form_file_scope = request.form["file-scope"].strip()
-        form_upload_file = (
-            request.files["file-file"] if "file-file" in request.files else None
-        )
+        form_upload_file = request.files["file-file"] if "file-file" in request.files else None
 
         # If no values have been provided set their default values
         if not form_file_scope:
@@ -131,9 +114,7 @@ def upload(map_identifier, topic_identifier):
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
             # Create the file directory for this topic map and topic if it doesn't already exist
-            file_directory = os.path.join(
-                bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
-            )
+            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -147,10 +128,7 @@ def upload(map_identifier, topic_identifier):
                 resource_ref=file_file_name,
             )
             title_attribute = Attribute(
-                "title",
-                form_file_title,
-                file_occurrence.identifier,
-                data_type=DataType.STRING,
+                "title", form_file_title, file_occurrence.identifier, data_type=DataType.STRING,
             )
 
             # Persist objects to the topic store
@@ -159,11 +137,7 @@ def upload(map_identifier, topic_identifier):
 
             flash("3D content successfully uploaded.", "success")
             return redirect(
-                url_for(
-                    "three_d.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -177,8 +151,7 @@ def upload(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/3d/edit/<map_identifier>/<topic_identifier>/<file_identifier>",
-    methods=("GET", "POST"),
+    "/3d/edit/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
@@ -192,17 +165,13 @@ def edit(map_identifier, topic_identifier, file_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrence = topic_store.get_occurrence(
-        map_identifier,
-        file_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, file_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_file_title = file_occurrence.get_attribute_by_name("title").value
@@ -233,24 +202,16 @@ def edit(map_identifier, topic_identifier, file_identifier):
             # Update file's title if it has changed
             if file_occurrence.get_attribute_by_name("title").value != form_file_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier,
-                    file_occurrence.get_attribute_by_name("title").identifier,
-                    form_file_title,
+                    topic_map.identifier, file_occurrence.get_attribute_by_name("title").identifier, form_file_title,
                 )
 
             # Update file's scope if it has changed
             if file_occurrence.scope != form_file_scope:
-                topic_store.update_occurrence_scope(
-                    map_identifier, file_occurrence.identifier, form_file_scope
-                )
+                topic_store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
 
             flash("3D content successfully updated.", "success")
             return redirect(
-                url_for(
-                    "three_d.index",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -265,8 +226,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
 
 @bp.route(
-    "/3d/delete/<map_identifier>/<topic_identifier>/<file_identifier>",
-    methods=("GET", "POST"),
+    "/3d/delete/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
@@ -280,17 +240,13 @@ def delete(map_identifier, topic_identifier, file_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrence = topic_store.get_occurrence(
-        map_identifier,
-        file_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, file_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_file_title = file_occurrence.get_attribute_by_name("title").value
@@ -302,22 +258,14 @@ def delete(map_identifier, topic_identifier, file_identifier):
 
         # Delete file from file system
         file_file_path = os.path.join(
-            bp.root_path,
-            RESOURCES_DIRECTORY,
-            str(map_identifier),
-            topic_identifier,
-            file_occurrence.resource_ref,
+            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier, file_occurrence.resource_ref,
         )
         if os.path.exists(file_file_path):
             os.remove(file_file_path)
 
         flash("3D content successfully deleted.", "warning")
         return redirect(
-            url_for(
-                "three_d.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+            url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
         )
 
     return render_template(

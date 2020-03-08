@@ -34,13 +34,9 @@ def view(map_identifier, topic_identifier):
     else:
         if topic_map.shared:
             if current_user.is_authenticated:  # User is logged in
-                if (
-                        current_user.id != topic_map.user_identifier
-                        and topic_identifier == "home"
-                ):
+                if current_user.id != topic_map.user_identifier and topic_identifier == "home":
                     flash(
-                        "You are accessing a shared topic map of another user.",
-                        "primary",
+                        "You are accessing a shared topic map of another user.", "primary",
                     )
         else:
             if current_user.is_authenticated:  # User is logged in
@@ -113,52 +109,33 @@ def view(map_identifier, topic_identifier):
     for occurrence in topic_occurrences:
         if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
             if occurrence.resource_data:
-                occurrences["text"] = mistune.markdown(
-                    occurrence.resource_data.decode()
-                )
+                occurrences["text"] = mistune.markdown(occurrence.resource_data.decode())
         elif occurrence.instance_of == "image":
             occurrences["images"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
             )
         elif occurrence.instance_of == "3d-scene":
             occurrences["3d-scenes"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
             )
         elif occurrence.instance_of == "file":
             occurrences["files"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
             )
         elif occurrence.instance_of == "url":
             occurrences["links"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
             )
         elif occurrence.instance_of == "video":
             occurrences["videos"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
             )
         elif occurrence.instance_of == "note":
             occurrences["notes"].append(
                 {
                     "identifier": occurrence.identifier,
                     "title": occurrence.get_attribute_by_name("title").value,
-                    "timestamp": maya.parse(
-                        occurrence.get_attribute_by_name("modification-timestamp").value
-                    ),
+                    "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
                     "text": mistune.markdown(occurrence.resource_data.decode()),
                 }
             )
@@ -167,17 +144,11 @@ def view(map_identifier, topic_identifier):
             map_identifier, topic_identifier, scope=session["current_scope"]
         )
     else:
-        associations = topic_store.get_association_groups(
-            map_identifier, topic_identifier
-        )
+        associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
     creation_date = maya.parse(topic.get_attribute_by_name("creation-timestamp").value)
     modification_date_attribute = topic.get_attribute_by_name("modification-timestamp")
-    modification_date = (
-        maya.parse(modification_date_attribute.value)
-        if modification_date_attribute
-        else "Undefined"
-    )
+    modification_date = maya.parse(modification_date_attribute.value) if modification_date_attribute else "Undefined"
 
     # Breadcrumbs
     if "breadcrumbs" not in session:
@@ -196,7 +167,7 @@ def view(map_identifier, topic_identifier):
         associations=associations,
         creation_date=creation_date,
         modification_date=modification_date,
-        breadcrumbs=breadcrumbs
+        breadcrumbs=breadcrumbs,
     )
 
 
@@ -213,9 +184,7 @@ def create(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -259,9 +228,7 @@ def create(map_identifier, topic_identifier):
                 "warning",
             )
         else:
-            new_topic = Topic(
-                form_topic_identifier, form_topic_instance_of, form_topic_name
-            )
+            new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=new_topic.identifier,
@@ -270,10 +237,7 @@ def create(map_identifier, topic_identifier):
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp",
-                timestamp,
-                new_topic.identifier,
-                data_type=DataType.TIMESTAMP,
+                "modification-timestamp", timestamp, new_topic.identifier, data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -283,11 +247,7 @@ def create(map_identifier, topic_identifier):
 
             flash("Topic successfully created.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=new_topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier,)
             )
 
     return render_template(
@@ -316,9 +276,7 @@ def edit(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -331,20 +289,15 @@ def edit(map_identifier, topic_identifier):
     )
 
     texts = [
-        occurrence for occurrence in occurrences if
-        occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]
+        occurrence
+        for occurrence in occurrences
+        if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]
     ]
 
     form_topic_name = topic.first_base_name.name
-    form_topic_text = (
-        texts[0].resource_data.decode()
-        if len(texts) > 0 and texts[0].resource_data
-        else ""
-    )
+    form_topic_text = texts[0].resource_data.decode() if len(texts) > 0 and texts[0].resource_data else ""
     form_topic_instance_of = topic.instance_of
-    form_topic_text_scope = (
-        texts[0].scope if len(texts) > 0 else session["current_scope"]
-    )  # Should it be '*'?
+    form_topic_text_scope = texts[0].scope if len(texts) > 0 else session["current_scope"]  # Should it be '*'?
 
     error = 0
 
@@ -374,22 +327,16 @@ def edit(map_identifier, topic_identifier):
         else:
             # Update topic's first base name if it has changed
             if topic.first_base_name.name != form_topic_name:
-                topic_store.update_basename(
-                    map_identifier, topic.first_base_name.identifier, form_topic_name
-                )
+                topic_store.update_basename(map_identifier, topic.first_base_name.identifier, form_topic_name)
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
-                topic_store.update_topic_instance_of(
-                    map_identifier, topic.identifier, form_topic_instance_of
-                )
+                topic_store.update_topic_instance_of(map_identifier, topic.identifier, form_topic_instance_of)
 
             # If the topic has an existing text occurrence update it, otherwise create a new text occurrence
             # and persist it
             if len(texts) > 0 and form_topic_text_scope == session["current_scope"]:
-                topic_store.update_occurrence_data(
-                    map_identifier, texts[0].identifier, form_topic_text
-                )
+                topic_store.update_occurrence_data(map_identifier, texts[0].identifier, form_topic_text)
             else:
                 text_occurrence = Occurrence(
                     instance_of="text",
@@ -403,26 +350,17 @@ def edit(map_identifier, topic_identifier):
             timestamp = str(datetime.now())
             if topic.get_attribute_by_name("modification-timestamp"):
                 topic_store.update_attribute_value(
-                    topic_map.identifier,
-                    topic.get_attribute_by_name("modification-timestamp").identifier,
-                    timestamp,
+                    topic_map.identifier, topic.get_attribute_by_name("modification-timestamp").identifier, timestamp,
                 )
             else:
                 modification_attribute = Attribute(
-                    "modification-timestamp",
-                    timestamp,
-                    topic.identifier,
-                    data_type=DataType.TIMESTAMP,
+                    "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
                 )
                 topic_store.set_attribute(topic_map.identifier, modification_attribute)
 
             flash("Topic successfully updated.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -451,9 +389,7 @@ def delete(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -464,9 +400,7 @@ def delete(map_identifier, topic_identifier):
             topic_store.delete_topic(map_identifier, topic_identifier)
 
             # Remove the topic's resources directory
-            topic_directory = os.path.join(
-                bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
-            )
+            topic_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
             if os.path.isdir(topic_directory):
                 shutil.rmtree(topic_directory)
         except TopicDbError:
@@ -475,11 +409,7 @@ def delete(map_identifier, topic_identifier):
                 "warning",
             )
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic_identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic_identifier,)
             )
 
         flash("Topic successfully deleted.", "success")
@@ -488,9 +418,7 @@ def delete(map_identifier, topic_identifier):
     return render_template("topic/delete.html", topic_map=topic_map, topic=topic)
 
 
-@bp.route(
-    "/topics/add-note/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
-)
+@bp.route("/topics/add-note/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -503,9 +431,7 @@ def add_note(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -546,17 +472,11 @@ def add_note(map_identifier, topic_identifier):
                 resource_data=form_note_text,
             )
             title_attribute = Attribute(
-                "title",
-                form_note_title,
-                note_occurrence.identifier,
-                data_type=DataType.STRING,
+                "title", form_note_title, note_occurrence.identifier, data_type=DataType.STRING,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp",
-                timestamp,
-                note_occurrence.identifier,
-                data_type=DataType.TIMESTAMP,
+                "modification-timestamp", timestamp, note_occurrence.identifier, data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -566,11 +486,7 @@ def add_note(map_identifier, topic_identifier):
 
             flash("Note successfully added.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -585,8 +501,7 @@ def add_note(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>",
-    methods=("GET", "POST"),
+    "/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
@@ -600,9 +515,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -647,39 +560,27 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
             # Update note's title if it has changed
             if note_occurrence.get_attribute_by_name("title").value != form_note_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier,
-                    note_occurrence.get_attribute_by_name("title").identifier,
-                    form_note_title,
+                    topic_map.identifier, note_occurrence.get_attribute_by_name("title").identifier, form_note_title,
                 )
 
             # Update the note's modification (timestamp) attribute
             timestamp = str(datetime.now())
             topic_store.update_attribute_value(
                 topic_map.identifier,
-                note_occurrence.get_attribute_by_name(
-                    "modification-timestamp"
-                ).identifier,
+                note_occurrence.get_attribute_by_name("modification-timestamp").identifier,
                 timestamp,
             )
 
             # Update note (occurrence)
-            topic_store.update_occurrence_data(
-                map_identifier, note_occurrence.identifier, form_note_text
-            )
+            topic_store.update_occurrence_data(map_identifier, note_occurrence.identifier, form_note_text)
 
             # Update note's scope if it has changed
             if note_occurrence.scope != form_note_scope:
-                topic_store.update_occurrence_scope(
-                    map_identifier, note_occurrence.identifier, form_note_scope
-                )
+                topic_store.update_occurrence_scope(map_identifier, note_occurrence.identifier, form_note_scope)
 
             flash("Note successfully updated.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -695,8 +596,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
 
 @bp.route(
-    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>",
-    methods=("GET", "POST"),
+    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
@@ -710,9 +610,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -732,13 +630,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     if request.method == "POST":
         topic_store.delete_occurrence(map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
-        return redirect(
-            url_for(
-                "topic.view",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
-        )
+        return redirect(url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
 
     return render_template(
         "topic/delete_note.html",
@@ -751,9 +643,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     )
 
 
-@bp.route(
-    "/topics/view-names/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
-)
+@bp.route("/topics/view-names/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -766,32 +656,19 @@ def view_names(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = (
-        maya.parse(creation_date_attribute.value)
-        if creation_date_attribute
-        else "Undefined"
-    )
+    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    return render_template(
-        "topic/view_names.html",
-        topic_map=topic_map,
-        topic=topic,
-        creation_date=creation_date,
-    )
+    return render_template("topic/view_names.html", topic_map=topic_map, topic=topic, creation_date=creation_date,)
 
 
-@bp.route(
-    "/topics/add-name/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
-)
+@bp.route("/topics/add-name/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -804,9 +681,7 @@ def add_name(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -837,11 +712,7 @@ def add_name(map_identifier, topic_identifier):
 
             flash("Name successfully added.", "success")
             return redirect(
-                url_for(
-                    "topic.view_names",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -850,13 +721,12 @@ def add_name(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_name=form_topic_name,
-        topic_name_scope=form_topic_name_scope
+        topic_name_scope=form_topic_name_scope,
     )
 
 
 @bp.route(
-    "/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>",
-    methods=("GET", "POST"),
+    "/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
@@ -870,9 +740,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -899,19 +767,17 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
             )
         else:
             # Update name if required
-            if form_topic_name != topic.get_base_name(
-                    name_identifier).name or form_topic_name_scope != topic.get_base_name(name_identifier).scope:
+            if (
+                form_topic_name != topic.get_base_name(name_identifier).name
+                or form_topic_name_scope != topic.get_base_name(name_identifier).scope
+            ):
                 topic_store.update_basename(
                     map_identifier, name_identifier, form_topic_name, scope=form_topic_name_scope
                 )
 
             flash("Name successfully updated.", "success")
             return redirect(
-                url_for(
-                    "topic.view_names",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
@@ -926,8 +792,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 
 
 @bp.route(
-    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>",
-    methods=("GET", "POST"),
+    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
@@ -941,9 +806,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -956,11 +819,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
         flash("Name successfully deleted.", "warning")
         return redirect(
-            url_for(
-                "topic.view_names",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+            url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
         )
 
     return render_template(
@@ -974,8 +833,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
 
 @bp.route(
-    "/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>",
-    methods=("GET", "POST"),
+    "/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
@@ -989,9 +847,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -1021,17 +877,9 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
             session["current_scope"] = form_scope
             flash("Context successfully changed.", "success")
             return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )
 
     return render_template(
-        "topic/change_context.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic,
-        scope_identifier=form_scope,
+        "topic/change_context.html", error=error, topic_map=topic_map, topic=topic, scope_identifier=form_scope,
     )
