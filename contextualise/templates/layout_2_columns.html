@@ -9,6 +9,7 @@
       gtag('js', new Date());
 
       gtag('config', 'UA-2662092-19');
+
     </script>
     {% endif %}
     <meta charset="utf-8">
@@ -60,12 +61,9 @@
                     {% endif %}
                 </ul>
                 {% if current_user.is_authenticated %}
-                <form autocomplete="off" class="form-inline my-2 my-md-0">
-                    <input aria-label="Enter topic identifier" class="form-control mr-sm-2 auto-complete"
-                           id="goto-topic-identifier" placeholder="Enter topic identifier"
-                           type="text">
-                    <button class="btn btn-outline-success my-2 my-sm-0" id="goto-button" type="reset">Go to</button>
-                </form>
+                <button class="btn btn-outline-success" data-target="#gotoModal" data-toggle="modal" type="reset">Go
+                    to topic
+                </button>
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
@@ -321,6 +319,32 @@
                 class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com/">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
     </div>
 </footer>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="gotoModalLabel" class="modal fade" id="gotoModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Go to topic</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off">
+                    <div class="form-group">
+                        <label class="col-form-label" for="goto-topic-identifier">Please provide a valid topic identifier</label>
+                        <input aria-label="Enter topic identifier" class="form-control auto-complete"
+                           id="goto-topic-identifier" placeholder="Enter identifier"
+                           type="text">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="goto-button" type="button">Go to</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% if current_user.is_authenticated and current_user.id == topic_map.user_identifier %}
 <script src="{{ url_for('static', filename='mousetrap.min.js') }}"></script>
 {% endif %}
@@ -361,6 +385,7 @@ if (document.getElementById('goto-button') != null) {
     });
 }
 
+
 </script>
 {% if current_user.is_authenticated and current_user.id == topic_map.user_identifier %}
 <script>
@@ -379,6 +404,14 @@ Mousetrap.bind('t c', function() { // Create-topic keyboard shortcut
 Mousetrap.bind('t e', function() { // Edit-topic keyboard shortcut
     var editTopicUrl = "/topics/edit/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = editTopicUrl;
+});
+
+Mousetrap.bind('t g', function() { // Go to-topic keyboard shortcut
+    $('#gotoModal').modal({
+        keyboard: true,
+        focus: true
+    });
+    $('#goto-topic-identifier').trigger('focus');
 });
 
 Mousetrap.bind('i v', function() { // View-images keyboard shortcut
@@ -405,6 +438,7 @@ Mousetrap.bind('a v', function() { // View-associations keyboard shortcut
     var viewAssociationsUrl = "/associations/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = viewAssociationsUrl;
 });
+
 </script>
 {% endif %}
 </body>

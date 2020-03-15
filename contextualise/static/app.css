@@ -36,10 +36,6 @@ main > .container {
     max-width: 320px;
 }
 
-#goto-topic-identifier {
-    width: 20em;
-}
-
 .contextualise-card {
     background-color: #f0f8ff;
 }
