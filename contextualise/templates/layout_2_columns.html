@@ -397,6 +397,10 @@ Mousetrap.bind('t v', function() { // View-topic keyboard shortcut
     var viewTopicUrl = "/topics/view/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = viewTopicUrl;
 });
+Mousetrap.bind('t h', function() { // Go-home keyboard shortcut
+    var viewTopicUrl = "/topics/view/" + mapIdentifier + "/home";
+    window.location.href = viewTopicUrl;
+});
 Mousetrap.bind('t c', function() { // Create-topic keyboard shortcut
     var createTopicUrl = "/topics/create/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = createTopicUrl;
