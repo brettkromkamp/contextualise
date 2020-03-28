@@ -327,7 +327,9 @@ def edit(map_identifier, topic_identifier):
         else:
             # Update topic's first base name if it has changed
             if topic.first_base_name.name != form_topic_name:
-                topic_store.update_basename(map_identifier, topic.first_base_name.identifier, form_topic_name)
+                topic_store.update_basename(
+                    map_identifier, topic.first_base_name.identifier, form_topic_name, form_topic_text_scope
+                )
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
