@@ -8,6 +8,24 @@
 {% endblock %}
 
 {% block menu %}
+{% if not current_user.is_authenticated %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Topic</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                network</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
+        </div>
+    </li>
+</ul>
+{% endif %}
 {% if current_user.id == topic_map.user_identifier %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
@@ -120,7 +138,8 @@
            role="button">Visualisations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View network</a>
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                network</a>
             <a class="dropdown-item" href="#">View timeline</a>
             <a class="dropdown-item" href="#">View geographic map</a>
         </div>

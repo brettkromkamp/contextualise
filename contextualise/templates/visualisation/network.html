@@ -122,11 +122,31 @@ if (topicIdentifier !== "") {
         // Always executed
     });
 }
+
 </script>
 
 {% endblock %}
 
 {% block menu %}
+{% if not current_user.is_authenticated %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item disabled"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                network</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
+        </div>
+    </li>
+</ul>
+{% else %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
@@ -211,12 +231,11 @@ if (topicIdentifier !== "") {
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-           href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
            role="button">Videos</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item disabled"
-               href="#">View</a>
+            <a class="dropdown-item"
+               href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
@@ -236,18 +255,20 @@ if (topicIdentifier !== "") {
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
            role="button">Visualisations</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item"
+            <a class="dropdown-item disabled"
                data-scope-filtered="{{ session['scope_filter'] }}"
                data-scope-identifier="{{ session['current_scope'] }}" href="#"
                id="view-graph-link">View graph</a>
-            <a class="dropdown-item" href="#">Timeline</a>
-            <a class="dropdown-item" href="#">Geographic map</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
         </div>
     </li>
 </ul>
+{% endif %}
 {% endblock %}
 
 {% block content %}

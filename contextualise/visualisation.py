@@ -16,16 +16,12 @@ UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/visualisation/network/<map_identifier>/<topic_identifier>")
-@login_required
 def network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
 
     topic = topic_store.get_topic(
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -40,16 +36,12 @@ def network(map_identifier, topic_identifier):
 
 
 @bp.route("/visualisation/timeline/<map_identifier>/<topic_identifier>")
-@login_required
 def timeline(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
 
     topic = topic_store.get_topic(
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -64,16 +56,12 @@ def timeline(map_identifier, topic_identifier):
 
 
 @bp.route("/visualisation/map/<map_identifier>/<topic_identifier>")
-@login_required
 def map(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
 
     topic = topic_store.get_topic(
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
