@@ -243,6 +243,16 @@ $("#view-graph-link").click(function(e) {
                 association</a>
         </div>
     </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View network</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
+        </div>
+    </li>
 </ul>
 {% endif %}
 {% endblock %}

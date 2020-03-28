@@ -180,12 +180,7 @@
             <br/>
             {% if associations %}
             <nav class="card contextualise-card">
-                <div class="card-header"><strong>Related topics</strong>
-                    &mdash; <small><a data-scope-filtered="{{ session['scope_filter'] }}"
-                                      data-scope-identifier="{{ session['current_scope'] }}" href="#"
-                                      id="view-graph-link">View
-                        graph</a></small>
-                </div>
+                <div class="card-header"><strong>Related topics</strong></div>
                 <div class="card-body list-card">
                     <ul>
                         {% for instance_of, roles in associations.dict.items() %}
@@ -384,7 +379,6 @@ if (document.getElementById('goto-button') != null) {
         }
     });
 }
-
 
 </script>
 {% if current_user.is_authenticated and current_user.id == topic_map.user_identifier %}
