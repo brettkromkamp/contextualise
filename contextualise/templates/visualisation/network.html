@@ -131,7 +131,7 @@ if (topicIdentifier !== "") {
 {% if not current_user.is_authenticated %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
