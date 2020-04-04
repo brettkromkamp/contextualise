@@ -19,7 +19,7 @@ UNIVERSAL_SCOPE = "*"
 @login_required
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -62,7 +62,7 @@ def index(map_identifier, topic_identifier):
 @login_required
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -141,7 +141,7 @@ def add(map_identifier, topic_identifier):
 @login_required
 def edit(map_identifier, topic_identifier, video_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -216,7 +216,7 @@ def edit(map_identifier, topic_identifier, video_identifier):
 @login_required
 def delete(map_identifier, topic_identifier, video_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)

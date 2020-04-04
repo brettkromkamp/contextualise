@@ -27,12 +27,12 @@ UNIVERSAL_SCOPE = "*"
 @bp.route("/topics/view/<map_identifier>/<topic_identifier>")
 def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
     else:
-        if topic_map.shared:
+        if topic_map.published:
             if current_user.is_authenticated:  # User is logged in
                 if current_user.id != topic_map.user_identifier and topic_identifier == "home":
                     flash(
@@ -175,7 +175,7 @@ def view(map_identifier, topic_identifier):
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -267,7 +267,7 @@ def create(map_identifier, topic_identifier):
 @login_required
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -382,7 +382,7 @@ def edit(map_identifier, topic_identifier):
 @login_required
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -424,7 +424,7 @@ def delete(map_identifier, topic_identifier):
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -508,7 +508,7 @@ def add_note(map_identifier, topic_identifier):
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -603,7 +603,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -649,7 +649,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -674,7 +674,7 @@ def view_names(map_identifier, topic_identifier):
 @login_required
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -733,7 +733,7 @@ def add_name(map_identifier, topic_identifier):
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -799,7 +799,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -840,7 +840,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)

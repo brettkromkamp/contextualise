@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block maps_menu %}
-<a class="nav-link" href="{{ url_for('map.shared') }}">Shared maps</a>
+<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
 {% endblock %}
 
 {% block content %}
@@ -34,8 +34,8 @@
                         href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">{{
                     map.name }}</a></th>
                 <td class="align-middle">
-                    {% if map.shared %}
-                    <span class="badge badge-pill badge-success">Public</span>
+                    {% if map.published %}
+                    <span class="badge badge-pill badge-success">Published</span>
                     {% else %}
                     <span class="badge badge-pill badge-secondary">Private</span>
                     {% endif %}

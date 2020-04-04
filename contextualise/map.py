@@ -31,18 +31,18 @@ def index():
     return render_template("map/index.html", maps=maps)
 
 
-@bp.route("/maps/shared/")
-def shared():
+@bp.route("/maps/published/")
+def published():
     topic_store = get_topic_store()
 
-    maps = topic_store.get_shared_topic_maps()
+    maps = topic_store.get_published_topic_maps()
 
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/shared.html", maps=maps)
+    return render_template("map/published.html", maps=maps)
 
 
 @bp.route("/maps/create/", methods=("GET", "POST"))
@@ -59,7 +59,7 @@ def create():
     if request.method == "POST":
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
-        form_map_shared = True if request.form.get("map-shared") == "1" else False
+        form_map_published = True if request.form.get("map-published") == "1" else False
         form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
@@ -88,11 +88,11 @@ def create():
                 form_map_description,
                 image_file_name,
                 initialised=False,
-                shared=form_map_shared,
+                published=form_map_published,
                 promoted=False,
             )
             if map_identifier:
-                topic_store.initialise_topic_map(map_identifier)
+                topic_store.initialise_topic_map(current_user.id, map_identifier)
 
                 # Create the directory for this topic map
                 topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
@@ -125,7 +125,7 @@ def create():
 def delete(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -135,7 +135,7 @@ def delete(map_identifier):
 
     if request.method == "POST":
         # Remove map from topic store
-        topic_store.delete_topic_map(map_identifier)
+        topic_store.delete_topic_map(current_user.id, map_identifier)
 
         # Delete the map's directory
         topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
@@ -153,7 +153,7 @@ def delete(map_identifier):
 def edit(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier)
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -163,14 +163,14 @@ def edit(map_identifier):
 
     form_map_name = topic_map.name
     form_map_description = topic_map.description
-    form_map_shared = topic_map.shared
+    form_map_published = topic_map.published
 
     error = 0
 
     if request.method == "POST":
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
-        form_map_shared = True if request.form.get("map-shared") == "1" else False
+        form_map_published = True if request.form.get("map-published") == "1" else False
         form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
@@ -200,13 +200,13 @@ def edit(map_identifier):
                 image_file_name = topic_map.image_path
 
             # Update the topic map
-            promoted = form_map_shared and topic_map.promoted
+            promoted = form_map_published and topic_map.promoted
             topic_store.update_topic_map(
                 map_identifier,
                 form_map_name,
                 form_map_description,
                 image_file_name,
-                shared=form_map_shared,
+                published=form_map_published,
                 promoted=promoted,
             )
 
@@ -219,7 +219,7 @@ def edit(map_identifier):
         topic_map=topic_map,
         map_name=form_map_name,
         map_description=form_map_description,
-        map_shared=form_map_shared,
+        map_shared=form_map_published,
     )
 
 
