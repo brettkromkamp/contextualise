@@ -30,7 +30,7 @@
                 {% if topic_map %}
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('map.index') }}">Maps</a>
+                        <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
