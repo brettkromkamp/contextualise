@@ -42,7 +42,7 @@
                 </td>
                 <td>{{ map.description }}</td>
                 <td style="min-width: 8em;" class="align-middle">
-                    <a href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                     <a href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
                 </td>
             </tr>

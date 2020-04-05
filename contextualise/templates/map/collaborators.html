@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout_1_column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>View map | Contextualise</title>
+{% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block menu %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">Map</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link  active" href="#">Collaborators</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic_map.name }}
+    <small class="text-muted">Collaborators</small>
+</h1>
+<hr/>
+<a class="btn btn-primary"
+   href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add collaborator</a>
+<br/>
+<br/>
+{% endblock %}
