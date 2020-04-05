@@ -223,6 +223,85 @@ def edit(map_identifier):
     )
 
 
+@bp.route("/maps/view/<map_identifier>", methods=("GET", "POST"))
+@login_required
+def view(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    return render_template("map/view.html")
+
+
+@bp.route("/maps/collaborators/<map_identifier>", methods=("GET", "POST"))
+@login_required
+def collaborators(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    return render_template("map/collaborators.html")
+
+
+@bp.route("/maps/add-collaborator/<map_identifier>", methods=("GET", "POST"))
+@login_required
+def add_collaborator(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    return render_template("map/add_collaborator.html")
+
+
+@bp.route("/maps/delete-collaborator/<map_identifier>", methods=("GET", "POST"))
+@login_required
+def delete_collaborator(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    return render_template("map/delete_collaborator.html")
+
+
+@bp.route("/maps/edit-collaborator/<map_identifier>", methods=("GET", "POST"))
+@login_required
+def edit_collaborator(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+
+    if topic_map is None:
+        abort(404)
+
+    if current_user.id != topic_map.user_identifier:
+        abort(403)
+
+    return render_template("map/edit_collaborator.html")
+
 # ========== HELPER METHODS ==========
 
 
