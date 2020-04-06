@@ -42,7 +42,9 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
+                <a class="card-link" href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                 <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+                <a class="card-link" href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>
                 <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
             </div>
         </div>
@@ -97,9 +99,9 @@
             <img alt="{{ map.name }}" class="card-img-top"
                  src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
             <div class="card-header">
-                {% if map.collaboration_mode == "CAN_VIEW" %}
+                {% if map.collaboration_mode.name == "CAN_VIEW" %}
                 <span class="badge badge-success" style="font-size: 105%;">Can View</span>
-                {% elif map.collaboration_mode == "CAN_COMMENT" %}
+                {% elif map.collaboration_mode.name == "CAN_COMMENT" %}
                 <span class="badge badge-success" style="font-size: 105%;">Can Comment</span>
                 {% else %}
                 <span class="badge badge-success" style="font-size: 105%;">Can Edit</span>
@@ -112,7 +114,9 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
+                <a class="card-link" href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                 <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+                <a class="card-link" href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>
                 <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
             </div>
         </div>

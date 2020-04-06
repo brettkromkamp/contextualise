@@ -28,7 +28,7 @@
     </li>
 </ul>
 {% endif %}
-{% if current_user.id == topic_map.user_identifier %}
+{% if current_user.id == topic_map.user_identifier or collaboration_mode.name == "CAN_EDIT" %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"

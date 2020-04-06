@@ -23,7 +23,7 @@ UNIVERSAL_SCOPE = "*"
 @login_required
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -64,7 +64,7 @@ def index(map_identifier, topic_identifier):
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -155,7 +155,7 @@ def upload(map_identifier, topic_identifier):
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -230,7 +230,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)

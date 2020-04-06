@@ -97,7 +97,7 @@ def create():
                 promoted=False,
             )
             if map_identifier:
-                topic_store.initialise_topic_map(current_user.id, map_identifier)
+                topic_store.initialise_topic_map(map_identifier, current_user.id)
 
                 # Create the directory for this topic map
                 topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
@@ -130,7 +130,7 @@ def create():
 def delete(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -158,7 +158,7 @@ def delete(map_identifier):
 def edit(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -233,7 +233,7 @@ def edit(map_identifier):
 def view(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -249,7 +249,7 @@ def view(map_identifier):
 def collaborators(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -265,7 +265,7 @@ def collaborators(map_identifier):
 def add_collaborator(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -301,9 +301,7 @@ def add_collaborator(map_identifier):
                 collaboration_mode = CollaborationMode.CAN_COMMENT
             else:
                 collaboration_mode = CollaborationMode.CAN_VIEW
-            topic_store.collaborate_on_topic_map(
-                collaborator.id, topic_map.identifier, collaborator.email, collaboration_mode
-            )
+            topic_store.collaborate(topic_map.identifier, collaborator.id, collaborator.email, collaboration_mode)
             flash("Collaborator successfully added.", "success")
             return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
 
@@ -321,7 +319,7 @@ def add_collaborator(map_identifier):
 def delete_collaborator(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -337,7 +335,7 @@ def delete_collaborator(map_identifier):
 def edit_collaborator(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)

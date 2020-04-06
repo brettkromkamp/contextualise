@@ -21,7 +21,7 @@ UNIVERSAL_SCOPE = "*"
 @bp.route("/notes/index/<map_identifier>")
 def index(map_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -60,7 +60,7 @@ def index(map_identifier):
 @login_required
 def add(map_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -135,7 +135,7 @@ def add(map_identifier):
 @login_required
 def attach(map_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -195,7 +195,7 @@ def attach(map_identifier, note_identifier):
 @login_required
 def convert(map_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)

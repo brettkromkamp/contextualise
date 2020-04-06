@@ -18,7 +18,7 @@ UNIVERSAL_SCOPE = "*"
 @bp.route("/visualisation/network/<map_identifier>/<topic_identifier>")
 def network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -38,7 +38,7 @@ def network(map_identifier, topic_identifier):
 @bp.route("/visualisation/timeline/<map_identifier>/<topic_identifier>")
 def timeline(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)
@@ -58,7 +58,7 @@ def timeline(map_identifier, topic_identifier):
 @bp.route("/visualisation/map/<map_identifier>/<topic_identifier>")
 def map(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier)
 
     if topic_map is None:
         abort(404)

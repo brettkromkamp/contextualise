@@ -27,23 +27,46 @@ UNIVERSAL_SCOPE = "*"
 @bp.route("/topics/view/<map_identifier>/<topic_identifier>")
 def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    # topic_map = topic_store.get_topic_map(map_identifier)
+    #
+    # if topic_map is None:
+    #     abort(404)
+    # else:
+    #     if topic_map.published:
+    #         if current_user.is_authenticated:  # User is logged in
+    #             if current_user.id != topic_map.user_identifier and topic_identifier == "home":
+    #                 flash(
+    #                     "You are accessing a shared topic map of another user.", "primary",
+    #                 )
+    #     else:
+    #         if current_user.is_authenticated:  # User is logged in
+    #             if current_user.id != topic_map.user_identifier:
+    #                 abort(403)
+    #         else:  # User is *not* logged in
+    #             abort(403)
 
-    if topic_map is None:
-        abort(404)
-    else:
-        if topic_map.published:
-            if current_user.is_authenticated:  # User is logged in
-                if current_user.id != topic_map.user_identifier and topic_identifier == "home":
-                    flash(
-                        "You are accessing a shared topic map of another user.", "primary",
-                    )
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
         else:
-            if current_user.is_authenticated:  # User is logged in
-                if current_user.id != topic_map.user_identifier:
+            topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        if topic_map.published:
+            if not is_map_owner and topic_identifier == "home":
+                flash("You are accessing a shared topic map of another user.", "primary")
+        else:
+            if not is_map_owner:  # The map is private and doesn't belong to the user who is trying to access it
+                collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+                if not collaboration_mode:  # The user is not collaborating on the map
                     abort(403)
-            else:  # User is *not* logged in
-                abort(403)
+    else:  # User is not logged in
+        topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        if not topic_map.published:  # User is not logged in and the map is not published
+            abort(403)
 
     # Determine if (active) scope filtering has been specified in the URL
     scope_filtered = request.args.get("filter", type=int)
@@ -168,6 +191,7 @@ def view(map_identifier, topic_identifier):
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
+        collaboration_mode=collaboration_mode,
     )
 
 
@@ -175,7 +199,7 @@ def view(map_identifier, topic_identifier):
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -267,7 +291,7 @@ def create(map_identifier, topic_identifier):
 @login_required
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -382,7 +406,7 @@ def edit(map_identifier, topic_identifier):
 @login_required
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -424,7 +448,7 @@ def delete(map_identifier, topic_identifier):
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -508,7 +532,7 @@ def add_note(map_identifier, topic_identifier):
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -603,7 +627,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -649,7 +673,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -674,7 +698,7 @@ def view_names(map_identifier, topic_identifier):
 @login_required
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -733,7 +757,7 @@ def add_name(map_identifier, topic_identifier):
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -799,7 +823,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
@@ -840,7 +864,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(current_user.id, map_identifier)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
         abort(404)
