@@ -15,20 +15,56 @@
         <br/>
     </div>
 </div>
-{% if maps %}
+{% if own_maps %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Maps I own</h4>
+        <hr/>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3">
+    {% for map in own_maps %}
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img alt="{{ map.name }}" class="card-img-top"
+                 src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+            <div class="card-header">
+                {% if map.published %}
+                <span class="badge badge badge-success" style="font-size: 105%;">Published</span>
+                {% else %}
+                <span class="badge badge badge-secondary" style="font-size: 105%;">Private</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ map.name }}
+                </h5>
+                <p class="card-text">{{ map.description }}</p>
+            </div>
+            <div class="card-footer">
+                <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+                <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% if collaboration_maps %}
+<!--
 <div class="row">
     <div class="col">
+        <h3>Maps I am collaborating on</h3>
         <table class="table table-bordered table-hover">
             <thead class="thead-light">
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Access</th>
                 <th scope="col">Description</th>
-                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
-            {% for map in maps %}
+            {% for map in collaboration_maps %}
             <tr>
                 <th class="align-middle" scope="row" style="min-width: 16em;"><a
                         href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">{{
@@ -41,19 +77,52 @@
                     {% endif %}
                 </td>
                 <td>{{ map.description }}</td>
-                <td style="min-width: 8em;" class="align-middle">
-                    <a href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
-                </td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+-->
+<div class="row">
+    <div class="col-md-12">
+        <h4>Maps I am collaborating on</h4>
+        <hr/>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3">
+    {% for map in collaboration_maps %}
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img alt="{{ map.name }}" class="card-img-top"
+                 src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+            <div class="card-header">
+                {% if map.collaboration_mode == "CAN_VIEW" %}
+                <span class="badge badge-success" style="font-size: 105%;">Can View</span>
+                {% elif map.collaboration_mode == "CAN_COMMENT" %}
+                <span class="badge badge-success" style="font-size: 105%;">Can Comment</span>
+                {% else %}
+                <span class="badge badge-success" style="font-size: 105%;">Can Edit</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ map.name }}
+                </h5>
+                <p class="card-text">{{ map.description }}</p>
+            </div>
+            <div class="card-footer">
+                <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+                <a class="card-link" href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% if own_maps %}
 <div class="row">
     <div class="col">
-        <br/>
         <a class="btn btn-primary"
            href="{{ url_for('map.create') }}">Create map</a>
         <br/>

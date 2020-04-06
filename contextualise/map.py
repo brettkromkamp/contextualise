@@ -25,12 +25,15 @@ def index():
 
     maps = topic_store.get_topic_maps(current_user.id)
 
+    own_maps = [map for map in maps if map.owner]
+    collaboration_maps = [map for map in maps if not map.owner]
+
     # Reset breadcrumbs and (current) scope/context
     session["breadcrumbs"] = []
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/index.html", maps=maps)
+    return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
 
 
 @bp.route("/maps/published/")
