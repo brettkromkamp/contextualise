@@ -392,13 +392,6 @@ def edit(map_identifier, topic_identifier):
 @login_required
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -441,13 +434,6 @@ def delete(map_identifier, topic_identifier):
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -535,13 +521,6 @@ def add_note(map_identifier, topic_identifier):
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -640,13 +619,6 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -696,13 +668,6 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 @login_required
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -728,13 +693,6 @@ def view_names(map_identifier, topic_identifier):
 @login_required
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -794,13 +752,6 @@ def add_name(map_identifier, topic_identifier):
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
@@ -867,13 +818,6 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
-    # topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    #
-    # if topic_map is None:
-    #     abort(404)
-    #
-    # if current_user.id != topic_map.user_identifier:
-    #     abort(403)
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
