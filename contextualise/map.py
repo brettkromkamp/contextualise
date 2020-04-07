@@ -296,11 +296,11 @@ def add_collaborator(map_identifier):
         else:
             collaboration_mode = None
             if form_collaboration_mode == "can-edit":
-                collaboration_mode = CollaborationMode.CAN_EDIT
+                collaboration_mode = CollaborationMode.EDIT
             elif form_collaboration_mode == "can-comment":
-                collaboration_mode = CollaborationMode.CAN_COMMENT
+                collaboration_mode = CollaborationMode.COMMENT
             else:
-                collaboration_mode = CollaborationMode.CAN_VIEW
+                collaboration_mode = CollaborationMode.VIEW
             topic_store.collaborate(topic_map.identifier, collaborator.id, collaborator.email, collaboration_mode)
             flash("Collaborator successfully added.", "success")
             return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))

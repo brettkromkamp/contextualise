@@ -36,9 +36,9 @@ def view(map_identifier, topic_identifier):
             topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         if topic_map is None:
             abort(404)
+        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         if topic_map.published:
             if not is_map_owner and topic_identifier == "home":
                 flash("You are accessing a published topic map of another user.", "primary")
@@ -189,7 +189,7 @@ def create(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -281,7 +281,7 @@ def edit(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -404,7 +404,7 @@ def delete(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -454,8 +454,8 @@ def add_note(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT
-        or topic_map.collaboration_mode is not CollaborationMode.CAN_COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -548,8 +548,8 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT
-        or topic_map.collaboration_mode is not CollaborationMode.CAN_COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        or topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -653,8 +653,8 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT
-        or topic_map.collaboration_mode is not CollaborationMode.CAN_COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        or topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -708,7 +708,7 @@ def view_names(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -740,7 +740,7 @@ def add_name(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -806,7 +806,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -879,7 +879,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.CAN_EDIT:
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
