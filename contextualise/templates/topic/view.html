@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block menu %}
-{% if not current_user.is_authenticated %}
+{% if not current_user.is_authenticated or not collaboration_mode %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link active" href="#">Topic</a>
@@ -28,7 +28,7 @@
     </li>
 </ul>
 {% endif %}
-{% if current_user.id == topic_map.user_identifier or collaboration_mode.name == "CAN_EDIT" %}
+{% if topic_map.owner or collaboration_mode.name == "CAN_EDIT" %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"

@@ -16,27 +16,25 @@
         <br/>
     </div>
 </div>
-<div class="row">
-    <div class="col">
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for map in maps %}
-            <tr>
-                <th class="align-middle" scope="row" style="min-width: 16em;"><a
-                        href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">{{
-                    map.name }}</a></th>
-                <td>{{ map.description }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+<div class="row row-cols-1 row-cols-md-3">
+    {% for map in maps %}
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img alt="{{ map.name }}" class="card-img-top"
+                 src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ map.name }}
+                </h5>
+                <p class="card-text">{{ map.description }}</p>
+            </div>
+            <div class="card-footer">
+                <a class="card-link" href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
+                <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+            </div>
+        </div>
     </div>
+    {% endfor %}
 </div>
 {% endif %}
 {% endblock %}

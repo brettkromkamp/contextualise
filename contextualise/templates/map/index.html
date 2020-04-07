@@ -30,9 +30,9 @@
                  src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
             <div class="card-header">
                 {% if map.published %}
-                <span class="badge badge badge-success" style="font-size: 105%;">Published</span>
+                <span class="badge badge-pill badge-success" style="font-size: 105%;">Published</span>
                 {% else %}
-                <span class="badge badge badge-secondary" style="font-size: 105%;">Private</span>
+                <span class="badge badge-pill badge-primary" style="font-size: 105%;">Private</span>
                 {% endif %}
             </div>
             <div class="card-body">
@@ -53,39 +53,6 @@
 </div>
 {% endif %}
 {% if collaboration_maps %}
-<!--
-<div class="row">
-    <div class="col">
-        <h3>Maps I am collaborating on</h3>
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Access</th>
-                <th scope="col">Description</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for map in collaboration_maps %}
-            <tr>
-                <th class="align-middle" scope="row" style="min-width: 16em;"><a
-                        href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">{{
-                    map.name }}</a></th>
-                <td class="align-middle">
-                    {% if map.published %}
-                    <span class="badge badge-pill badge-success">Published</span>
-                    {% else %}
-                    <span class="badge badge-pill badge-secondary">Private</span>
-                    {% endif %}
-                </td>
-                <td>{{ map.description }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
--->
 <div class="row">
     <div class="col-md-12">
         <h4>Maps I am collaborating on</h4>
@@ -100,11 +67,11 @@
                  src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
             <div class="card-header">
                 {% if map.collaboration_mode.name == "CAN_VIEW" %}
-                <span class="badge badge-success" style="font-size: 105%;">Can View</span>
+                <span class="badge badge-pill badge-primary" style="font-size: 105%;">Can View</span>
                 {% elif map.collaboration_mode.name == "CAN_COMMENT" %}
-                <span class="badge badge-success" style="font-size: 105%;">Can Comment</span>
+                <span class="badge badge-pill badge-info" style="font-size: 105%;">Can Comment</span>
                 {% else %}
-                <span class="badge badge-success" style="font-size: 105%;">Can Edit</span>
+                <span class="badge badge-pill badge-danger" style="font-size: 105%;">Can Edit</span>
                 {% endif %}
             </div>
             <div class="card-body">
