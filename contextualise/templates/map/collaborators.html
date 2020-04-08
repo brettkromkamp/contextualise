@@ -23,8 +23,45 @@
     <small class="text-muted">Collaborators</small>
 </h1>
 <hr/>
-<a class="btn btn-primary"
-   href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add collaborator</a>
-<br/>
-<br/>
+{% if collaborators %}
+<div class="row">
+    <div class="col">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">User name</th>
+                <th scope="col">Collaboration mode</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for collaborator in collaborators %}
+            <tr>
+                <th scope="row">{{ collaborator.user_name }}</th>
+                <td class="align-middle">
+                    {% if collaborator.collaboration_mode.name == "VIEW" %}
+                    <span class="badge badge-info">Can View</span>
+                    {% elif collaborator.collaboration_mode.name == "COMMENT" %}
+                    <span class="badge badge-info">Can Comment</span>
+                    {% else %}
+                    <span class="badge badge-danger">Can Edit</span>
+                    {% endif %}
+                </td>
+                <td style="min-width: 8em;" class="align-middle">
+                    <a href="#">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col">
+        <a class="btn btn-primary"
+           href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add collaborator</a>
+    </div>
+</div>
 {% endblock %}

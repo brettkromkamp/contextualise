@@ -15,7 +15,7 @@ from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievalmode import RetrievalMode
 from topicdb.core.topicdberror import TopicDbError
-from topicdb.core.store.collaborationmode import CollaborationMode
+from topicdb.core.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
 
 bp = Blueprint("topic", __name__)
@@ -528,7 +528,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
         topic_map.collaboration_mode is not CollaborationMode.EDIT
-        or topic_map.collaboration_mode is not CollaborationMode.COMMENT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -626,7 +626,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
         topic_map.collaboration_mode is not CollaborationMode.EDIT
-        or topic_map.collaboration_mode is not CollaborationMode.COMMENT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 

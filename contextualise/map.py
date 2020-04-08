@@ -9,7 +9,8 @@ from werkzeug.utils import redirect
 
 from contextualise.topic_store import get_topic_store
 
-from topicdb.core.store.collaborationmode import CollaborationMode
+from topicdb.core.models.collaborationmode import CollaborationMode
+from topicdb.core.models.collaborator import Collaborator
 
 bp = Blueprint("map", __name__)
 
@@ -131,11 +132,9 @@ def delete(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     if request.method == "POST":
@@ -159,11 +158,9 @@ def edit(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     form_map_name = topic_map.name
@@ -234,11 +231,9 @@ def view(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     return render_template("map/view.html", topic_map=topic_map)
@@ -250,14 +245,14 @@ def collaborators(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
-    return render_template("map/collaborators.html", topic_map=topic_map)
+    collaborators = topic_store.get_collaborators(map_identifier)
+
+    return render_template("map/collaborators.html", topic_map=topic_map, collaborators=collaborators)
 
 
 @bp.route("/maps/add-collaborator/<map_identifier>", methods=("GET", "POST"))
@@ -266,11 +261,9 @@ def add_collaborator(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     form_collaborator_email = ""
@@ -320,11 +313,9 @@ def delete_collaborator(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     return render_template("map/delete_collaborator.html")
@@ -336,11 +327,9 @@ def edit_collaborator(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    if not topic_map.owner:
         abort(403)
 
     return render_template("map/edit_collaborator.html")

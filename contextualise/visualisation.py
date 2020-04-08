@@ -15,7 +15,7 @@ bp = Blueprint("visualisation", __name__)
 UNIVERSAL_SCOPE = "*"
 
 
-@bp.route("/visualisation/network/<map_identifier>/<topic_identifier>")
+@bp.route("/visualisations/network/<map_identifier>/<topic_identifier>")
 def network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -35,7 +35,7 @@ def network(map_identifier, topic_identifier):
     return render_template("visualisation/network.html", topic_map=topic_map, topic=topic, creation_date=creation_date)
 
 
-@bp.route("/visualisation/timeline/<map_identifier>/<topic_identifier>")
+@bp.route("/visualisations/timeline/<map_identifier>/<topic_identifier>")
 def timeline(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)
@@ -55,7 +55,7 @@ def timeline(map_identifier, topic_identifier):
     return render_template("visualisation/timeline.html", topic_map=topic_map, topic=topic, creation_date=creation_date)
 
 
-@bp.route("/visualisation/map/<map_identifier>/<topic_identifier>")
+@bp.route("/visualisations/map/<map_identifier>/<topic_identifier>")
 def map(map_identifier, topic_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier)

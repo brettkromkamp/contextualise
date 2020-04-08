@@ -38,9 +38,9 @@
                          src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                     <div class="card-header">
                         {% if map.published %}
-                        <span class="badge badge-pill badge-success" style="font-size: 105%;">Published</span>
+                        <span class="badge badge-success">Published</span>
                         {% else %}
-                        <span class="badge badge-pill badge-danger" style="font-size: 105%;">Private</span>
+                        <span class="badge badge-danger">Private</span>
                         {% endif %}
                     </div>
                     <div class="card-body">
@@ -89,11 +89,11 @@
                          src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                     <div class="card-header">
                         {% if map.collaboration_mode.name == "VIEW" %}
-                        <span class="badge badge-pill badge-primary" style="font-size: 105%;">Can View</span>
+                        <span class="badge badge-info">Can View</span>
                         {% elif map.collaboration_mode.name == "COMMENT" %}
-                        <span class="badge badge-pill badge-info" style="font-size: 105%;">Can Comment</span>
+                        <span class="badge badge-secondary">Can Comment</span>
                         {% else %}
-                        <span class="badge badge-pill badge-danger" style="font-size: 105%;">Can Edit</span>
+                        <span class="badge badge-danger">Can Edit</span>
                         {% endif %}
                     </div>
                     <div class="card-body">

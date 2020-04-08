@@ -344,7 +344,7 @@
         </div>
     </div>
 </div>
-{% if current_user.is_authenticated and current_user.id == topic_map.user_identifier %}
+{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
 <script src="{{ url_for('static', filename='mousetrap.min.js') }}"></script>
 {% endif %}
 <script
@@ -385,7 +385,7 @@ if (document.getElementById('goto-button') != null) {
 }
 
 </script>
-{% if current_user.is_authenticated and current_user.id == topic_map.user_identifier %}
+{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
 <script>
 var urlParts = window.location.pathname.split('/');
 var mapIdentifier = urlParts[3];
