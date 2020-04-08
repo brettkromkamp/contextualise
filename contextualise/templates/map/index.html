@@ -40,7 +40,7 @@
                         {% if map.published %}
                         <span class="badge badge-success">Published</span>
                         {% else %}
-                        <span class="badge badge-danger">Private</span>
+                        <span class="badge badge-warning">Private</span>
                         {% endif %}
                     </div>
                     <div class="card-body">
@@ -53,9 +53,6 @@
                         <a class="card-link"
                            href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                         <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
-                        <a class="card-link" href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit</a>
-                        <a class="card-link"
-                           href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +90,7 @@
                         {% elif map.collaboration_mode.name == "COMMENT" %}
                         <span class="badge badge-secondary">Can Comment</span>
                         {% else %}
-                        <span class="badge badge-danger">Can Edit</span>
+                        <span class="badge badge-warning">Can Edit</span>
                         {% endif %}
                     </div>
                     <div class="card-body">

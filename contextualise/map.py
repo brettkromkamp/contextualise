@@ -250,7 +250,9 @@ def collaborators(map_identifier):
     if not topic_map.owner:
         abort(403)
 
-    collaborators = topic_store.get_collaborators(map_identifier)
+    collaborators = topic_store.get_collaborators(
+        map_identifier
+    )  # TODO: Rename (shadows -method- name from outer scope)?
 
     return render_template("map/collaborators.html", topic_map=topic_map, collaborators=collaborators)
 

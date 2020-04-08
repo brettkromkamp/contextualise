@@ -42,12 +42,12 @@
                     {% if collaborator.collaboration_mode.name == "VIEW" %}
                     <span class="badge badge-info">Can View</span>
                     {% elif collaborator.collaboration_mode.name == "COMMENT" %}
-                    <span class="badge badge-info">Can Comment</span>
+                    <span class="badge badge-secondary">Can Comment</span>
                     {% else %}
-                    <span class="badge badge-danger">Can Edit</span>
+                    <span class="badge badge-warning">Can Edit</span>
                     {% endif %}
                 </td>
-                <td style="min-width: 8em;" class="align-middle">
+                <td class="align-middle" style="min-width: 8em;">
                     <a href="#">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                     <a href="#">Delete</a>
                 </td>
@@ -57,9 +57,14 @@
         </table>
     </div>
 </div>
+{% else %}
+<p>You are not collaborating with anyone on this topic map. Click on the "Add collaborator" button below to add a collaborator.</p>
 {% endif %}
 <div class="row">
     <div class="col">
+        <a class="btn btn-secondary"
+           href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
+           role="button">Return</a>
         <a class="btn btn-primary"
            href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add collaborator</a>
     </div>

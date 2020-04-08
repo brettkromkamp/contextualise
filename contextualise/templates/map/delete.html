@@ -20,7 +20,7 @@
                type="text" value="{{ topic_map.name }}">
     </div>
     <div class="form-group">
-        <label><strong>Text</strong></label><br/>
+        <label><strong>Description</strong></label><br/>
         {{ topic_map.description|safe }}
     </div>
     <div class="form-group">
@@ -30,7 +30,17 @@
              class="map-image img-thumbnail" class="img-thumbnail"
              src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
     </div>
-    <a class="btn btn-secondary" href="{{ url_for('map.index') }}" role="button">Cancel</a>
+    <div class="form-group">
+        <label><strong>Access</strong></label>
+        <br/>
+        {% if topic_map.published %}
+        <span class="badge badge-success">Published</span>
+        {% else %}
+        <span class="badge badge-warning">Private</span>
+        {% endif %}
+    </div>
+    <hr/>
+    <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}" role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete map</button>
 </form>
 <br/>

@@ -12,7 +12,8 @@
         <a class="nav-link active" href="#">Map</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}">Collaborators</a>
+        <a class="nav-link"
+           href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}">Collaborators</a>
     </li>
 </ul>
 {% endblock %}
@@ -23,12 +24,42 @@
     <small class="text-muted">View map</small>
 </h1>
 <hr/>
-
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label><strong>Name</strong></label><br/>
+            {{ topic_map.name }}
+        </div>
+        <div class="form-group">
+            <label><strong>Description</strong></label><br/>
+            {{ topic_map.description|safe }}
+        </div>
+        <div class="form-group">
+            <label><strong>Image</strong></label>
+            <br/>
+            <img alt="{{ map_name }}"
+                 class="map-image img-thumbnail" class="img-thumbnail"
+                 src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
+        </div>
+        <div class="form-group">
+            <label><strong>Access</strong></label>
+            <br/>
+            {% if topic_map.published %}
+            <span class="badge badge-success">Published</span>
+            {% else %}
+            <span class="badge badge-warning">Private</span>
+            {% endif %}
+        </div>
+        <hr/>
+    </div>
+</div>
 <a class="btn btn-secondary"
    href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
    role="button">Return</a>
 <a class="btn btn-primary"
-   href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit map</a>
+   href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}" role="button">Edit map</a>
+<a class="btn btn-danger"
+   href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" role="button">Delete map</a>
 <br/>
 <br/>
 {% endblock %}

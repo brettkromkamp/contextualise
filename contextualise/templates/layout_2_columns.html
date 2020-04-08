@@ -167,7 +167,7 @@
                 {% endif %}
                 <div class="card-body list-card">
                     <ul>
-                        <li>Map: <a href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">{{
+                        <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
                             topic_map.name }}</a></li>
                         {% if session['current_scope'] == '*' %}
                         <li>Context: <a
