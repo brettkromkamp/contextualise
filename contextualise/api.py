@@ -24,13 +24,11 @@ def get_slug():
 @login_required
 def get_identifiers(map_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if not topic_map.published and current_user.id != topic_map.user_identifier:
-        abort(403)
+    # TODO: Missing logic?
 
     query_term = request.args.get("q").lower()
 
@@ -40,13 +38,14 @@ def get_identifiers(map_identifier):
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
 def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
+    if current_user.is_authenticated:
+        topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    else:
+        topic_map = topic_store.get_topic_map(map_identifier)
     if topic_map is None:
         abort(404)
-
-    if not topic_map.published and current_user.id != topic_map.user_identifier:
-        abort(403)
+    # TODO: Missing logic?
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 

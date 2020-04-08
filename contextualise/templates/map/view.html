@@ -8,8 +8,22 @@
 
 {% block menu %}
 <ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Map</a>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
+           role="button">Map</a>
+        <div class="dropdown-menu">
+            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit map</a>
+            <a class="dropdown-item"
+               href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
+                map</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Home</a>
+        </div>
     </li>
     <li class="nav-item">
         <a class="nav-link"
@@ -56,10 +70,6 @@
 <a class="btn btn-secondary"
    href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
    role="button">Return</a>
-<a class="btn btn-primary"
-   href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}" role="button">Edit map</a>
-<a class="btn btn-danger"
-   href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" role="button">Delete map</a>
 <br/>
 <br/>
 {% endblock %}

@@ -8,11 +8,26 @@
 
 {% block menu %}
 <ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">Map</a>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+           href="#"
+           role="button">Map</a>
+        <div class="dropdown-menu">
+            <a aria-disabled="true" class="dropdown-item"
+               href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}" tabindex="-1">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit map</a>
+            <a class="dropdown-item"
+               href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
+                map</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Home</a>
+        </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link  active" href="#">Collaborators</a>
+        <a class="nav-link active" href="#">Collaborators</a>
     </li>
 </ul>
 {% endblock %}
@@ -58,7 +73,8 @@
     </div>
 </div>
 {% else %}
-<p>You are not collaborating with anyone on this topic map. Click on the "Add collaborator" button below to add a collaborator.</p>
+<p>You are not collaborating with anyone on this topic map. Click on the "Add collaborator" button below to add a
+    collaborator.</p>
 {% endif %}
 <div class="row">
     <div class="col">

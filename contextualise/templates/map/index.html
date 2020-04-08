@@ -53,6 +53,7 @@
                         <a class="card-link"
                            href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                         <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
+                        <a class="card-link" href="{{ url_for('map.collaborators', map_identifier=map['identifier']) }}">Collaborators</a>
                     </div>
                 </div>
             </div>

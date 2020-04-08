@@ -4,13 +4,11 @@ import uuid
 
 from flask import Blueprint, session, request, flash, render_template, url_for, current_app
 from flask_security import login_required, current_user
+from topicdb.core.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
 from contextualise.topic_store import get_topic_store
-
-from topicdb.core.models.collaborationmode import CollaborationMode
-from topicdb.core.models.collaborator import Collaborator
 
 bp = Blueprint("map", __name__)
 

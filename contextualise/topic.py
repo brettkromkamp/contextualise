@@ -5,18 +5,19 @@ from datetime import datetime
 
 import maya
 import mistune
-from contextualise.topic_store import get_topic_store
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
+from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievalmode import RetrievalMode
 from topicdb.core.topicdberror import TopicDbError
-from topicdb.core.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
+
+from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("topic", __name__)
 
@@ -29,22 +30,16 @@ UNIVERSAL_SCOPE = "*"
 def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-        else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         if topic_map.published:
-            if not is_map_owner and topic_identifier == "home":
+            if not topic_map.owner and topic_identifier == "home":
                 flash("You are accessing a published topic map of another user.", "primary")
         else:
-            if not is_map_owner:  # The map is private and doesn't belong to the user who is trying to access it
-                if not collaboration_mode:  # The user is not collaborating on the map
+            if not topic_map.owner:  # The map is private and doesn't belong to the user who is trying to access it
+                if not topic_map.collaboration_mode:  # The user is not collaborating on the map
                     abort(403)
     else:  # User is not logged in
         topic_map = topic_store.get_topic_map(map_identifier)
@@ -176,7 +171,7 @@ def view(map_identifier, topic_identifier):
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
-        collaboration_mode=collaboration_mode,
+        collaboration_mode=topic_map.collaboration_mode,
     )
 
 
