@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block maps_menu %}
+{% if current_user.is_authenticated %}
 <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -29,7 +31,8 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
-                <a class="card-link" href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
+                <a class="card-link"
+                   href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
                 <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
             </div>
         </div>

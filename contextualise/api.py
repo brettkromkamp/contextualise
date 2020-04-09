@@ -39,13 +39,20 @@ def get_identifiers(map_identifier):
 def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    if current_user.is_authenticated:
-        topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    else:
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+        else:
+            topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+    else:  # User is not logged in
         topic_map = topic_store.get_topic_map(map_identifier)
-    if topic_map is None:
-        abort(404)
-    # TODO: Missing logic?
+        if topic_map is None:
+            abort(404)
+        if not topic_map.published:  # User is not logged in and the map is not published
+            abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 

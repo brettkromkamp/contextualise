@@ -9,6 +9,7 @@
 
       gtag('config', 'UA-2662092-19');
 
+
     </script>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
@@ -38,7 +39,11 @@
                 {% if topic_map %}
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
+                        {% if current_user.is_authenticated %}
                         <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+                        {% else %}
+                        <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
                         {% if session['current_scope'] == '*' %}
@@ -140,6 +145,7 @@ document.getElementById('goto-button').addEventListener('click', (event) => {
 		window.location.href = gotoUrl;
 	}
 });
+
 
 
 </script>
