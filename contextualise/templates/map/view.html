@@ -1,12 +1,17 @@
-{% extends "layout_1_column.html" %}
+{% extends "layout_maps.html" %}
 
 {% block title %}
 <title>View map | Contextualise</title>
 {% endblock %}
 
+{% block maps_menu %}
+<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+{% endblock %}
+
 {% block javascript %}{% endblock %}
 
 {% block menu %}
+{% if topic_map.owner %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
@@ -30,6 +35,7 @@
            href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}">Collaborators</a>
     </li>
 </ul>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -42,7 +48,8 @@
     <div class="col-md-12">
         <div class="form-group">
             <label><strong>Name</strong></label><br/>
-            {{ topic_map.name }}
+            <a href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">{{
+                topic_map.name }}</a>
         </div>
         <div class="form-group">
             <label><strong>Description</strong></label><br/>
@@ -67,9 +74,15 @@
         <hr/>
     </div>
 </div>
+{% if current_user.is_authenticated %}
 <a class="btn btn-secondary"
    href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
    role="button">Return</a>
+{% else %}
+<a class="btn btn-secondary"
+   href="{{ url_for('map.published') }}"
+   role="button">Return</a>
+{% endif %}
 <br/>
 <br/>
 {% endblock %}

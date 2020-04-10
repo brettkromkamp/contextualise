@@ -1,7 +1,11 @@
-{% extends "layout_1_column.html" %}
+{% extends "layout_maps.html" %}
 
 {% block title %}
 <title>View map | Contextualise</title>
+{% endblock %}
+
+{% block maps_menu %}
+<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
 {% endblock %}
 
 {% block javascript %}{% endblock %}

@@ -34,8 +34,10 @@
             {% for map in own_maps %}
             <div class="col mb-4">
                 <div class="card h-100">
-                    <img alt="{{ map.name }}" class="card-img-top"
-                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                    <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                        <img alt="{{ map.name }}" class="card-img-top"
+                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                    </a>
                     <div class="card-header">
                         {% if map.published %}
                         <span class="badge badge-success">Published</span>
@@ -51,9 +53,9 @@
                     </div>
                     <div class="card-footer">
                         <a class="card-link"
-                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
-                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View</a>
-                        <a class="card-link" href="{{ url_for('map.collaborators', map_identifier=map['identifier']) }}">Collaborators</a>
+                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Go
+                            to map</a>
+                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Info</a>
                     </div>
                 </div>
             </div>
@@ -83,8 +85,10 @@
             {% for map in collaboration_maps %}
             <div class="col mb-4">
                 <div class="card h-100">
-                    <img alt="{{ map.name }}" class="card-img-top"
-                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                    <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                        <img alt="{{ map.name }}" class="card-img-top"
+                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                    </a>
                     <div class="card-header">
                         {% if map.collaboration_mode.name == "VIEW" %}
                         <span class="badge badge-info">Can View</span>
@@ -102,7 +106,9 @@
                     </div>
                     <div class="card-footer">
                         <a class="card-link"
-                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Home</a>
+                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">Go
+                            to map</a>
+                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Info</a>
                     </div>
                 </div>
             </div>
