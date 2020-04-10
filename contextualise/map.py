@@ -2,13 +2,12 @@ import os
 import shutil
 import uuid
 
+from contextualise.topic_store import get_topic_store
 from flask import Blueprint, session, request, flash, render_template, url_for, current_app
 from flask_security import login_required, current_user
 from topicdb.core.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
-
-from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("map", __name__)
 
@@ -281,7 +280,7 @@ def add_collaborator(map_identifier):
         abort(403)
 
     form_collaborator_email = ""
-    form_collaboration_mode = "can-view"  # TODO: Review.
+    form_collaboration_mode = "view"  # TODO: Review.
 
     error = 0
 
@@ -302,9 +301,9 @@ def add_collaborator(map_identifier):
             )
         else:
             collaboration_mode = None
-            if form_collaboration_mode == "can-edit":
+            if form_collaboration_mode == "edit":
                 collaboration_mode = CollaborationMode.EDIT
-            elif form_collaboration_mode == "can-comment":
+            elif form_collaboration_mode == "comment":
                 collaboration_mode = CollaborationMode.COMMENT
             else:
                 collaboration_mode = CollaborationMode.VIEW
@@ -335,9 +334,9 @@ def delete_collaborator(map_identifier):
     return render_template("map/delete_collaborator.html")
 
 
-@bp.route("/maps/edit-collaborator/<map_identifier>", methods=("GET", "POST"))
+@bp.route("/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"))
 @login_required
-def edit_collaborator(map_identifier):
+def edit_collaborator(map_identifier, collaborator_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
@@ -345,8 +344,39 @@ def edit_collaborator(map_identifier):
         abort(404)
     if not topic_map.owner:
         abort(403)
+    collaborator = topic_store.get_collaborator(map_identifier, collaborator_identifier)
+    if collaborator is None:
+        abort(404)
 
-    return render_template("map/edit_collaborator.html")
+    form_collaboration_mode = collaborator.collaboration_mode.name.lower()
+    form_collaborator_email = collaborator.user_name
+
+    error = 0
+
+    if request.method == "POST":
+        form_collaboration_mode = request.form["collaboration-mode"]
+        form_collaborator_email = request.form["collaborator-email"]
+
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            topic_store.update_collaboration_mode(
+                map_identifier, collaborator_identifier, CollaborationMode[form_collaboration_mode.upper()]
+            )
+            flash("Collaborator successfully updated.", "success")
+            return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
+
+    return render_template(
+        "map/edit_collaborator.html",
+        error=error,
+        topic_map=topic_map,
+        collaborator_identifier=collaborator_identifier,
+        collaborator_email=form_collaborator_email,
+        collaboration_mode=form_collaboration_mode,
+    )
 
 
 # ========== HELPER METHODS ==========

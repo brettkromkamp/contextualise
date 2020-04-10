@@ -67,7 +67,7 @@
                     {% endif %}
                 </td>
                 <td class="align-middle" style="min-width: 8em;">
-                    <a href="#">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                     <a href="#">Delete</a>
                 </td>
             </tr>
