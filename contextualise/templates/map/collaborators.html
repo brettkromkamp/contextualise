@@ -68,7 +68,7 @@
                 </td>
                 <td class="align-middle" style="min-width: 8em;">
                     <a href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a href="#">Delete</a>
+                    <a href="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Delete</a>
                 </td>
             </tr>
             {% endfor %}

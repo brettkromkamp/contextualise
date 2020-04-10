@@ -115,6 +115,13 @@
             {% endfor %}
         </div>
         {% endif %}
+        {% if not collaboration_maps %}
+        <div class="row">
+            <div class="col">
+                <p>Currently, nobody has shared a topic map with you for the purpose of collaboration. Patience, my friend, patience!</p>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

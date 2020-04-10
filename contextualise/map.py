@@ -320,9 +320,9 @@ def add_collaborator(map_identifier):
     )
 
 
-@bp.route("/maps/delete-collaborator/<map_identifier>", methods=("GET", "POST"))
+@bp.route("/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"))
 @login_required
-def delete_collaborator(map_identifier):
+def delete_collaborator(map_identifier, collaborator_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
@@ -330,8 +330,30 @@ def delete_collaborator(map_identifier):
         abort(404)
     if not topic_map.owner:
         abort(403)
+    collaborator = topic_store.get_collaborator(map_identifier, collaborator_identifier)
+    if collaborator is None:
+        abort(404)
 
-    return render_template("map/delete_collaborator.html")
+    error = 0
+
+    if request.method == "POST":
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            topic_store.stop_collaboration(map_identifier, collaborator_identifier)
+            flash("Collaborator successfully removed.", "success")
+            return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
+
+    return render_template(
+        "map/delete_collaborator.html",
+        error=error,
+        topic_map=topic_map,
+        collaborator_identifier=collaborator_identifier,
+        collaborator=collaborator,
+    )
 
 
 @bp.route("/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"))

@@ -123,6 +123,7 @@ if (topicIdentifier !== "") {
     });
 }
 
+
 </script>
 
 {% endblock %}
@@ -131,7 +132,8 @@ if (topicIdentifier !== "") {
 {% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
+        <a class="nav-link"
+           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
@@ -150,11 +152,11 @@ if (topicIdentifier !== "") {
 {% if current_user.is_authenticated and collaboration_mode.name == "COMMENT" %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
            href="#"
            role="button">Topic</a>
         <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
+            <a class="dropdown-item" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
@@ -162,11 +164,12 @@ if (topicIdentifier !== "") {
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
            role="button">Visualisations</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+            <a class="dropdown-item disabled"
+               href="#">View
                 network</a>
             <a class="dropdown-item" href="#">View timeline</a>
             <a class="dropdown-item" href="#">View geographic map</a>

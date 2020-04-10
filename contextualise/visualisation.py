@@ -50,7 +50,7 @@ def network(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
-        collaboration_mode=topic_map.collaboration_mode,
+        collaboration_mode=collaboration_mode,
     )
 
 
