@@ -6,16 +6,17 @@ Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
 """
 
 import configparser
+import logging
 import os
+from logging.handlers import RotatingFileHandler
 
+from contextualise.security import user_store, user_models
+from contextualise.utilities import filters
 from flask import Flask
 from flask import render_template
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
 from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, hash_password
-
-from contextualise.security import user_store, user_models
-from contextualise.utilities import filters
 
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
@@ -195,6 +196,19 @@ def create_app(test_config=None):
     from contextualise import topic_store
 
     topic_store.init_app(app)
+
+    # Set up logging
+    if not app.debug:
+        if not os.path.exists('logs'):
+            os.mkdir('logs')
+        file_handler = RotatingFileHandler('logs/contextualise.log', maxBytes=10240, backupCount=10)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+        app.logger.setLevel(logging.INFO)
+        app.logger.info('Contextualise startup')
 
     return app
 
