@@ -136,7 +136,7 @@ def delete(map_identifier):
 
     if request.method == "POST":
         # Remove map from topic store
-        topic_store.delete_topic_map(current_user.id, map_identifier)
+        topic_store.delete_topic_map(map_identifier, current_user.id)
 
         # Delete the map's directory
         topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
