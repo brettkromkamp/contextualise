@@ -59,6 +59,10 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 
+**Features Currently in Development (April 2020)**
+
+* `Google Docs <https://www.google.com/docs/about/>`_-like collaboration; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
+
 **Post Version 1.0 Features**
 
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences

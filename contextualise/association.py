@@ -2,6 +2,7 @@ import maya
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.association import Association
+from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
@@ -16,12 +17,12 @@ UNIVERSAL_SCOPE = "*"
 @login_required
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -50,12 +51,12 @@ def index(map_identifier, topic_identifier):
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -172,12 +173,12 @@ def create(map_identifier, topic_identifier):
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(

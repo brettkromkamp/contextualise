@@ -48,35 +48,35 @@
     <strong>Access?</strong>
     {% if map_shared %}
     <div class="form-check">
-        <input class="form-check-input" id="shared-radio-1" name="map-shared" type="radio" value="0">
-        <label class="form-check-label" for="shared-radio-1">
+        <input class="form-check-input" id="published-radio-1" name="map-published" type="radio" value="0">
+        <label class="form-check-label" for="published-radio-1">
             Private
         </label>
     </div>
     <div class="form-check">
-        <input checked class="form-check-input" id="shared-radio-2" name="map-shared" type="radio" value="1">
-        <label class="form-check-label" for="shared-radio-2">
-            Shared
+        <input checked class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
+        <label class="form-check-label" for="published-radio-2">
+            Published
         </label>
     </div>
     {% else %}
     <div class="form-check">
-        <input checked class="form-check-input" id="shared-radio-1" name="map-shared" type="radio" value="0">
-        <label class="form-check-label" for="shared-radio-1">
+        <input checked class="form-check-input" id="published-radio-1" name="map-published" type="radio" value="0">
+        <label class="form-check-label" for="published-radio-1">
             Private
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" id="shared-radio-2" name="map-shared" type="radio" value="1">
-        <label class="form-check-label" for="shared-radio-2">
-            Shared
+        <input class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
+        <label class="form-check-label" for="published-radio-2">
+            Published
         </label>
     </div>
     {% endif %}
     {% endif %}
-    <br/>
+    <hr/>
     <a class="btn btn-secondary"
-       href="{{ url_for('map.index') }}"
+       href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
        role="button">Cancel</a>
     <button class="btn btn-primary" type="submit">Update map</button>
 </form>

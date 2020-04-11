@@ -3,6 +3,7 @@ from flask import Blueprint, session, render_template, request, flash, url_for
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
+from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.models.datatype import DataType
 from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
@@ -19,14 +20,14 @@ UNIVERSAL_SCOPE = "*"
 @login_required
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -70,14 +71,14 @@ def index(map_identifier, topic_identifier):
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -142,14 +143,14 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
 @login_required
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -226,14 +227,14 @@ def add(map_identifier, topic_identifier):
 @login_required
 def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -325,14 +326,14 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 @login_required
 def edit(map_identifier, topic_identifier, attribute_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -424,14 +425,14 @@ def entity_edit(
     map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
 ):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -535,14 +536,14 @@ def entity_edit(
 @login_required
 def delete(map_identifier, topic_identifier, attribute_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(
@@ -597,14 +598,14 @@ def entity_delete(
     map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
 ):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier)
 
+    if "admin" not in current_user.roles:
+        abort(403)
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-
-    if current_user.id != topic_map.user_identifier:
-        abort(403)
-    if "admin" not in current_user.roles:
+    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = topic_store.get_topic(

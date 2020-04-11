@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block menu %}
-{% if not current_user.is_authenticated %}
+{% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link active" href="#">Topic</a>
@@ -28,7 +28,34 @@
     </li>
 </ul>
 {% endif %}
-{% if current_user.id == topic_map.user_identifier %}
+{% if current_user.is_authenticated and collaboration_mode.name == "COMMENT" %}
+<ul class="nav nav-tabs">
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+           href="#"
+           role="button">Topic</a>
+        <div class="dropdown-menu">
+            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+               href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                note</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+           role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                network</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
+        </div>
+    </li>
+</ul>
+{% endif %}
+{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
@@ -244,7 +271,7 @@
             <small class="text-muted">{{ note.timestamp }}</small>
         </h5>
         <p class="card-text">{{ note.text|safe }}</p>
-        {% if current_user.id == topic_map.user_identifier %}
+        {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name == "COMMENT") %}
         <a class="card-link"
            href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
         <a class="card-link"
