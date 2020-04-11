@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 from collections import deque
@@ -37,6 +38,7 @@ def view(map_identifier, topic_identifier):
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
+            current_app.logger.setLevel(logging.INFO)
             current_app.logger.info(
                 f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
             )
