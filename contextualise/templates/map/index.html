@@ -61,23 +61,15 @@
             </div>
             {% endfor %}
         </div>
-        {% if own_maps %}
+        {% endif %}
         <div class="row">
             <div class="col">
-                <a class="btn btn-primary"
-                   href="{{ url_for('map.create') }}">Create map</a>
-                <br/>
-            </div>
-        </div>
-        {% else %}
-        <div class="row">
-            <div class="col">
+                {% if not own_maps %}
                 <p>No topic maps. Click on the "Create map" button below to create a topic map.</p>
+                {% endif %}
                 <a class="btn btn-primary" href="{{ url_for('map.create') }}">Create map</a>
             </div>
         </div>
-        {% endif %}
-        {% endif %}
     </div>
     <div aria-labelledby="collaboration-maps-tab" class="tab-pane fade" id="collaboration-maps" role="tabpanel">
         {% if collaboration_maps %}
@@ -118,7 +110,8 @@
         {% if not collaboration_maps %}
         <div class="row">
             <div class="col">
-                <p>Currently, nobody has shared a topic map with you for the purpose of collaboration. Patience, my friend, patience!</p>
+                <p>Currently, nobody has shared a topic map with you for the purpose of collaboration. Patience, my
+                    friend, patience!</p>
             </div>
         </div>
         {% endif %}
