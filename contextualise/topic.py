@@ -94,8 +94,7 @@ def view(map_identifier, topic_identifier):
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     if topic is None:
-        current_app.logger.setLevel(logging.INFO)
-        current_app.logger.info(
+        current_app.logger.warning(
             f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
         )
         session["inexistent_topic_identifier"] = topic_identifier
@@ -133,23 +132,23 @@ def view(map_identifier, topic_identifier):
                 occurrences["text"] = mistune.markdown(occurrence.resource_data.decode())
         elif occurrence.instance_of == "image":
             occurrences["images"].append(
-                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref, }
             )
         elif occurrence.instance_of == "3d-scene":
             occurrences["3d-scenes"].append(
-                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref, }
             )
         elif occurrence.instance_of == "file":
             occurrences["files"].append(
-                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref, }
             )
         elif occurrence.instance_of == "url":
             occurrences["links"].append(
-                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref, }
             )
         elif occurrence.instance_of == "video":
             occurrences["videos"].append(
-                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref,}
+                {"title": occurrence.get_attribute_by_name("title").value, "url": occurrence.resource_ref, }
             )
         elif occurrence.instance_of == "note":
             occurrences["notes"].append(
@@ -277,7 +276,7 @@ def create(map_identifier, topic_identifier):
 
             flash("Topic successfully created.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier, )
             )
 
     return render_template(
@@ -400,7 +399,7 @@ def edit(map_identifier, topic_identifier):
 
             flash("Topic successfully updated.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
@@ -458,7 +457,7 @@ def delete(map_identifier, topic_identifier):
                 "warning",
             )
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic_identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic_identifier, )
             )
 
         flash("Topic successfully deleted.", "success")
@@ -481,8 +480,8 @@ def add_note(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -546,7 +545,7 @@ def add_note(map_identifier, topic_identifier):
 
             flash("Note successfully added.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
@@ -576,8 +575,8 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -651,7 +650,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
             flash("Note successfully updated.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
@@ -682,8 +681,8 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -712,7 +711,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     if request.method == "POST":
         topic_store.delete_occurrence(map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
-        return redirect(url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, ))
 
     return render_template(
         "topic/delete_note.html",
@@ -755,7 +754,7 @@ def view_names(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    return render_template("topic/view_names.html", topic_map=topic_map, topic=topic, creation_date=creation_date,)
+    return render_template("topic/view_names.html", topic_map=topic_map, topic=topic, creation_date=creation_date, )
 
 
 @bp.route("/topics/add-name/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
@@ -810,7 +809,7 @@ def add_name(map_identifier, topic_identifier):
 
             flash("Name successfully added.", "success")
             return redirect(
-                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
@@ -874,8 +873,8 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         else:
             # Update name if required
             if (
-                form_topic_name != topic.get_base_name(name_identifier).name
-                or form_topic_name_scope != topic.get_base_name(name_identifier).scope
+                    form_topic_name != topic.get_base_name(name_identifier).name
+                    or form_topic_name_scope != topic.get_base_name(name_identifier).scope
             ):
                 topic_store.update_basename(
                     map_identifier, name_identifier, form_topic_name, scope=form_topic_name_scope
@@ -883,7 +882,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 
             flash("Name successfully updated.", "success")
             return redirect(
-                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
@@ -933,7 +932,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
         flash("Name successfully deleted.", "warning")
         return redirect(
-            url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+            url_for("topic.view_names", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
         )
 
     return render_template(
@@ -996,7 +995,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
             session["current_scope"] = form_scope
             flash("Context successfully changed.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, )
             )
 
     return render_template(
