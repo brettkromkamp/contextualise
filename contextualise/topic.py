@@ -1,4 +1,3 @@
-import logging
 import os
 import shutil
 from collections import deque
@@ -38,11 +37,10 @@ def view(map_identifier, topic_identifier):
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
-            abort(404)
-            current_app.logger.setLevel(logging.WARNING)
-            current_app.logger.warning(
+            current_app.logger.info(
                 f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
             )
+            abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         if topic_map.published:
             if not is_map_owner and topic_identifier == "home":
