@@ -54,6 +54,10 @@ def view(map_identifier, topic_identifier):
     else:  # User is not logged in
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info(
+                f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+            )
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
@@ -90,6 +94,10 @@ def view(map_identifier, topic_identifier):
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         session["inexistent_topic_identifier"] = topic_identifier
         abort(404)
     else:
@@ -192,6 +200,10 @@ def create(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -201,6 +213,10 @@ def create(map_identifier, topic_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_topic_name = ""
@@ -284,6 +300,10 @@ def edit(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -293,6 +313,10 @@ def edit(map_identifier, topic_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     occurrences = topic_store.get_topic_occurrences(
@@ -400,6 +424,10 @@ def delete(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -409,6 +437,10 @@ def delete(map_identifier, topic_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     if request.method == "POST":
@@ -442,6 +474,10 @@ def add_note(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
@@ -454,6 +490,10 @@ def add_note(map_identifier, topic_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_note_title = ""
@@ -529,6 +569,10 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
@@ -542,6 +586,10 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     )
 
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     note_occurrence = topic_store.get_occurrence(
@@ -627,6 +675,10 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and (
@@ -640,6 +692,10 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     )
 
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     note_occurrence = topic_store.get_occurrence(
@@ -676,6 +732,10 @@ def view_names(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -686,6 +746,10 @@ def view_names(map_identifier, topic_identifier):
     )
 
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
@@ -701,6 +765,10 @@ def add_name(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -710,6 +778,10 @@ def add_name(map_identifier, topic_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_topic_name = ""
@@ -760,6 +832,10 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -769,6 +845,10 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_topic_name = topic.get_base_name(name_identifier).name
@@ -826,6 +906,10 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
     # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
@@ -835,6 +919,10 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_topic_name = topic.get_base_name(name_identifier).name
@@ -867,6 +955,10 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
     if topic_map is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
         abort(404)
 
     topic = topic_store.get_topic(
@@ -874,6 +966,10 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
     )
 
     if topic is None:
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
         abort(404)
 
     form_scope = scope_identifier
