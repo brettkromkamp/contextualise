@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 from collections import deque
@@ -5,7 +6,8 @@ from datetime import datetime
 
 import maya
 import mistune
-from flask import Blueprint, session, flash, render_template, request, url_for, redirect
+from contextualise.topic_store import get_topic_store
+from flask import Blueprint, session, flash, render_template, request, url_for, redirect, current_app
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
@@ -16,8 +18,6 @@ from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievalmode import RetrievalMode
 from topicdb.core.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
-
-from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("topic", __name__)
 
@@ -39,6 +39,10 @@ def view(map_identifier, topic_identifier):
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
+            current_app.logger.setLevel(logging.WARNING)
+            current_app.logger.warning(
+                f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+            )
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         if topic_map.published:
             if not is_map_owner and topic_identifier == "home":
