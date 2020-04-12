@@ -83,6 +83,9 @@
    href="{{ url_for('map.published') }}"
    role="button">Return</a>
 {% endif %}
+<a class="btn btn-primary"
+   href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}"
+   role="button">Go to map</a>
 <br/>
 <br/>
 {% endblock %}
