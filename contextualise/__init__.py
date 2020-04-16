@@ -111,7 +111,7 @@ def create_app(test_config=None):
     security = Security(app, user_datastore)
 
     @user_registered.connect_via(app)
-    def user_registered_handler(app, user, confirm_token):
+    def user_registered_handler(app, user, confirm_token, form_data):
         default_role = user_datastore.find_role("user")
         user_datastore.add_role_to_user(user, default_role)
         user_store.db_session.commit()
