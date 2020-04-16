@@ -10,13 +10,14 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from contextualise.security import user_store, user_models
-from contextualise.utilities import filters
 from flask import Flask
 from flask import render_template
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
-from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, hash_password
+from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, user_authenticated, hash_password
+
+from contextualise.security import user_store, user_models
+from contextualise.utilities import filters
 
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
@@ -111,10 +112,16 @@ def create_app(test_config=None):
     security = Security(app, user_datastore)
 
     @user_registered.connect_via(app)
-    def user_registered_handler(app, user, confirm_token, form_data):
+    def user_registered_handler(app, user, confirm_token, form_data, **extra_args):
         default_role = user_datastore.find_role("user")
         user_datastore.add_role_to_user(user, default_role)
         user_store.db_session.commit()
+
+    @user_authenticated.connect_via(app)
+    def user_authenticated_handler(app, user, authn_via, **extra_args):
+        app.logger.info(
+            f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]"
+        )
 
     @app.before_first_request
     def create_user():
