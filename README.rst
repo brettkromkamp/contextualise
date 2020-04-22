@@ -199,6 +199,9 @@ Miscellaneous
 Currently, I am using Contextualise for worldbuilding purposes of the Brave Robot fictional universe including its `Codex
 Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_.
 
+If you are interested in reading more in-depth articles in relation to knowledge graphs in general and Contextualise in
+particular, then check out my `blog <https://brettkromkamp.com/tags/contextualise/>`_.
+
 .. image:: resources/codex-roboticus1.png
    :alt: Codex Roboticus
 
