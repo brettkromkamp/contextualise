@@ -247,6 +247,28 @@
     </div>
 </div>
 <hr/>
+{% if knowledge_path %}
+<div class="d-flex flex-row justify-content-center align-items-center" style="height: 50px;">
+    <div aria-label="Basic example" class="btn-group" role="group">
+        {% if ["navigation", "previous"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'previous'][0] }}" role="button"><i
+                class="fas fa-arrow-left"></i></a>
+        {% endif %}
+        {% if ["navigation", "up"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'up'][0] }}" role="button"><i
+                class="fas fa-arrow-up"></i></a>
+        {% endif %}
+        {% if ["navigation", "down"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'down'][0] }}" role="button"><i
+                class="fas fa-arrow-down"></i></a>
+        {% endif %}
+        {% if ["navigation", "next"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'next'][0] }}" role="button"><i
+                class="fas fa-arrow-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 {% if occurrences['text'] %}
 {{ occurrences['text']|safe }}
 <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
@@ -271,7 +293,8 @@
             <small class="text-muted">{{ note.timestamp }}</small>
         </h5>
         <p class="card-text">{{ note.text|safe }}</p>
-        {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name == "COMMENT") %}
+        {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name ==
+        "COMMENT") %}
         <a class="card-link"
            href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
         <a class="card-link"

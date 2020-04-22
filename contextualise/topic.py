@@ -163,6 +163,13 @@ def view(map_identifier, topic_identifier):
     else:
         associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
+    knowledge_path = (
+        ["navigation", "up"] in associations
+        or ["navigation", "down"] in associations
+        or ["navigation", "previous"] in associations
+        or ["navigation", "next"] in associations
+    )
+
     creation_date = maya.parse(topic.get_attribute_by_name("creation-timestamp").value)
     modification_date_attribute = topic.get_attribute_by_name("modification-timestamp")
     modification_date = maya.parse(modification_date_attribute.value) if modification_date_attribute else "Undefined"
@@ -182,6 +189,7 @@ def view(map_identifier, topic_identifier):
         topic=topic,
         occurrences=occurrences,
         associations=associations,
+        knowledge_path=knowledge_path,
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,

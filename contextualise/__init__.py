@@ -118,9 +118,7 @@ def create_app(test_config=None):
 
     @user_authenticated.connect_via(app)
     def user_authenticated_handler(app, user, authn_via, **extra_args):
-        app.logger.info(
-            f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]"
-        )
+        app.logger.info(f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]")
 
     @app.before_first_request
     def create_user():
