@@ -178,6 +178,28 @@
 {% endblock %}
 
 {% block content %}
+{% if is_knowledge_path_topic %}
+<div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
+    <div aria-label="Basic example" class="btn-group" role="group">
+        {% if ["navigation", "previous"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'previous'][0] }}"
+           role="button"><i class="fas fa-arrow-left"></i></a>
+        {% endif %}
+        {% if ["navigation", "up"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'up'][0] }}"
+           role="button"><i class="fas fa-arrow-up"></i></a>
+        {% endif %}
+        {% if ["navigation", "down"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'down'][0] }}"
+           role="button"><i class="fas fa-arrow-down"></i></a>
+        {% endif %}
+        {% if ["navigation", "next"] in associations %}
+        <a class="btn btn-primary" href="{{ associations['navigation', 'next'][0] }}"
+           role="button"><i class="fas fa-arrow-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 <h1>{{ topic.first_base_name.name }}</h1>
 <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i
         class="fas fa-info-circle"></i> <a aria-controls="advancedProperties" aria-expanded="false"
@@ -247,30 +269,6 @@
     </div>
 </div>
 <hr/>
-{% if knowledge_path %}
-<!--
-<div class="d-flex flex-row justify-content-center align-items-center knowledge-path-nav" style="height: 1px;">
-    <div aria-label="Basic example" class="btn-group" role="group">
-        {% if ["navigation", "previous"] in associations %}
-        <a class="btn btn-primary" href="{{ associations['navigation', 'previous'][0] }}" role="button"><i
-                class="fas fa-arrow-left"></i></a>
-        {% endif %}
-        {% if ["navigation", "up"] in associations %}
-        <a class="btn btn-primary" href="{{ associations['navigation', 'up'][0] }}" role="button"><i
-                class="fas fa-arrow-up"></i></a>
-        {% endif %}
-        {% if ["navigation", "down"] in associations %}
-        <a class="btn btn-primary" href="{{ associations['navigation', 'down'][0] }}" role="button"><i
-                class="fas fa-arrow-down"></i></a>
-        {% endif %}
-        {% if ["navigation", "next"] in associations %}
-        <a class="btn btn-primary" href="{{ associations['navigation', 'next'][0] }}" role="button"><i
-                class="fas fa-arrow-right"></i></a>
-        {% endif %}
-    </div>
-</div>
--->
-{% endif %}
 {% if occurrences['text'] %}
 {{ occurrences['text']|safe }}
 <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>

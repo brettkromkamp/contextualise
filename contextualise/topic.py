@@ -163,7 +163,7 @@ def view(map_identifier, topic_identifier):
     else:
         associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
-    knowledge_path = (
+    is_knowledge_path_topic = (
         ["navigation", "up"] in associations
         or ["navigation", "down"] in associations
         or ["navigation", "previous"] in associations
@@ -189,7 +189,7 @@ def view(map_identifier, topic_identifier):
         topic=topic,
         occurrences=occurrences,
         associations=associations,
-        knowledge_path=knowledge_path,
+        is_knowledge_path_topic=is_knowledge_path_topic,
         creation_date=creation_date,
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
