@@ -164,10 +164,10 @@ def view(map_identifier, topic_identifier):
         associations = topic_store.get_association_groups(map_identifier, topic_identifier)
 
     is_knowledge_path_topic = (
-        ["navigation", "up"] in associations
-        or ["navigation", "down"] in associations
-        or ["navigation", "previous"] in associations
-        or ["navigation", "next"] in associations
+        ("navigation", "up") in associations
+        or ("navigation", "down") in associations
+        or ("navigation", "previous") in associations
+        or ("navigation", "next") in associations
     )
 
     creation_date = maya.parse(topic.get_attribute_by_name("creation-timestamp").value)

@@ -181,19 +181,19 @@
 {% if is_knowledge_path_topic %}
 <div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
     <div aria-label="Basic example" class="btn-group" role="group">
-        {% if ["navigation", "previous"] in associations %}
+        {% if ("navigation", "previous") in associations %}
         <a class="btn btn-primary" href="{{ associations['navigation', 'previous'][0] }}"
            role="button"><i class="fas fa-arrow-left"></i></a>
         {% endif %}
-        {% if ["navigation", "up"] in associations %}
+        {% if ("navigation", "up") in associations %}
         <a class="btn btn-primary" href="{{ associations['navigation', 'up'][0] }}"
            role="button"><i class="fas fa-arrow-up"></i></a>
         {% endif %}
-        {% if ["navigation", "down"] in associations %}
+        {% if ("navigation", "down") in associations %}
         <a class="btn btn-primary" href="{{ associations['navigation', 'down'][0] }}"
            role="button"><i class="fas fa-arrow-down"></i></a>
         {% endif %}
-        {% if ["navigation", "next"] in associations %}
+        {% if ("navigation", "next") in associations %}
         <a class="btn btn-primary" href="{{ associations['navigation', 'next'][0] }}"
            role="button"><i class="fas fa-arrow-right"></i></a>
         {% endif %}
