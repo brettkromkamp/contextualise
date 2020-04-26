@@ -1,5 +1,5 @@
-Contextualise: Manage Your Knowledge
-====================================
+Contextualise: Map Your Knowledge
+=================================
 
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of investigative
