@@ -24,7 +24,8 @@ def index(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -52,14 +53,16 @@ def index(map_identifier, topic_identifier):
     # occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "video/index.html", topic_map=topic_map, topic=topic, videos=videos, creation_date=creation_date,
     )
 
 
-@bp.route("/videos/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route("/videos/add/<map_identifier>/<topic_identifier>",
+          methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -67,7 +70,8 @@ def add(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -97,7 +101,8 @@ def add(map_identifier, topic_identifier):
             error = error | 1
         if not form_video_url:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_video_scope):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_video_scope):
             error = error | 4
 
         if error != 0:
@@ -122,7 +127,11 @@ def add(map_identifier, topic_identifier):
 
             flash("Video link successfully added.", "success")
             return redirect(
-                url_for("video.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "video.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -146,7 +155,8 @@ def edit(map_identifier, topic_identifier, video_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -176,7 +186,8 @@ def edit(map_identifier, topic_identifier, video_identifier):
         # Validate form inputs
         if not form_video_title:
             error = error | 1
-        if not topic_store.topic_exists(topic_map.identifier, form_video_scope):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_video_scope):
             error = error | 2
 
         if error != 0:
@@ -186,18 +197,25 @@ def edit(map_identifier, topic_identifier, video_identifier):
             )
         else:
             # Update video's title if it has changed
-            if video_occurrence.get_attribute_by_name("title").value != form_video_title:
+            if video_occurrence.get_attribute_by_name(
+                    "title").value != form_video_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, video_occurrence.get_attribute_by_name("title").identifier, form_video_title,
+                    topic_map.identifier, video_occurrence.get_attribute_by_name(
+                        "title").identifier, form_video_title,
                 )
 
             # Update video's scope if it has changed
             if video_occurrence.scope != form_video_scope:
-                topic_store.update_occurrence_scope(map_identifier, video_occurrence.identifier, form_video_scope)
+                topic_store.update_occurrence_scope(
+                    map_identifier, video_occurrence.identifier, form_video_scope)
 
             flash("Video link successfully updated.", "success")
             return redirect(
-                url_for("video.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "video.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -221,7 +239,8 @@ def delete(map_identifier, topic_identifier, video_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -240,10 +259,12 @@ def delete(map_identifier, topic_identifier, video_identifier):
 
     if request.method == "POST":
         # Delete video occurrence from topic store
-        topic_store.delete_occurrence(map_identifier, video_occurrence.identifier)
+        topic_store.delete_occurrence(
+            map_identifier, video_occurrence.identifier)
 
         flash("Video link successfully deleted.", "warning")
-        return redirect(url_for("video.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(url_for(
+            "video.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
 
     return render_template(
         "video/delete.html",

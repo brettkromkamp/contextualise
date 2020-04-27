@@ -32,7 +32,8 @@ def get_identifiers(map_identifier):
 
     query_term = request.args.get("q").lower()
 
-    return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10))
+    return jsonify(topic_store.get_topic_identifiers(
+        map_identifier, query_term, limit=10))
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
@@ -40,9 +41,11 @@ def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(
+            map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(
+                map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
@@ -93,7 +96,8 @@ def get_network(map_identifier, topic_identifier):
             build_network(child.pointer)  # Recursive call
 
     if topic:
-        tree = topic_store.get_topics_network(map_identifier, topic_identifier, scope=scope_identifier)
+        tree = topic_store.get_topics_network(
+            map_identifier, topic_identifier, scope=scope_identifier)
         if len(tree) > 1:
             nodes = 0
             edges = 1
@@ -104,6 +108,8 @@ def get_network(map_identifier, topic_identifier):
             build_network(topic_identifier)
             return jsonify(result)
         else:
-            return jsonify({"status": "error", "code": 404, "message": "No network data"})
+            return jsonify({"status": "error", "code": 404,
+                            "message": "No network data"})
     else:
-        return jsonify({"status": "error", "code": 404, "message": "Topic not found"})
+        return jsonify({"status": "error", "code": 404,
+                        "message": "Topic not found"})

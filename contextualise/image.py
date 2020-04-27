@@ -29,7 +29,8 @@ def index(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -55,14 +56,16 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "image/index.html", topic_map=topic_map, topic=topic, images=images, creation_date=creation_date,
     )
 
 
-@bp.route("/images/upload/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route("/images/upload/<map_identifier>/<topic_identifier>",
+          methods=("GET", "POST"))
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -70,7 +73,8 @@ def upload(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -104,7 +108,8 @@ def upload(map_identifier, topic_identifier):
                 error = error | 4
             elif not allowed_file(form_upload_file.filename):
                 error = error | 8
-        if not topic_store.topic_exists(topic_map.identifier, form_image_scope):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_image_scope):
             error = error | 16
 
         if error != 0:
@@ -115,8 +120,13 @@ def upload(map_identifier, topic_identifier):
         else:
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
-            # Create the image directory for this topic map and topic if it doesn't already exist
-            image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            # Create the image directory for this topic map and topic if it
+            # doesn't already exist
+            image_directory = os.path.join(
+                bp.root_path,
+                RESOURCES_DIRECTORY,
+                str(map_identifier),
+                topic_identifier)
             if not os.path.isdir(image_directory):
                 os.makedirs(image_directory)
 
@@ -139,7 +149,11 @@ def upload(map_identifier, topic_identifier):
 
             flash("Image successfully uploaded.", "success")
             return redirect(
-                url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "image.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -162,7 +176,8 @@ def edit(map_identifier, topic_identifier, image_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -193,7 +208,8 @@ def edit(map_identifier, topic_identifier, image_identifier):
         # Validate form inputs
         if not form_image_title:
             error = error | 1
-        if not topic_store.topic_exists(topic_map.identifier, form_image_scope):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_image_scope):
             error = error | 2
 
         if error != 0:
@@ -203,18 +219,25 @@ def edit(map_identifier, topic_identifier, image_identifier):
             )
         else:
             # Update image's title if it has changed
-            if image_occurrence.get_attribute_by_name("title").value != form_image_title:
+            if image_occurrence.get_attribute_by_name(
+                    "title").value != form_image_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, image_occurrence.get_attribute_by_name("title").identifier, form_image_title,
+                    topic_map.identifier, image_occurrence.get_attribute_by_name(
+                        "title").identifier, form_image_title,
                 )
 
             # Update image's scope if it has changed
             if image_occurrence.scope != form_image_scope:
-                topic_store.update_occurrence_scope(map_identifier, image_occurrence.identifier, form_image_scope)
+                topic_store.update_occurrence_scope(
+                    map_identifier, image_occurrence.identifier, form_image_scope)
 
             flash("Image successfully updated.", "success")
             return redirect(
-                url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "image.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -239,7 +262,8 @@ def delete(map_identifier, topic_identifier, image_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -259,17 +283,20 @@ def delete(map_identifier, topic_identifier, image_identifier):
 
     if request.method == "POST":
         # Delete image occurrence from topic store
-        topic_store.delete_occurrence(map_identifier, image_occurrence.identifier)
+        topic_store.delete_occurrence(
+            map_identifier, image_occurrence.identifier)
 
         # Delete image from file system
         image_file_path = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier, image_occurrence.resource_ref,
+            bp.root_path, RESOURCES_DIRECTORY, str(
+                map_identifier), topic_identifier, image_occurrence.resource_ref,
         )
         if os.path.exists(image_file_path):
             os.remove(image_file_path)
 
         flash("Image successfully deleted.", "warning")
-        return redirect(url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(url_for(
+            "image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
 
     return render_template(
         "image/delete.html",

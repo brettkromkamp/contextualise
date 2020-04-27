@@ -24,15 +24,19 @@ def index(map_identifier):
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(
+            map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(
+                map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to access it
+        collaboration_mode = topic_store.get_collaboration_mode(
+            map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
@@ -63,7 +67,8 @@ def index(map_identifier):
             }
         )
 
-    return render_template("note/index.html", topic_map=topic_map, topic=topic, notes=notes)
+    return render_template(
+        "note/index.html", topic_map=topic_map, topic=topic, notes=notes)
 
 
 @bp.route("/notes/add/<map_identifier>", methods=("GET", "POST"))
@@ -74,11 +79,15 @@ def add(map_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    topic = topic_store.get_topic(
+        map_identifier,
+        "home",
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -125,10 +134,12 @@ def add(map_identifier):
             # Persist objects to the topic store
             topic_store.set_occurrence(topic_map.identifier, note_occurrence)
             topic_store.set_attribute(topic_map.identifier, title_attribute)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(
+                topic_map.identifier, modification_attribute)
 
             flash("Note successfully added.", "success")
-            return redirect(url_for("note.index", map_identifier=topic_map.identifier))
+            return redirect(
+                url_for("note.index", map_identifier=topic_map.identifier))
 
     return render_template(
         "note/add.html",
@@ -141,7 +152,8 @@ def add(map_identifier):
     )
 
 
-@bp.route("/notes/attach/<map_identifier>/<note_identifier>", methods=("GET", "POST"))
+@bp.route("/notes/attach/<map_identifier>/<note_identifier>",
+          methods=("GET", "POST"))
 @login_required
 def attach(map_identifier, note_identifier):
     topic_store = get_topic_store()
@@ -149,11 +161,15 @@ def attach(map_identifier, note_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    topic = topic_store.get_topic(
+        map_identifier,
+        "home",
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -174,7 +190,8 @@ def attach(map_identifier, note_identifier):
         form_note_topic_identifier = request.form["note-topic-identifier"].strip()
 
         # Validate form inputs
-        if not topic_store.topic_exists(topic_map.identifier, form_note_topic_identifier):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_note_topic_identifier):
             error = error | 1
 
         if error != 0:
@@ -183,10 +200,15 @@ def attach(map_identifier, note_identifier):
                 "warning",
             )
         else:
-            topic_store.update_occurrence_topic_identifier(map_identifier, note_identifier, form_note_topic_identifier)
+            topic_store.update_occurrence_topic_identifier(
+                map_identifier, note_identifier, form_note_topic_identifier)
             flash("Note successfully attached.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=form_note_topic_identifier,)
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=form_note_topic_identifier,
+                )
             )
 
     return render_template(
@@ -201,7 +223,8 @@ def attach(map_identifier, note_identifier):
     )
 
 
-@bp.route("/notes/convert/<map_identifier>/<note_identifier>", methods=("GET", "POST"))
+@bp.route("/notes/convert/<map_identifier>/<note_identifier>",
+          methods=("GET", "POST"))
 @login_required
 def convert(map_identifier, note_identifier):
     topic_store = get_topic_store()
@@ -209,11 +232,15 @@ def convert(map_identifier, note_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    topic = topic_store.get_topic(
+        map_identifier,
+        "home",
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
 
     if topic is None:
         abort(404)
@@ -228,7 +255,8 @@ def convert(map_identifier, note_identifier):
 
     form_topic_name = ""
     form_topic_identifier = ""
-    form_topic_text = "## " + note_title + "\n" + note_occurrence.resource_data.decode()
+    form_topic_text = "## " + note_title + "\n" + \
+        note_occurrence.resource_data.decode()
 
     form_topic_instance_of = "topic"
 
@@ -247,11 +275,13 @@ def convert(map_identifier, note_identifier):
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
-        if topic_store.topic_exists(topic_map.identifier, form_topic_identifier):
+        if topic_store.topic_exists(
+                topic_map.identifier, form_topic_identifier):
             error = error | 2
         if not form_topic_identifier:
             error = error | 4
-        if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
+        if not topic_store.topic_exists(
+                topic_map.identifier, form_topic_instance_of):
             error = error | 8
 
         if error != 0:
@@ -260,7 +290,10 @@ def convert(map_identifier, note_identifier):
                 "warning",
             )
         else:
-            new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
+            new_topic = Topic(
+                form_topic_identifier,
+                form_topic_instance_of,
+                form_topic_name)
             text_occurrence = Occurrence(
                 instance_of="text", topic_identifier=new_topic.identifier, resource_data=form_topic_text,
             )
@@ -272,14 +305,20 @@ def convert(map_identifier, note_identifier):
             # Persist objects to the topic store
             topic_store.set_topic(topic_map.identifier, new_topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(
+                topic_map.identifier, modification_attribute)
 
             # Remove the original note occurrence
-            topic_store.delete_occurrence(topic_map.identifier, note_identifier)
+            topic_store.delete_occurrence(
+                topic_map.identifier, note_identifier)
 
             flash("Note successfully converted.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier,)
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=new_topic.identifier,
+                )
             )
 
     return render_template(

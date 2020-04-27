@@ -29,7 +29,8 @@ def index(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -55,14 +56,16 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "three_d/index.html", topic_map=topic_map, topic=topic, files=files, creation_date=creation_date,
     )
 
 
-@bp.route("/3d/upload/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route("/3d/upload/<map_identifier>/<topic_identifier>",
+          methods=("GET", "POST"))
 @login_required
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -70,7 +73,8 @@ def upload(map_identifier, topic_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -114,8 +118,13 @@ def upload(map_identifier, topic_identifier):
             file_extension = get_file_extension(form_upload_file.filename)
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
-            # Create the file directory for this topic map and topic if it doesn't already exist
-            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            # Create the file directory for this topic map and topic if it
+            # doesn't already exist
+            file_directory = os.path.join(
+                bp.root_path,
+                RESOURCES_DIRECTORY,
+                str(map_identifier),
+                topic_identifier)
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -138,7 +147,11 @@ def upload(map_identifier, topic_identifier):
 
             flash("3D content successfully uploaded.", "success")
             return redirect(
-                url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "three_d.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -161,7 +174,8 @@ def edit(map_identifier, topic_identifier, file_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -201,18 +215,25 @@ def edit(map_identifier, topic_identifier, file_identifier):
             )
         else:
             # Update file's title if it has changed
-            if file_occurrence.get_attribute_by_name("title").value != form_file_title:
+            if file_occurrence.get_attribute_by_name(
+                    "title").value != form_file_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, file_occurrence.get_attribute_by_name("title").identifier, form_file_title,
+                    topic_map.identifier, file_occurrence.get_attribute_by_name(
+                        "title").identifier, form_file_title,
                 )
 
             # Update file's scope if it has changed
             if file_occurrence.scope != form_file_scope:
-                topic_store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
+                topic_store.update_occurrence_scope(
+                    map_identifier, file_occurrence.identifier, form_file_scope)
 
             flash("3D content successfully updated.", "success")
             return redirect(
-                url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "three_d.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -236,7 +257,8 @@ def delete(map_identifier, topic_identifier, file_identifier):
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
-    # If the map doesn't belong to the user and they don't have the right collaboration mode on the map, then abort
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
@@ -255,18 +277,24 @@ def delete(map_identifier, topic_identifier, file_identifier):
 
     if request.method == "POST":
         # Delete file occurrence from topic store
-        topic_store.delete_occurrence(map_identifier, file_occurrence.identifier)
+        topic_store.delete_occurrence(
+            map_identifier, file_occurrence.identifier)
 
         # Delete file from file system
         file_file_path = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier, file_occurrence.resource_ref,
+            bp.root_path, RESOURCES_DIRECTORY, str(
+                map_identifier), topic_identifier, file_occurrence.resource_ref,
         )
         if os.path.exists(file_file_path):
             os.remove(file_file_path)
 
         flash("3D content successfully deleted.", "warning")
         return redirect(
-            url_for("three_d.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+            url_for(
+                "three_d.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
         )
 
     return render_template(

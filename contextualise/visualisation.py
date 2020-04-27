@@ -17,15 +17,19 @@ def network(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(
+            map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(
+                map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to access it
+        collaboration_mode = topic_store.get_collaboration_mode(
+            map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
@@ -43,7 +47,8 @@ def network(map_identifier, topic_identifier):
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "visualisation/network.html",
@@ -60,15 +65,19 @@ def timeline(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(
+            map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(
+                map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to access it
+        collaboration_mode = topic_store.get_collaboration_mode(
+            map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
@@ -86,7 +95,8 @@ def timeline(map_identifier, topic_identifier):
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "visualisation/timeline.html",
@@ -103,15 +113,19 @@ def map(map_identifier, topic_identifier):  # TODO: Shadows built-in name 'map'.
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(
+            map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(
+                map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to access it
+        collaboration_mode = topic_store.get_collaboration_mode(
+            map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
@@ -129,7 +143,8 @@ def map(map_identifier, topic_identifier):  # TODO: Shadows built-in name 'map'.
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = maya.parse(
+        creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
         "visualisation/map.html",
