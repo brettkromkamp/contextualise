@@ -48,3 +48,8 @@ main > .container {
 .contextualise-card-header {
     padding: 0em;
 }
+
+.contextualise-accordion ul {
+    padding-left: 1em;
+    margin-bottom: 0em;
+}
