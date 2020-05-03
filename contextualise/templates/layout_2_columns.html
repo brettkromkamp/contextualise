@@ -13,6 +13,7 @@
 
 
 
+
     </script>
     {% endif %}
     <meta charset="utf-8">
@@ -193,10 +194,11 @@
                         <div class="card">
                             <div class="card-header" id="heading-{{ instance_of }}">
                                 <h2 class="mb-0">
-                                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                                    <button class="btn btn-link contextualise-btn-link" type="button"
+                                            data-toggle="collapse"
                                             data-target="#collapse-{{ instance_of }}" aria-expanded="true"
-                                            aria-controls="collapse-{{ instance_of }}">
-                                        {{ instance_of|topic_name(topic_map.identifier) }}
+                                            aria-controls="collapse-{{ instance_of }}">{{
+                                        instance_of|topic_name(topic_map.identifier) }}
                                     </button>
                                 </h2>
                             </div>
@@ -406,6 +408,7 @@ if (document.getElementById('goto-button') != null) {
 
 
 
+
 </script>
 {% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
 <script>
@@ -462,6 +465,7 @@ Mousetrap.bind('a v', function() { // View-associations keyboard shortcut
     var viewAssociationsUrl = "/associations/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = viewAssociationsUrl;
 });
+
 
 
 

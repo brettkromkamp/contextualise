@@ -21,6 +21,7 @@ main > .container {
 
 .list-card ul {
     padding-left: 1em;
+    margin-bottom: 0em;
 }
 
 #network-graph {
@@ -38,4 +39,8 @@ main > .container {
 
 .contextualise-card {
     background-color: #f0f8ff;
+}
+
+.contextualise-btn-link {
+    padding: 0em;
 }
