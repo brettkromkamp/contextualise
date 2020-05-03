@@ -42,5 +42,9 @@ main > .container {
 }
 
 .contextualise-btn-link {
+    /* padding: 0em; */
+}
+
+.contextualise-card-header {
     padding: 0em;
 }
