@@ -1,7 +1,7 @@
 Contextualise: Map Your Knowledge
 =================================
 
-.. image:: resources/contextualise-long.png
+.. image:: resources/contextualise-logo.png
    :alt: Contextualise logo
 
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
