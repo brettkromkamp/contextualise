@@ -10,6 +10,9 @@
 
       gtag('config', 'UA-2662092-19');
 
+
+
+
     </script>
     {% endif %}
     <meta charset="utf-8">
@@ -185,31 +188,47 @@
             <nav class="card contextualise-card">
                 <div class="card-header"><strong>Related topics</strong></div>
                 <div class="card-body list-card">
-                    <ul>
+                    <div class="accordion" id="accordion-related-topics">
                         {% for instance_of, roles in associations.dict.items() %}
-                        <li>{{ instance_of|topic_name(topic_map.identifier) }}
-                            <ul>
-                                {% for role, topic_refs in roles.items() %}
-                                <li>{{ role|topic_name(topic_map.identifier) }}
+                        <div class="card">
+                            <div class="card-header" id="heading-{{ instance_of }}">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                                            data-target="#collapse-{{ instance_of }}" aria-expanded="true"
+                                            aria-controls="collapse-{{ instance_of }}">
+                                        {{ instance_of|topic_name(topic_map.identifier) }}
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapse-{{ instance_of }}"
+                                 class="collapse {% if instance_of != 'navigation' %}show{% endif %}"
+                                 aria-labelledby="heading-{{ instance_of }}"
+                                 data-parent="#accordion-related-topics">
+                                <div class="card-body">
                                     <ul>
-                                        {% for topic_ref in topic_refs %}
-                                        <li>
-                                            {% if session['current_scope'] == '*' %}
-                                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                                                topic_ref|topic_name(topic_map.identifier) }}</a>
-                                            {% else %}
-                                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
-                                                topic_ref|topic_name(topic_map.identifier) }}</a>
-                                            {% endif %}
+                                        {% for role, topic_refs in roles.items() %}
+                                        <li>{{ role|topic_name(topic_map.identifier) }}
+                                            <ul>
+                                                {% for topic_ref in topic_refs %}
+                                                <li>
+                                                    {% if session['current_scope'] == '*' %}
+                                                    <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                                                        topic_ref|topic_name(topic_map.identifier) }}</a>
+                                                    {% else %}
+                                                    <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
+                                                        topic_ref|topic_name(topic_map.identifier) }}</a>
+                                                    {% endif %}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
                                         </li>
                                         {% endfor %}
                                     </ul>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
-                    </ul>
+                    </div>
                 </div>
             </nav>
             <br/>
@@ -330,10 +349,11 @@
             <div class="modal-body">
                 <form autocomplete="off">
                     <div class="form-group">
-                        <label class="col-form-label" for="goto-topic-identifier">Please provide a valid topic identifier</label>
+                        <label class="col-form-label" for="goto-topic-identifier">Please provide a valid topic
+                            identifier</label>
                         <input aria-label="Enter topic identifier" class="form-control auto-complete"
-                           id="goto-topic-identifier" placeholder="Enter identifier"
-                           type="text">
+                               id="goto-topic-identifier" placeholder="Enter identifier"
+                               type="text">
                     </div>
                 </form>
             </div>
@@ -382,6 +402,9 @@ if (document.getElementById('goto-button') != null) {
         }
     });
 }
+
+
+
 
 </script>
 {% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
@@ -439,6 +462,9 @@ Mousetrap.bind('a v', function() { // View-associations keyboard shortcut
     var viewAssociationsUrl = "/associations/" + mapIdentifier + "/" + topicIdentifier;
     window.location.href = viewAssociationsUrl;
 });
+
+
+
 
 </script>
 {% endif %}
