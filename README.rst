@@ -1,6 +1,9 @@
 Contextualise: Map Your Knowledge
 =================================
 
+.. image:: resources/contextualise-long.png
+   :alt: Contextualise logo
+
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of investigative
 journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and
