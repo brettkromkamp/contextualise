@@ -162,16 +162,16 @@
             </div>
             <div class="col-md-4">
                 {% if current_user.id == topic_map.user_identifier %}
-                    <h5>Context &mdash; <small><a
-                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></small>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <h5>Context <span class="contextualise-small"> &mdash; <a
+                            href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></span>&nbsp;&nbsp;&middot;&nbsp;
                         {% if session['scope_filter'] == 1 %}
-                        <small><a
+                        <span class="contextualise-small"><a
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
-                            filtering</a></small></h5>
+                            filtering</a></span></h5>
                     {% else %}
-                    <small><a
+                    <span class="contextualise-small"><a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
-                        filtering</a></small></h5>
+                        filtering</a></span></h5>
                 {% endif %}
                 {% else %}
                 <h5>Context</h5>
