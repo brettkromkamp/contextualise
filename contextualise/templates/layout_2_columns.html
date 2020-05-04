@@ -9,20 +9,6 @@
       gtag('js', new Date());
 
       gtag('config', 'UA-2662092-19');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </script>
     {% endif %}
     <meta charset="utf-8">
@@ -35,7 +21,7 @@
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
     <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
-    <link href="{{ url_for('static', filename='app.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='app.css', version='1.1') }}" rel="stylesheet">
 </head>
 <body class="d-flex flex-column h-100">
 <header>
@@ -162,14 +148,14 @@
             </div>
             <div class="col-md-4">
                 {% if current_user.id == topic_map.user_identifier %}
-                    <h5>Context <span style="font-size: 70%;"> &mdash; <a
+                    <h5>Context <span class="contextualise-small"> &mdash; <a
                             href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></span>&nbsp;&nbsp;&middot;&nbsp;
                         {% if session['scope_filter'] == 1 %}
-                        <span style="font-size: 70%;"><a
+                        <span class="contextualise-small"><a
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
                             filtering</a></span></h5>
                     {% else %}
-                    <span style="font-size: 70%;"><a
+                    <span class="contextualise-small"><a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
                         filtering</a></span></h5>
                 {% endif %}
