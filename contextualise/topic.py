@@ -494,6 +494,9 @@ def delete(map_identifier, topic_identifier):
             # Remove the topic from the topic store
             topic_store.delete_topic(map_identifier, topic_identifier)
 
+            # Clear the breadcrumbs (of which this topic was part of)
+            session["breadcrumbs"] = []
+
             # Remove the topic's resources directory
             topic_directory = os.path.join(
                 bp.root_path,
@@ -516,7 +519,13 @@ def delete(map_identifier, topic_identifier):
             )
 
         flash("Topic successfully deleted.", "success")
-        return redirect(url_for("map.index"))
+        return redirect(
+            url_for(
+                "topic.view",
+                map_identifier=topic_map.identifier,
+                topic_identifier="home",
+            )
+        )
 
     return render_template("topic/delete.html",
                            topic_map=topic_map, topic=topic)
