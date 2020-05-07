@@ -63,7 +63,7 @@ def index(map_identifier):
                 "identifier": note_occurrence.identifier,
                 "title": note_occurrence.get_attribute_by_name("title").value,
                 "timestamp": maya.parse(note_occurrence.get_attribute_by_name("modification-timestamp").value),
-                "text": mistune.markdown(note_occurrence.resource_data.decode()),
+                "text": mistune.html(note_occurrence.resource_data.decode()),
             }
         )
 
@@ -181,7 +181,7 @@ def attach(map_identifier, note_identifier):
     )
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = mistune.markdown(note_occurrence.resource_data.decode())
+    form_note_text = mistune.html(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     error = 0

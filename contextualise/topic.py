@@ -133,8 +133,7 @@ def view(map_identifier, topic_identifier):
     for occurrence in topic_occurrences:
         if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
             if occurrence.resource_data:
-                occurrences["text"] = mistune.markdown(
-                    occurrence.resource_data.decode())
+                occurrences["text"] = mistune.html(occurrence.resource_data.decode())
         elif occurrence.instance_of == "image":
             occurrences["images"].append(
                 {"title": occurrence.get_attribute_by_name(
@@ -166,7 +165,7 @@ def view(map_identifier, topic_identifier):
                     "identifier": occurrence.identifier,
                     "title": occurrence.get_attribute_by_name("title").value,
                     "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
-                    "text": mistune.markdown(occurrence.resource_data.decode()),
+                    "text": mistune.html(occurrence.resource_data.decode()),
                 }
             )
     if scope_filtered:
@@ -178,10 +177,10 @@ def view(map_identifier, topic_identifier):
             map_identifier, topic_identifier)
 
     is_knowledge_path_topic = (
-        ("navigation", "up") in associations
-        or ("navigation", "down") in associations
-        or ("navigation", "previous") in associations
-        or ("navigation", "next") in associations
+            ("navigation", "up") in associations
+            or ("navigation", "down") in associations
+            or ("navigation", "previous") in associations
+            or ("navigation", "next") in associations
     )
 
     creation_date = maya.parse(
@@ -546,8 +545,8 @@ def add_note(map_identifier, topic_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -645,8 +644,8 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -759,8 +758,8 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
@@ -782,7 +781,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     )
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = mistune.markdown(note_occurrence.resource_data.decode())
+    form_note_text = mistune.html(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     if request.method == "POST":
@@ -790,7 +789,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
             map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
         return redirect(url_for(
-            "topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+            "topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, ))
 
     return render_template(
         "topic/delete_note.html",
@@ -835,7 +834,7 @@ def view_names(map_identifier, topic_identifier):
         creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template("topic/view_names.html", topic_map=topic_map,
-                           topic=topic, creation_date=creation_date,)
+                           topic=topic, creation_date=creation_date, )
 
 
 @bp.route("/topics/add-name/<map_identifier>/<topic_identifier>",
@@ -960,8 +959,8 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         else:
             # Update name if required
             if (
-                form_topic_name != topic.get_base_name(name_identifier).name
-                or form_topic_name_scope != topic.get_base_name(name_identifier).scope
+                    form_topic_name != topic.get_base_name(name_identifier).name
+                    or form_topic_name_scope != topic.get_base_name(name_identifier).scope
             ):
                 topic_store.update_basename(
                     map_identifier, name_identifier, form_topic_name, scope=form_topic_name_scope
