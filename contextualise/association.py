@@ -113,19 +113,19 @@ def create(map_identifier, topic_identifier):
                 topic_map.identifier, form_association_dest_topic_ref):
             error = error | 1
         if form_association_dest_role_spec != "related" and not topic_store.topic_exists(
-            topic_map.identifier, form_association_dest_role_spec
+                topic_map.identifier, form_association_dest_role_spec
         ):
             error = error | 2
         if form_association_src_role_spec != "related" and not topic_store.topic_exists(
-            topic_map.identifier, form_association_src_role_spec
+                topic_map.identifier, form_association_src_role_spec
         ):
             error = error | 4
         if form_association_instance_of != "association" and not topic_store.topic_exists(
-            topic_map.identifier, form_association_instance_of
+                topic_map.identifier, form_association_instance_of
         ):
             error = error | 8
         if form_association_scope != UNIVERSAL_SCOPE and not topic_store.topic_exists(
-            topic_map.identifier, form_association_scope
+                topic_map.identifier, form_association_scope
         ):
             error = error | 16
         if form_association_identifier and topic_store.topic_exists(
@@ -219,4 +219,139 @@ def delete(map_identifier, topic_identifier, association_identifier):
         )
 
     return render_template("association/delete.html",
-                           topic_map=topic_map, topic=topic, association=association,)
+                           topic_map=topic_map, topic=topic, association=association, )
+
+
+@bp.route(
+    "/associations/view-member/<map_identifier>/<topic_identifier>/<association_identifier>/<member_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def view_member(map_identifier, topic_identifier, association_identifier, member_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/view_member.html")
+
+
+@bp.route(
+    "/associations/add-member/<map_identifier>/<topic_identifier>/<association_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def add_member(map_identifier, topic_identifier, association_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/add_member.html")
+
+
+@bp.route(
+    "/associations/delete-member/<map_identifier>/<topic_identifier>/<association_identifier>/<member_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def delete_member(map_identifier, topic_identifier, association_identifier, member_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/delete_member.html")
+
+
+@bp.route(
+    "/associations/add-reference/<map_identifier>/<topic_identifier>/<association_identifier>/<member_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def add_reference(map_identifier, topic_identifier, association_identifier, member_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/add_reference.html")
+
+
+@bp.route(
+    "/associations/delete-reference/<map_identifier>/<topic_identifier>/<association_identifier>/<member_identifier>/<reference_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def delete_reference(map_identifier, topic_identifier, association_identifier, member_identifier, reference_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/delete_reference.html")
