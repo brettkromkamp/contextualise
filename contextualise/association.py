@@ -83,15 +83,11 @@ def create(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_association_dest_topic_ref = request.form["association-dest-topic-ref"].strip(
-        )
-        form_association_dest_role_spec = request.form["association-dest-role-spec"].strip(
-        )
+        form_association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
+        form_association_dest_role_spec = request.form["association-dest-role-spec"].strip()
         form_association_src_topic_ref = topic_identifier
-        form_association_src_role_spec = request.form["association-src-role-spec"].strip(
-        )
-        form_association_instance_of = request.form["association-instance-of"].strip(
-        )
+        form_association_src_role_spec = request.form["association-src-role-spec"].strip()
+        form_association_instance_of = request.form["association-instance-of"].strip()
         form_association_scope = request.form["association-scope"].strip()
         form_association_name = request.form["association-name"].strip()
         form_association_identifier = request.form["association-identifier"].strip()
@@ -219,13 +215,12 @@ def delete(map_identifier, topic_identifier, association_identifier):
         )
 
     return render_template("association/delete.html",
-                           topic_map=topic_map, topic=topic, association=association, )
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association)
 
 
-@bp.route(
-    "/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>")
 @login_required
 def view(map_identifier, topic_identifier, association_identifier):
     topic_store = get_topic_store()
@@ -244,9 +239,12 @@ def view(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
 
-    return render_template("associations/view.html")
+    return render_template("association/view.html",
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association)
 
 
 @bp.route(
@@ -271,9 +269,14 @@ def view_member(map_identifier, topic_identifier, association_identifier, member
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
+    member = association.get_member(member_identifier)
 
-    return render_template("associations/view_member.html")
+    return render_template("association/view_member.html",
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association,
+                           member=member)
 
 
 @bp.route(
@@ -300,7 +303,7 @@ def add_member(map_identifier, topic_identifier, association_identifier):
 
     # TODO: Implement missing logic.
 
-    return render_template("associations/add_member.html")
+    return render_template("association/add_member.html")
 
 
 @bp.route(
@@ -327,7 +330,7 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
 
     # TODO: Implement missing logic.
 
-    return render_template("associations/delete_member.html")
+    return render_template("association/delete_member.html")
 
 
 @bp.route(
@@ -352,9 +355,53 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
+    if association is None:
+        abort(404)
 
-    return render_template("associations/add_reference.html")
+    member = association.get_member(member_identifier)
+
+    form_topic_reference = ""
+
+    error = 0
+
+    if request.method == "POST":
+        form_topic_reference = request.form["topic-reference"].strip()
+
+        # Validate form inputs
+        if not form_topic_reference:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_reference):
+            error = error | 2
+
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            member.add_topic_ref(form_topic_reference)
+            topic_store.delete_association(map_identifier, association_identifier)
+            topic_store.set_association(map_identifier, association)
+
+            flash("Topic reference successfully added.", "success")
+            return redirect(
+                url_for(
+                    "association.view_member",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                    association_identifier=association_identifier,
+                    member_identifier=member_identifier
+                )
+            )
+
+    return render_template("association/add_reference.html",
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association,
+                           member=member,
+                           topic_reference=form_topic_reference)
 
 
 @bp.route(
@@ -381,4 +428,4 @@ def delete_reference(map_identifier, topic_identifier, association_identifier, m
 
     # TODO: Implement missing logic.
 
-    return render_template("associations/delete_reference.html")
+    return render_template("association/delete_reference.html")
