@@ -57,3 +57,11 @@ main > .container {
 .contextualise-small {
     font-size: 70%;
 }
+
+.contextualise-cell-1 {
+    width: 160px;
+}
+
+.contextualise-cell-2 {
+    min-width: 120px;
+}

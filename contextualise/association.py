@@ -223,6 +223,33 @@ def delete(map_identifier, topic_identifier, association_identifier):
 
 
 @bp.route(
+    "/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def view(map_identifier, topic_identifier, association_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+    return render_template("associations/view.html")
+
+
+@bp.route(
     "/associations/view-member/<map_identifier>/<topic_identifier>/<association_identifier>/<member_identifier>",
     methods=("GET", "POST"),
 )
