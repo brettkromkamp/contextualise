@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout_1_column.html" %}
 
-</body>
-</html>
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block content %}
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    <small class="text-muted">Delete topic reference</small>
+</h1>
+<hr/>
+<form action="{{ url_for('association.delete_reference',
+        map_identifier=topic_map.identifier,
+        topic_identifier=topic.identifier,
+        association_identifier=association.identifier,
+        member_identifier=member.identifier,
+        reference_identifier=topic_reference) }}"
+      autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="association-instance-of"><strong>Role</strong></label>
+        <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
+               readonly type="text"
+               value="{{ member.role_spec|topic_name(topic_map.identifier) }}">
+    </div>
+    <div class="form-group">
+        <div class="form-group">
+            <label for="topic-reference"><strong>Topic reference</strong></label>
+            <input class="form-control auto-complete" id="topic-reference" name="topic-reference"
+                   placeholder="Enter topic reference" required
+                   readonly type="text"
+                   value="{{ topic_reference|topic_name(topic_map.identifier) }}">
+        </div>
+    </div>
+    <br/>
+    <a class="btn btn-secondary"
+       href="{{ url_for('association.view_member',
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+            association_identifier=association.identifier,
+            member_identifier=member.identifier) }}"
+       role="button">Cancel</a>
+    <button class="btn btn-danger" type="submit">Delete topic reference</button>
+</form>
+<br/>
+{% endblock %}

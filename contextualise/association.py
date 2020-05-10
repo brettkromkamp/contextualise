@@ -426,6 +426,34 @@ def delete_reference(map_identifier, topic_identifier, association_identifier, m
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
+    if association is None:
+        abort(404)
 
-    return render_template("association/delete_reference.html")
+    member = association.get_member(member_identifier)
+
+    form_topic_reference = reference_identifier
+
+    if request.method == "POST":
+        member.remove_topic_ref(form_topic_reference)
+        topic_store.delete_association(map_identifier, association_identifier)
+        topic_store.set_association(map_identifier, association)
+
+        flash("Topic reference successfully deleted.", "warning")
+        return redirect(
+            url_for(
+                "association.view_member",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+                association_identifier=association_identifier,
+                member_identifier=member_identifier
+            )
+        )
+
+    return render_template("association/delete_reference.html",
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association,
+                           member=member,
+                           topic_reference=form_topic_reference)
+

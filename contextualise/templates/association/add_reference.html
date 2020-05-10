@@ -12,7 +12,11 @@
     <small class="text-muted">Add topic reference</small>
 </h1>
 <hr/>
-<form action="{{ url_for('association.add_reference', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}"
+<form action="{{ url_for('association.add_reference',
+        map_identifier=topic_map.identifier,
+        topic_identifier=topic.identifier,
+        association_identifier=association.identifier,
+        member_identifier=member.identifier) }}"
       autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
@@ -37,7 +41,11 @@
     </div>
     <br/>
     <a class="btn btn-secondary"
-       href="{{ url_for('association.view_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}"
+       href="{{ url_for('association.view_member',
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+            association_identifier=association.identifier,
+            member_identifier=member.identifier) }}"
        role="button">Cancel</a>
     <button class="btn btn-primary" type="submit">Add topic reference</button>
 </form>

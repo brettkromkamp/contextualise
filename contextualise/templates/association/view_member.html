@@ -35,7 +35,12 @@
                     topic_ref|topic_name(topic_map.identifier) }}</a>
             </td>
             <td>
-                {% if member.topic_refs|length > 1 %}<a href="#">Delete</a>{% else %}Not applicable{% endif %}
+                {% if member.topic_refs|length > 1 %}<a href="{{ url_for('association.delete_reference',
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                    association_identifier=association.identifier,
+                    member_identifier=member.identifier,
+                    reference_identifier=topic_ref) }}">Delete</a>{% else %}Not applicable{% endif %}
             </td>
         </tr>
         {% endfor %}
