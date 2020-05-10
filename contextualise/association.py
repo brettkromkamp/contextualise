@@ -435,11 +435,14 @@ def delete_reference(map_identifier, topic_identifier, association_identifier, m
     form_topic_reference = reference_identifier
 
     if request.method == "POST":
-        member.remove_topic_ref(form_topic_reference)
-        topic_store.delete_association(map_identifier, association_identifier)
-        topic_store.set_association(map_identifier, association)
+        if len(member.topic_refs) > 1:
+            member.remove_topic_ref(form_topic_reference)
+            topic_store.delete_association(map_identifier, association_identifier)
+            topic_store.set_association(map_identifier, association)
 
-        flash("Topic reference successfully deleted.", "warning")
+            flash("Topic reference successfully deleted.", "warning")
+        else:
+            flash("Topic reference was not deleted.", "warning")
         return redirect(
             url_for(
                 "association.view_member",
@@ -456,4 +459,3 @@ def delete_reference(map_identifier, topic_identifier, association_identifier, m
                            association=association,
                            member=member,
                            topic_reference=form_topic_reference)
-
