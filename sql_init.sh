@@ -102,19 +102,29 @@ CREATE INDEX basename_4_index ON topicdb.basename (topicmap_identifier, topic_id
 CREATE SEQUENCE topicdb.topic_map_id_sequence;
 
 CREATE TABLE IF NOT EXISTS topicdb.topicmap (
-    user_identifier INT NOT NULL,
     identifier INT NOT NULL DEFAULT nextval('topicdb.topic_map_id_sequence'),
     name TEXT NOT NULL,
     description TEXT,
     image_path TEXT,
     initialised BOOLEAN DEFAULT FALSE NOT NULL,
-    shared BOOLEAN DEFAULT FALSE NOT NULL,
+    published BOOLEAN DEFAULT FALSE NOT NULL,
     promoted BOOLEAN DEFAULT FALSE NOT NULL,
-    PRIMARY KEY (user_identifier, identifier)
+    PRIMARY KEY (identifier)
 );
-CREATE INDEX topicmap_1_index ON topicdb.topicmap (identifier);
-CREATE INDEX topicmap_2_index ON topicdb.topicmap (shared);
-CREATE INDEX topicmap_3_index ON topicdb.topicmap (promoted);
+CREATE INDEX topicmap_1_index ON topicdb.topicmap (published);
+CREATE INDEX topicmap_2_index ON topicdb.topicmap (promoted);
 
 ALTER SEQUENCE topicdb.topic_map_id_sequence OWNED BY topicdb.topicmap.identifier;
+
+
+/* ========== USER_TOPICMAP ========== */
+CREATE TABLE IF NOT EXISTS topicdb.user_topicmap (
+    user_identifier INT NOT NULL,
+    topicmap_identifier INT NOT NULL,
+    user_name TEXT,
+    owner BOOLEAN DEFAULT FALSE NOT NULL,
+    collaboration_mode TEXT NOT NULL,
+    PRIMARY KEY (user_identifier, topicmap_identifier)
+);
+CREATE INDEX user_topicmap_1_index ON topicdb.user_topicmap (owner);
 EOSQL
