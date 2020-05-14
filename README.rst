@@ -13,7 +13,9 @@ many kinds of hobbies.
     It is not advised, at this stage, to use Contextualise for anything other than testing purposes. Data could be
     irrevocably lost!
 
-    A Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+    A Contextualise overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+
+    Finally, check out the `Knowledge Graph Radar <https://github.com/brettkromkamp/knowledge-graph-radar>`_ to keep track of interesting people, projects, applications and so forth related to the `knowledge graph <https://en.wikipedia.org/wiki/Knowledge_Graph>`_ space.
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
@@ -61,10 +63,12 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
+* Google Docs-like `collaboration <https://brettkromkamp.com/posts/contextualise-collaboration/>`_; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
+* `Knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
 
-**Features Currently in Development (April 2020)**
+**Features Currently in Development (May 2020)**
 
-* `Google Docs <https://www.google.com/docs/about/>`_-like collaboration; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
+* `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
 
 **Post Version 1.0 Features**
 
