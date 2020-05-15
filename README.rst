@@ -15,7 +15,10 @@ many kinds of hobbies.
 
     A Contextualise overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
-    Finally, check out the `Knowledge Graph Radar <https://github.com/brettkromkamp/knowledge-graph-radar>`_ to keep track of interesting people, projects, applications and so forth related to the `knowledge graph <https://en.wikipedia.org/wiki/Knowledge_Graph>`_ space.
+    Finally, check out the `Knowledge Graph Radar <https://github.com/brettkromkamp/knowledge-graph-radar>`_ to keep
+    track of interesting people, projects, applications and so forth related to the `knowledge graph <https://en.wikipedia.org/wiki/Knowledge_Graph>`_ space.
+    Alternatively, if you are interested in reading more in-depth articles in relation to knowledge graphs in general
+    and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/tags/contextualise/>`_.
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
@@ -64,7 +67,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Interactive visual network graph of related topics (allowing navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 * Google Docs-like `collaboration <https://brettkromkamp.com/posts/contextualise-collaboration/>`_; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
-* `Knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
+* Support for user-defined `knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
 
 **Features Currently in Development (May 2020)**
 
@@ -205,9 +208,6 @@ Miscellaneous
 
 Currently, I am using Contextualise for worldbuilding purposes of the Brave Robot fictional universe including its `Codex
 Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_.
-
-If you are interested in reading more in-depth articles in relation to knowledge graphs in general and Contextualise in
-particular, then check out my `blog <https://brettkromkamp.com/tags/contextualise/>`_.
 
 .. image:: resources/codex-roboticus1.png
    :alt: Codex Roboticus
