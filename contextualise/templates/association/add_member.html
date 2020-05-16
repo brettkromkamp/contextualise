@@ -44,7 +44,6 @@
             {% endif %}
         </div>
     </div>
-    <br/>
     <a class="btn btn-secondary"
        href="{{ url_for('association.view',
             map_identifier=topic_map.identifier,
@@ -53,5 +52,6 @@
        role="button">Cancel</a>
     <button class="btn btn-primary" type="submit">Add member</button>
 </form>
+<br/>
 <br/>
 {% endblock %}
