@@ -1,11 +1,12 @@
 import maya
-from contextualise.topic_store import get_topic_store
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.association import Association
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
+
+from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("association", __name__)
 
@@ -375,9 +376,35 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
+    if association is None:
+        abort(404)
 
-    return render_template("association/delete_member.html")
+    member = association.get_member(member_identifier)
+
+    if request.method == "POST":
+        if len(association.members) > 2:
+            association.remove_member(member_identifier)
+            topic_store.delete_association(map_identifier, association_identifier)
+            topic_store.set_association(map_identifier, association)
+            
+            flash("Member successfully deleted.", "warning")
+        else:
+            flash("Member was not deleted.", "warning")
+        return redirect(
+            url_for(
+                "association.view",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+                association_identifier=association_identifier
+            )
+        )
+
+    return render_template("association/delete_member.html",
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association,
+                           member=member)
 
 
 @bp.route(

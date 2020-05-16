@@ -47,7 +47,9 @@
             </td>
             <td class="align-middle">
                 <a href="{{ url_for('association.view_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">View</a>{%
-                if association.members|length > 2 %} &nbsp;&nbsp;&middot;&nbsp;&nbsp; <a href="#">Delete</a>{% endif %}
+                if association.members|length > 2 %} &nbsp;&nbsp;&middot;&nbsp;&nbsp; <a
+                    href="{{ url_for('association.delete_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">Delete</a>{%
+                endif %}
             </td>
         </tr>
         {% endfor %}
