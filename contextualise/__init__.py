@@ -19,6 +19,8 @@ from flask_security import Security, SQLAlchemySessionUserDatastore, user_regist
 from contextualise.security import user_store, user_models
 from contextualise.utilities import filters
 
+from contextualise.topic_store import get_topic_store
+
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
 config = configparser.ConfigParser()
@@ -84,7 +86,9 @@ def create_app(test_config=None):
 
     @app.route("/")
     def home():
-        return render_template("index.html")
+        topic_store = get_topic_store()
+        maps = topic_store.get_promoted_topic_maps()
+        return render_template("index.html", maps=maps)
 
     @app.route("/health")
     def hello():
