@@ -43,14 +43,13 @@
         {% endfor %}
         </tbody>
     </table>
-    <br/>
     <a class="btn btn-secondary"
        href="{{ url_for('association.view',
             map_identifier=topic_map.identifier,
             topic_identifier=topic.identifier,
             association_identifier=association.identifier) }}"
        role="button">Cancel</a>
-    <button class="btn btn-primary" type="submit">Delete member</button>
+    <button class="btn btn-danger" type="submit">Delete member</button>
 </form>
 <br/>
 {% endblock %}

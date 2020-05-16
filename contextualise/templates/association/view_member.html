@@ -47,12 +47,12 @@
         </tbody>
     </table>
 </div>
-<br/>
 <a class="btn btn-secondary"
    href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
    role="button">Return</a>
 <a class="btn btn-primary"
    href="{{ url_for('association.add_reference', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}"
    role="button">Add topic reference</a>
+<br/>
 <br/>
 {% endblock %}

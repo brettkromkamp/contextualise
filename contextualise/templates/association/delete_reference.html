@@ -35,7 +35,6 @@
                    value="{{ topic_reference|topic_name(topic_map.identifier) }}">
         </div>
     </div>
-    <br/>
     <a class="btn btn-secondary"
        href="{{ url_for('association.view_member',
             map_identifier=topic_map.identifier,
@@ -45,5 +44,6 @@
        role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete topic reference</button>
 </form>
+<br/>
 <br/>
 {% endblock %}
