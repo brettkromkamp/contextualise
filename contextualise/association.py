@@ -1,12 +1,11 @@
 import maya
+from contextualise.topic_store import get_topic_store
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
 from topicdb.core.models.association import Association
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
-
-from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("association", __name__)
 
@@ -301,9 +300,57 @@ def add_member(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    association = topic_store.get_association(map_identifier, association_identifier)
+    if association is None:
+        abort(404)
 
-    return render_template("association/add_member.html")
+    form_role_spec = ""
+    form_topic_reference = ""
+
+    error = 0
+
+    if request.method == "POST":
+        form_role_spec = request.form["role-spec"].strip()
+        form_topic_reference = request.form["topic-reference"].strip()
+
+        # Validate form inputs
+        if not form_role_spec:
+            error = error | 1
+        if not topic_store.topic_exists(topic_map.identifier, form_role_spec):
+            error = error | 2
+        if not form_topic_reference:
+            error = error | 4
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_reference):
+            error = error | 8
+
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            association.create_member(form_topic_reference, form_role_spec)
+            topic_store.delete_association(map_identifier, association_identifier)
+            topic_store.set_association(map_identifier, association)
+
+            flash("Member successfully added.", "success")
+            return redirect(
+                url_for(
+                    "association.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                    association_identifier=association_identifier
+                )
+            )
+
+    return render_template("association/add_member.html",
+                           error=error,
+                           topic_map=topic_map,
+                           topic=topic,
+                           association=association,
+                           role_spec=form_role_spec,
+                           topic_reference=form_topic_reference
+                           )
 
 
 @bp.route(

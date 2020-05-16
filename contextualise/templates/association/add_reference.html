@@ -20,8 +20,8 @@
       autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
-        <label for="association-instance-of"><strong>Role</strong></label>
-        <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
+        <label for="role-spec"><strong>Role</strong></label>
+        <input aria-readonly="true" class="form-control" id="role-spec" name="role-spec"
                readonly type="text"
                value="{{ member.role_spec|topic_name(topic_map.identifier) }}">
     </div>

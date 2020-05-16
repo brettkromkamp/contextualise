@@ -146,10 +146,10 @@
     <tbody>
     {% for association in associations %}
     <tr>
-        <td>
+        <td class="align-middle">
             <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
                 association.instance_of|topic_name(topic_map.identifier) }}</a></td>
-        <td>
+        <td class="align-middle">
             <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
                 association.scope|topic_name(topic_map.identifier) }}</a></td>
         <td>
@@ -163,7 +163,7 @@
                 <tbody>
                 {% for member in association.members %}
                 <tr>
-                    <td class="contextualise-cell-1">
+                    <td class="contextualise-cell-1 align-middle">
                         <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
                             member.role_spec|topic_name(topic_map.identifier) }}</a></td>
                     <td>
@@ -177,7 +177,7 @@
                 </tbody>
             </table>
         </td>
-        <td class="contextualise-cell-2">
+        <td class="contextualise-cell-2 align-middle">
             <a href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">View</a><br/>
             <a href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
             {% if 'admin' in current_user.roles %}<br/><a

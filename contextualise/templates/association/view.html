@@ -36,7 +36,7 @@
         <tbody>
         {% for member in association.members %}
         <tr>
-            <td>
+            <td class="align-middle">
                 <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
                     member.role_spec|topic_name(topic_map.identifier) }}</a></td>
             <td>
@@ -45,7 +45,7 @@
                     topic_ref|topic_name(topic_map.identifier) }}</a><br/>
                 {% endfor %}
             </td>
-            <td>
+            <td class="align-middle">
                 <a href="{{ url_for('association.view_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">View</a>{%
                 if association.members|length > 2 %} &nbsp;&nbsp;&middot;&nbsp;&nbsp; <a href="#">Delete</a>{% endif %}
             </td>
@@ -83,6 +83,8 @@
 <a class="btn btn-secondary"
    href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
    role="button">Return</a>
-<button class="btn btn-primary" type="submit">Add member</button>
+<a class="btn btn-primary"
+   href="{{ url_for('association.add_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
+   role="button">Add member</a>
 <br/>
 {% endblock %}
