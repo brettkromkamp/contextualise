@@ -64,13 +64,13 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * The ability to attach (`glTF`_-based) 3D scenes to topics with an accompanying interactive 3D model viewer
 * Powerful (semantic) associations with the ability to create typed associations with role-based members
 * Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
-* Interactive visual network graph of related topics (allowing navigation between topics)
+* Interactive visual network graph of related topics (allowing for navigation between topics)
 * Auto-complete on all form fields that expect a topic reference
 * Google Docs-like `collaboration <https://brettkromkamp.com/posts/contextualise-collaboration/>`_; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
 * Support for user-defined `knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
 * `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
 
-**Features Currently in Development (May 2020)**
+**Features Currently in Development (May-June 2020)**
 
 * A topics index for each topic map with pagination and sorting (by name or modification date)
 * `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
@@ -146,10 +146,10 @@ You should see something similar to the following in the terminal::
     * Debugger is active!
     * Debugger PIN: 521-258-444
 
-Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *Welcome*
-page.
+Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing something similar to the
+application's *Welcome* page.
 
-.. image:: resources/welcome-page.png
+.. image:: resources/landing-page.png
    :alt: The Contextualise Welcome page
 
 *The Contextualise Welcome page*
