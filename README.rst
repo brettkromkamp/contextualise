@@ -68,10 +68,12 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Auto-complete on all form fields that expect a topic reference
 * Google Docs-like `collaboration <https://brettkromkamp.com/posts/contextualise-collaboration/>`_; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
 * Support for user-defined `knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
+* `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
 
 **Features Currently in Development (May 2020)**
 
-* `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
+* A topics index for each topic map with pagination and sorting (by name or modification date)
+* `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 
 **Post Version 1.0 Features**
 

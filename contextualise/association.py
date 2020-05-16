@@ -387,7 +387,7 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
             association.remove_member(member_identifier)
             topic_store.delete_association(map_identifier, association_identifier)
             topic_store.set_association(map_identifier, association)
-            
+
             flash("Member successfully deleted.", "warning")
         else:
             flash("Member was not deleted.", "warning")
