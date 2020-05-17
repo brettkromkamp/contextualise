@@ -31,8 +31,7 @@ def index():
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/index.html", own_maps=own_maps,
-                           collaboration_maps=collaboration_maps)
+    return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
 
 
 @bp.route("/maps/published/")

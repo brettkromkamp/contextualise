@@ -10,8 +10,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
-from flask import render_template
+from flask import Flask, session, render_template
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
 from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, user_authenticated, hash_password
@@ -21,6 +20,7 @@ from contextualise.utilities import filters
 
 from contextualise.topic_store import get_topic_store
 
+UNIVERSAL_SCOPE = "*"
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
 config = configparser.ConfigParser()
@@ -86,8 +86,13 @@ def create_app(test_config=None):
 
     @app.route("/")
     def home():
-        topic_store = get_topic_store()
-        maps = topic_store.get_promoted_topic_maps()
+        maps = get_topic_store().get_promoted_topic_maps()
+
+        # Reset breadcrumbs and (current) scope/context
+        session["breadcrumbs"] = []
+        session["current_scope"] = UNIVERSAL_SCOPE
+        session["scope_filter"] = 1
+
         return render_template("index.html", maps=maps)
 
     @app.route("/health")
