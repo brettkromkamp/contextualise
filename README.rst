@@ -73,16 +73,16 @@ The following provides an overview of Contextualise's existing (and planned) fea
 **Features Currently in Development (May-June 2020)**
 
 * A topics index for each topic map with pagination and sorting (by name or modification date)
-* `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
+* Semantic tagging
 
 **Post Version 1.0 Features**
 
+* `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
 * Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand
 * `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing for the navigation between topics using a visual timeline component
 * WikiMedia API integration to automatically enhance existing topics with relevant information from `Wikipedia <https://www.wikipedia.org/>`_
-* Semantic tagging
 
 For a more exhaustive list of planned features take a look at Contextualise's `list of issues <https://github.com/brettkromkamp/contextualise/issues>`_.
 
