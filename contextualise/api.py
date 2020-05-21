@@ -20,6 +20,39 @@ def get_slug():
     return jsonify({"value": value, "slug": slugify(str(value))})
 
 
+@bp.route("/api/topic-exists/<map_identifier>")
+@login_required
+def topic_exists(map_identifier):
+    result = False
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+
+    topic_identifier = slugify(str(request.args.get("q").lower()))
+    generated_topic_name = " ".join([
+        word.capitalize()
+        for word in topic_identifier.split("-")
+    ])
+    result = topic_store.topic_exists(map_identifier, topic_identifier)
+    return jsonify({"status": result,
+                    "topicIdentifier": topic_identifier,
+                    "generatedTopicName": generated_topic_name})
+
+
+@bp.route("/api/create-topic/<map_identifier>", methods=['POST'])
+@login_required
+def create_topic(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+
+    # TODO: Implement missing logic.
+
+
 @bp.route("/api/get-identifiers/<map_identifier>")
 @login_required
 def get_identifiers(map_identifier):

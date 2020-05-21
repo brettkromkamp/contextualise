@@ -72,12 +72,12 @@ The following provides an overview of Contextualise's existing (and planned) fea
 
 **Features Currently in Development (May-June 2020)**
 
+* `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 * A topics index for each topic map with pagination and sorting (by name or modification date)
 * Semantic tagging
 
 **Post Version 1.0 Features**
 
-* `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
 * Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand

@@ -362,9 +362,6 @@
         </div>
     </div>
 </div>
-{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
-<script src="{{ url_for('static', filename='mousetrap.min.js') }}"></script>
-{% endif %}
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -400,63 +397,5 @@ if (document.getElementById('goto-button') != null) {
 }
 
 </script>
-{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
-<script>
-var urlParts = window.location.pathname.split('/');
-var mapIdentifier = urlParts[3];
-var topicIdentifier = urlParts[4];
-
-Mousetrap.bind('t v', function() { // View-topic keyboard shortcut
-    var viewTopicUrl = "/topics/view/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewTopicUrl;
-});
-Mousetrap.bind('t h', function() { // Go-home keyboard shortcut
-    var viewTopicUrl = "/topics/view/" + mapIdentifier + "/home";
-    window.location.href = viewTopicUrl;
-});
-Mousetrap.bind('t c', function() { // Create-topic keyboard shortcut
-    var createTopicUrl = "/topics/create/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = createTopicUrl;
-});
-Mousetrap.bind('t e', function() { // Edit-topic keyboard shortcut
-    var editTopicUrl = "/topics/edit/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = editTopicUrl;
-});
-
-Mousetrap.bind('t g', function() { // Go to-topic keyboard shortcut
-    $('#gotoModal').modal({
-        keyboard: true,
-        focus: true
-    });
-    $('#goto-topic-identifier').trigger('focus');
-});
-
-Mousetrap.bind('i v', function() { // View-images keyboard shortcut
-    var viewImagesUrl = "/images/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewImagesUrl;
-});
-Mousetrap.bind('3 v', function() { // View-3D resources keyboard shortcut
-    var view3dUrl = "/3d/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = view3dUrl;
-});
-Mousetrap.bind('f v', function() { // View-files keyboard shortcut
-    var viewFilesUrl = "/files/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewFilesUrl;
-});
-Mousetrap.bind('l v', function() { // View-links keyboard shortcut
-    var viewLinksUrl = "/links/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewLinksUrl;
-});
-Mousetrap.bind('v v', function() { // View-videos keyboard shortcut
-    var viewVideosUrl = "/videos/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewVideosUrl;
-});
-Mousetrap.bind('a v', function() { // View-associations keyboard shortcut
-    var viewAssociationsUrl = "/associations/" + mapIdentifier + "/" + topicIdentifier;
-    window.location.href = viewAssociationsUrl;
-});
-
-</script>
-{% endif %}
 </body>
 </html>

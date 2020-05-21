@@ -32,25 +32,21 @@ document.getElementById('topic-name').addEventListener('blur', (event) => {
 var topicIdentifierInput = document.getElementById('topic-identifier');
 
 document.getElementById('edit-identifier-button').addEventListener('click', (event) => {
-		if (topicIdentifierInput.readOnly) {
-				topicIdentifierInput.readOnly = false;
-				topicIdentifierInput.focus();
-				document.getElementById('edit-identifier-button').innerHTML = "Ok";
-		} else {
-				topicIdentifierInput.readOnly = true;
-				document.getElementById('edit-identifier-button').focus();
-				document.getElementById('edit-identifier-button').innerHTML = "Edit";
-		}
+    if (topicIdentifierInput.readOnly) {
+        topicIdentifierInput.readOnly = false;
+        topicIdentifierInput.focus();
+        document.getElementById('edit-identifier-button').innerHTML = "Ok";
+    } else {
+        topicIdentifierInput.readOnly = true;
+        document.getElementById('edit-identifier-button').focus();
+        document.getElementById('edit-identifier-button').innerHTML = "Edit";
+    }
 });
-
-
 </script>
 
 {% if error %}
 <script>
 $('#advancedOptions').collapse('show');
-
-
 </script>
 {% endif %}
 {% endblock %}
