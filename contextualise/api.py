@@ -1,8 +1,13 @@
 import os
+from datetime import datetime
 
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
 from slugify import slugify
+from topicdb.core.models.attribute import Attribute
+from topicdb.core.models.datatype import DataType
+from topicdb.core.models.occurrence import Occurrence
+from topicdb.core.models.topic import Topic
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
@@ -10,6 +15,7 @@ from contextualise.topic_store import get_topic_store
 bp = Blueprint("api", __name__)
 
 SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
+UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/api/get-slug")
@@ -23,22 +29,25 @@ def get_slug():
 @bp.route("/api/topic-exists/<map_identifier>")
 @login_required
 def topic_exists(map_identifier):
-    result = False
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
 
-    topic_identifier = slugify(str(request.args.get("q").lower()))
-    generated_topic_name = " ".join([
+    normalised_topic_identifier = slugify(str(request.args.get("q").lower()))
+    normalised_topic_name = " ".join([
         word.capitalize()
-        for word in topic_identifier.split("-")
+        for word in normalised_topic_identifier.split("-")
     ])
-    result = topic_store.topic_exists(map_identifier, topic_identifier)
-    return jsonify({"status": result,
-                    "topicIdentifier": topic_identifier,
-                    "generatedTopicName": generated_topic_name})
+    exists = topic_store.topic_exists(map_identifier, normalised_topic_identifier)
+    if exists:
+        result = {"topicExists": True}
+    else:
+        result = {"topicExists": False,
+                  "normalisedTopicIdentifier": normalised_topic_identifier,
+                  "normalisedTopicName": normalised_topic_name}
+    return jsonify(result)
 
 
 @bp.route("/api/create-topic/<map_identifier>", methods=['POST'])
@@ -50,7 +59,39 @@ def create_topic(map_identifier):
     if topic_map is None:
         abort(404)
 
-    # TODO: Implement missing logic.
+    topic_identifier = ""
+    topic_name = ""
+
+    if request.method == "POST":
+        topic_identifier = request.form["topic-identifier"].strip()
+        topic_name = request.form["topic-name"].strip()
+        if not topic_name:
+            topic_name = "Undefined"
+        if topic_store.topic_exists(topic_map.identifier, topic_identifier):
+            return jsonify({"status": "error", "code": 409}), 409
+        else:
+            topic = Topic(
+                topic_identifier,
+                'topic',
+                topic_name)
+            text_occurrence = Occurrence(
+                instance_of="text",
+                topic_identifier=topic.identifier,
+                scope=UNIVERSAL_SCOPE,
+                resource_data="Topic created *in place*.",
+            )
+            timestamp = str(datetime.now())
+            modification_attribute = Attribute(
+                "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
+            )
+
+            # Persist objects to the topic store
+            topic_store.set_topic(topic_map.identifier, topic)
+            topic_store.set_occurrence(topic_map.identifier, text_occurrence)
+            topic_store.set_attribute(
+                topic_map.identifier, modification_attribute)
+
+            return jsonify({"status": "success", "code": 201}), 201
 
 
 @bp.route("/api/get-identifiers/<map_identifier>")
@@ -139,10 +180,10 @@ def get_network(map_identifier, topic_identifier):
                 [],
             )  # The result is a tuple containing two lists of dictionaries
             build_network(topic_identifier)
-            return jsonify(result)
+            return jsonify(result), 200
         else:
             return jsonify({"status": "error", "code": 404,
-                            "message": "No network data"})
+                            "message": "No network data"}), 404
     else:
         return jsonify({"status": "error", "code": 404,
-                        "message": "Topic not found"})
+                        "message": "Topic not found"}), 404

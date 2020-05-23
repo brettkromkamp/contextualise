@@ -25,7 +25,6 @@
                     data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbars">
                 {% if topic_map %}
                 <ul class="navbar-nav mr-auto">
@@ -150,7 +149,8 @@
                 </div>
                 <div class="form-group">
                     <label for="create-topic-name" class="col-form-label">Topic name:</label>
-                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name">
+                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name" tabindex="0"
+                           autofocus>
                 </div>
             </div>
             <div class="modal-footer">
@@ -177,8 +177,9 @@ var urlParts = window.location.pathname.split('/');
 var mapIdentifier = urlParts[3];
 var getIdentifiersApiUrl = '/api/get-identifiers/' + mapIdentifier;
 var topicExistsApiUrl = '/api/topic-exists/' + mapIdentifier;
-var createTopicIdentifier = "";
-var createTopicName = "";
+var topicCreateApiUrl = '/api/create-topic/' + mapIdentifier;
+var normalisedTopicIdentifier = "";
+var normalisedTopicName = "";
 
 $('.auto-complete').autoComplete({
   resolverSettings: {
@@ -186,7 +187,6 @@ $('.auto-complete').autoComplete({
   }
 });
 
-// https://stackoverflow.com/questions/3113070/add-an-onblur-to-all-form-elements
 $('.auto-complete').blur(function() {
     var queryTerm = this.value;
     axios.get(topicExistsApiUrl, {
@@ -196,9 +196,10 @@ $('.auto-complete').blur(function() {
       })
       .then(function (response) {
         console.log(response);
-        if (response.data.status === false && response.data.topicIdentifier !== "") {
-            createTopicIdentifier = response.data.topicIdentifier;
-            createTopicName = response.data.generatedTopicName;
+        if (response.data.topicExists === false && response.data.normalisedTopicIdentifier !== "") {
+            normalisedTopicIdentifier = response.data.normalisedTopicIdentifier;
+            normalisedTopicName = response.data.normalisedTopicName;
+            this.value = normalisedTopicIdentifier;
             $('#createTopicModal').modal();
         }
       })
@@ -213,8 +214,10 @@ $('.auto-complete').blur(function() {
 $('#createTopicModal').on('show.bs.modal', function (event) {
     var modal = $(this);
 
-    modal.find('.modal-body #create-topic-identifier').val(createTopicIdentifier);
-    modal.find('.modal-body #create-topic-name').val(createTopicName);
+    modal.find('.modal-body #create-topic-identifier').val(normalisedTopicIdentifier);
+    modal.find('.modal-body #create-topic-name').val(normalisedTopicName);
+
+    $('#create-topic-name').trigger('focus'); // Has no effect, just doesn't work!
 })
 
 document.getElementById("create-topic-modal-button").addEventListener("click", function() {
@@ -223,7 +226,28 @@ document.getElementById("create-topic-modal-button").addEventListener("click", f
 
 $('#createTopicModal').on('hidden.bs.modal', function (e) {
     var modal = $(this);
+    // Temporary code
+    console.log(modal.find('.modal-body #create-topic-identifier').val());
     console.log(modal.find('.modal-body #create-topic-name').val());
+
+    var bodyFormData = new FormData();
+    bodyFormData.set('topic-identifier', modal.find('.modal-body #create-topic-identifier').val());
+    bodyFormData.set('topic-name', modal.find('.modal-body #create-topic-name').val());
+
+    axios({
+        method: 'post',
+        url: topicCreateApiUrl,
+        data: bodyFormData,
+        headers: {'Content-Type': 'multipart/form-data' }
+        })
+        .then(function (response) {
+            //handle success
+            console.log(response);
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
 });
 
 </script>
