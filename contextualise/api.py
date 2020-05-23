@@ -59,9 +59,6 @@ def create_topic(map_identifier):
     if topic_map is None:
         abort(404)
 
-    topic_identifier = ""
-    topic_name = ""
-
     if request.method == "POST":
         topic_identifier = request.form["topic-identifier"].strip()
         topic_name = request.form["topic-name"].strip()
@@ -70,15 +67,12 @@ def create_topic(map_identifier):
         if topic_store.topic_exists(topic_map.identifier, topic_identifier):
             return jsonify({"status": "error", "code": 409}), 409
         else:
-            topic = Topic(
-                topic_identifier,
-                'topic',
-                topic_name)
+            topic = Topic(topic_identifier, 'topic', topic_name)
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=topic.identifier,
                 scope=UNIVERSAL_SCOPE,
-                resource_data="Topic created *in place*.",
+                resource_data="Topic automatically created.",
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(

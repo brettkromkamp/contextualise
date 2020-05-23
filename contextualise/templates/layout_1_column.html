@@ -8,6 +8,7 @@
     <meta content="Contextualise v1.0.0" name="generator">
     {% block title %}{% endblock %}
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
@@ -143,14 +144,14 @@
                 <p>A topic with the identifier you provided does not exist. Check the identifier and the suggested name
                     and click the "Create topic" button if you want to create a topic with this identifier.</p>
                 <div class="form-group">
-                    <label for="create-topic-identifier" class="col-form-label">Topic identifier:</label>
+                    <label for="create-topic-identifier" class="col-form-label"><strong>Topic identifier</strong></label>
                     <input aria-readonly="true" readonly type="text" class="form-control" id="create-topic-identifier"
                            name="create-topic-identifier">
                 </div>
                 <div class="form-group">
-                    <label for="create-topic-name" class="col-form-label">Topic name:</label>
-                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name" tabindex="0"
-                           autofocus>
+                    <label for="create-topic-name" class="col-form-label"><strong>Topic name</strong></label>
+                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name"
+                           placeholder="Enter name" autofocus>
                 </div>
             </div>
             <div class="modal-footer">
@@ -168,6 +169,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.5/dist/latest/bootstrap-autocomplete.min.js"></script>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
@@ -180,6 +182,8 @@ var topicExistsApiUrl = '/api/topic-exists/' + mapIdentifier;
 var topicCreateApiUrl = '/api/create-topic/' + mapIdentifier;
 var normalisedTopicIdentifier = "";
 var normalisedTopicName = "";
+var createTopic = false;
+var notyf = new Notyf({position: {x: 'right', y: 'top'}, dismissible: true, duration: 3000});
 
 $('.auto-complete').autoComplete({
   resolverSettings: {
@@ -189,6 +193,7 @@ $('.auto-complete').autoComplete({
 
 $('.auto-complete').blur(function() {
     var queryTerm = this.value;
+    createTopic = false;
     axios.get(topicExistsApiUrl, {
         params: {
           q: queryTerm
@@ -222,32 +227,31 @@ $('#createTopicModal').on('show.bs.modal', function (event) {
 
 document.getElementById("create-topic-modal-button").addEventListener("click", function() {
     $('#createTopicModal').modal('hide');
+    createTopic = true;
 });
 
 $('#createTopicModal').on('hidden.bs.modal', function (e) {
-    var modal = $(this);
-    // Temporary code
-    console.log(modal.find('.modal-body #create-topic-identifier').val());
-    console.log(modal.find('.modal-body #create-topic-name').val());
+    if (createTopic) {
+        var modal = $(this);
+        var bodyFormData = new FormData();
+        bodyFormData.set('topic-identifier', modal.find('.modal-body #create-topic-identifier').val());
+        bodyFormData.set('topic-name', modal.find('.modal-body #create-topic-name').val());
 
-    var bodyFormData = new FormData();
-    bodyFormData.set('topic-identifier', modal.find('.modal-body #create-topic-identifier').val());
-    bodyFormData.set('topic-name', modal.find('.modal-body #create-topic-name').val());
-
-    axios({
-        method: 'post',
-        url: topicCreateApiUrl,
-        data: bodyFormData,
-        headers: {'Content-Type': 'multipart/form-data' }
-        })
-        .then(function (response) {
-            //handle success
-            console.log(response);
-        })
-        .catch(function (response) {
-            //handle error
-            console.log(response);
-        });
+        axios({
+            method: 'post',
+            url: topicCreateApiUrl,
+            data: bodyFormData,
+            headers: {'Content-Type': 'multipart/form-data' }
+            })
+            .then(function (response) {
+                // Handle success
+                notyf.success('Topic successfully saved!');
+            })
+            .catch(function (response) {
+                // Handle error
+                notyf.error('Unable to save topic!');
+            });
+    }
 });
 
 </script>
