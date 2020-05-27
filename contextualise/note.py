@@ -44,7 +44,9 @@ def index(map_identifier):
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home")
+    topic = topic_store.get_topic(map_identifier, "notes")
+    if topic is None:
+        abort(404)
 
     note_occurrences = topic_store.get_topic_occurrences(
         map_identifier,
@@ -81,7 +83,7 @@ def add(map_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    topic = topic_store.get_topic(map_identifier, "notes", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -157,7 +159,7 @@ def attach(map_identifier, note_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    topic = topic_store.get_topic(map_identifier, "notes", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -222,8 +224,7 @@ def convert(map_identifier, note_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
-
+    topic = topic_store.get_topic(map_identifier, "notes", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -330,8 +331,7 @@ def edit(map_identifier, note_identifier):
     ):
         abort(403)
 
-    topic = topic_store.get_topic(map_identifier, "home", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
-
+    topic = topic_store.get_topic(map_identifier, "notes", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
     if topic is None:
         abort(404)
 
@@ -406,6 +406,56 @@ def edit(map_identifier, note_identifier):
     return render_template(
         "note/edit.html",
         error=error,
+        topic_map=topic_map,
+        topic=topic,
+        note_identifier=note_occurrence.identifier,
+        note_title=form_note_title,
+        note_text=form_note_text,
+        note_scope=form_note_scope,
+    )
+
+
+@bp.route("/notes/delete/<map_identifier>/<note_identifier>", methods=("GET", "POST"))
+@login_required
+def delete(map_identifier, note_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and (
+            topic_map.collaboration_mode is not CollaborationMode.EDIT
+            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+    ):
+        abort(403)
+
+    topic = topic_store.get_topic(map_identifier, "notes", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES)
+    if topic is None:
+        abort(404)
+
+    note_occurrence = topic_store.get_occurrence(
+        map_identifier,
+        note_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    form_note_title = note_occurrence.get_attribute_by_name("title").value
+    form_note_text = mistune.html(note_occurrence.resource_data.decode())
+    form_note_scope = note_occurrence.scope
+
+    if request.method == "POST":
+        topic_store.delete_occurrence(
+            map_identifier, note_occurrence.identifier)
+        flash("Note successfully deleted.", "warning")
+        return redirect(url_for(
+            "note.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, ))
+
+    return render_template(
+        "note/delete.html",
         topic_map=topic_map,
         topic=topic,
         note_identifier=note_occurrence.identifier,
