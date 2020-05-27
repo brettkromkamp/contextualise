@@ -25,7 +25,7 @@ $('#advancedOptions').collapse('show');
     <small class="text-muted">Edit note</small>
 </h1>
 <hr/>
-<form action="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
+<form action="{{ url_for('note.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note_identifier) }}"
       autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
@@ -73,7 +73,7 @@ $('#advancedOptions').collapse('show');
         <br/>
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       href="{{ url_for('note.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
        role="button">Cancel</a>
     <button class="btn btn-primary" type="submit">Update note</button>
 </form>
