@@ -36,7 +36,7 @@
                 map</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Go to map</a>
+               href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">View map</a>
         </div>
     </li>
     <li class="nav-item">
@@ -94,7 +94,7 @@
 {% endif %}
 <a class="btn btn-primary"
    href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}"
-   role="button">Go to map</a>
+   role="button">View map</a>
 <br/>
 <br/>
 {% endblock %}
