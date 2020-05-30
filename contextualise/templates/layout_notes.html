@@ -132,16 +132,15 @@
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 {% block javascript %}{% endblock %}
 <script>
-var urlParts = window.location.pathname.split('/');
+var urlParts = window.location.pathname.split("/");
 var mapIdentifier = urlParts[3];
-var getIdentifiersApiUrl = '/api/get-identifiers/' + mapIdentifier;
+var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
 
-$('.auto-complete').autoComplete({
+$(".auto-complete").autoComplete({
   resolverSettings: {
-      url: getIdentifiersApiUrl
-  }
+    url: getIdentifiersApiUrl,
+  },
 });
-
 </script>
 </body>
 </html>

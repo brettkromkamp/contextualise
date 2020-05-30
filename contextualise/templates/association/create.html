@@ -6,44 +6,50 @@
 
 {% block javascript %}
 <script>
-document.getElementById('association-name').addEventListener('blur', (event) => {
-    var associationName = document.getElementById('association-name').value;
+document
+  .getElementById("association-name")
+  .addEventListener("blur", (event) => {
+    var associationName = document.getElementById("association-name").value;
     if (associationName !== "") {
-        axios.get('/api/get-slug?value=' + associationName)
-            .then(function (response) {
-                // Handle success
-                document.getElementById('association-identifier').value = response.data.slug;
-            })
-            .catch(function (error) {
-                // Handle error
-                console.log(error);
-            })
-            .then(function () {
-                // Always executed
-            });
+      axios
+        .get("/api/get-slug?value=" + associationName)
+        .then(function (response) {
+          // Handle success
+          document.getElementById("association-identifier").value =
+            response.data.slug;
+        })
+        .catch(function (error) {
+          // Handle error
+          console.log(error);
+        })
+        .then(function () {
+          // Always executed
+        });
     }
-});
+  });
 
-var associationIdentifierInput = document.getElementById('association-identifier');
+var associationIdentifierInput = document.getElementById(
+  "association-identifier"
+);
 
-document.getElementById('edit-identifier-button').addEventListener('click', (event) => {
-		if (associationIdentifierInput.readOnly) {
-				associationIdentifierInput.readOnly = false;
-				associationIdentifierInput.focus();
-				document.getElementById('edit-identifier-button').innerHTML = "Ok";
-		} else {
-				associationIdentifierInput.readOnly = true;
-				document.getElementById('edit-identifier-button').focus();
-				document.getElementById('edit-identifier-button').innerHTML = "Edit";
-		}
-});
-
+document
+  .getElementById("edit-identifier-button")
+  .addEventListener("click", (event) => {
+    if (associationIdentifierInput.readOnly) {
+      associationIdentifierInput.readOnly = false;
+      associationIdentifierInput.focus();
+      document.getElementById("edit-identifier-button").innerHTML = "Ok";
+    } else {
+      associationIdentifierInput.readOnly = true;
+      document.getElementById("edit-identifier-button").focus();
+      document.getElementById("edit-identifier-button").innerHTML = "Edit";
+    }
+  });
 </script>
 
 {% if error %}
 <script>
 $('#advancedOptions').collapse('show');
-
 </script>
 {% endif %}
 {% endblock %}

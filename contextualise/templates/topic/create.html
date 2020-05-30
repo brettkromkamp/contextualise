@@ -9,39 +9,42 @@
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <script>
-var editor = new EasyMDE({element: document.getElementById('topic-text')});
+var editor = new EasyMDE({ element: document.getElementById("topic-text") });
 
-document.getElementById('topic-name').addEventListener('blur', (event) => {
-    var topicName = document.getElementById('topic-name').value;
-    if (topicName !== "") {
-        axios.get('/api/get-slug?value=' + topicName)
-            .then(function (response) {
-                // Handle success
-                document.getElementById('topic-identifier').value = response.data.slug;
-            })
-            .catch(function (error) {
-                // Handle error
-                console.log(error);
-            })
-            .then(function () {
-                // Always executed
-            });
-    }
+document.getElementById("topic-name").addEventListener("blur", (event) => {
+  var topicName = document.getElementById("topic-name").value;
+  if (topicName !== "") {
+    axios
+      .get("/api/get-slug?value=" + topicName)
+      .then(function (response) {
+        // Handle success
+        document.getElementById("topic-identifier").value = response.data.slug;
+      })
+      .catch(function (error) {
+        // Handle error
+        console.log(error);
+      })
+      .then(function () {
+        // Always executed
+      });
+  }
 });
 
-var topicIdentifierInput = document.getElementById('topic-identifier');
+var topicIdentifierInput = document.getElementById("topic-identifier");
 
-document.getElementById('edit-identifier-button').addEventListener('click', (event) => {
+document
+  .getElementById("edit-identifier-button")
+  .addEventListener("click", (event) => {
     if (topicIdentifierInput.readOnly) {
-        topicIdentifierInput.readOnly = false;
-        topicIdentifierInput.focus();
-        document.getElementById('edit-identifier-button').innerHTML = "Ok";
+      topicIdentifierInput.readOnly = false;
+      topicIdentifierInput.focus();
+      document.getElementById("edit-identifier-button").innerHTML = "Ok";
     } else {
-        topicIdentifierInput.readOnly = true;
-        document.getElementById('edit-identifier-button').focus();
-        document.getElementById('edit-identifier-button').innerHTML = "Edit";
+      topicIdentifierInput.readOnly = true;
+      document.getElementById("edit-identifier-button").focus();
+      document.getElementById("edit-identifier-button").innerHTML = "Edit";
     }
-});
+  });
 </script>
 
 {% if error %}
