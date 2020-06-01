@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
-    <link href="{{ url_for('static', filename='app.css', version='1.2') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
 </head>
 <body class="d-flex flex-column h-100">
 <header>
@@ -72,7 +72,7 @@
                     {% endif %}
                 </ul>
                 {% if current_user.is_authenticated %}
-                <button class="btn btn-outline-success" data-target="#gotoModal" data-toggle="modal" type="reset">Go
+                <button class="btn btn-outline-primary" data-target="#gotoModal" data-toggle="modal" type="reset">Go
                     to topic
                 </button>
                 <ul class="nav navbar-nav ml-auto">
@@ -365,7 +365,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" id="goto-button" type="button">Go to</button>
+                <button class="btn btn-primary" id="goto-button" type="button">Go to topic</button>
             </div>
         </div>
     </div>

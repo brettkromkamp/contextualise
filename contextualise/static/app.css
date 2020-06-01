@@ -30,6 +30,7 @@ main > .container {
   top: 0px;
   width: 100%;
   height: 460px;
+  border: 1px solid #ccc;
 }
 
 .map-image {

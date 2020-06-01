@@ -143,7 +143,7 @@ def get_network(map_identifier, topic_identifier):
             group = "active"
         node = {
             "id": inner_identifier,
-            "label": base_name + " [" + instance_of + "]",
+            "label": base_name,
             "group": group,
             "instanceOf": instance_of,
         }
