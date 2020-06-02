@@ -110,15 +110,7 @@ if (topicIdentifier !== "") {
           },
           minVelocity: 0.75,
           solver: "repulsion",
-        },
-        groups: {
-          active: {
-            color: { background: "#f5b7b1", border: "#78281f" },
-          },
-          topic: {
-            color: { background: "#a9dfbf", border: "#145a32" },
-          },
-        },
+        }
       };
 
       var network = new vis.Network(container, data, options);
@@ -332,7 +324,13 @@ if (topicIdentifier !== "") {
 </h1>
 <p><em>{{ creation_date }}</em></p>
 <hr/>
-<div class="min-vh-100" id="network-graph"></div>
+<div class="min-vh-100" id="network-graph">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%);" class="d-flex justify-content-center" id="network-graph-spinner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>  
+</div>
 <br/>
 <br/>
 {% endblock %}

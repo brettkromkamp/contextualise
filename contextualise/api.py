@@ -133,19 +133,23 @@ def get_network(map_identifier, topic_identifier):
         scope_identifier = None
 
     def build_network(inner_identifier):
-        base_name = tree[inner_identifier].payload.first_base_name.name
-        instance_of = tree[inner_identifier].payload.instance_of
+        base_name = tree[inner_identifier].payload['topic'].first_base_name.name
+        instance_of = tree[inner_identifier].payload['topic'].instance_of
+        level = tree[inner_identifier].payload['level']
         children = tree[inner_identifier].children
 
         # group = instance_of
-        group = "topic"
+        color = f"#{level * 3}{level * 3}{level * 3}"
+        if level == 0:
+            color = "#A00"
         if inner_identifier == topic_identifier:
-            group = "active"
+            color = "#F00"
+            
         node = {
             "id": inner_identifier,
             "label": base_name,
-            "group": group,
             "instanceOf": instance_of,
+            "color": color
         }
 
         result[nodes].append(node)
@@ -155,9 +159,7 @@ def get_network(map_identifier, topic_identifier):
             edge = {
                 "from": inner_identifier,
                 "to": child.pointer,
-                "label": child.type,
                 "font": {"align": "horizontal"},
-                "arrows": "to, from",
                 "color": {"color": "#666", "opacity": 0.5},
             }
             result[edges].append(edge)
