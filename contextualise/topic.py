@@ -21,7 +21,7 @@ from werkzeug.exceptions import abort
 bp = Blueprint("topic", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
-BREADCRUMBS_COUNT = 3
+BREADCRUMBS_COUNT = 5
 UNIVERSAL_SCOPE = "*"
 
 
