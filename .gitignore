@@ -139,3 +139,6 @@ settings.ini
 
 # User-generated content
 **/static/resources
+
+# Application log files
+logs/
