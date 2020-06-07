@@ -144,7 +144,7 @@ def get_network(map_identifier, topic_identifier):
             color = "#A00"
         if inner_identifier == topic_identifier:
             color = "#F00"
-            
+
         node = {
             "id": inner_identifier,
             "label": base_name,
