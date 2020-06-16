@@ -147,7 +147,7 @@ def get_network(map_identifier, topic_identifier):
 
         node = {
             "id": inner_identifier,
-            "label": base_name,
+            "label": base_name + "\n[" + instance_of + "]",
             "instanceOf": instance_of,
             "color": color
         }
