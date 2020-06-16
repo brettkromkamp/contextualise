@@ -219,6 +219,10 @@ def create_app(test_config=None):
 
     app.register_blueprint(visualisation.bp)
 
+    from contextualise import tag
+
+    app.register_blueprint(tag.bp)
+
     # Add topic store
     from contextualise import topic_store
 

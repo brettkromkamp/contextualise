@@ -215,7 +215,7 @@ if (topicIdentifier !== "") {
             <a class="dropdown-item"
                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 note</a>
-            <a class="dropdown-item" href="#">Add tag</a>
+            <a class="dropdown-item" href="#">Add tags</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
@@ -326,7 +326,7 @@ if (topicIdentifier !== "") {
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
-  </div>  
+  </div>
 </div>
 <br/>
 <br/>
