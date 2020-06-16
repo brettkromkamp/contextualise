@@ -192,7 +192,8 @@
                 </div>
                 <br/>
                 {% if associations %}
-                <h5>Related topics</h5>
+                <h5>Related topics <span class="contextualise-small"> &mdash; <a
+                    href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View network</a></span></h5>
                 <nav class="accordion" id="accordion-related-topics">
                     {% for instance_of, roles in associations.dict.items() %}
                     <div class="card contextualise-card">
