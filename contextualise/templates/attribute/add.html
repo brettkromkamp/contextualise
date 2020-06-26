@@ -62,7 +62,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="attribute-scope" name="attribute-scope"
+                        <input class="form-control typeahead" id="attribute-scope" name="attribute-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ attribute_scope }}">
                         {% if error|bitwise_and(4) == 4 %}

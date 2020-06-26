@@ -65,7 +65,7 @@ $('#advancedOptions').collapse('show');
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
-        <input class="form-control auto-complete" id="association-dest-topic-ref" name="association-dest-topic-ref"
+        <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
                placeholder="Enter destination topic identifier" required
                type="text" value="{{ association_dest_topic_ref }}">
         {% if error|bitwise_and(1) == 1 %}
@@ -78,7 +78,7 @@ $('#advancedOptions').collapse('show');
         <label for="association-dest-role-spec"><strong>Destination role</strong>
             <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
         </label>
-        <input class="form-control auto-complete" id="association-dest-role-spec" name="association-dest-role-spec"
+        <input class="form-control typeahead" id="association-dest-role-spec" name="association-dest-role-spec"
                placeholder="Enter destination role identifier"
                type="text" value="{{ association_dest_role_spec }}">
     </div>
@@ -92,7 +92,7 @@ $('#advancedOptions').collapse('show');
         <label for="association-src-role-spec"><strong>Source role</strong>
             <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
         </label>
-        <input class="form-control auto-complete" id="association-src-role-spec" name="association-src-role-spec"
+        <input class="form-control typeahead" id="association-src-role-spec" name="association-src-role-spec"
                placeholder="Enter source role identifier"
                type="text" value="{{ association_src_role_spec }}">
     </div>
@@ -100,7 +100,7 @@ $('#advancedOptions').collapse('show');
         <label for="association-instance-of"><strong>Type</strong>
             <small class="text-info">&mdash; If no value is provided the default will be "association"</small>
         </label>
-        <input class="form-control auto-complete" id="association-instance-of" name="association-instance-of"
+        <input class="form-control typeahead" id="association-instance-of" name="association-instance-of"
                placeholder="Enter type identifier"
                type="text" value="{{ association_instance_of }}">
         {% if error|bitwise_and(8) == 8 %}
@@ -124,7 +124,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="association-scope" name="association-scope"
+                        <input class="form-control typeahead" id="association-scope" name="association-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ association_scope }}">
                         {% if error|bitwise_and(16) == 16 %}

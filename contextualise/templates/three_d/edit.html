@@ -42,7 +42,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="file-scope" name="file-scope"
+                        <input class="form-control typeahead" id="file-scope" name="file-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ file_scope }}">
                         {% if error|bitwise_and(2) == 2 %}

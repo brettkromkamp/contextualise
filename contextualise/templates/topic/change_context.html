@@ -24,7 +24,7 @@
                 Universal context)
             </small>
         </label>
-        <input class="form-control auto-complete" id="new-scope" name="new-scope"
+        <input class="form-control typeahead" id="new-scope" name="new-scope"
                placeholder="Enter context identifier"
                type="text" value="{{ scope_identifier }}">
         {% if error|bitwise_and(1) == 1 %}

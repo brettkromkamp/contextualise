@@ -35,7 +35,7 @@
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="topic-name-scope" name="topic-name-scope"
+                        <input class="form-control typeahead" id="topic-name-scope" name="topic-name-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ topic_name_scope }}">
                         {% if error|bitwise_and(2) == 2 %}

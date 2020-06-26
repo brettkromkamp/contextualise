@@ -41,7 +41,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="video-scope" name="video-scope"
+                        <input class="form-control typeahead" id="video-scope" name="video-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ video_scope }}">
                         {% if error|bitwise_and(2) == 2 %}

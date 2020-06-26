@@ -15,7 +15,7 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="note-topic-identifier"><strong>Topic</strong></label>
-        <input class="form-control auto-complete" id="note-topic-identifier" name="note-topic-identifier"
+        <input class="form-control typeahead" id="note-topic-identifier" name="note-topic-identifier"
                placeholder="Enter topic identifier" required
                type="text">
         {% if error|bitwise_and(1) == 1 %}

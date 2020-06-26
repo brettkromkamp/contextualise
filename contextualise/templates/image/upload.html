@@ -60,7 +60,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="image-scope" name="image-scope"
+                        <input class="form-control typeahead" id="image-scope" name="image-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ image_scope }}">
                         {% if error|bitwise_and(16) == 16 %}

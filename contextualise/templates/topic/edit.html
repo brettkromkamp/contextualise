@@ -50,7 +50,7 @@ $('#advancedOptions').collapse('show');
                         <label for="topic-instance-of"><strong>Type</strong>
                             <small class="text-info">&mdash; If no value is provided the default will be "topic"</small>
                         </label>
-                        <input class="form-control auto-complete" id="topic-instance-of" name="topic-instance-of"
+                        <input class="form-control typeahead" id="topic-instance-of" name="topic-instance-of"
                                placeholder="Enter type identifier"
                                type="text" value="{{ topic_instance_of }}">
                         {% if error|bitwise_and(1) == 1 %}
@@ -66,7 +66,7 @@ $('#advancedOptions').collapse('show');
                                 Universal context)
                             </small>
                         </label>
-                        <input class="form-control auto-complete" id="topic-text-scope" name="topic-text-scope"
+                        <input class="form-control typeahead" id="topic-text-scope" name="topic-text-scope"
                                placeholder="Enter context identifier"
                                type="text" value="{{ topic_text_scope }}">
                         {% if error|bitwise_and(2) == 2 %}

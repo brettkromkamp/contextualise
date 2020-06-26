@@ -359,7 +359,7 @@
                     <div class="form-group">
                         <label class="col-form-label" for="goto-topic-identifier">Please provide a valid topic
                             identifier</label>
-                        <input aria-label="Enter topic identifier" class="form-control auto-complete"
+                        <input aria-label="Enter topic identifier" class="form-control typeahead"
                                id="goto-topic-identifier" placeholder="Enter identifier"
                                type="text">
                     </div>
@@ -388,7 +388,7 @@ var urlParts = window.location.pathname.split("/");
 var mapIdentifier = urlParts[3];
 var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
 
-$(".auto-complete").autoComplete({
+$(".typeahead").autoComplete({
   resolverSettings: {
     url: getIdentifiersApiUrl,
   },

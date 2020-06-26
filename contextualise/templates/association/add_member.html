@@ -20,7 +20,7 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="role-spec"><strong>Member role</strong></label>
-        <input class="form-control auto-complete" id="role-spec" name="role-spec"
+        <input class="form-control typeahead" id="role-spec" name="role-spec"
                placeholder="Enter role" required
                type="text"
                value="{{ role_spec }}">
@@ -33,7 +33,7 @@
     <div class="form-group">
         <div class="form-group">
             <label for="topic-reference"><strong>Topic reference</strong></label>
-            <input class="form-control auto-complete" id="topic-reference" name="topic-reference"
+            <input class="form-control typeahead" id="topic-reference" name="topic-reference"
                    placeholder="Enter topic reference" required
                    type="text"
                    value="{{ topic_reference }}">
