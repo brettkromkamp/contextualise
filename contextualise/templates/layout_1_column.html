@@ -181,7 +181,6 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.5/dist/latest/bootstrap-autocomplete.min.js"></script>
 <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 {% block javascript %}{% endblock %}
@@ -217,13 +216,6 @@ $('.typeahead').typeahead({
 {
   name: 'identifiers',
   source: topicIdentifiers
-});
-
-
-$(".typeahead").autoComplete({
-  resolverSettings: {
-    url: getIdentifiersApiUrl,
-  },
 });
 
 $(".typeahead").change(function (e) {
