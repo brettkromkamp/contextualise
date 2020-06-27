@@ -24,7 +24,7 @@ $('#advancedOptions').collapse('show');
     <div class="form-group">
         <label for="image-title"><strong>Title</strong></label>
         <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required
-               type="text" value="{{ image_title }}">
+               type="text" value="{{ image_title or '' }}">
     </div>
     <div class="form-group">
         <label for="image-file"><strong>File</strong></label>
@@ -56,13 +56,13 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="image-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal context)
+                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="image-scope" name="image-scope"
                                placeholder="Enter context identifier"
-                               type="text" value="{{ image_scope }}">
+                               type="text" value="{{ image_scope or '' }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing

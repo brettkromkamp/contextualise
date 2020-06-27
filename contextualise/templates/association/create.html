@@ -120,8 +120,8 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="association-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal context)
+                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="association-scope" name="association-scope"

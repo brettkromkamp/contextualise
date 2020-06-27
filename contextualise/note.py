@@ -101,10 +101,6 @@ def add(map_identifier):
     if topic is None:
         abort(404)
 
-    form_note_title = ""
-    form_note_text = ""
-    form_note_scope = session["current_scope"]
-
     error = 0
 
     if request.method == "POST":
@@ -114,7 +110,7 @@ def add(map_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = UNIVERSAL_SCOPE
+            form_note_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_note_title:
@@ -158,14 +154,21 @@ def add(map_identifier):
             flash("Note successfully added.", "success")
             return redirect(url_for("note.index", map_identifier=topic_map.identifier))
 
+        return render_template(
+            "note/add.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            note_title=form_note_title,
+            note_text=form_note_text,
+            note_scope=form_note_scope,
+        )
+
     return render_template(
         "note/add.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        note_title=form_note_title,
-        note_text=form_note_text,
-        note_scope=form_note_scope,
+        topic=topic
     )
 
 
@@ -383,10 +386,6 @@ def edit(map_identifier, note_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = note_occurrence.resource_data.decode()
-    form_note_scope = note_occurrence.scope
-
     error = 0
 
     if request.method == "POST":
@@ -396,7 +395,7 @@ def edit(map_identifier, note_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = UNIVERSAL_SCOPE
+            form_note_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_note_title:
@@ -450,16 +449,24 @@ def edit(map_identifier, note_identifier):
                 )
             )
 
+        return render_template(
+            "note/edit.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            note_identifier=note_occurrence.identifier,
+            note_title=form_note_title,
+            note_text=form_note_text,
+            note_scope=form_note_scope,
+        )
+
     return render_template(
-        "note/edit.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic,
-        note_identifier=note_occurrence.identifier,
-        note_title=form_note_title,
-        note_text=form_note_text,
-        note_scope=form_note_scope,
-    )
+            "note/edit.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            note_identifier=note_occurrence.identifier
+        )
 
 
 @bp.route("/notes/delete/<map_identifier>/<note_identifier>", methods=("GET", "POST"))

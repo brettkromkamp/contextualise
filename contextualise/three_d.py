@@ -18,7 +18,6 @@ bp = Blueprint("three_d", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
 EXTENSIONS_WHITELIST = {"gltf", "glb"}
-UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/3d/<map_identifier>/<topic_identifier>")
@@ -103,9 +102,6 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    form_file_title = ""
-    form_file_scope = session["current_scope"]
-
     error = 0
 
     if request.method == "POST":
@@ -117,7 +113,7 @@ def upload(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = UNIVERSAL_SCOPE
+            form_file_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_file_title:
@@ -176,13 +172,20 @@ def upload(map_identifier, topic_identifier):
                 )
             )
 
+        return render_template(
+            "three_d/upload.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            file_title=form_file_title,
+            file_scope=form_file_scope,
+        )
+
     return render_template(
         "three_d/upload.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        file_title=form_file_title,
-        file_scope=form_file_scope,
+        topic=topic
     )
 
 

@@ -109,7 +109,7 @@ def create(map_identifier, topic_identifier):
         if not form_association_instance_of:
             form_association_instance_of = "association"
         if not form_association_scope:
-            form_association_scope = UNIVERSAL_SCOPE
+            form_association_scope = session["current_scope"]
         if not form_association_name:
             form_association_name = "Undefined"
 

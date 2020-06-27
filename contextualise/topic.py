@@ -272,12 +272,6 @@ def create(map_identifier, topic_identifier):
         )
         abort(404)
 
-    form_topic_name = ""
-    form_topic_identifier = ""
-    form_topic_text = ""
-    form_topic_instance_of = "topic"
-    form_topic_text_scope = session["current_scope"]
-
     error = 0
 
     if request.method == "POST":
@@ -291,7 +285,7 @@ def create(map_identifier, topic_identifier):
         if not form_topic_instance_of:
             form_topic_instance_of = "topic"
         if not form_topic_text_scope:
-            form_topic_text_scope = UNIVERSAL_SCOPE
+            form_topic_text_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_topic_name:
@@ -342,16 +336,23 @@ def create(map_identifier, topic_identifier):
                 )
             )
 
+        return render_template(
+            "topic/create.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            topic_name=form_topic_name,
+            topic_identifier=form_topic_identifier,
+            topic_text=form_topic_text,
+            topic_instance_of=form_topic_instance_of,
+            topic_text_scope=form_topic_text_scope,
+        )
+
     return render_template(
         "topic/create.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        topic_name=form_topic_name,
-        topic_identifier=form_topic_identifier,
-        topic_text=form_topic_text,
-        topic_instance_of=form_topic_instance_of,
-        topic_text_scope=form_topic_text_scope,
+        topic=topic
     )
 
 
@@ -408,7 +409,7 @@ def edit(map_identifier, topic_identifier):
     form_topic_instance_of = topic.instance_of
     form_topic_text_scope = (
         texts[0].scope if len(texts) > 0 else session["current_scope"]
-    )  # Should it be '*'?
+    )
 
     error = 0
 
@@ -422,7 +423,7 @@ def edit(map_identifier, topic_identifier):
         if not form_topic_instance_of:
             form_topic_instance_of = "topic"
         if not form_topic_text_scope:
-            form_topic_text_scope = UNIVERSAL_SCOPE
+            form_topic_text_scope = session["current_scope"]
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
@@ -607,10 +608,6 @@ def add_note(map_identifier, topic_identifier):
         )
         abort(404)
 
-    form_note_title = ""
-    form_note_text = ""
-    form_note_scope = session["current_scope"]
-
     error = 0
 
     if request.method == "POST":
@@ -620,7 +617,7 @@ def add_note(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = UNIVERSAL_SCOPE
+            form_note_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_note_title:
@@ -670,14 +667,21 @@ def add_note(map_identifier, topic_identifier):
                 )
             )
 
+        return render_template(
+            "topic/add_note.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            note_title=form_note_title,
+            note_text=form_note_text,
+            note_scope=form_note_scope,
+        )
+
     return render_template(
         "topic/add_note.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        note_title=form_note_title,
-        note_text=form_note_text,
-        note_scope=form_note_scope,
+        topic=topic
     )
 
 
@@ -735,7 +739,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
         # If no values have been provided set their default values
         if not form_note_scope:
-            form_note_scope = UNIVERSAL_SCOPE
+            form_note_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_note_title:
@@ -948,14 +952,15 @@ def add_name(map_identifier, topic_identifier):
         )
         abort(404)
 
-    form_topic_name = ""
-    form_topic_name_scope = session["current_scope"]
-
     error = 0
 
     if request.method == "POST":
         form_topic_name = request.form["topic-name"].strip()
         form_topic_name_scope = request.form["topic-name-scope"].strip()
+
+        # If no values have been provided set their default values
+        if not form_topic_name_scope:
+            form_topic_name_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_topic_name:
@@ -981,13 +986,20 @@ def add_name(map_identifier, topic_identifier):
                 )
             )
 
+        return render_template(
+            "topic/add_name.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            topic_name=form_topic_name,
+            topic_name_scope=form_topic_name_scope,
+        )
+
     return render_template(
         "topic/add_name.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        topic_name=form_topic_name,
-        topic_name_scope=form_topic_name_scope,
+        topic=topic
     )
 
 
@@ -1032,6 +1044,10 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     if request.method == "POST":
         form_topic_name = request.form["topic-name"].strip()
         form_topic_name_scope = request.form["topic-name-scope"].strip()
+
+        # If no values have been provided set their default values
+        if not form_topic_name_scope:
+            form_topic_name_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_topic_name:
@@ -1162,8 +1178,6 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
         )
         abort(404)
 
-    form_scope = scope_identifier
-
     error = 0
 
     if request.method == "POST":
@@ -1171,7 +1185,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
 
         # If no values have been provided set their default values
         if not form_scope:
-            form_scope = UNIVERSAL_SCOPE
+            form_scope = session["current_scope"]
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_scope):
@@ -1193,10 +1207,17 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
                 )
             )
 
+        return render_template(
+            "topic/change_context.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            scope_identifier=form_scope,
+        )
+
     return render_template(
         "topic/change_context.html",
         error=error,
         topic_map=topic_map,
-        topic=topic,
-        scope_identifier=form_scope,
+        topic=topic
     )

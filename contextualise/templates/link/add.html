@@ -24,12 +24,12 @@ $('#advancedOptions').collapse('show');
     <div class="form-group">
         <label for="link-title"><strong>Title</strong></label>
         <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required
-               type="text" value="{{ link_title }}">
+               type="text" value="{{ link_title or '' }}">
     </div>
     <div class="form-group">
         <label for="link-url"><strong>Link (URL)</strong></label>
         <input class="form-control" id="link-url" name="link-url" placeholder="Enter link" required
-               type="text" value="{{ link_url }}">
+               type="text" value="{{ link_url or '' }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
                                              data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
@@ -42,13 +42,13 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="link-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal context)
+                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="link-scope" name="link-scope"
                                placeholder="Enter context identifier"
-                               type="text" value="{{ link_scope }}">
+                               type="text" value="{{ link_scope or '' }}">
                         {% if error|bitwise_and(4) == 4 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing

@@ -37,8 +37,8 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="file-scope">Context
-                            <small class="text-info">&mdash; If no value is provided the default will be "*" (that is,
-                                Universal context)
+                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="file-scope" name="file-scope"
