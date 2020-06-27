@@ -182,11 +182,8 @@ def upload(map_identifier, topic_identifier):
         )
 
     return render_template(
-            "file/upload.html",
-            error=error,
-            topic_map=topic_map,
-            topic=topic
-        )
+        "file/upload.html", error=error, topic_map=topic_map, topic=topic
+    )
 
 
 @bp.route(

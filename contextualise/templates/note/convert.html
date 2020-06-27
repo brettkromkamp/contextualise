@@ -105,7 +105,7 @@ $('#advancedOptions').collapse('show');
                         </label>
                         <input class="form-control typeahead" id="topic-instance-of" name="topic-instance-of"
                                placeholder="Enter type identifier"
-                               type="text" value="{{ topic_instance_of }}">
+                               type="text" value="{{ topic_instance_of or '' }}">
                         {% if error|bitwise_and(8) == 8 %}
                         <small class="text-danger">
                             A type with this identifier doesn't exist. Please provide an identifier for an existing

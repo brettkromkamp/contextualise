@@ -182,10 +182,7 @@ def upload(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "three_d/upload.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "three_d/upload.html", error=error, topic_map=topic_map, topic=topic
     )
 
 

@@ -126,7 +126,7 @@ $('#advancedOptions').collapse('show');
                         </label>
                         <input class="form-control typeahead" id="association-scope" name="association-scope"
                                placeholder="Enter context identifier"
-                               type="text" value="{{ association_scope  or '' }}">
+                               type="text" value="{{ association_scope or '' }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing

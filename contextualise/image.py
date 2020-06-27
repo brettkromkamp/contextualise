@@ -185,10 +185,7 @@ def upload(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "image/upload.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "image/upload.html", error=error, topic_map=topic_map, topic=topic
     )
 
 

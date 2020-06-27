@@ -349,10 +349,7 @@ def create(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "topic/create.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "topic/create.html", error=error, topic_map=topic_map, topic=topic
     )
 
 
@@ -678,10 +675,7 @@ def add_note(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "topic/add_note.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "topic/add_note.html", error=error, topic_map=topic_map, topic=topic
     )
 
 
@@ -996,10 +990,7 @@ def add_name(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "topic/add_name.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "topic/add_name.html", error=error, topic_map=topic_map, topic=topic
     )
 
 
@@ -1178,6 +1169,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
         )
         abort(404)
 
+    form_scope = scope_identifier
     error = 0
 
     if request.method == "POST":
@@ -1207,17 +1199,10 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
                 )
             )
 
-        return render_template(
-            "topic/change_context.html",
-            error=error,
-            topic_map=topic_map,
-            topic=topic,
-            scope_identifier=form_scope,
-        )
-
     return render_template(
         "topic/change_context.html",
         error=error,
         topic_map=topic_map,
-        topic=topic
+        topic=topic,
+        scope_identifier=form_scope,
     )

@@ -5,8 +5,6 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("tag", __name__)
 
-UNIVERSAL_SCOPE = "*"
-
 
 @bp.route("/tags/index/<map_identifier>")
 def index(map_identifier):

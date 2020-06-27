@@ -160,10 +160,7 @@ def add(map_identifier, topic_identifier):
         )
 
     return render_template(
-        "link/add.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "link/add.html", error=error, topic_map=topic_map, topic=topic
     )
 
 

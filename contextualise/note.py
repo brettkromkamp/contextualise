@@ -16,8 +16,6 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("note", __name__)
 
-UNIVERSAL_SCOPE = "*"
-
 
 @bp.route("/notes/index/<map_identifier>")
 def index(map_identifier):
@@ -165,10 +163,7 @@ def add(map_identifier):
         )
 
     return render_template(
-        "note/add.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic
+        "note/add.html", error=error, topic_map=topic_map, topic=topic
     )
 
 
@@ -280,8 +275,6 @@ def convert(map_identifier, note_identifier):
     form_topic_identifier = ""
     form_topic_text = "## " + note_title + "\n" + note_occurrence.resource_data.decode()
 
-    form_topic_instance_of = "topic"
-
     error = 0
 
     if request.method == "POST":
@@ -343,6 +336,18 @@ def convert(map_identifier, note_identifier):
                 )
             )
 
+        return render_template(
+            "note/convert.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            topic_name=form_topic_name,
+            topic_identifier=form_topic_identifier,
+            topic_text=form_topic_text,
+            topic_instance_of=form_topic_instance_of,
+            note_identifier=note_identifier,
+        )
+
     return render_template(
         "note/convert.html",
         error=error,
@@ -351,7 +356,6 @@ def convert(map_identifier, note_identifier):
         topic_name=form_topic_name,
         topic_identifier=form_topic_identifier,
         topic_text=form_topic_text,
-        topic_instance_of=form_topic_instance_of,
         note_identifier=note_identifier,
     )
 
@@ -385,6 +389,10 @@ def edit(map_identifier, note_identifier):
         inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    form_note_title = note_occurrence.get_attribute_by_name("title").value
+    form_note_text = note_occurrence.resource_data.decode()
+    form_note_scope = note_occurrence.scope
 
     error = 0
 
@@ -449,24 +457,16 @@ def edit(map_identifier, note_identifier):
                 )
             )
 
-        return render_template(
-            "note/edit.html",
-            error=error,
-            topic_map=topic_map,
-            topic=topic,
-            note_identifier=note_occurrence.identifier,
-            note_title=form_note_title,
-            note_text=form_note_text,
-            note_scope=form_note_scope,
-        )
-
     return render_template(
-            "note/edit.html",
-            error=error,
-            topic_map=topic_map,
-            topic=topic,
-            note_identifier=note_occurrence.identifier
-        )
+        "note/edit.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        note_identifier=note_occurrence.identifier,
+        note_title=form_note_title,
+        note_text=form_note_text,
+        note_scope=form_note_scope,
+    )
 
 
 @bp.route("/notes/delete/<map_identifier>/<note_identifier>", methods=("GET", "POST"))

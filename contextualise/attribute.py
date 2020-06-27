@@ -13,8 +13,6 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("attribute", __name__)
 
-UNIVERSAL_SCOPE = "*"
-
 
 @bp.route("/attributes/<map_identifier>/<topic_identifier>")
 @login_required
@@ -78,7 +76,7 @@ def index(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/attributes/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>"
+    "/attributes/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>"
 )
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
@@ -191,10 +189,9 @@ def add(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    form_attribute_name = ""
-    form_attribute_value = ""
-    form_attribute_type = ""
-    form_attribute_scope = session["current_scope"]
+    entity_type = "topic"
+    post_url = "attribute.add"
+    cancel_url = "attribute.index"
 
     error = 0
 
@@ -206,7 +203,7 @@ def add(map_identifier, topic_identifier):
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = UNIVERSAL_SCOPE
+            form_attribute_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_attribute_name:
@@ -227,6 +224,7 @@ def add(map_identifier, topic_identifier):
                 form_attribute_value,
                 topic.identifier,
                 data_type=DataType[form_attribute_type],
+                scope=form_attribute_scope,
             )
 
             # Persist objects to the topic store
@@ -241,9 +239,19 @@ def add(map_identifier, topic_identifier):
                 )
             )
 
-    entity_type = "topic"
-    post_url = "attribute.add"
-    cancel_url = "attribute.index"
+        return render_template(
+            "attribute/add.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            entity_type=entity_type,
+            post_url=post_url,
+            cancel_url=cancel_url,
+            attribute_name=form_attribute_name,
+            attribute_value=form_attribute_value,
+            attribute_type=form_attribute_type,
+            attribute_scope=form_attribute_scope,
+        )
 
     return render_template(
         "attribute/add.html",
@@ -253,15 +261,11 @@ def add(map_identifier, topic_identifier):
         entity_type=entity_type,
         post_url=post_url,
         cancel_url=cancel_url,
-        attribute_name=form_attribute_name,
-        attribute_value=form_attribute_value,
-        attribute_type=form_attribute_type,
-        attribute_scope=form_attribute_scope,
     )
 
 
 @bp.route(
-    "/attributes/add/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>",
+    "/attributes/add/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>",
     methods=("GET", "POST"),
 )
 @login_required
@@ -300,10 +304,8 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     if entity is None:
         abort(404)
 
-    form_attribute_name = ""
-    form_attribute_value = ""
-    form_attribute_type = ""
-    form_attribute_scope = UNIVERSAL_SCOPE
+    post_url = "attribute.entity_add"
+    cancel_url = "attribute.entity_index"
 
     error = 0
 
@@ -315,7 +317,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = UNIVERSAL_SCOPE
+            form_attribute_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_attribute_name:
@@ -336,6 +338,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
                 form_attribute_value,
                 entity.identifier,
                 data_type=DataType[form_attribute_type],
+                scope=form_attribute_scope,
             )
 
             # Persist objects to the topic store
@@ -352,8 +355,20 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
                 )
             )
 
-    post_url = "attribute.entity_add"
-    cancel_url = "attribute.entity_index"
+        return render_template(
+            "attribute/add.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            entity=entity,
+            entity_type=entity_type,
+            post_url=post_url,
+            cancel_url=cancel_url,
+            attribute_name=form_attribute_name,
+            attribute_value=form_attribute_value,
+            attribute_type=form_attribute_type,
+            attribute_scope=form_attribute_scope,
+        )
 
     return render_template(
         "attribute/add.html",
@@ -364,10 +379,6 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         entity_type=entity_type,
         post_url=post_url,
         cancel_url=cancel_url,
-        attribute_name=form_attribute_name,
-        attribute_value=form_attribute_value,
-        attribute_type=form_attribute_type,
-        attribute_scope=form_attribute_scope,
     )
 
 
@@ -419,7 +430,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = UNIVERSAL_SCOPE
+            form_attribute_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_attribute_name:
@@ -443,6 +454,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
                 form_attribute_value,
                 topic.identifier,
                 data_type=DataType[form_attribute_type],
+                scope=form_attribute_scope,
             )
             topic_store.set_attribute(topic_map.identifier, updated_attribute)
 
@@ -483,7 +495,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
 
 @bp.route(
-    "/attributes/edit/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>",
+    "/attributes/edit/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>/<entity_type>",
     methods=("GET", "POST"),
 )
 @login_required
@@ -547,7 +559,7 @@ def entity_edit(
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
-            form_attribute_scope = UNIVERSAL_SCOPE
+            form_attribute_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_attribute_name:
@@ -571,6 +583,7 @@ def entity_edit(
                 form_attribute_value,
                 entity.identifier,
                 data_type=DataType[form_attribute_type],
+                scope=form_attribute_scope,
             )
             topic_store.set_attribute(topic_map.identifier, updated_attribute)
 
@@ -683,7 +696,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 
 
 @bp.route(
-    "/attributes/delete/<entity_type>/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>",
+    "/attributes/delete/<map_identifier>/<topic_identifier>/<entity_identifier>/<attribute_identifier>/<entity_type>",
     methods=("GET", "POST"),
 )
 @login_required
