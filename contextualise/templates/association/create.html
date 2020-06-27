@@ -67,7 +67,7 @@ $('#advancedOptions').collapse('show');
         <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
         <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
                placeholder="Enter destination topic identifier" required
-               type="text" value="{{ association_dest_topic_ref }}">
+               type="text" value="{{ association_dest_topic_ref or '' }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
             A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
@@ -80,13 +80,13 @@ $('#advancedOptions').collapse('show');
         </label>
         <input class="form-control typeahead" id="association-dest-role-spec" name="association-dest-role-spec"
                placeholder="Enter destination role identifier"
-               type="text" value="{{ association_dest_role_spec }}">
+               type="text" value="{{ association_dest_role_spec or '' }}">
     </div>
     <div class="form-group">
         <label for="association-src-topic-ref"><strong>Source topic</strong></label>
         <input class="form-control" id="association-src-topic-ref" name="association-src-topic-ref"
                placeholder="Enter source topic identifier" readonly required
-               tabindex="-1" type="text" value="{{ association_src_topic_ref }}">
+               type="text" value="{{ association_src_topic_ref or '' }}">
     </div>
     <div class="form-group">
         <label for="association-src-role-spec"><strong>Source role</strong>
@@ -94,7 +94,7 @@ $('#advancedOptions').collapse('show');
         </label>
         <input class="form-control typeahead" id="association-src-role-spec" name="association-src-role-spec"
                placeholder="Enter source role identifier"
-               type="text" value="{{ association_src_role_spec }}">
+               type="text" value="{{ association_src_role_spec or '' }}">
     </div>
     <div class="form-group">
         <label for="association-instance-of"><strong>Type</strong>
@@ -102,7 +102,7 @@ $('#advancedOptions').collapse('show');
         </label>
         <input class="form-control typeahead" id="association-instance-of" name="association-instance-of"
                placeholder="Enter type identifier"
-               type="text" value="{{ association_instance_of }}">
+               type="text" value="{{ association_instance_of or '' }}">
         {% if error|bitwise_and(8) == 8 %}
         <small class="text-danger">
             A type with this identifier doesn't exist. Please provide an identifier for an existing type.
@@ -126,7 +126,7 @@ $('#advancedOptions').collapse('show');
                         </label>
                         <input class="form-control typeahead" id="association-scope" name="association-scope"
                                placeholder="Enter context identifier"
-                               type="text" value="{{ association_scope }}">
+                               type="text" value="{{ association_scope  or '' }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -141,7 +141,7 @@ $('#advancedOptions').collapse('show');
                         </label>
                         <input class="form-control" id="association-name" name="association-name"
                                placeholder="Enter name"
-                               type="text" value="{{ association_name }}">
+                               type="text" value="{{ association_name or '' }}">
                     </div>
                     <div class="form-group">
                         <label for="association-identifier"><strong>Identifier</strong>
@@ -152,7 +152,7 @@ $('#advancedOptions').collapse('show');
                         <div class="input-group">
                             <input class="form-control" id="association-identifier" name="association-identifier"
                                    placeholder="Enter identifier"
-                                   readonly type="text" value="{{ association_identifier }}">
+                                   readonly type="text" value="{{ association_identifier or '' }}">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">
                                     Edit

@@ -6,7 +6,16 @@ from datetime import datetime
 import maya
 import mistune
 from contextualise.topic_store import get_topic_store
-from flask import Blueprint, session, flash, render_template, request, url_for, redirect, current_app
+from flask import (
+    Blueprint,
+    session,
+    flash,
+    render_template,
+    request,
+    url_for,
+    redirect,
+    current_app,
+)
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
@@ -31,11 +40,9 @@ def view(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(
-            map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(
-                map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
@@ -44,14 +51,18 @@ def view(map_identifier, topic_identifier):
             )
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(
-            map_identifier, current_user.id)
+            map_identifier, current_user.id
+        )
         if topic_map.published:
             if not is_map_owner and topic_identifier == "home":
                 flash(
                     "You are accessing a published topic map of another user.",
-                    "primary")
+                    "primary",
+                )
         else:
-            if not is_map_owner:  # The map is private and doesn't belong to the user who is trying to access it
+            if (
+                not is_map_owner
+            ):  # The map is private and doesn't belong to the user who is trying to access it
                 if not collaboration_mode:  # The user is not collaborating on the map
                     abort(403)
     else:  # User is not logged in
@@ -61,7 +72,9 @@ def view(map_identifier, topic_identifier):
                 f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
             )
             abort(404)
-        if not topic_map.published:  # User is not logged in and the map is not published
+        if (
+            not topic_map.published
+        ):  # User is not logged in and the map is not published
             abort(403)
 
     # Determine if (active) scope filtering has been specified in the URL
@@ -78,8 +91,7 @@ def view(map_identifier, topic_identifier):
     # If a context has been specified in the URL, then use that to set the
     # context
     scope_identifier = request.args.get("context", type=str)
-    if scope_identifier and topic_store.topic_exists(
-            map_identifier, scope_identifier):
+    if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
         session["current_scope"] = scope_identifier
 
     # Get topic
@@ -131,40 +143,55 @@ def view(map_identifier, topic_identifier):
         "notes": [],
     }
     for occurrence in topic_occurrences:
-        if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
+        if (
+            occurrence.instance_of == "text"
+            and occurrence.scope == session["current_scope"]
+        ):
             if occurrence.resource_data:
                 occurrences["text"] = mistune.html(occurrence.resource_data.decode())
         elif occurrence.instance_of == "image":
             occurrences["images"].append(
-                {"title": occurrence.get_attribute_by_name(
-                    "title").value, "url": occurrence.resource_ref, }
+                {
+                    "title": occurrence.get_attribute_by_name("title").value,
+                    "url": occurrence.resource_ref,
+                }
             )
         elif occurrence.instance_of == "3d-scene":
             occurrences["3d-scenes"].append(
-                {"title": occurrence.get_attribute_by_name(
-                    "title").value, "url": occurrence.resource_ref, }
+                {
+                    "title": occurrence.get_attribute_by_name("title").value,
+                    "url": occurrence.resource_ref,
+                }
             )
         elif occurrence.instance_of == "file":
             occurrences["files"].append(
-                {"title": occurrence.get_attribute_by_name(
-                    "title").value, "url": occurrence.resource_ref, }
+                {
+                    "title": occurrence.get_attribute_by_name("title").value,
+                    "url": occurrence.resource_ref,
+                }
             )
         elif occurrence.instance_of == "url":
             occurrences["links"].append(
-                {"title": occurrence.get_attribute_by_name(
-                    "title").value, "url": occurrence.resource_ref, }
+                {
+                    "title": occurrence.get_attribute_by_name("title").value,
+                    "url": occurrence.resource_ref,
+                }
             )
         elif occurrence.instance_of == "video":
             occurrences["videos"].append(
-                {"title": occurrence.get_attribute_by_name(
-                    "title").value, "url": occurrence.resource_ref, }
+                {
+                    "title": occurrence.get_attribute_by_name("title").value,
+                    "url": occurrence.resource_ref,
+                }
             )
         elif occurrence.instance_of == "note":
             occurrences["notes"].append(
                 {
                     "identifier": occurrence.identifier,
                     "title": occurrence.get_attribute_by_name("title").value,
-                    "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
+                    "timestamp": maya.parse(
+                        occurrence.get_attribute_by_name("modification-timestamp").value
+                    ),
                     "text": mistune.html(occurrence.resource_data.decode()),
                 }
             )
@@ -174,7 +201,8 @@ def view(map_identifier, topic_identifier):
         )
     else:
         associations = topic_store.get_association_groups(
-            map_identifier, topic_identifier)
+            map_identifier, topic_identifier
+        )
 
     is_knowledge_path_topic = (
         ("navigation", "up") in associations
@@ -183,12 +211,13 @@ def view(map_identifier, topic_identifier):
         or ("navigation", "next") in associations
     )
 
-    creation_date = maya.parse(
-        topic.get_attribute_by_name("creation-timestamp").value)
-    modification_date_attribute = topic.get_attribute_by_name(
-        "modification-timestamp")
-    modification_date = maya.parse(
-        modification_date_attribute.value) if modification_date_attribute else "Undefined"
+    creation_date = maya.parse(topic.get_attribute_by_name("creation-timestamp").value)
+    modification_date_attribute = topic.get_attribute_by_name("modification-timestamp")
+    modification_date = (
+        maya.parse(modification_date_attribute.value)
+        if modification_date_attribute
+        else "Undefined"
+    )
 
     # Breadcrumbs
     if "breadcrumbs" not in session:
@@ -213,8 +242,7 @@ def view(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/create/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route("/topics/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -227,11 +255,16 @@ def create(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -263,16 +296,13 @@ def create(map_identifier, topic_identifier):
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
-        if topic_store.topic_exists(
-                topic_map.identifier, form_topic_identifier):
+        if topic_store.topic_exists(topic_map.identifier, form_topic_identifier):
             error = error | 2
         if not form_topic_identifier:
             error = error | 4
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_instance_of):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
             error = error | 8
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_text_scope):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_text_scope):
             error = error | 16
 
         if error != 0:
@@ -282,9 +312,8 @@ def create(map_identifier, topic_identifier):
             )
         else:
             new_topic = Topic(
-                form_topic_identifier,
-                form_topic_instance_of,
-                form_topic_name)
+                form_topic_identifier, form_topic_instance_of, form_topic_name
+            )
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=new_topic.identifier,
@@ -293,14 +322,16 @@ def create(map_identifier, topic_identifier):
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, new_topic.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                new_topic.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
             topic_store.set_topic(topic_map.identifier, new_topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(
-                topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(topic_map.identifier, modification_attribute)
 
             flash("Topic successfully created.", "success")
             return redirect(
@@ -324,8 +355,7 @@ def create(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/edit/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route("/topics/edit/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -338,11 +368,16 @@ def edit(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -360,15 +395,20 @@ def edit(map_identifier, topic_identifier):
     texts = [
         occurrence
         for occurrence in occurrences
-        if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]
+        if occurrence.instance_of == "text"
+        and occurrence.scope == session["current_scope"]
     ]
 
     form_topic_name = topic.first_base_name.name
-    form_topic_text = texts[0].resource_data.decode() if len(
-        texts) > 0 and texts[0].resource_data else ""
+    form_topic_text = (
+        texts[0].resource_data.decode()
+        if len(texts) > 0 and texts[0].resource_data
+        else ""
+    )
     form_topic_instance_of = topic.instance_of
-    form_topic_text_scope = texts[0].scope if len(
-        texts) > 0 else session["current_scope"]  # Should it be '*'?
+    form_topic_text_scope = (
+        texts[0].scope if len(texts) > 0 else session["current_scope"]
+    )  # Should it be '*'?
 
     error = 0
 
@@ -385,11 +425,9 @@ def edit(map_identifier, topic_identifier):
             form_topic_text_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_instance_of):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_instance_of):
             error = error | 1
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_text_scope):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_text_scope):
             error = error | 2
 
         if error != 0:
@@ -401,20 +439,24 @@ def edit(map_identifier, topic_identifier):
             # Update topic's first base name if it has changed
             if topic.first_base_name.name != form_topic_name:
                 topic_store.update_basename(
-                    map_identifier, topic.first_base_name.identifier, form_topic_name, form_topic_text_scope
+                    map_identifier,
+                    topic.first_base_name.identifier,
+                    form_topic_name,
+                    form_topic_text_scope,
                 )
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
                 topic_store.update_topic_instance_of(
-                    map_identifier, topic.identifier, form_topic_instance_of)
+                    map_identifier, topic.identifier, form_topic_instance_of
+                )
 
             # If the topic has an existing text occurrence update it, otherwise create a new text occurrence
             # and persist it
-            if len(
-                    texts) > 0 and form_topic_text_scope == session["current_scope"]:
+            if len(texts) > 0 and form_topic_text_scope == session["current_scope"]:
                 topic_store.update_occurrence_data(
-                    map_identifier, texts[0].identifier, form_topic_text)
+                    map_identifier, texts[0].identifier, form_topic_text
+                )
             else:
                 text_occurrence = Occurrence(
                     instance_of="text",
@@ -422,22 +464,24 @@ def edit(map_identifier, topic_identifier):
                     scope=form_topic_text_scope,
                     resource_data=form_topic_text,
                 )
-                topic_store.set_occurrence(
-                    topic_map.identifier, text_occurrence)
+                topic_store.set_occurrence(topic_map.identifier, text_occurrence)
 
             # Update the topic's modification (timestamp) attribute
             timestamp = str(datetime.now())
             if topic.get_attribute_by_name("modification-timestamp"):
                 topic_store.update_attribute_value(
-                    topic_map.identifier, topic.get_attribute_by_name(
-                        "modification-timestamp").identifier, timestamp,
+                    topic_map.identifier,
+                    topic.get_attribute_by_name("modification-timestamp").identifier,
+                    timestamp,
                 )
             else:
                 modification_attribute = Attribute(
-                    "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
+                    "modification-timestamp",
+                    timestamp,
+                    topic.identifier,
+                    data_type=DataType.TIMESTAMP,
                 )
-                topic_store.set_attribute(
-                    topic_map.identifier, modification_attribute)
+                topic_store.set_attribute(topic_map.identifier, modification_attribute)
 
             flash("Topic successfully updated.", "success")
             return redirect(
@@ -462,8 +506,7 @@ def edit(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/delete/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route("/topics/delete/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -476,11 +519,16 @@ def delete(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -498,10 +546,8 @@ def delete(map_identifier, topic_identifier):
 
             # Remove the topic's resources directory
             topic_directory = os.path.join(
-                bp.root_path,
-                RESOURCES_DIRECTORY,
-                str(map_identifier),
-                topic_identifier)
+                bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
+            )
             if os.path.isdir(topic_directory):
                 shutil.rmtree(topic_directory)
         except TopicDbError:
@@ -526,12 +572,12 @@ def delete(map_identifier, topic_identifier):
             )
         )
 
-    return render_template("topic/delete.html",
-                           topic_map=topic_map, topic=topic)
+    return render_template("topic/delete.html", topic_map=topic_map, topic=topic)
 
 
-@bp.route("/topics/add-note/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route(
+    "/topics/add-note/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
+)
 @login_required
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -545,13 +591,15 @@ def add_note(map_identifier, topic_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-            topic_map.collaboration_mode is not CollaborationMode.EDIT
-            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -595,18 +643,23 @@ def add_note(map_identifier, topic_identifier):
                 resource_data=form_note_text,
             )
             title_attribute = Attribute(
-                "title", form_note_title, note_occurrence.identifier, data_type=DataType.STRING,
+                "title",
+                form_note_title,
+                note_occurrence.identifier,
+                data_type=DataType.STRING,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, note_occurrence.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                note_occurrence.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
             topic_store.set_occurrence(topic_map.identifier, note_occurrence)
             topic_store.set_attribute(topic_map.identifier, title_attribute)
-            topic_store.set_attribute(
-                topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(topic_map.identifier, modification_attribute)
 
             flash("Note successfully added.", "success")
             return redirect(
@@ -629,7 +682,8 @@ def add_note(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("GET", "POST"),
+    "/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
@@ -644,13 +698,15 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-            topic_map.collaboration_mode is not CollaborationMode.EDIT
-            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -696,11 +752,11 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
             )
         else:
             # Update note's title if it has changed
-            if note_occurrence.get_attribute_by_name(
-                    "title").value != form_note_title:
+            if note_occurrence.get_attribute_by_name("title").value != form_note_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, note_occurrence.get_attribute_by_name(
-                        "title").identifier, form_note_title,
+                    topic_map.identifier,
+                    note_occurrence.get_attribute_by_name("title").identifier,
+                    form_note_title,
                 )
 
             # Update the note's modification (timestamp) attribute
@@ -708,18 +764,21 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
             topic_store.update_attribute_value(
                 topic_map.identifier,
                 note_occurrence.get_attribute_by_name(
-                    "modification-timestamp").identifier,
+                    "modification-timestamp"
+                ).identifier,
                 timestamp,
             )
 
             # Update note (occurrence)
             topic_store.update_occurrence_data(
-                map_identifier, note_occurrence.identifier, form_note_text)
+                map_identifier, note_occurrence.identifier, form_note_text
+            )
 
             # Update note's scope if it has changed
             if note_occurrence.scope != form_note_scope:
                 topic_store.update_occurrence_scope(
-                    map_identifier, note_occurrence.identifier, form_note_scope)
+                    map_identifier, note_occurrence.identifier, form_note_scope
+                )
 
             flash("Note successfully updated.", "success")
             return redirect(
@@ -743,7 +802,8 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
 
 @bp.route(
-    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("GET", "POST"),
+    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
@@ -758,13 +818,15 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and (
-            topic_map.collaboration_mode is not CollaborationMode.EDIT
-            and topic_map.collaboration_mode is not CollaborationMode.COMMENT
+        topic_map.collaboration_mode is not CollaborationMode.EDIT
+        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
     ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -785,11 +847,15 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     form_note_scope = note_occurrence.scope
 
     if request.method == "POST":
-        topic_store.delete_occurrence(
-            map_identifier, note_occurrence.identifier)
+        topic_store.delete_occurrence(map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
-        return redirect(url_for(
-            "topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier, ))
+        return redirect(
+            url_for(
+                "topic.view",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
+        )
 
     return render_template(
         "topic/delete_note.html",
@@ -802,8 +868,9 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     )
 
 
-@bp.route("/topics/view-names/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route(
+    "/topics/view-names/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
+)
 @login_required
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -816,11 +883,16 @@ def view_names(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -830,15 +902,23 @@ def view_names(map_identifier, topic_identifier):
         abort(404)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(
-        creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    return render_template("topic/view_names.html", topic_map=topic_map,
-                           topic=topic, creation_date=creation_date, )
+    return render_template(
+        "topic/view_names.html",
+        topic_map=topic_map,
+        topic=topic,
+        creation_date=creation_date,
+    )
 
 
-@bp.route("/topics/add-name/<map_identifier>/<topic_identifier>",
-          methods=("GET", "POST"))
+@bp.route(
+    "/topics/add-name/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
+)
 @login_required
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
@@ -851,11 +931,16 @@ def add_name(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -875,8 +960,7 @@ def add_name(map_identifier, topic_identifier):
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_name_scope):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_name_scope):
             error = error | 2
 
         if error != 0:
@@ -886,8 +970,7 @@ def add_name(map_identifier, topic_identifier):
             )
         else:
             base_name = BaseName(form_topic_name, scope=form_topic_name_scope)
-            topic_store.set_basename(
-                map_identifier, topic.identifier, base_name)
+            topic_store.set_basename(map_identifier, topic.identifier, base_name)
 
             flash("Name successfully added.", "success")
             return redirect(
@@ -909,7 +992,8 @@ def add_name(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("GET", "POST"),
+    "/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
@@ -923,11 +1007,16 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -947,8 +1036,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         # Validate form inputs
         if not form_topic_name:
             error = error | 1
-        if not topic_store.topic_exists(
-                topic_map.identifier, form_topic_name_scope):
+        if not topic_store.topic_exists(topic_map.identifier, form_topic_name_scope):
             error = error | 2
 
         if error != 0:
@@ -959,11 +1047,14 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         else:
             # Update name if required
             if (
-                    form_topic_name != topic.get_base_name(name_identifier).name
-                    or form_topic_name_scope != topic.get_base_name(name_identifier).scope
+                form_topic_name != topic.get_base_name(name_identifier).name
+                or form_topic_name_scope != topic.get_base_name(name_identifier).scope
             ):
                 topic_store.update_basename(
-                    map_identifier, name_identifier, form_topic_name, scope=form_topic_name_scope
+                    map_identifier,
+                    name_identifier,
+                    form_topic_name,
+                    scope=form_topic_name_scope,
                 )
 
             flash("Name successfully updated.", "success")
@@ -987,7 +1078,8 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 
 
 @bp.route(
-    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("GET", "POST"),
+    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
@@ -1001,11 +1093,16 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -1039,7 +1136,8 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
 
 @bp.route(
-    "/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("GET", "POST"),
+    "/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
@@ -1053,7 +1151,9 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
         abort(404)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     if topic is None:
@@ -1094,5 +1194,9 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
             )
 
     return render_template(
-        "topic/change_context.html", error=error, topic_map=topic_map, topic=topic, scope_identifier=form_scope,
+        "topic/change_context.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        scope_identifier=form_scope,
     )

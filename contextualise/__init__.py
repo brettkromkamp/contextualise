@@ -13,7 +13,13 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask, session, render_template
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
-from flask_security import Security, SQLAlchemySessionUserDatastore, user_registered, user_authenticated, hash_password
+from flask_security import (
+    Security,
+    SQLAlchemySessionUserDatastore,
+    user_registered,
+    user_authenticated,
+    hash_password,
+)
 
 from contextualise.security import user_store, user_models
 from contextualise.utilities import filters
@@ -44,16 +50,16 @@ def create_app(test_config=None):
     app.config.from_mapping(
         DEBUG=False,
         SECRET_KEY=os.environ.get(
-            "SECRET_KEY",
-            "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
+            "SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"
+        ),
         TOPIC_STORE_USER=database_username,
         TOPIC_STORE_PASSWORD=database_password,
         TOPIC_STORE_DBNAME=database_name,
         TOPIC_STORE_HOST=database_host,
         TOPIC_STORE_PORT=database_port,
         SECURITY_PASSWORD_SALT=os.environ.get(
-            "SECURITY_PASSWORD_SALT",
-            "139687009245803364536588051620840970665"),
+            "SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"
+        ),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
         SECURITY_EMAIL_SENDER=email_sender,
@@ -122,12 +128,12 @@ def create_app(test_config=None):
 
     # Setup Flask-Security
     user_datastore = SQLAlchemySessionUserDatastore(
-        user_store.db_session, user_models.User, user_models.Role)
+        user_store.db_session, user_models.User, user_models.Role
+    )
     security = Security(app, user_datastore)
 
     @user_registered.connect_via(app)
-    def user_registered_handler(
-            app, user, confirm_token, form_data, **extra_args):
+    def user_registered_handler(app, user, confirm_token, form_data, **extra_args):
         default_role = user_datastore.find_role("user")
         user_datastore.add_role_to_user(user, default_role)
         user_store.db_session.commit()
@@ -135,26 +141,26 @@ def create_app(test_config=None):
     @user_authenticated.connect_via(app)
     def user_authenticated_handler(app, user, authn_via, **extra_args):
         app.logger.info(
-            f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]")
+            f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]"
+        )
 
     @app.before_first_request
     def create_user():
         user_store.init_db()
 
         # Create roles
-        user_datastore.find_or_create_role(
-            name="admin", description="Administrator")
+        user_datastore.find_or_create_role(name="admin", description="Administrator")
         user_datastore.find_or_create_role(name="user", description="End user")
 
         # Create users
         if not user_datastore.get_user("admin@contextualise.dev"):
             user_datastore.create_user(
-                email="admin@contextualise.dev",
-                password=hash_password("Passw0rd1"))
+                email="admin@contextualise.dev", password=hash_password("Passw0rd1")
+            )
         if not user_datastore.get_user("user@contextualise.dev"):
             user_datastore.create_user(
-                email="user@contextualise.dev",
-                password=hash_password("Passw0rd1"))
+                email="user@contextualise.dev", password=hash_password("Passw0rd1")
+            )
         user_store.db_session.commit()
 
         # Assign roles
@@ -233,10 +239,12 @@ def create_app(test_config=None):
         if not os.path.exists("logs"):
             os.mkdir("logs")
         file_handler = RotatingFileHandler(
-            "logs/contextualise.log", maxBytes=10240, backupCount=10)
+            "logs/contextualise.log", maxBytes=10240, backupCount=10
+        )
         file_handler.setFormatter(
             logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
+                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+            )
         )
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
@@ -251,5 +259,9 @@ def create_app(test_config=None):
 if __name__ == "__main__":
     app = create_app()
     app.run(
-        debug=True, use_debugger=False, use_reloader=False, passthrough_errors=True, host="0.0.0.0",
+        debug=True,
+        use_debugger=False,
+        use_reloader=False,
+        passthrough_errors=True,
+        host="0.0.0.0",
     )

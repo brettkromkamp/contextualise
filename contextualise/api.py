@@ -36,21 +36,22 @@ def topic_exists(map_identifier):
         abort(404)
 
     normalised_topic_identifier = slugify(str(request.args.get("q").lower()))
-    normalised_topic_name = " ".join([
-        word.capitalize()
-        for word in normalised_topic_identifier.split("-")
-    ])
+    normalised_topic_name = " ".join(
+        [word.capitalize() for word in normalised_topic_identifier.split("-")]
+    )
     exists = topic_store.topic_exists(map_identifier, normalised_topic_identifier)
     if exists:
         result = {"topicExists": True}
     else:
-        result = {"topicExists": False,
-                  "normalisedTopicIdentifier": normalised_topic_identifier,
-                  "normalisedTopicName": normalised_topic_name}
+        result = {
+            "topicExists": False,
+            "normalisedTopicIdentifier": normalised_topic_identifier,
+            "normalisedTopicName": normalised_topic_name,
+        }
     return jsonify(result)
 
 
-@bp.route("/api/create-topic/<map_identifier>", methods=['POST'])
+@bp.route("/api/create-topic/<map_identifier>", methods=["POST"])
 @login_required
 def create_topic(map_identifier):
     topic_store = get_topic_store()
@@ -67,7 +68,7 @@ def create_topic(map_identifier):
         if topic_store.topic_exists(topic_map.identifier, topic_identifier):
             return jsonify({"status": "error", "code": 409}), 409
         else:
-            topic = Topic(topic_identifier, 'topic', topic_name)
+            topic = Topic(topic_identifier, "topic", topic_name)
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=topic.identifier,
@@ -76,14 +77,16 @@ def create_topic(map_identifier):
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                topic.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
             topic_store.set_topic(topic_map.identifier, topic)
             topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(
-                topic_map.identifier, modification_attribute)
+            topic_store.set_attribute(topic_map.identifier, modification_attribute)
 
             return jsonify({"status": "success", "code": 201}), 201
 
@@ -100,8 +103,9 @@ def get_identifiers(map_identifier):
 
     query_term = request.args.get("q").lower()
 
-    return jsonify(topic_store.get_topic_identifiers(
-        map_identifier, query_term, limit=10))
+    return jsonify(
+        topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)
+    )
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
@@ -109,11 +113,9 @@ def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(
-            map_identifier, current_user.id)
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(
-                map_identifier, current_user.id)
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
@@ -122,7 +124,9 @@ def get_network(map_identifier, topic_identifier):
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        if not topic_map.published:  # User is not logged in and the map is not published
+        if (
+            not topic_map.published
+        ):  # User is not logged in and the map is not published
             abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
@@ -133,9 +137,9 @@ def get_network(map_identifier, topic_identifier):
         scope_identifier = None
 
     def build_network(inner_identifier):
-        base_name = tree[inner_identifier].payload['topic'].first_base_name.name
-        instance_of = tree[inner_identifier].payload['topic'].instance_of
-        level = tree[inner_identifier].payload['level']
+        base_name = tree[inner_identifier].payload["topic"].first_base_name.name
+        instance_of = tree[inner_identifier].payload["topic"].instance_of
+        level = tree[inner_identifier].payload["level"]
         children = tree[inner_identifier].children
 
         # group = instance_of
@@ -149,7 +153,7 @@ def get_network(map_identifier, topic_identifier):
             "id": inner_identifier,
             "label": base_name + "\n[" + instance_of + "]",
             "instanceOf": instance_of,
-            "color": color
+            "color": color,
         }
 
         result[nodes].append(node)
@@ -167,7 +171,8 @@ def get_network(map_identifier, topic_identifier):
 
     if topic:
         tree = topic_store.get_topics_network(
-            map_identifier, topic_identifier, scope=scope_identifier)
+            map_identifier, topic_identifier, scope=scope_identifier
+        )
         if len(tree) > 1:
             nodes = 0
             edges = 1
@@ -178,8 +183,12 @@ def get_network(map_identifier, topic_identifier):
             build_network(topic_identifier)
             return jsonify(result), 200
         else:
-            return jsonify({"status": "error", "code": 404,
-                            "message": "No network data"}), 404
+            return (
+                jsonify({"status": "error", "code": 404, "message": "No network data"}),
+                404,
+            )
     else:
-        return jsonify({"status": "error", "code": 404,
-                        "message": "Topic not found"}), 404
+        return (
+            jsonify({"status": "error", "code": 404, "message": "Topic not found"}),
+            404,
+        )

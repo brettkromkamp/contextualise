@@ -11,7 +11,7 @@ def topic_name(topic_identifier, topic_map_identifier):
 
 
 def tag_name(tag_identifier):
-    return tag_identifier[:tag_identifier.find("-tag")]
+    return tag_identifier[: tag_identifier.find("-tag")]
 
 
 def bitwise_and(value1, value2):
