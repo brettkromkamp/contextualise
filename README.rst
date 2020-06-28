@@ -13,7 +13,7 @@ many kinds of hobbies.
 
     A Contextualise overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
-    Finally, check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, A curated
+    Finally, check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, a curated
     list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space.
     Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general
     and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
