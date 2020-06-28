@@ -1177,7 +1177,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
 
         # If no values have been provided set their default values
         if not form_scope:
-            form_scope = session["current_scope"]
+            form_scope = UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_scope):

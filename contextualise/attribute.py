@@ -212,6 +212,8 @@ def add(map_identifier, topic_identifier):
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
+        if topic.get_attribute_by_name(form_attribute_name):
+            error = error | 8
 
         if error != 0:
             flash(
@@ -293,14 +295,11 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_association(
+    entity = topic_store.get_occurrence(
         map_identifier,
         entity_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
-    if entity is None:
-        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
-
     if entity is None:
         abort(404)
 
@@ -326,6 +325,8 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
+        if entity.get_attribute_by_name(form_attribute_name):
+            error = error | 8
 
         if error != 0:
             flash(
@@ -439,6 +440,8 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
+        if topic.get_attribute_by_name(form_attribute_name):
+            error = error | 8
 
         if error != 0:
             flash(
@@ -529,14 +532,11 @@ def entity_edit(
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_association(
+    entity = topic_store.get_occurrence(
         map_identifier,
         entity_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
-    if entity is None:
-        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
-
     if entity is None:
         abort(404)
 
@@ -568,6 +568,8 @@ def entity_edit(
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
+        if entity.get_attribute_by_name(form_attribute_name):
+            error = error | 8
 
         if error != 0:
             flash(

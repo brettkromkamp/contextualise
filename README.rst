@@ -10,15 +10,13 @@ journalism, personal and professional research projects, `world building`_ (for 
 many kinds of hobbies.
 
     On a side note, an **alpha** version of Contextualise is already available at `https://contextualise.dev <https://contextualise.dev/>`_.
-    It is not advised, at this stage, to use Contextualise for anything other than testing purposes. Data could be
-    irrevocably lost!
 
     A Contextualise overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
 
-    Finally, check out the `Knowledge Graph Radar <https://github.com/brettkromkamp/knowledge-graph-radar>`_ to keep
-    track of interesting people, projects, applications and so forth related to the `knowledge graph <https://en.wikipedia.org/wiki/Knowledge_Graph>`_ space.
-    Alternatively, if you are interested in reading more in-depth articles in relation to knowledge graphs in general
-    and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/tags/contextualise/>`_.
+    Finally, check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, A curated
+    list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space.
+    Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general
+    and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
@@ -64,17 +62,18 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * The ability to attach (`glTF`_-based) 3D scenes to topics with an accompanying interactive 3D model viewer
 * Powerful (semantic) associations with the ability to create typed associations with role-based members
 * Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
-* Interactive visual network graph of related topics (allowing for navigation between topics)
+* Navigable network graph visualisation of related topics
 * Auto-complete on all form fields that expect a topic reference
 * Google Docs-like `collaboration <https://brettkromkamp.com/posts/contextualise-collaboration/>`_; that is, being able to share topic maps with other Contextualise users for the purpose of collaboration in one of three ways: 1) **can view**, 2) **can comment** or 3) **can edit**
 * Support for user-defined `knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
 * `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
-
-**Features Currently in Development (May-June 2020)**
-
 * `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
+
+**Features Currently in Development (June-August 2020)**
+
+* Associative tagging
+* Network graph visualisation filtering by association types
 * A topics index for each topic map with pagination and sorting (by name or modification date)
-* Semantic tagging
 
 **Post Version 1.0 Features**
 
