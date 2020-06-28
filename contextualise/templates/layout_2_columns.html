@@ -31,6 +31,7 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
     <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
 </head>
 <body class="d-flex flex-column h-100">
 <header>
@@ -379,20 +380,36 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script
-        src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.1.0/dist/latest/bootstrap-autocomplete.min.js"></script>
+<script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 {% block javascript %}{% endblock %}
 <script>
 var urlParts = window.location.pathname.split("/");
 var mapIdentifier = urlParts[3];
-var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
+var getIdentifiersApiUrl =
+  "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
 
-$(".typeahead").autoComplete({
-  resolverSettings: {
+var topicIdentifiers = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  sufficient: 3,
+  remote: {
     url: getIdentifiersApiUrl,
+    wildcard: "%QUERY",
   },
 });
+
+$(".typeahead").typeahead(
+  {
+    minLength: 3,
+    highlight: true,
+  },
+  {
+    name: "identifiers",
+    source: topicIdentifiers,
+    limit: 8
+  }
+);
 
 if (document.getElementById("goto-button") != null) {
   document.getElementById("goto-button").addEventListener("click", (event) => {
