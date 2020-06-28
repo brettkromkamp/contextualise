@@ -36,9 +36,7 @@ def topic_exists(map_identifier):
         abort(404)
 
     normalised_topic_identifier = slugify(str(request.args.get("q").lower()))
-    normalised_topic_name = " ".join(
-        [word.capitalize() for word in normalised_topic_identifier.split("-")]
-    )
+    normalised_topic_name = " ".join([word.capitalize() for word in normalised_topic_identifier.split("-")])
     exists = topic_store.topic_exists(map_identifier, normalised_topic_identifier)
     if exists:
         result = {"topicExists": True}
@@ -77,10 +75,7 @@ def create_topic(map_identifier):
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp",
-                timestamp,
-                topic.identifier,
-                data_type=DataType.TIMESTAMP,
+                "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -103,9 +98,7 @@ def get_identifiers(map_identifier):
 
     query_term = request.args.get("q").lower()
 
-    return jsonify(
-        topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)
-    )
+    return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10))
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
@@ -124,9 +117,7 @@ def get_network(map_identifier, topic_identifier):
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        if (
-            not topic_map.published
-        ):  # User is not logged in and the map is not published
+        if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
@@ -170,9 +161,7 @@ def get_network(map_identifier, topic_identifier):
             build_network(child.pointer)  # Recursive call
 
     if topic:
-        tree = topic_store.get_topics_network(
-            map_identifier, topic_identifier, scope=scope_identifier
-        )
+        tree = topic_store.get_topics_network(map_identifier, topic_identifier, scope=scope_identifier)
         if len(tree) > 1:
             nodes = 0
             edges = 1

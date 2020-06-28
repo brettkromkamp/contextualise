@@ -39,6 +39,4 @@ class User(user_store.Base, UserMixin):
     login_count = Column(Integer)
     active = Column(Boolean())
     confirmed_at = Column(DateTime())
-    roles = relationship(
-        "Role", secondary="roles_users", backref=backref("users", lazy="dynamic")
-    )
+    roles = relationship("Role", secondary="roles_users", backref=backref("users", lazy="dynamic"))

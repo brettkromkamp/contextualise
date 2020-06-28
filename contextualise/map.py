@@ -39,9 +39,7 @@ def index():
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template(
-        "map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps
-    )
+    return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
 
 
 @bp.route("/maps/published/")
@@ -73,11 +71,7 @@ def create():
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
         form_map_published = True if request.form.get("map-published") == "1" else False
-        form_upload_file = (
-            request.files["map-image-file"]
-            if "map-image-file" in request.files
-            else None
-        )
+        form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
         if not form_map_name:
@@ -96,9 +90,7 @@ def create():
                 "warning",
             )
         else:
-            image_file_name = (
-                f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-            )
+            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create and initialise the topic map
             map_identifier = topic_store.set_topic_map(
@@ -114,9 +106,7 @@ def create():
                 topic_store.initialise_topic_map(map_identifier, current_user.id)
 
                 # Create the directory for this topic map
-                topic_map_directory = os.path.join(
-                    bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-                )
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
                 if not os.path.isdir(topic_map_directory):
                     os.makedirs(topic_map_directory)
 
@@ -157,9 +147,7 @@ def delete(map_identifier):
         topic_store.delete_topic_map(map_identifier, current_user.id)
 
         # Delete the map's directory
-        topic_map_directory = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-        )
+        topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
         if os.path.isdir(topic_map_directory):
             shutil.rmtree(topic_map_directory)
 
@@ -190,11 +178,7 @@ def edit(map_identifier):
         form_map_name = request.form["map-name"].strip()
         form_map_description = request.form["map-description"].strip()
         form_map_published = True if request.form.get("map-published") == "1" else False
-        form_upload_file = (
-            request.files["map-image-file"]
-            if "map-image-file" in request.files
-            else None
-        )
+        form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
         # Validate form inputs
         if not form_map_name:
@@ -214,9 +198,7 @@ def edit(map_identifier):
             if form_upload_file:
                 # Upload the image for the topic map to the map's directory
                 image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-                topic_map_directory = os.path.join(
-                    bp.root_path, RESOURCES_DIRECTORY, str(map_identifier)
-                )
+                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
                 file_path = os.path.join(topic_map_directory, image_file_name)
                 form_upload_file.save(file_path)
 
@@ -261,9 +243,7 @@ def view(map_identifier):
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(
-            map_identifier, current_user.id
-        )
+        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
@@ -273,9 +253,7 @@ def view(map_identifier):
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             abort(404)
-        if (
-            not topic_map.published
-        ):  # User is not logged in and the map is not published
+        if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
     return render_template("map/view.html", topic_map=topic_map)
@@ -296,9 +274,7 @@ def collaborators(map_identifier):
         map_identifier
     )  # TODO: Rename (shadows -method- name from outer scope)?
 
-    return render_template(
-        "map/collaborators.html", topic_map=topic_map, collaborators=collaborators
-    )
+    return render_template("map/collaborators.html", topic_map=topic_map, collaborators=collaborators)
 
 
 @bp.route("/maps/add-collaborator/<map_identifier>", methods=("GET", "POST"))
@@ -321,9 +297,7 @@ def add_collaborator(map_identifier):
         form_collaborator_email = request.form["collaborator-email"].strip()
         form_collaboration_mode = request.form["collaboration-mode"]
 
-        collaborator = current_app.extensions["security"].datastore.get_user(
-            form_collaborator_email
-        )
+        collaborator = current_app.extensions["security"].datastore.get_user(form_collaborator_email)
         if not collaborator:
             error = error | 1
         if form_collaborator_email == current_user.email:
@@ -343,15 +317,10 @@ def add_collaborator(map_identifier):
             else:
                 collaboration_mode = CollaborationMode.VIEW
             topic_store.collaborate(
-                topic_map.identifier,
-                collaborator.id,
-                collaborator.email,
-                collaboration_mode,
+                topic_map.identifier, collaborator.id, collaborator.email, collaboration_mode,
             )
             flash("Collaborator successfully added.", "success")
-            return redirect(
-                url_for("map.collaborators", map_identifier=topic_map.identifier)
-            )
+            return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
 
     return render_template(
         "map/add_collaborator.html",
@@ -363,8 +332,7 @@ def add_collaborator(map_identifier):
 
 
 @bp.route(
-    "/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>",
-    methods=("GET", "POST"),
+    "/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def delete_collaborator(map_identifier, collaborator_identifier):
@@ -390,9 +358,7 @@ def delete_collaborator(map_identifier, collaborator_identifier):
         else:
             topic_store.stop_collaboration(map_identifier, collaborator_identifier)
             flash("Collaborator successfully removed.", "success")
-            return redirect(
-                url_for("map.collaborators", map_identifier=topic_map.identifier)
-            )
+            return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
 
     return render_template(
         "map/delete_collaborator.html",
@@ -404,8 +370,7 @@ def delete_collaborator(map_identifier, collaborator_identifier):
 
 
 @bp.route(
-    "/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>",
-    methods=("GET", "POST"),
+    "/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def edit_collaborator(map_identifier, collaborator_identifier):
@@ -436,14 +401,10 @@ def edit_collaborator(map_identifier, collaborator_identifier):
             )
         else:
             topic_store.update_collaboration_mode(
-                map_identifier,
-                collaborator_identifier,
-                CollaborationMode[form_collaboration_mode.upper()],
+                map_identifier, collaborator_identifier, CollaborationMode[form_collaboration_mode.upper()],
             )
             flash("Collaborator successfully updated.", "success")
-            return redirect(
-                url_for("map.collaborators", map_identifier=topic_map.identifier)
-            )
+            return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
 
     return render_template(
         "map/edit_collaborator.html",
