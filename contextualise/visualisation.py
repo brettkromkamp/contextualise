@@ -8,8 +8,6 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("visualisation", __name__)
 
-UNIVERSAL_SCOPE = "*"
-
 
 @bp.route("/visualisations/network/<map_identifier>/<topic_identifier>")
 def network(map_identifier, topic_identifier):

@@ -230,7 +230,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
         # If no values have been provided set their default values
         if not form_file_scope:
-            form_file_scope = UNIVERSAL_SCOPE
+            form_file_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_file_title:

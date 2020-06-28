@@ -72,7 +72,7 @@ def create_topic(map_identifier):
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=topic.identifier,
-                scope=UNIVERSAL_SCOPE,
+                scope=UNIVERSAL_SCOPE,  # TODO: Should it be session["current_scope"]?
                 resource_data="Topic automatically created.",
             )
             timestamp = str(datetime.now())

@@ -208,7 +208,7 @@ def edit(map_identifier, topic_identifier, video_identifier):
 
         # If no values have been provided set their default values
         if not form_video_scope:
-            form_video_scope = UNIVERSAL_SCOPE
+            form_video_scope = session["current_scope"]
 
         # Validate form inputs
         if not form_video_title:
