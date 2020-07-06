@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block javascript %}
-<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 {% endblock %}
 
@@ -17,11 +17,12 @@
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Visualisations</a>
+            role="button">Visualisations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 network</a>
+            <a class="dropdown-item" href="#">View tags cloud</a>
             <a class="dropdown-item" href="#">View timeline</a>
             <a class="dropdown-item" href="#">View geographic map</a>
         </div>
@@ -32,23 +33,23 @@
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-           href="#"
-           role="button">Topic</a>
+            href="#" role="button">Topic</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 note</a>
         </div>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Visualisations</a>
+            role="button">Visualisations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 network</a>
+            <a class="dropdown-item" href="#">View tags cloud</a>
             <a class="dropdown-item" href="#">View timeline</a>
             <a class="dropdown-item" href="#">View geographic map</a>
         </div>
@@ -59,115 +60,78 @@
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-           href="#"
-           role="button">Topic</a>
+            href="#" role="button">Topic</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
                 topic</a>
             <a class="dropdown-item"
-               href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
             <a class="dropdown-item"
-               href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
                 topic</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 names</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 note</a>
             <a class="dropdown-item" href="#">Add tags</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 attributes</a>
             {% endif %}
         </div>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Images</a>
+            role="button">Resources</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
                 image</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">3D</a>
-        <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-               href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                3D content</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Files</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-               href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
                 file</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Links</a>
-        <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-               href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                link</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Videos</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-               href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-               href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 video</a>
+            <a class="dropdown-item"
+                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                link</a>
+            <a class="dropdown-item"
+                href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                3D scene</a>
         </div>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Associations</a>
+            role="button">Associations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
                 association</a>
         </div>
     </li>
     <li class="nav-item dropdown">
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-           role="button">Visualisations</a>
+            role="button">Visualisations</a>
         <div class="dropdown-menu">
             <a class="dropdown-item"
-               href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 network</a>
             <a class="dropdown-item" href="#">View tags cloud</a>
             <a class="dropdown-item" href="#">View timeline</a>
@@ -179,10 +143,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic.first_base_name.name }}{% if topic.instance_of == 'tag' %}&nbsp;<small class="text-muted" style="font-size: 60%;"><i class="fas fa-tag"></i></small>{% endif %}</h1>
-<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i
-        class="fas fa-info-circle text-muted"></i> <a aria-controls="advancedProperties" aria-expanded="false"
-                                           data-toggle="collapse" href="#advancedProperties"> Properties</a></small>
+<h1>{{ topic.first_base_name.name }}{% if topic.instance_of == 'tag' %}&nbsp;<small class="text-muted"
+        style="font-size: 60%;"><i class="fas fa-tag"></i></small>{% endif %}</h1>
+<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i class="fas fa-info-circle text-muted"></i> <a
+            aria-controls="advancedProperties" aria-expanded="false" data-toggle="collapse" href="#advancedProperties">
+            Properties</a></small>
 </p>
 <div class="collapse" id="advancedProperties">
     <div class="card">
@@ -193,67 +158,69 @@
             <div class="card-text">
                 <table class="table table-bordered table-sm">
                     <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Value</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Value</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">Identifier</th>
-                        <td>
-                            {{ topic.identifier }}
-                        </td>
-                    </tr>
-                    <tr>
-                        {% if topic.base_names|length > 1 %}
-                        <th scope="row">Names</th>
-                        <td>
-                            {% for base_name in topic.base_names %}
-                            {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
+                        <tr>
+                            <th scope="row">Identifier</th>
+                            <td>
+                                {{ topic.identifier }}
+                            </td>
+                        </tr>
+                        <tr>
+                            {% if topic.base_names|length > 1 %}
+                            <th scope="row">Names</th>
+                            <td>
+                                {% for base_name in topic.base_names %}
+                                {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
                             endif %}
-                            {% endfor %}
-                        </td>
-                        {% else %}
-                        <th scope="row">Name</th>
-                        <td>
-                            {{ topic.first_base_name.name}}
-                        </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th scope="row">Type</th>
-                        <td>
-                            {% if session['current_scope'] == '*' %}
-                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                {% endfor %}
+                            </td>
                             {% else %}
-                            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                            <th scope="row">Name</th>
+                            <td>
+                                {{ topic.first_base_name.name}}
+                            </td>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Creation timestamp</th>
-                        <td>{{ creation_date }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Modification timestamp</th>
-                        <td>{{ modification_date }}</td>
-                    </tr>
+                        </tr>
+                        <tr>
+                            <th scope="row">Type</th>
+                            <td>
+                                {% if session['current_scope'] == '*' %}
+                                <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                {% else %}
+                                <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Creation timestamp</th>
+                            <td>{{ creation_date }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Modification timestamp</th>
+                            <td>{{ modification_date }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <br/>
+    <br />
 </div>
 {% if topic.instance_of == 'tag' %}
 <strong>Tagged topics:</strong>
-<br/>
+<br />
 {% for identifier in associations['categorization', 'member'] %}
 <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-    identifier|topic_name(topic_map.identifier) }}</a><br/>
+    identifier|topic_name(topic_map.identifier) }}</a><br />
 {% endfor %}
 {% endif %}
 {% if ('categorization', 'category') in associations %}
@@ -263,24 +230,28 @@
     identifier|tag_name }}</a>{% if loop.index < associations['categorization', 'category']|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
 {% endfor %}
 {% endif %}
-<hr/>
+<hr />
 {% if occurrences['text'] %}
 {{ occurrences['text']|safe }}
 <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
 {% else %}
 {% if current_user.id == topic_map.user_identifier %}
-<p>This topic has no text. Click on the "Edit topic" button below to add text to this topic.</p>
+<p class="alert alert-info" role="alert">
+    This topic has no text. Click on the "Edit topic" button below to add text to this topic.
+</p>
 <a class="btn btn-primary"
-   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+    href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
     topic</a>
-<br/>
-<br/>
+<br />
+<br />
 {% else %}
-<p>This topic has no text.</p>
+<p class="alert alert-info" role="alert">
+    This topic has no text.
+</p>
 {% endif %}
 {% endif %}
 {% if occurrences['notes'] %}
-<hr/>
+<hr />
 <h5>Notes</h5>
 {% for note in occurrences['notes'] %}
 <a name="note-{{note.identifier}}"></a>
@@ -293,38 +264,38 @@
         {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name ==
         "COMMENT") %}
         <a class="card-link"
-           href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
+            href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
         <a class="card-link"
-           href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+            href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
         {% endif %}
     </div>
 </div>
-<br/>
+<br />
 {% endfor %}
 <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
 {% endif %}
 {% if is_knowledge_path_topic %}
-<hr/>
+<hr />
 <div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
     <div aria-label="Basic example" class="btn-group" role="group">
         {% if ("navigation", "previous") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'previous'][0] }}"
-           role="button"><i class="fas fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Previous</a>
+        <a class="btn btn-info" href="{{ associations['navigation', 'previous'][0] }}" role="button"><i
+                class="fas fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Previous</a>
         {% endif %}
         {% if ("navigation", "up") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'up'][0] }}"
-           role="button"><i class="fas fa-arrow-up"></i>&nbsp;&nbsp;&nbsp;Up</a>
+        <a class="btn btn-info" href="{{ associations['navigation', 'up'][0] }}" role="button"><i
+                class="fas fa-arrow-up"></i>&nbsp;&nbsp;&nbsp;Up</a>
         {% endif %}
         {% if ("navigation", "down") in associations %}
         <a class="btn btn-info" href="{{ associations['navigation', 'down'][0] }}"
-           role="button">Down&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a>
+            role="button">Down&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a>
         {% endif %}
         {% if ("navigation", "next") in associations %}
         <a class="btn btn-info" href="{{ associations['navigation', 'next'][0] }}"
-           role="button">Next&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-right"></i></a>
+            role="button">Next&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-right"></i></a>
         {% endif %}
     </div>
 </div>
-<br/>
+<br />
 {% endif %}
 {% endblock %}

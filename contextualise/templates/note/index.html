@@ -10,7 +10,7 @@
         <h2>Notes &mdash;
             <small class="text-muted">{{ topic_map.name }}</small>
         </h2>
-        <br/>
+        <br />
     </div>
 </div>
 <div class="row">
@@ -24,22 +24,28 @@
                 </h5>
                 <p class="card-text">{{ note.text|safe }}</p>
                 {% if current_user.id == topic_map.user_identifier %}
-                <a class="card-link" href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
                 <a class="card-link"
-                   href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
+                    href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
+                <a class="card-link"
+                    href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
                     to topic</a>
-                <a class="card-link" href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert to topic</a>
-                <a class="card-link" href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
+                <a class="card-link"
+                    href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert
+                    to topic</a>
+                <a class="card-link"
+                    href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
                 {% endif %}
             </div>
         </div>
-        <br/>
+        <br />
         {% endfor %}
         {% else %}
         {% if current_user.id == topic_map.user_identifier %}
         <div class="row">
             <div class="col">
-                <p>This map has no notes. Click on the "Add note" button below to create a note.</p>
+                <p class="alert alert-info" role="alert">
+                    This map has no notes. Click on the "Add note" button below to create a note.
+                </p>
             </div>
         </div>
         {% endif %}
@@ -47,10 +53,10 @@
         {% if current_user.id == topic_map.user_identifier %}
         <div class="row">
             <div class="col">
-                <a class="btn btn-primary"
-                   href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
-                <br/>
-                <br/>
+                <a class="btn btn-primary" href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add
+                    note</a>
+                <br />
+                <br />
             </div>
         </div>
         {% endif %}

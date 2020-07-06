@@ -12,19 +12,17 @@
 <div class="row">
     <div class="col">
         <h1>My maps</h1>
-        <br/>
+        <br />
     </div>
 </div>
 <ul class="nav nav-tabs" id="mapsTab" role="tablist">
     <li class="nav-item">
         <a aria-controls="my-maps" aria-selected="true" class="nav-link active" data-toggle="tab" href="#my-maps"
-           id="my-maps-tab"
-           role="tab">Maps I own</a>
+            id="my-maps-tab" role="tab">Maps I own</a>
     </li>
     <li class="nav-item">
         <a aria-controls="collaboration-maps" aria-selected="false" class="nav-link" data-toggle="tab"
-           href="#collaboration-maps"
-           id="collaboration-maps-tab" role="tab">Maps I am collaborating on</a>
+            href="#collaboration-maps" id="collaboration-maps-tab" role="tab">Maps I am collaborating on</a>
     </li>
 </ul>
 <div class="tab-content" id="mapsTabContent">
@@ -36,7 +34,7 @@
                 <div class="card h-100 shadow-sm">
                     <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
                         <img alt="{{ map.name }}" class="card-img-top"
-                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                            src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                     </a>
                     <div class="card-header">
                         {% if map.published %}
@@ -53,8 +51,10 @@
                     </div>
                     <div class="card-footer">
                         <a class="card-link"
-                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View map</a>
-                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map details</a>
+                            href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                            map</a>
+                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map
+                            details</a>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,9 @@
         <div class="row">
             <div class="col">
                 {% if not own_maps %}
-                <p>No topic maps. Click on the "Create map" button below to create a topic map.</p>
+                <p class="alert alert-warning" role="alert">
+                    No topic maps. Click on the "Create map" button below to create a topic map.
+                </p>
                 {% endif %}
                 <a class="btn btn-primary" href="{{ url_for('map.create') }}">Create map</a>
             </div>
@@ -78,7 +80,7 @@
                 <div class="card h-100 shadow-sm">
                     <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
                         <img alt="{{ map.name }}" class="card-img-top"
-                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                            src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                     </a>
                     <div class="card-header">
                         {% if map.collaboration_mode.name == "VIEW" %}
@@ -97,8 +99,10 @@
                     </div>
                     <div class="card-footer">
                         <a class="card-link"
-                           href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View map</a>
-                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map details</a>
+                            href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                            map</a>
+                        <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map
+                            details</a>
                     </div>
                 </div>
             </div>
@@ -108,12 +112,14 @@
         {% if not collaboration_maps %}
         <div class="row">
             <div class="col">
-                <p>Currently, nobody has shared a topic map with you for the purpose of collaboration. Patience, my
-                    friend, patience!</p>
+                <p class="alert alert-info" role="alert">
+                    Currently, nobody has shared a topic map with you for the purpose of collaboration. Patience, my
+                    friend, patience!
+                </p>
             </div>
         </div>
         {% endif %}
     </div>
 </div>
-<br/>
+<br />
 {% endblock %}
