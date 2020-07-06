@@ -393,8 +393,6 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
-        if topic.get_attribute_by_name(form_attribute_name):
-            error = error | 8
 
         if error != 0:
             flash(
@@ -506,8 +504,6 @@ def entity_edit(
             error = error | 2
         if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
-        if entity.get_attribute_by_name(form_attribute_name):
-            error = error | 8
 
         if error != 0:
             flash(
