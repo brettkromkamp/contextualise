@@ -11,19 +11,16 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Add member</small>
 </h1>
-<hr/>
+<hr />
 <form action="{{ url_for('association.add_member',
         map_identifier=topic_map.identifier,
         topic_identifier=topic.identifier,
-        association_identifier=association.identifier) }}"
-      autocomplete="off" method="post" role="form">
+        association_identifier=association.identifier) }}" autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="role-spec"><strong>Member role</strong></label>
-        <input class="form-control typeahead" id="role-spec" name="role-spec"
-               placeholder="Enter role" required
-               type="text"
-               value="{{ role_spec or '' }}">
+        <input class="form-control typeahead" id="role-spec" name="role-spec" placeholder="Enter role" required
+            type="text" value="{{ role_spec or '' }}">
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
@@ -34,9 +31,7 @@
         <div class="form-group">
             <label for="topic-reference"><strong>Topic reference</strong></label>
             <input class="form-control typeahead" id="topic-reference" name="topic-reference"
-                   placeholder="Enter topic reference" required
-                   type="text"
-                   value="{{ topic_reference or '' }}">
+                placeholder="Enter topic reference" required type="text" value="{{ topic_reference or '' }}">
             {% if error|bitwise_and(8) == 8 %}
             <small class="text-danger">
                 A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
@@ -44,14 +39,12 @@
             {% endif %}
         </div>
     </div>
-    <a class="btn btn-secondary"
-       href="{{ url_for('association.view',
+    <a class="btn btn-secondary" href="{{ url_for('association.view',
             map_identifier=topic_map.identifier,
             topic_identifier=topic.identifier,
-            association_identifier=association.identifier) }}"
-       role="button">Cancel</a>
+            association_identifier=association.identifier) }}" role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Add member</button>
 </form>
-<br/>
-<br/>
+<br />
+<br />
 {% endblock %}

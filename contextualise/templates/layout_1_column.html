@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="h-100" lang="en">
-<head>
+
+  <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="Personal Knowledge Management System" name="description">
@@ -19,284 +20,285 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
     <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
-</head>
-<body class="d-flex flex-column h-100">
-<header>
-    <a name="page-top"></a>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  </head>
+
+  <body class="d-flex flex-column h-100">
+    <header>
+      <a name="page-top"></a>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Contextualise</a>
-            <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-                    data-target="#navbars"
-                    data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbars">
-                {% if topic_map %}
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
-                    </li>
-                    {% if topic and topic.identifier != 'home' %}
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary"
-                           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
-                           role="button">Home</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                {% endif %}
-                {% if current_user.is_authenticated %}
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
-                           data-toggle="dropdown"
-                           href="#" id="navbarDropdown" role="button">
-                            <strong>{{ current_user.email }}</strong>
-                        </a>
-                        <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Preferences</a>
-                            <div class="dropdown-divider"></div>
-                            {% if topic_map and current_user.id == topic_map.user_identifier %}
-                            <a class="dropdown-item" href="#">Search</a>
-                            {% endif %}
-                            <a class="dropdown-item" href="#">Topics index</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
-                        </div>
-                    </li>
-                </ul>
-                {% else %}
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
-                    </li>
-                </ul>
-                {% endif %}
-            </div>
+          <a class="navbar-brand" href="/">Contextualise</a>
+          <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbars" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbars">
+            {% if topic_map %}
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+              </li>
+              {% if topic and topic.identifier != 'home' %}
+              <li class="nav-item">
+                <a class="btn btn-outline-primary"
+                  href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+                  role="button">Home</a>
+              </li>
+              {% endif %}
+            </ul>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                  href="#" id="navbarDropdown" role="button">
+                  <strong>{{ current_user.email }}</strong>
+                </a>
+                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                  <a class="dropdown-item" href="#">Preferences</a>
+                  <div class="dropdown-divider"></div>
+                  {% if topic_map and current_user.id == topic_map.user_identifier %}
+                  <a class="dropdown-item" href="#">Search</a>
+                  {% endif %}
+                  <a class="dropdown-item" href="#">Topics index</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
+                </div>
+              </li>
+            </ul>
+            {% else %}
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
+              </li>
+            </ul>
+            {% endif %}
+          </div>
         </div>
-    </nav>
-</header>
-<main class="flex-shrink-0" role="main">
-    <div class="container">
+      </nav>
+    </header>
+    <main class="flex-shrink-0" role="main">
+      <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                {% include "_messages.html" %}
-            </div>
+          <div class="col-md-12">
+            {% include "_messages.html" %}
+          </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                {% if topic and topic_map %}
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        {% if session['breadcrumbs'] %}
-                        {% for breadcrumb in session['breadcrumbs'] %}
-                        {% if loop.index < session['breadcrumbs']|length %}
-                        <li class="breadcrumb-item"><a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
+          <div class="col-md-12">
+            {% if topic and topic_map %}
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                {% if session['breadcrumbs'] %}
+                {% for breadcrumb in session['breadcrumbs'] %}
+                {% if loop.index < session['breadcrumbs']|length %}
+                <li class="breadcrumb-item"><a
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
                             breadcrumb|topic_name(topic_map.identifier) }}</a></li>
-                        {% else %}
-                        <li aria-current="page" class="breadcrumb-item active">{{
+                {% else %}
+                <li aria-current="page" class="breadcrumb-item active">{{
                             breadcrumb|topic_name(topic_map.identifier) }}
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                        {% endif %}
-                    </ol>
-                </nav>
+                </li>
                 {% endif %}
-            </div>
+                {% endfor %}
+                {% endif %}
+              </ol>
+            </nav>
+            {% endif %}
+          </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                {% block menu %}{% endblock %}
-            </div>
+          <div class="col-md-12">
+            {% block menu %}{% endblock %}
+          </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                {% block body %}
-                {% block content %}{% endblock %}
-                {% endblock %}
-            </div>
+          <div class="col-md-12">
+            {% block body %}
+            {% block content %}{% endblock %}
+            {% endblock %}
+          </div>
         </div>
-    </div>
-</main>
-<footer class="footer mt-auto py-3">
-    <div class="container">
-		<span class="text-muted"><small><a href="/">Contextualise</a> is handcrafted with <i class="fas fa-heart"
-                                                                                             style="color:#c91818;"></i> and a lot of <i
-                class="fas fa-coffee"></i> by <a href="https://brettkromkamp.com">Brett Kromkamp</a>, a semantic technologies enthusiast living in Norway</small></span>
-    </div>
-</footer>
-<!-- Modal -->
-<div class="modal fade" id="createTopicModal" tabindex="-1" role="dialog" aria-labelledby="createTopicModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
+      </div>
+    </main>
+    <footer class="footer mt-auto py-3">
+      <div class="container">
+        <span class="text-muted"><small><a href="/">Contextualise</a> is handcrafted with <i class="fas fa-heart"
+              style="color:#c91818;"></i> and a lot of <i class="fas fa-coffee"></i> by <a
+              href="https://brettkromkamp.com">Brett Kromkamp</a>, a semantic technologies enthusiast living in
+            Norway</small></span>
+      </div>
+    </footer>
+    <!-- Modal -->
+    <div class="modal fade" id="createTopicModal" tabindex="-1" role="dialog" aria-labelledby="createTopicModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Topic doesn't exist. Create topic?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Topic doesn't exist. Create topic?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>A topic with the identifier you provided does not exist. Check the identifier and the suggested name
+              and click the "Create topic" button if you want to create a topic with this identifier.</p>
+            <div class="form-group">
+              <label for="create-topic-identifier" class="col-form-label"><strong>Topic identifier</strong></label>
+              <input aria-readonly="true" readonly type="text" class="form-control" id="create-topic-identifier"
+                name="create-topic-identifier">
             </div>
-            <div class="modal-body">
-                <p>A topic with the identifier you provided does not exist. Check the identifier and the suggested name
-                    and click the "Create topic" button if you want to create a topic with this identifier.</p>
-                <div class="form-group">
-                    <label for="create-topic-identifier" class="col-form-label"><strong>Topic identifier</strong></label>
-                    <input aria-readonly="true" readonly type="text" class="form-control" id="create-topic-identifier"
-                           name="create-topic-identifier">
-                </div>
-                <div class="form-group">
-                    <label for="create-topic-name" class="col-form-label"><strong>Topic name</strong></label>
-                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name"
-                           placeholder="Enter name" autofocus>
-                </div>
+            <div class="form-group">
+              <label for="create-topic-name" class="col-form-label"><strong>Topic name</strong></label>
+              <input type="text" class="form-control" id="create-topic-name" name="create-topic-name"
+                placeholder="Enter name" autofocus>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="create-topic-modal-button">Create topic</button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="create-topic-modal-button">Create topic</button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
-{% block javascript %}{% endblock %}
-<script>
-var urlParts = window.location.pathname.split("/");
-var mapIdentifier = urlParts[3];
-var getIdentifiersApiUrl =
-  "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
-var topicExistsApiUrl = "/api/topic-exists/" + mapIdentifier;
-var topicCreateApiUrl = "/api/create-topic/" + mapIdentifier;
-var normalisedTopicIdentifier = "";
-var normalisedTopicName = "";
-var createTopic = false;
-var notyf = new Notyf({
-  position: { x: "right", y: "top" },
-  dismissible: true,
-  duration: 3000,
-});
-
-var topicIdentifiers = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.whitespace,
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  sufficient: 3,
-  remote: {
-    url: getIdentifiersApiUrl,
-    wildcard: "%QUERY",
-  },
-});
-
-$(".typeahead").typeahead(
-  {
-    minLength: 3,
-    highlight: true,
-  },
-  {
-    name: "identifiers",
-    source: topicIdentifiers,
-    limit: 8
-  }
-);
-
-$(".typeahead").change(function (e) {
-  var queryTerm = this.value;
-  createTopic = false;
-  axios
-    .get(topicExistsApiUrl, {
-      params: {
-        q: queryTerm,
-      },
-    })
-    .then(function (response) {
-      if (
-        response.data.topicExists === false &&
-        response.data.normalisedTopicIdentifier !== ""
-      ) {
-        normalisedTopicIdentifier = response.data.normalisedTopicIdentifier;
-        normalisedTopicName = response.data.normalisedTopicName;
-        this.value = normalisedTopicIdentifier;
-        $("#createTopicModal").modal();
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
-    });
-});
-
-$("#createTopicModal").on("show.bs.modal", function (event) {
-  var modal = $(this);
-
-  modal
-    .find(".modal-body #create-topic-identifier")
-    .val(normalisedTopicIdentifier);
-  modal.find(".modal-body #create-topic-name").val(normalisedTopicName);
-
-  //$("#create-topic-name").trigger("focus"); // Has no effect, just doesn't work!
-});
-
-document
-  .getElementById("create-topic-modal-button")
-  .addEventListener("click", function () {
-    $("#createTopicModal").modal("hide");
-    createTopic = true;
-  });
-
-$("#createTopicModal").on("hidden.bs.modal", function (e) {
-  if (createTopic) {
-    var modal = $(this);
-    var bodyFormData = new FormData();
-    bodyFormData.set(
-      "topic-identifier",
-      modal.find(".modal-body #create-topic-identifier").val()
-    );
-    bodyFormData.set(
-      "topic-name",
-      modal.find(".modal-body #create-topic-name").val()
-    );
-
-    axios({
-      method: "post",
-      url: topicCreateApiUrl,
-      data: bodyFormData,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then(function (response) {
-        // Handle success
-        notyf.success("Topic successfully saved!");
-      })
-      .catch(function (response) {
-        // Handle error
-        notyf.error("Unable to save topic!");
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    {% block javascript %}{% endblock %}
+    <script>
+      var urlParts = window.location.pathname.split("/");
+      var mapIdentifier = urlParts[3];
+      var getIdentifiersApiUrl =
+        "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+      var topicExistsApiUrl = "/api/topic-exists/" + mapIdentifier;
+      var topicCreateApiUrl = "/api/create-topic/" + mapIdentifier;
+      var normalisedTopicIdentifier = "";
+      var normalisedTopicName = "";
+      var createTopic = false;
+      var notyf = new Notyf({
+        position: { x: "right", y: "top" },
+        dismissible: true,
+        duration: 3000,
       });
-  }
-});
-</script>
-</body>
+
+      var topicIdentifiers = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        sufficient: 3,
+        remote: {
+          url: getIdentifiersApiUrl,
+          wildcard: "%QUERY",
+        },
+      });
+
+      $(".typeahead").typeahead(
+        {
+          minLength: 3,
+          highlight: true,
+        },
+        {
+          name: "identifiers",
+          source: topicIdentifiers,
+          limit: 8
+        }
+      );
+
+      $(".typeahead").change(function (e) {
+        var queryTerm = this.value;
+        createTopic = false;
+        axios
+          .get(topicExistsApiUrl, {
+            params: {
+              q: queryTerm,
+            },
+          })
+          .then(function (response) {
+            if (
+              response.data.topicExists === false &&
+              response.data.normalisedTopicIdentifier !== ""
+            ) {
+              normalisedTopicIdentifier = response.data.normalisedTopicIdentifier;
+              normalisedTopicName = response.data.normalisedTopicName;
+              this.value = normalisedTopicIdentifier;
+              $("#createTopicModal").modal();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .then(function () {
+            // always executed
+          });
+      });
+
+      $("#createTopicModal").on("show.bs.modal", function (event) {
+        var modal = $(this);
+
+        modal
+          .find(".modal-body #create-topic-identifier")
+          .val(normalisedTopicIdentifier);
+        modal.find(".modal-body #create-topic-name").val(normalisedTopicName);
+
+        //$("#create-topic-name").trigger("focus"); // Has no effect, just doesn't work!
+      });
+
+      document
+        .getElementById("create-topic-modal-button")
+        .addEventListener("click", function () {
+          $("#createTopicModal").modal("hide");
+          createTopic = true;
+        });
+
+      $("#createTopicModal").on("hidden.bs.modal", function (e) {
+        if (createTopic) {
+          var modal = $(this);
+          var bodyFormData = new FormData();
+          bodyFormData.set(
+            "topic-identifier",
+            modal.find(".modal-body #create-topic-identifier").val()
+          );
+          bodyFormData.set(
+            "topic-name",
+            modal.find(".modal-body #create-topic-name").val()
+          );
+
+          axios({
+            method: "post",
+            url: topicCreateApiUrl,
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+            .then(function (response) {
+              // Handle success
+              notyf.success("Topic successfully saved!");
+            })
+            .catch(function (response) {
+              // Handle error
+              notyf.error("Unable to save topic!");
+            });
+        }
+      });
+    </script>
+  </body>
+
 </html>

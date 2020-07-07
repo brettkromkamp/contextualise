@@ -9,12 +9,12 @@
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <script>
-var editor = new EasyMDE({element: document.getElementById('topic-text')});
+    var editor = new EasyMDE({ element: document.getElementById('topic-text') });
 </script>
 
 {% if error %}
 <script>
-$('#advancedOptions').collapse('show');
+    $('#advancedOptions').collapse('show');
 </script>
 {% endif %}
 {% endblock %}
@@ -24,21 +24,21 @@ $('#advancedOptions').collapse('show');
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Edit topic</small>
 </h1>
-<hr/>
+<hr />
 <form action="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-      autocomplete="off" method="post" role="form">
+    autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
-        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required
-               type="text" value="{{ topic_name or '' }}">
+        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required type="text"
+            value="{{ topic_name or '' }}">
     </div>
     <div class="form-group">
         <label for="topic-text"><strong>Text</strong></label>
         <textarea class="form-control" id="topic-text" name="topic-text" rows="8">{{ topic_text or '' }}</textarea>
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -51,8 +51,7 @@ $('#advancedOptions').collapse('show');
                             <small class="text-info">&mdash; If no value is provided the default will be "topic"</small>
                         </label>
                         <input class="form-control typeahead" id="topic-instance-of" name="topic-instance-of"
-                               placeholder="Enter type identifier"
-                               type="text" value="{{ topic_instance_of or '' }}">
+                            placeholder="Enter type identifier" type="text" value="{{ topic_instance_of or '' }}">
                         {% if error|bitwise_and(1) == 1 %}
                         <small class="text-danger">
                             A type with this identifier doesn't exist. Please provide an identifier for an existing
@@ -62,13 +61,13 @@ $('#advancedOptions').collapse('show');
                     </div>
                     <div class="form-group">
                         <label for="topic-text-scope"><strong>Text context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                            <small class="text-info">&mdash; If no value is provided the default will be
+                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
                                 the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="topic-text-scope" name="topic-text-scope"
-                               placeholder="Enter context identifier"
-                               type="text" value="{{ topic_text_scope or '' }}">
+                            placeholder="Enter context identifier" type="text" value="{{ topic_text_scope or '' }}">
                         {% if error|bitwise_and(2) == 2 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -79,12 +78,12 @@ $('#advancedOptions').collapse('show');
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Update topic</button>
 </form>
-<br/>
+<br />
 {% endblock %}

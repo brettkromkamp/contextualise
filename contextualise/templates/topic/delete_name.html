@@ -11,17 +11,17 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Delete topic name</small>
 </h1>
-<hr/>
-<form action="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
-      autocomplete="off" method="post" role="form">
+<hr />
+<form
+    action="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
+    autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
-        <input class="form-control" id="topic-name" name="topic-name" readonly
-               type="text" value="{{ topic_name }}">
+        <input class="form-control" id="topic-name" name="topic-name" readonly type="text" value="{{ topic_name }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -32,17 +32,17 @@
                     <div class="form-group">
                         <label for="link-scope"><strong>Context</strong></label>
                         <input aria-readonly="true" class="form-control" id="topic-name-scope" name="topic-name-scope"
-                               readonly type="text" value="{{ topic_name_scope }}">
+                            readonly type="text" value="{{ topic_name_scope }}">
                     </div>
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete name</button>
 </form>
-<br/>
+<br />
 {% endblock %}

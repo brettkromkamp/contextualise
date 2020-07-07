@@ -181,3 +181,21 @@ def get_network(map_identifier, topic_identifier):
             jsonify({"status": "error", "code": 404, "message": "Topic not found"}),
             404,
         )
+
+
+@bp.route("/api/get-associations/<map_identifier>/<topic_identifier>")
+@login_required
+def get_associations(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+
+    associations = topic_store.get_topic_associations(map_identifier, topic_identifier)
+    if associations is None:
+        abort(404)
+
+    result = {"associations"}
+
+    return (jsonify(result), 200)

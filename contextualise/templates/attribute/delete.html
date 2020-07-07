@@ -11,60 +11,62 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Delete attribute</small>
 </h1>
-<hr/>
+<hr />
 {% if entity_type == 'topic' %}
-<form action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}"
-      method="post" role="form">
-{% else %}
-<form action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}"
-      method="post" role="form">
-{% endif %}
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="attribute-name"><strong>Name</strong></label>
-        <input class="form-control" id="attribute-name" name="attribute-name" readonly
-               type="text" value="{{ attribute_name }}">
-    </div>
-    <div class="form-group">
-        <label for="attribute-value"><strong>Value</strong></label>
-        <input class="form-control" id="attribute-value" name="attribute-value" readonly
-               type="text" value="{{ attribute_value }}">
-    </div>
-    <div class="form-group">
-        <label for="attribute-type">Type</label>
-        <input class="form-control" id="attribute-type" name="attribute-type" readonly
-               type="text" value="{{ attribute_type }}">
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
-            </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="attribute-scope"><strong>Context</strong></label>
-                        <input aria-readonly="true" class="form-control" id="attribute-scope" name="attribute-scope"
-                               readonly type="text" value="{{ attribute_scope }}">
+<form
+    action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}"
+    method="post" role="form">
+    {% else %}
+    <form
+        action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}"
+        method="post" role="form">
+        {% endif %}
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="attribute-name"><strong>Name</strong></label>
+            <input class="form-control" id="attribute-name" name="attribute-name" readonly type="text"
+                value="{{ attribute_name }}">
+        </div>
+        <div class="form-group">
+            <label for="attribute-value"><strong>Value</strong></label>
+            <input class="form-control" id="attribute-value" name="attribute-value" readonly type="text"
+                value="{{ attribute_value }}">
+        </div>
+        <div class="form-group">
+            <label for="attribute-type">Type</label>
+            <input class="form-control" id="attribute-type" name="attribute-type" readonly type="text"
+                value="{{ attribute_type }}">
+        </div>
+        <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
+        </p>
+        <div class="collapse" id="advancedOptions">
+            <div class="card">
+                <div class="card-header">
+                    Advanced options
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="form-group">
+                            <label for="attribute-scope"><strong>Context</strong></label>
+                            <input aria-readonly="true" class="form-control" id="attribute-scope" name="attribute-scope"
+                                readonly type="text" value="{{ attribute_scope }}">
+                        </div>
                     </div>
                 </div>
             </div>
+            <br />
         </div>
-        <br/>
-    </div>
-    {% if entity_type == 'topic' %}
-    <a class="btn btn-secondary"
-       href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
-    {% else %}
-    <a class="btn btn-secondary"
-       href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}"
-       role="button">Cancel</a>
-    {% endif %}
-    <button class="btn btn-danger" type="submit">Delete attribute</button>
-</form>
-<br/>
-{% endblock %}
+        {% if entity_type == 'topic' %}
+        <a class="btn btn-secondary"
+            href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            role="button">Cancel</a>
+        {% else %}
+        <a class="btn btn-secondary"
+            href="{{ url_for(cancel_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}"
+            role="button">Cancel</a>
+        {% endif %}
+        <button class="btn btn-danger" type="submit">Delete attribute</button>
+    </form>
+    <br />
+    {% endblock %}

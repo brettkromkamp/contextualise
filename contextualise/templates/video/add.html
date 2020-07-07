@@ -7,7 +7,7 @@
 {% block javascript %}
 {% if error %}
 <script>
-$('#advancedOptions').collapse('show');
+    $('#advancedOptions').collapse('show');
 </script>
 {% endif %}
 {% endblock %}
@@ -17,22 +17,22 @@ $('#advancedOptions').collapse('show');
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Add video link</small>
 </h1>
-<hr/>
+<hr />
 <form action="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-      autocomplete="off" method="post" role="form">
+    autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="video-title"><strong>Title</strong></label>
-        <input class="form-control" id="video-title" name="video-title" placeholder="Enter title" required
-               type="text" value="{{ video_title or '' }}">
+        <input class="form-control" id="video-title" name="video-title" placeholder="Enter title" required type="text"
+            value="{{ video_title or '' }}">
     </div>
     <div class="form-group">
         <label for="video-url"><strong>Link (URL)</strong></label>
-        <input class="form-control" id="video-url" name="video-url" placeholder="Enter video link" required
-               type="text" value="{{ video_url or '' }}">
+        <input class="form-control" id="video-url" name="video-url" placeholder="Enter video link" required type="text"
+            value="{{ video_url or '' }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -42,13 +42,13 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="video-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                            <small class="text-info">&mdash; If no value is provided the default will be
+                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
                                 the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="video-scope" name="video-scope"
-                               placeholder="Enter context identifier"
-                               type="text" value="{{ video_scope or '' }}">
+                            placeholder="Enter context identifier" type="text" value="{{ video_scope or '' }}">
                         {% if error|bitwise_and(4) == 4 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -59,12 +59,12 @@ $('#advancedOptions').collapse('show');
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Add video link</button>
 </form>
-<br/>
+<br />
 {% endblock %}

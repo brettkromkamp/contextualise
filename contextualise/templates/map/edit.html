@@ -8,29 +8,28 @@
 <h1>{{ topic_map.name }}
     <small class="text-muted">Edit map</small>
 </h1>
-<hr/>
-<form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}"
-      autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+<hr />
+<form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}" autocomplete="off"
+    enctype="multipart/form-data" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="map-name"><strong>Name</strong></label>
-        <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required
-               type="text" value="{{ map_name }}">
+        <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required type="text"
+            value="{{ map_name }}">
     </div>
     <div class="form-group">
         <label for="map-description"><strong>Description</strong></label>
         <textarea class="form-control" id="map-description" name="map-description"
-                  rows="3">{{ map_description }}</textarea>
+            rows="3">{{ map_description }}</textarea>
     </div>
     <div class="form-group">
         <label for="map-image-file"><strong>Image</strong></label>
         {% if topic_map.image_path %}
-        <br/>
-        <img alt="{{ map_name }}"
-             class="map-image img-thumbnail" class="img-thumbnail"
-             src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
-        <br/>
-        <br/>
+        <br />
+        <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
+            src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
+        <br />
+        <br />
         {% endif %}
         <input accept=".jpg,.jpeg,.png" class="form-control-file" id="map-image-file" name="map-image-file" type="file">
         {% if error|bitwise_and(2) == 2 %}
@@ -74,11 +73,10 @@
     </div>
     {% endif %}
     {% endif %}
-    <hr/>
-    <a class="btn btn-secondary"
-       href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
-       role="button">Cancel</a>
+    <hr />
+    <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Update map</button>
 </form>
-<br/>
+<br />
 {% endblock %}

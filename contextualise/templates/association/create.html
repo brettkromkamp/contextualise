@@ -6,50 +6,50 @@
 
 {% block javascript %}
 <script>
-document
-  .getElementById("association-name")
-  .addEventListener("blur", (event) => {
-    var associationName = document.getElementById("association-name").value;
-    if (associationName !== "") {
-      axios
-        .get("/api/get-slug?value=" + associationName)
-        .then(function (response) {
-          // Handle success
-          document.getElementById("association-identifier").value =
-            response.data.slug;
-        })
-        .catch(function (error) {
-          // Handle error
-          console.log(error);
-        })
-        .then(function () {
-          // Always executed
+    document
+        .getElementById("association-name")
+        .addEventListener("blur", (event) => {
+            var associationName = document.getElementById("association-name").value;
+            if (associationName !== "") {
+                axios
+                    .get("/api/get-slug?value=" + associationName)
+                    .then(function (response) {
+                        // Handle success
+                        document.getElementById("association-identifier").value =
+                            response.data.slug;
+                    })
+                    .catch(function (error) {
+                        // Handle error
+                        console.log(error);
+                    })
+                    .then(function () {
+                        // Always executed
+                    });
+            }
         });
-    }
-  });
 
-var associationIdentifierInput = document.getElementById(
-  "association-identifier"
-);
+    var associationIdentifierInput = document.getElementById(
+        "association-identifier"
+    );
 
-document
-  .getElementById("edit-identifier-button")
-  .addEventListener("click", (event) => {
-    if (associationIdentifierInput.readOnly) {
-      associationIdentifierInput.readOnly = false;
-      associationIdentifierInput.focus();
-      document.getElementById("edit-identifier-button").innerHTML = "Ok";
-    } else {
-      associationIdentifierInput.readOnly = true;
-      document.getElementById("edit-identifier-button").focus();
-      document.getElementById("edit-identifier-button").innerHTML = "Edit";
-    }
-  });
+    document
+        .getElementById("edit-identifier-button")
+        .addEventListener("click", (event) => {
+            if (associationIdentifierInput.readOnly) {
+                associationIdentifierInput.readOnly = false;
+                associationIdentifierInput.focus();
+                document.getElementById("edit-identifier-button").innerHTML = "Ok";
+            } else {
+                associationIdentifierInput.readOnly = true;
+                document.getElementById("edit-identifier-button").focus();
+                document.getElementById("edit-identifier-button").innerHTML = "Edit";
+            }
+        });
 </script>
 
 {% if error %}
 <script>
-$('#advancedOptions').collapse('show');
+    $('#advancedOptions').collapse('show');
 </script>
 {% endif %}
 {% endblock %}
@@ -59,15 +59,16 @@ $('#advancedOptions').collapse('show');
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Create association</small>
 </h1>
-<hr/>
-<form action="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-      autocomplete="off" method="post" role="form">
+<hr />
+<form
+    action="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+    autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
         <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
-               placeholder="Enter destination topic identifier" required
-               type="text" value="{{ association_dest_topic_ref or '' }}">
+            placeholder="Enter destination topic identifier" required type="text"
+            value="{{ association_dest_topic_ref or '' }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
             A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
@@ -79,30 +80,27 @@ $('#advancedOptions').collapse('show');
             <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
         </label>
         <input class="form-control typeahead" id="association-dest-role-spec" name="association-dest-role-spec"
-               placeholder="Enter destination role identifier"
-               type="text" value="{{ association_dest_role_spec or '' }}">
+            placeholder="Enter destination role identifier" type="text" value="{{ association_dest_role_spec or '' }}">
     </div>
     <div class="form-group">
         <label for="association-src-topic-ref"><strong>Source topic</strong></label>
         <input class="form-control" id="association-src-topic-ref" name="association-src-topic-ref"
-               placeholder="Enter source topic identifier" readonly required
-               type="text" value="{{ association_src_topic_ref or '' }}">
+            placeholder="Enter source topic identifier" readonly required type="text"
+            value="{{ association_src_topic_ref or '' }}">
     </div>
     <div class="form-group">
         <label for="association-src-role-spec"><strong>Source role</strong>
             <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
         </label>
         <input class="form-control typeahead" id="association-src-role-spec" name="association-src-role-spec"
-               placeholder="Enter source role identifier"
-               type="text" value="{{ association_src_role_spec or '' }}">
+            placeholder="Enter source role identifier" type="text" value="{{ association_src_role_spec or '' }}">
     </div>
     <div class="form-group">
         <label for="association-instance-of"><strong>Type</strong>
             <small class="text-info">&mdash; If no value is provided the default will be "association"</small>
         </label>
         <input class="form-control typeahead" id="association-instance-of" name="association-instance-of"
-               placeholder="Enter type identifier"
-               type="text" value="{{ association_instance_of or '' }}">
+            placeholder="Enter type identifier" type="text" value="{{ association_instance_of or '' }}">
         {% if error|bitwise_and(8) == 8 %}
         <small class="text-danger">
             A type with this identifier doesn't exist. Please provide an identifier for an existing type.
@@ -110,7 +108,7 @@ $('#advancedOptions').collapse('show');
         {% endif %}
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -120,13 +118,13 @@ $('#advancedOptions').collapse('show');
                 <div class="card-text">
                     <div class="form-group">
                         <label for="association-scope"><strong>Context</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                            <small class="text-info">&mdash; If no value is provided the default will be
+                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
                                 the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="association-scope" name="association-scope"
-                               placeholder="Enter context identifier"
-                               type="text" value="{{ association_scope or '' }}">
+                            placeholder="Enter context identifier" type="text" value="{{ association_scope or '' }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -140,8 +138,7 @@ $('#advancedOptions').collapse('show');
                             </small>
                         </label>
                         <input class="form-control" id="association-name" name="association-name"
-                               placeholder="Enter name"
-                               type="text" value="{{ association_name or '' }}">
+                            placeholder="Enter name" type="text" value="{{ association_name or '' }}">
                     </div>
                     <div class="form-group">
                         <label for="association-identifier"><strong>Identifier</strong>
@@ -151,8 +148,8 @@ $('#advancedOptions').collapse('show');
                         </label>
                         <div class="input-group">
                             <input class="form-control" id="association-identifier" name="association-identifier"
-                                   placeholder="Enter identifier"
-                                   readonly type="text" value="{{ association_identifier or '' }}">
+                                placeholder="Enter identifier" readonly type="text"
+                                value="{{ association_identifier or '' }}">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">
                                     Edit
@@ -170,12 +167,12 @@ $('#advancedOptions').collapse('show');
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Create association</button>
 </form>
-<br/>
+<br />
 {% endblock %}

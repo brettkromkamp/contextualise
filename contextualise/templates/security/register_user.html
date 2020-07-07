@@ -15,10 +15,11 @@
     {% if register_user_form.password_confirm %}
     <label class="sr-only" for="password_confirm">Confirm password</label>
     <input class="form-control" id="password_confirm" name="password_confirm" placeholder="Retype password"
-           type="password">
+        type="password">
     {% endif %}
     <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Register</button>
     {% include "security/_menu.html" %}
-    <p class="mt-5 mb-3 text-muted"><a href="/">Contextualise</a> &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp</p>
+    <p class="mt-5 mb-3 text-muted"><a href="/">Contextualise</a> &mdash; Copyright &copy; 2019-2020 by Brett Kromkamp
+    </p>
 </form>
 {% endblock %}

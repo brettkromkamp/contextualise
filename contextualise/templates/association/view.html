@@ -11,54 +11,56 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">View association</small>
 </h1>
-<hr/>
+<hr />
 <div class="form-group">
     <div class="form-group">
         <label for="association-instance-of"><strong>Type</strong></label>
         <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
-               readonly type="text"
-               value="{{ association.instance_of|topic_name(topic_map.identifier) }}">
+            readonly type="text" value="{{ association.instance_of|topic_name(topic_map.identifier) }}">
     </div>
     <div class="form-group">
         <label for="association-scope"><strong>Context</strong></label>
-        <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope"
-               readonly type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
+        <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope" readonly
+            type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
     </div>
     <label><strong>Members</strong></label>
     <table class="table table-bordered table-sm">
         <thead class="thead-light">
-        <tr>
-            <th scope="col">Role</th>
-            <th scope="col">Topic reference</th>
-            <th scope="col">Action</th>
-        </tr>
+            <tr>
+                <th scope="col">Role</th>
+                <th scope="col">Topic reference</th>
+                <th scope="col">Action</th>
+            </tr>
         </thead>
         <tbody>
-        {% for member in association.members %}
-        <tr>
-            <td class="align-middle">
-                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
+            {% for member in association.members %}
+            <tr>
+                <td class="align-middle">
+                    <a
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
                     member.role_spec|topic_name(topic_map.identifier) }}</a></td>
-            <td>
-                {% for topic_ref in member.topic_refs %}
-                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                    topic_ref|topic_name(topic_map.identifier) }}</a><br/>
-                {% endfor %}
-            </td>
-            <td class="align-middle">
-                <a href="{{ url_for('association.view_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">View</a>{%
+                <td>
+                    {% for topic_ref in member.topic_refs %}
+                    <a
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                    topic_ref|topic_name(topic_map.identifier) }}</a><br />
+                    {% endfor %}
+                </td>
+                <td class="align-middle">
+                    <a
+                        href="{{ url_for('association.view_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">View</a>{%
                 if association.members|length > 2 %} &nbsp;&nbsp;&middot;&nbsp;&nbsp; <a
-                    href="{{ url_for('association.delete_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">Delete</a>{%
+                        href="{{ url_for('association.delete_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier, member_identifier=member.identifier) }}">Delete</a>{%
                 endif %}
-            </td>
-        </tr>
-        {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
 
-<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                         data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false" data-toggle="collapse"
+        href="#advancedOptions"> Advanced options</a></p>
 <div class="collapse" id="advancedOptions">
     <div class="card">
         <div class="card-header">
@@ -69,25 +71,24 @@
                 <div class="form-group">
                     <label for="association-name"><strong>Name</strong></label>
                     <input aria-readonly="true" class="form-control" id="association-name" name="association-name"
-                           readonly type="text" value="{{ association.first_base_name.name }}">
+                        readonly type="text" value="{{ association.first_base_name.name }}">
                 </div>
                 <div class="form-group">
                     <label for="association-identifier"><strong>Identifier</strong></label>
                     <input aria-readonly="true" class="form-control" id="association-identifier"
-                           name="association-identifier"
-                           readonly type="text" value="{{ association.identifier }}">
+                        name="association-identifier" readonly type="text" value="{{ association.identifier }}">
                 </div>
             </div>
         </div>
     </div>
-    <br/>
+    <br />
 </div>
 <a class="btn btn-secondary"
-   href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-   role="button">Return</a>
+    href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+    role="button">Return</a>
 <a class="btn btn-primary"
-   href="{{ url_for('association.add_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
-   role="button">Add member</a>
-<br/>
-<br/>
+    href="{{ url_for('association.add_member', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}"
+    role="button">Add member</a>
+<br />
+<br />
 {% endblock %}

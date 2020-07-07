@@ -11,17 +11,18 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Edit topic name</small>
 </h1>
-<hr/>
-<form action="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
-      autocomplete="off" method="post" role="form">
+<hr />
+<form
+    action="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
+    autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
-        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required
-               type="text" value="{{ topic_name or '' }}">
+        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required type="text"
+            value="{{ topic_name or '' }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -31,13 +32,13 @@
                 <div class="card-text">
                     <div class="form-group">
                         <label for="link-scope">Context
-                            <small class="text-info">&mdash; If no value is provided the default will be "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                            <small class="text-info">&mdash; If no value is provided the default will be
+                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
                                 the current context)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="topic-name-scope" name="topic-name-scope"
-                               placeholder="Enter context identifier"
-                               type="text" value="{{ topic_name_scope or '' }}">
+                            placeholder="Enter context identifier" type="text" value="{{ topic_name_scope or '' }}">
                         {% if error|bitwise_and(2) == 2 %}
                         <small class="text-danger">
                             A context with this identifier doesn't exist. Please provide an identifier for an existing
@@ -48,12 +49,12 @@
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-success" type="submit">Update name</button>
 </form>
-<br/>
+<br />
 {% endblock %}

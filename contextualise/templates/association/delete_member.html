@@ -11,45 +11,42 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Delete member</small>
 </h1>
-<hr/>
+<hr />
 <form action="{{ url_for('association.delete_member',
         map_identifier=topic_map.identifier,
         topic_identifier=topic.identifier,
         association_identifier=association.identifier,
-        member_identifier=member.identifier) }}"
-      autocomplete="off" method="post" role="form">
+        member_identifier=member.identifier) }}" autocomplete="off" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="role-spec"><strong>Member role</strong></label>
-        <input aria-readonly="true" class="form-control typeahead" id="role-spec" name="role-spec"
-               readonly type="text"
-               value="{{ member.role_spec|topic_name(topic_map.identifier) }}">
+        <input aria-readonly="true" class="form-control typeahead" id="role-spec" name="role-spec" readonly type="text"
+            value="{{ member.role_spec|topic_name(topic_map.identifier) }}">
     </div>
     <label><strong>Topic references</strong></label>
     <table class="table table-bordered table-sm">
         <thead class="thead-light">
-        <tr>
-            <th scope="col">Reference</th>
-        </tr>
+            <tr>
+                <th scope="col">Reference</th>
+            </tr>
         </thead>
         <tbody>
-        {% for topic_ref in member.topic_refs %}
-        <tr>
-            <td>
-                <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+            {% for topic_ref in member.topic_refs %}
+            <tr>
+                <td>
+                    <a
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
                     topic_ref|topic_name(topic_map.identifier) }}</a>
-            </td>
-        </tr>
-        {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
-    <a class="btn btn-secondary"
-       href="{{ url_for('association.view',
+    <a class="btn btn-secondary" href="{{ url_for('association.view',
             map_identifier=topic_map.identifier,
             topic_identifier=topic.identifier,
-            association_identifier=association.identifier) }}"
-       role="button">Cancel</a>
+            association_identifier=association.identifier) }}" role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete member</button>
 </form>
-<br/>
+<br />
 {% endblock %}

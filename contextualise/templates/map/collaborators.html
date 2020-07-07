@@ -13,21 +13,18 @@
 {% block menu %}
 <ul class="nav nav-tabs">
     <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-           href="#"
-           role="button">Map</a>
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+            role="button">Map</a>
         <div class="dropdown-menu">
             <a aria-disabled="true" class="dropdown-item"
-               href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}" tabindex="-1">View</a>
+                href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}" tabindex="-1">View</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-               href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit map</a>
-            <a class="dropdown-item"
-               href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
+            <a class="dropdown-item" href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit map</a>
+            <a class="dropdown-item" href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
                 map</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-               href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Home</a>
+                href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Home</a>
         </div>
     </li>
     <li class="nav-item">
@@ -41,37 +38,39 @@
     {{ topic_map.name }}
     <small class="text-muted">Collaborators</small>
 </h1>
-<hr/>
+<hr />
 {% if collaborators %}
 <div class="row">
     <div class="col">
         <table class="table table-bordered table-hover">
             <thead class="thead-light">
-            <tr>
-                <th scope="col">User name</th>
-                <th scope="col">Collaboration mode</th>
-                <th scope="col">Actions</th>
-            </tr>
+                <tr>
+                    <th scope="col">User name</th>
+                    <th scope="col">Collaboration mode</th>
+                    <th scope="col">Actions</th>
+                </tr>
             </thead>
             <tbody>
-            {% for collaborator in collaborators %}
-            <tr>
-                <th scope="row">{{ collaborator.user_name }}</th>
-                <td class="align-middle">
-                    {% if collaborator.collaboration_mode.name == "VIEW" %}
-                    <span class="badge badge-info">Can View</span>
-                    {% elif collaborator.collaboration_mode.name == "COMMENT" %}
-                    <span class="badge badge-secondary">Can Comment</span>
-                    {% else %}
-                    <span class="badge badge-warning">Can Edit</span>
-                    {% endif %}
-                </td>
-                <td class="align-middle" style="min-width: 8em;">
-                    <a href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a href="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
+                {% for collaborator in collaborators %}
+                <tr>
+                    <th scope="row">{{ collaborator.user_name }}</th>
+                    <td class="align-middle">
+                        {% if collaborator.collaboration_mode.name == "VIEW" %}
+                        <span class="badge badge-info">Can View</span>
+                        {% elif collaborator.collaboration_mode.name == "COMMENT" %}
+                        <span class="badge badge-secondary">Can Comment</span>
+                        {% else %}
+                        <span class="badge badge-warning">Can Edit</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle" style="min-width: 8em;">
+                        <a
+                            href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                        <a
+                            href="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -82,11 +81,10 @@
 {% endif %}
 <div class="row">
     <div class="col">
-        <a class="btn btn-secondary"
-           href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
-           role="button">Return</a>
-        <a class="btn btn-primary"
-           href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add collaborator</a>
+        <a class="btn btn-secondary" href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
+            role="button">Return</a>
+        <a class="btn btn-primary" href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add
+            collaborator</a>
     </div>
 </div>
 {% endblock %}

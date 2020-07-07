@@ -11,17 +11,18 @@
     {{ topic.identifier|topic_name(topic_map.identifier) }}
     <small class="text-muted">Delete link</small>
 </h1>
-<hr/>
-<form action="{{ url_for('link.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link_identifier) }}"
-      method="post" role="form">
+<hr />
+<form
+    action="{{ url_for('link.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link_identifier) }}"
+    method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="link-title"><strong>Title</strong></label>
-        <input aria-readonly="true" class="form-control" id="link-title" name="link-title" readonly
-               type="text" value="{{ link_title }}">
+        <input aria-readonly="true" class="form-control" id="link-title" name="link-title" readonly type="text"
+            value="{{ link_title }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
+            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
     <div class="collapse" id="advancedOptions">
         <div class="card">
             <div class="card-header">
@@ -31,18 +32,18 @@
                 <div class="card-text">
                     <div class="form-group">
                         <label for="link-scope"><strong>Context</strong></label>
-                        <input aria-readonly="true" class="form-control" id="link-scope" name="link-scope"
-                               readonly type="text" value="{{ link_scope }}">
+                        <input aria-readonly="true" class="form-control" id="link-scope" name="link-scope" readonly
+                            type="text" value="{{ link_scope }}">
                     </div>
                 </div>
             </div>
         </div>
-        <br/>
+        <br />
     </div>
     <a class="btn btn-secondary"
-       href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Cancel</a>
+        href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
     <button class="btn btn-danger" type="submit">Delete link</button>
 </form>
-<br/>
+<br />
 {% endblock %}
