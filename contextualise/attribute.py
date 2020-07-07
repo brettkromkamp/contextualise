@@ -365,7 +365,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     if topic is None:
         abort(404)
 
-    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    attribute = topic.get_attribute(attribute_identifier)
     if attribute is None:
         abort(404)
 
@@ -470,13 +470,18 @@ def entity_edit(
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_occurrence(
-        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    if entity_type == "association":
+        entity = topic_store.get_association(
+            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    else:
+        entity = topic_store.get_occurrence(
+            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
     if entity is None:
         abort(404)
 
-    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    attribute = entity.get_attribute(attribute_identifier)
     if attribute is None:
         abort(404)
 
@@ -584,7 +589,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     if topic is None:
         abort(404)
 
-    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    attribute = topic.get_attribute(attribute_identifier)
     if attribute is None:
         abort(404)
 
@@ -647,16 +652,18 @@ def entity_delete(
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_association(
-        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if entity is None:
-        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
-
+    if entity_type == "association":
+        entity = topic_store.get_association(
+            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    else:
+        entity = topic_store.get_occurrence(
+            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
     if entity is None:
         abort(404)
 
-    attribute = topic_store.get_attribute(map_identifier, attribute_identifier)
+    attribute = entity.get_attribute(attribute_identifier)
     if attribute is None:
         abort(404)
 
