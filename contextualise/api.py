@@ -192,10 +192,34 @@ def get_associations(map_identifier, topic_identifier):
     if topic_map is None:
         abort(404)
 
-    associations = topic_store.get_topic_associations(map_identifier, topic_identifier)
+    associations = topic_store.get_association_groups(map_identifier, topic_identifier)
     if associations is None:
         abort(404)
 
-    result = {"associations"}
+    result = {}
+    result_instance_ofs = {}
+    for instance_of, roles in associations.dict.items():
+        result_roles = {}
+        for role, topic_refs in roles.items():
+            result_topic_refs = []
+            for topic_ref in topic_refs:
+                topic_ref_topic = topic_store.get_topic(map_identifier, topic_ref)
+                result_topic_refs.append({"identifier": topic_ref, "name": topic_ref_topic.first_base_name.name})
+            else:
+                role_topic = topic_store.get_topic(map_identifier, role)
+                result_roles[role] = {
+                    "identifier": role,
+                    "name": role_topic.first_base_name.name,
+                    "topicRefs": result_topic_refs,
+                }
+        else:
+            instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
+            result_instance_ofs[instance_of] = {
+                "indentifier": instance_of,
+                "name": instance_of_topic.first_base_name.name,
+                "roles": result_roles,
+            }
+    else:
+        result["associations"] = result_instance_ofs
 
     return (jsonify(result), 200)
