@@ -183,9 +183,9 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-@bp.route("/api/get-associations/<map_identifier>/<topic_identifier>")
+@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>")
 @login_required
-def get_associations(map_identifier, topic_identifier):
+def get_association_groups(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
@@ -197,7 +197,6 @@ def get_associations(map_identifier, topic_identifier):
         return jsonify({"status": "error", "code": 404}), 404
 
     result = {}
-    result_instance_ofs = {}
     for instance_of, roles in associations.dict.items():
         result_roles = {}
         for role, topic_refs in roles.items():
@@ -214,13 +213,11 @@ def get_associations(map_identifier, topic_identifier):
                 }
         else:
             instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
-            result_instance_ofs[instance_of] = {
+            result[instance_of] = {
                 "indentifier": instance_of,
                 "name": instance_of_topic.first_base_name.name,
                 "roles": result_roles,
             }
-    else:
-        result["associations"] = result_instance_ofs
 
     return (jsonify(result), 200)
 
