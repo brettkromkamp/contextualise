@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
+from flask_cors import cross_origin
 from slugify import slugify
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
@@ -184,19 +185,28 @@ def get_network(map_identifier, topic_identifier):
 
 
 @bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>")
-@login_required
+@cross_origin()
 def get_association_groups(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    if topic_map is None:
-        return jsonify({"status": "error", "code": 404}), 404
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+        else:
+            topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
+    else:  # User is not logged in
+        topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
 
     associations = topic_store.get_association_groups(map_identifier, topic_identifier)
     if not associations:
         return jsonify({"status": "error", "code": 404}), 404
 
-    result = {}
+    result = []
     for instance_of, roles in associations.dict.items():
         result_roles = {}
         for role, topic_refs in roles.items():
@@ -213,11 +223,9 @@ def get_association_groups(map_identifier, topic_identifier):
                 }
         else:
             instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
-            result[instance_of] = {
-                "indentifier": instance_of,
-                "name": instance_of_topic.first_base_name.name,
-                "roles": result_roles,
-            }
+            result.append(
+                {"identifier": instance_of, "name": instance_of_topic.first_base_name.name, "roles": result_roles,}
+            )
 
     return (jsonify(result), 200)
 

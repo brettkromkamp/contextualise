@@ -1,7 +1,7 @@
 """
 setup.py file. Part of the Contextualise project.
 
-March 3, 2019 
+March 3, 2019
 Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
 """
 
@@ -29,6 +29,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "flask",
+        "flask-cors",
         "flask-security-too",
         "flask-sqlalchemy",
         "flask-seasurf",
