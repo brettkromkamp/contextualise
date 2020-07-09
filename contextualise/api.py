@@ -33,7 +33,7 @@ def topic_exists(map_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
-        abort(404)
+        return jsonify({"status": "error", "code": 404}), 404
 
     normalised_topic_identifier = slugify(str(request.args.get("q").lower()))
     normalised_topic_name = " ".join([word.capitalize() for word in normalised_topic_identifier.split("-")])
@@ -56,7 +56,7 @@ def create_topic(map_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
-        abort(404)
+        return jsonify({"status": "error", "code": 404}), 404
 
     if request.method == "POST":
         topic_identifier = request.form["topic-identifier"].strip()
@@ -93,7 +93,7 @@ def get_identifiers(map_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
-        abort(404)
+        return jsonify({"status": "error", "code": 404}), 404
     # TODO: Missing logic?
 
     query_term = request.args.get("q").lower()
@@ -112,13 +112,13 @@ def get_network(map_identifier, topic_identifier):
         else:
             topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
-            abort(404)
+            return jsonify({"status": "error", "code": 404}), 404
     else:  # User is not logged in
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
-            abort(404)
+            return jsonify({"status": "error", "code": 404}), 404
         if not topic_map.published:  # User is not logged in and the map is not published
-            abort(403)
+            return jsonify({"status": "error", "code": 403}), 403
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 
@@ -190,11 +190,11 @@ def get_associations(map_identifier, topic_identifier):
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
     if topic_map is None:
-        abort(404)
+        return jsonify({"status": "error", "code": 404}), 404
 
     associations = topic_store.get_association_groups(map_identifier, topic_identifier)
-    if associations is None:
-        abort(404)
+    if not associations:
+        return jsonify({"status": "error", "code": 404}), 404
 
     result = {}
     result_instance_ofs = {}
@@ -223,3 +223,18 @@ def get_associations(map_identifier, topic_identifier):
         result["associations"] = result_instance_ofs
 
     return (jsonify(result), 200)
+
+
+@bp.route("/api/create-association/<map_identifier>/<topic_identifier>", methods=["POST"])
+@login_required
+def create_association(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        return jsonify({"status": "error", "code": 404}), 404
+
+    if request.method == "POST":
+        pass  # TODO: Implement logic
+
+    return jsonify({"status": "success", "code": 201}), 201
