@@ -533,8 +533,10 @@
                         </nav>
                         <br />
                         -->
+                        <h5>Related topics <span class="contextualise-small"> &mdash; <a
+                                    href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                    network</a></span></h5>
                         <nav class="accordion" id="associations-component">
-                            <h5>Related topics</h5>
                             <div v-for="association in associations" :key="association.identifier"
                                 class="card contextualise-card">
                                 <div class="card-header contextualise-card-header"
@@ -549,6 +551,7 @@
                                     </h2>
                                 </div>
                                 <div :id="'collapse-' + association.identifier"
+                                    :class="'collapse ' + (association.identifier !== 'navigation' && association.identifier !== 'categorization' ? 'show': '')"
                                     :aria-labelledby="'heading-' + association.identifier"
                                     data-parent="#associations-component">
                                     <div class="card-body">
