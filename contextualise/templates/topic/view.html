@@ -728,6 +728,7 @@
 
         <script type="text/javascript">
             window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
+            window.__CURRENT_SCOPE__ = "{{ session['current_scope'] }}";
 
             var urlParts = window.location.pathname.split("/");
             var mapIdentifier = urlParts[3];
@@ -774,6 +775,7 @@
                 el: "#associations-component",
                 delimiters: ['${', '}'],
                 data: {
+                    currentScope: window.__CURRENT_SCOPE__,
                     associations: window.__ASSOCIATIONS_STATE__
                 }
             })
