@@ -6,16 +6,7 @@ from datetime import datetime
 import maya
 import mistune
 from contextualise.topic_store import get_topic_store
-from flask import (
-    Blueprint,
-    session,
-    flash,
-    render_template,
-    request,
-    url_for,
-    redirect,
-    current_app,
-)
+from flask import Blueprint, session, flash, render_template, request, url_for, redirect, current_app
 from flask_security import login_required, current_user
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
@@ -195,12 +186,17 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session["breadcrumbs"] = list(breadcrumbs)
 
+    from contextualise import api
+
+    associations_state = api.get_association_groups(map_identifier, topic_identifier).data.decode("utf-8")
+
     return render_template(
         "topic/view.html",
         topic_map=topic_map,
         topic=topic,
         occurrences=occurrences,
         associations=associations,
+        associations_state=associations_state,
         is_knowledge_path_topic=is_knowledge_path_topic,
         creation_date=creation_date,
         modification_date=modification_date,

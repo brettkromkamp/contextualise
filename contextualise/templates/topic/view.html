@@ -1,301 +1,780 @@
-{% extends "layout_2_columns.html" %}
+<!doctype html>
+<html class="h-100" lang="en">
 
-{% block title %}
-<title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
-{% endblock %}
+    <head>
+        {% if not current_user.is_authenticated %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2662092-19"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
-{% block javascript %}
-<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-{% endblock %}
+            gtag('config', 'UA-2662092-19');
+        </script>
+        {% endif %}
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+        <meta content="Personal Knowledge Management System" name="description">
+        <meta content="Brett Kromkamp" name="author">
+        <meta content="Contextualise v1.0.0" name="generator">
+        <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
+        <link rel="canonical" href="https://contextualise.dev">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ url_for('static', filename='safari-pinned-tab.svg') }}" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+            rel="stylesheet" />
+        <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
+    </head>
 
-{% block menu %}
-{% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Topic</a>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                network</a>
-            <a class="dropdown-item" href="#">View tags cloud</a>
-            <a class="dropdown-item" href="#">View timeline</a>
-            <a class="dropdown-item" href="#">View geographic map</a>
-        </div>
-    </li>
-</ul>
-{% endif %}
-{% if current_user.is_authenticated and collaboration_mode.name == "COMMENT" %}
-<ul class="nav nav-tabs">
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-            href="#" role="button">Topic</a>
-        <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                note</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                network</a>
-            <a class="dropdown-item" href="#">View tags cloud</a>
-            <a class="dropdown-item" href="#">View timeline</a>
-            <a class="dropdown-item" href="#">View geographic map</a>
-        </div>
-    </li>
-</ul>
-{% endif %}
-{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
-<ul class="nav nav-tabs">
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-            href="#" role="button">Topic</a>
-        <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                topic</a>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                topic</a>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
-                topic</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                names</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                note</a>
-            <a class="dropdown-item" href="#">Add tags</a>
-            {% if 'admin' in current_user.roles %}
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                attributes</a>
-            {% endif %}
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Resources</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                image</a>
-            <a class="dropdown-item"
-                href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                file</a>
-            <a class="dropdown-item"
-                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                video</a>
-            <a class="dropdown-item"
-                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                link</a>
-            <a class="dropdown-item"
-                href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                3D scene</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Associations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                association</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                network</a>
-            <a class="dropdown-item" href="#">View tags cloud</a>
-            <a class="dropdown-item" href="#">View timeline</a>
-            <a class="dropdown-item" href="#">View geographic map</a>
-        </div>
-    </li>
-</ul>
-{% endif %}
-{% endblock %}
-
-{% block content %}
-<h1>{{ topic.first_base_name.name }}{% if topic.instance_of == 'tag' %}&nbsp;<small class="text-muted"
-        style="font-size: 60%;"><i class="fas fa-tag"></i></small>{% endif %}</h1>
-<p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i class="fas fa-info-circle text-muted"></i> <a
-            aria-controls="advancedProperties" aria-expanded="false" data-toggle="collapse" href="#advancedProperties">
-            Properties</a></small>
-</p>
-<div class="collapse" id="advancedProperties">
-    <div class="card">
-        <div class="card-header">
-            Properties
-        </div>
-        <div class="card-body">
-            <div class="card-text">
-                <table class="table table-bordered table-sm">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Identifier</th>
-                            <td>
-                                {{ topic.identifier }}
-                            </td>
-                        </tr>
-                        <tr>
-                            {% if topic.base_names|length > 1 %}
-                            <th scope="row">Names</th>
-                            <td>
-                                {% for base_name in topic.base_names %}
-                                {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
-                            endif %}
-                                {% endfor %}
-                            </td>
-                            {% else %}
-                            <th scope="row">Name</th>
-                            <td>
-                                {{ topic.first_base_name.name}}
-                            </td>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            <th scope="row">Type</th>
-                            <td>
-                                {% if session['current_scope'] == '*' %}
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+    <body class="d-flex flex-column h-100">
+        <header>
+            <a name="page-top"></a>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="/">Contextualise</a>
+                    <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
+                        class="navbar-toggler" data-target="#navbars" data-toggle="collapse" type="button">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbars">
+                        {% if topic_map %}
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                {% if current_user.is_authenticated %}
+                                <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
                                 {% else %}
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
-                                topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
                                 {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Creation timestamp</th>
-                            <td>{{ creation_date }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Modification timestamp</th>
-                            <td>{{ modification_date }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+                            </li>
+                            {% if topic.identifier != 'home' %}
+                            <li class="nav-item">
+                                {% if session['current_scope'] == '*' %}
+                                <a class="btn btn-outline-primary"
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+                                    role="button">Home</a>
+                                {% else %}
+                                <a class="btn btn-outline-primary"
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', context=session['current_scope']) }}"
+                                    role="button">Home</a>
+                                {% endif %}
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-outline-primary" data-target="#gotoModal" data-toggle="modal"
+                            type="reset">Go
+                            to topic
+                        </button>
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                                    <strong>{{ current_user.email }}</strong>
+                                </a>
+                                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Preferences</a>
+                                    <div class="dropdown-divider"></div>
+                                    {% if current_user.id == topic_map.user_identifier %}
+                                    <a class="dropdown-item" href="#">Search</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="#">Topics index</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
+                                </div>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="flex-shrink-0" role="main">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include "_messages.html" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if topic_map %}
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                {% if session['breadcrumbs'] %}
+                                {% for breadcrumb in session['breadcrumbs'] %}
+                                {% if loop.index < session['breadcrumbs']|length %}
+                                <li class="breadcrumb-item">{% if session['current_scope'] == '*' %}<a
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
+                            breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    {% else %}<a
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, context=session['current_scope']) }}">{{
+                                breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    {% endif %}
+                                </li>
+                                {% else %}
+                                <li aria-current="page" class="breadcrumb-item active">{{
+                            breadcrumb|topic_name(topic_map.identifier) }}
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% endif %}
+                            </ol>
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Topic</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" role="button">Visualisations</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        network</a>
+                                    <a class="dropdown-item" href="#">View tags cloud</a>
+                                    <a class="dropdown-item" href="#">View timeline</a>
+                                    <a class="dropdown-item" href="#">View geographic map</a>
+                                </div>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if current_user.is_authenticated and collaboration_mode.name == "COMMENT" %}
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active"
+                                    data-toggle="dropdown" href="#" role="button">Topic</a>
+                                <div class="dropdown-menu">
+                                    <a aria-disabled="true" class="dropdown-item disabled" href="#"
+                                        tabindex="-1">View</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                        note</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" role="button">Visualisations</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        network</a>
+                                    <a class="dropdown-item" href="#">View tags cloud</a>
+                                    <a class="dropdown-item" href="#">View timeline</a>
+                                    <a class="dropdown-item" href="#">View geographic map</a>
+                                </div>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active"
+                                    data-toggle="dropdown" href="#" role="button">Topic</a>
+                                <div class="dropdown-menu">
+                                    <a aria-disabled="true" class="dropdown-item disabled" href="#"
+                                        tabindex="-1">View</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                                        topic</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                                        topic</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                                        topic</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        names</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                        note</a>
+                                    <a class="dropdown-item" href="#">Add tags</a>
+                                    {% if 'admin' in current_user.roles %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        attributes</a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" role="button">Resources</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                                        image</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                                        file</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                        video</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                        link</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                                        3D scene</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" role="button">Associations</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                                        association</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                    data-toggle="dropdown" href="#" role="button">Visualisations</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        network</a>
+                                    <a class="dropdown-item" href="#">View tags cloud</a>
+                                    <a class="dropdown-item" href="#">View timeline</a>
+                                    <a class="dropdown-item" href="#">View geographic map</a>
+                                </div>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1>{{ topic.first_base_name.name }}{% if topic.instance_of == 'tag' %}&nbsp;<small
+                                class="text-muted" style="font-size: 60%;"><i class="fas fa-tag"></i></small>{% endif %}
+                        </h1>
+                        <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i
+                                    class="fas fa-info-circle text-muted"></i> <a aria-controls="advancedProperties"
+                                    aria-expanded="false" data-toggle="collapse" href="#advancedProperties">
+                                    Properties</a></small>
+                        </p>
+                        <div class="collapse" id="advancedProperties">
+                            <div class="card">
+                                <div class="card-header">
+                                    Properties
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-text">
+                                        <table class="table table-bordered table-sm">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Identifier</th>
+                                                    <td>
+                                                        {{ topic.identifier }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% if topic.base_names|length > 1 %}
+                                                    <th scope="row">Names</th>
+                                                    <td>
+                                                        {% for base_name in topic.base_names %}
+                                                        {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
+                                                endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                    {% else %}
+                                                    <th scope="row">Name</th>
+                                                    <td>
+                                                        {{ topic.first_base_name.name}}
+                                                    </td>
+                                                    {% endif %}
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Type</th>
+                                                    <td>
+                                                        {% if session['current_scope'] == '*' %}
+                                                        <a
+                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                                                    topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                                        {% else %}
+                                                        <a
+                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                                                    topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Creation timestamp</th>
+                                                    <td>{{ creation_date }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Modification timestamp</th>
+                                                    <td>{{ modification_date }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        {% if topic.instance_of == 'tag' %}
+                        <strong>Tagged topics:</strong>
+                        <br />
+                        {% for identifier in associations['categorization', 'member'] %}
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+                        identifier|topic_name(topic_map.identifier) }}</a><br />
+                        {% endfor %}
+                        {% endif %}
+                        {% if ('categorization', 'category') in associations %}
+                        <strong>Tags:</strong>&nbsp;
+                        {% for identifier in associations['categorization', 'category'] %}
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+                        identifier|tag_name }}</a>{% if loop.index < associations['categorization', 'category']|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        <hr />
+                        {% if occurrences['text'] %}
+                        {{ occurrences['text']|safe }}
+                        <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to
+                                    top</a></small></p>
+                        {% else %}
+                        {% if current_user.id == topic_map.user_identifier %}
+                        <p class="alert alert-info" role="alert">
+                            This topic has no text. Click on the "Edit topic" button below to add text to this topic.
+                        </p>
+                        <a class="btn btn-primary"
+                            href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                            topic</a>
+                        <br />
+                        <br />
+                        {% else %}
+                        <p class="alert alert-info" role="alert">
+                            This topic has no text.
+                        </p>
+                        {% endif %}
+                        {% endif %}
+                        {% if occurrences['notes'] %}
+                        <hr />
+                        <h5>Notes</h5>
+                        {% for note in occurrences['notes'] %}
+                        <a name="note-{{note.identifier}}"></a>
+                        <div class="card border-warning">
+                            <div class="card-body text-secondary">
+                                <h5 class="card-title">{{ note.title }} &mdash;
+                                    <small class="text-muted">{{ note.timestamp }}</small>
+                                </h5>
+                                <p class="card-text">{{ note.text|safe }}</p>
+                                {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name ==
+                            "COMMENT") %}
+                                <a class="card-link"
+                                    href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
+                                <a class="card-link"
+                                    href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br />
+                        {% endfor %}
+                        <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to
+                                    top</a></small></p>
+                        {% endif %}
+                        {% if is_knowledge_path_topic %}
+                        <hr />
+                        <div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
+                            <div aria-label="Basic example" class="btn-group" role="group">
+                                {% if ("navigation", "previous") in associations %}
+                                <a class="btn btn-info" href="{{ associations['navigation', 'previous'][0] }}"
+                                    role="button"><i class="fas fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Previous</a>
+                                {% endif %}
+                                {% if ("navigation", "up") in associations %}
+                                <a class="btn btn-info" href="{{ associations['navigation', 'up'][0] }}"
+                                    role="button"><i class="fas fa-arrow-up"></i>&nbsp;&nbsp;&nbsp;Up</a>
+                                {% endif %}
+                                {% if ("navigation", "down") in associations %}
+                                <a class="btn btn-info" href="{{ associations['navigation', 'down'][0] }}"
+                                    role="button">Down&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a>
+                                {% endif %}
+                                {% if ("navigation", "next") in associations %}
+                                <a class="btn btn-info" href="{{ associations['navigation', 'next'][0] }}"
+                                    role="button">Next&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-right"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br />
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        {% if current_user.id == topic_map.user_identifier %}
+                        <h5>Context <span class="contextualise-small"> &mdash; <a
+                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></span>&nbsp;&nbsp;&middot;&nbsp;
+                            {% if session['scope_filter'] == 1 %}
+                            <span class="contextualise-small"><a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
+                                    filtering</a></span></h5>
+                        {% else %}
+                        <span class="contextualise-small"><a
+                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
+                                filtering</a></span></h5>
+                        {% endif %}
+                        {% else %}
+                        <h5>Context</h5>
+                        {% endif %}
+                        <div class="card contextualise-card">
+                            <div class="collapse show">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Map: <a
+                                                href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
+                                    topic_map.name }}</a></li>
+                                        {% if session['current_scope'] == '*' %}
+                                        <li>Context: <a
+                                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                                    session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                                        {% else %}
+                                        <li>Context: <a
+                                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                                    session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        {% if associations %}
+                        <!--
+                        <h5>Related topics <span class="contextualise-small"> &mdash; <a
+                                    href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                    network</a></span></h5>
+                        <nav class="accordion" id="accordion-related-topics">
+                            {% for instance_of, roles in associations.dict.items() %}
+                            <div class="card contextualise-card">
+                                <div class="card-header contextualise-card-header" id="heading-{{ instance_of }}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link contextualise-btn-link" type="button"
+                                            data-toggle="collapse" data-target="#collapse-{{ instance_of }}"
+                                            aria-expanded="true" aria-controls="collapse-{{ instance_of }}">{{
+                                    instance_of|topic_name(topic_map.identifier) }}
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div id="collapse-{{ instance_of }}"
+                                    class="collapse {% if instance_of != 'navigation' and instance_of != 'categorization' %}show{% endif %}"
+                                    aria-labelledby="heading-{{ instance_of }}" data-parent="#accordion-related-topics">
+                                    <div class="card-body">
+                                        <ul>
+                                            {% for role, topic_refs in roles.items() %}
+                                            <li>{{ role|topic_name(topic_map.identifier) }}
+                                                <ul>
+                                                    {% for topic_ref in topic_refs %}
+                                                    <li>
+                                                        {% if session['current_scope'] == '*' %}
+                                                        <a
+                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
+                                                        {% else %}
+                                                        <a
+                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
+                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
+                                                        {% endif %}
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </nav>
+                        <br />
+                        -->
+                        <nav class="accordion" id="associations-component">
+                            <h5>Related topics</h5>
+                            <div v-for="association in associations" :key="association.identifier"
+                                class="card contextualise-card">
+                                <div class="card-header contextualise-card-header"
+                                    :id="'heading-' + association.identifier">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link contextualise-btn-link" type="button"
+                                            data-toggle="collapse" :data-target="'#collapse-' + association.identifier"
+                                            aria-expanded="true"
+                                            :aria-controls="'collapse-' + association.identifier">${
+                                            association.name }
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div :id="'collapse-' + association.identifier"
+                                    :aria-labelledby="'heading-' + association.identifier"
+                                    data-parent="#associations-component">
+                                    <div class="card-body">
+                                        <ul>
+                                            <li v-for="role in association.roles" :key="role.identifier">
+                                                ${ role.name }
+                                                <ul>
+                                                    <li v-for="topicRef in role.topicRefs" :key="topicRef.identifier">
+                                                        <a :href="topicRef.identifier">${ topicRef.name }</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <br />
+                    {% endif %}
+                    {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
+                    <h5>Topic resources</h5>
+                    <div class="card contextualise-card">
+                        <div class="collapse show">
+                            <div class="card-body">
+                                <ul>
+                                    {% if occurrences['images'] %}
+                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                        <a
+                                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                                        {% else %}
+                                        Images
+                                        {% endif %}
+                                        <ul>
+                                            {% for image in occurrences['images'] %}
+                                            <li>
+                                                <a data-caption="{{ image.title }}" data-fancybox="images"
+                                                    href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                                                image.title }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                    {% if occurrences['3d-scenes'] %}
+                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                        <a
+                                            href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                                        {% else %}
+                                        3D
+                                        {% endif %}
+                                        <ul>
+                                            {% for scene in occurrences['3d-scenes'] %}
+                                            <li>
+                                                <a data-fancybox
+                                                    data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
+                                                    data-type="iframe" href="javascript:;">{{ scene.title }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                    {% if occurrences['files'] %}
+                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                        <a
+                                            href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+                                        {% else %}
+                                        Files
+                                        {% endif %}
+                                        <ul>
+                                            {% for file in occurrences['files'] %}
+                                            <li>
+                                                <a
+                                                    href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
+                                                file.title }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                    {% if occurrences['links'] %}
+                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                        <a
+                                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                                        {% else %}
+                                        Links
+                                        {% endif %}
+                                        <ul>
+                                            {% for link in occurrences['links'] %}
+                                            <li>
+                                                <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                    {% if occurrences['videos'] %}
+                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                        <a
+                                            href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                                        {% else %}
+                                        Videos
+                                        {% endif %}
+                                        <ul>
+                                            {% for video in occurrences['videos'] %}
+                                            <li>
+                                                <a data-caption="{{ video.title }}" data-fancybox="gallery"
+                                                    href="{{ video.url }}">{{ video.title }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    {% endif %}
+                </div>
+            </div>
+            </div>
+        </main>
+        <footer class="footer mt-auto py-3">
+            <div class="container">
+                <span class="text-muted"><small><a href="/">Contextualise</a> is handcrafted with <i
+                            class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i class="fas fa-coffee"></i>
+                        by <a href="https://brettkromkamp.com">Brett Kromkamp</a>, a semantic technologies enthusiast
+                        living in Norway</small></span>
+            </div>
+        </footer>
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="gotoModalLabel" class="modal fade" id="gotoModal" role="dialog"
+            tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Go to topic</h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off">
+                            <div class="form-group">
+                                <label class="col-form-label" for="goto-topic-identifier">Please provide
+                                    a valid topic
+                                    identifier</label>
+                                <input aria-label="Enter topic identifier" class="form-control typeahead"
+                                    id="goto-topic-identifier" placeholder="Enter identifier" type="text">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="goto-button" type="button">Go to
+                            topic</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <br />
-</div>
-{% if topic.instance_of == 'tag' %}
-<strong>Tagged topics:</strong>
-<br />
-{% for identifier in associations['categorization', 'member'] %}
-<a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-    identifier|topic_name(topic_map.identifier) }}</a><br />
-{% endfor %}
-{% endif %}
-{% if ('categorization', 'category') in associations %}
-<strong>Tags:</strong>&nbsp;
-{% for identifier in associations['categorization', 'category'] %}
-<a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-    identifier|tag_name }}</a>{% if loop.index < associations['categorization', 'category']|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
-{% endfor %}
-{% endif %}
-<hr />
-{% if occurrences['text'] %}
-{{ occurrences['text']|safe }}
-<p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
-{% else %}
-{% if current_user.id == topic_map.user_identifier %}
-<p class="alert alert-info" role="alert">
-    This topic has no text. Click on the "Edit topic" button below to add text to this topic.
-</p>
-<a class="btn btn-primary"
-    href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-    topic</a>
-<br />
-<br />
-{% else %}
-<p class="alert alert-info" role="alert">
-    This topic has no text.
-</p>
-{% endif %}
-{% endif %}
-{% if occurrences['notes'] %}
-<hr />
-<h5>Notes</h5>
-{% for note in occurrences['notes'] %}
-<a name="note-{{note.identifier}}"></a>
-<div class="card border-warning">
-    <div class="card-body text-secondary">
-        <h5 class="card-title">{{ note.title }} &mdash;
-            <small class="text-muted">{{ note.timestamp }}</small>
-        </h5>
-        <p class="card-text">{{ note.text|safe }}</p>
-        {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name ==
-        "COMMENT") %}
-        <a class="card-link"
-            href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
-        <a class="card-link"
-            href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
-        {% endif %}
-    </div>
-</div>
-<br />
-{% endfor %}
-<p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to top</a></small></p>
-{% endif %}
-{% if is_knowledge_path_topic %}
-<hr />
-<div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
-    <div aria-label="Basic example" class="btn-group" role="group">
-        {% if ("navigation", "previous") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'previous'][0] }}" role="button"><i
-                class="fas fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Previous</a>
-        {% endif %}
-        {% if ("navigation", "up") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'up'][0] }}" role="button"><i
-                class="fas fa-arrow-up"></i>&nbsp;&nbsp;&nbsp;Up</a>
-        {% endif %}
-        {% if ("navigation", "down") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'down'][0] }}"
-            role="button">Down&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a>
-        {% endif %}
-        {% if ("navigation", "next") in associations %}
-        <a class="btn btn-info" href="{{ associations['navigation', 'next'][0] }}"
-            role="button">Next&nbsp;&nbsp;&nbsp;<i class="fas fa-arrow-right"></i></a>
-        {% endif %}
-    </div>
-</div>
-<br />
-{% endif %}
-{% endblock %}
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='app.js') }}"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+        <script type="text/javascript">
+            window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
+
+            var urlParts = window.location.pathname.split("/");
+            var mapIdentifier = urlParts[3];
+            var getIdentifiersApiUrl =
+                "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+
+            var topicIdentifiers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                sufficient: 3,
+                remote: {
+                    url: getIdentifiersApiUrl,
+                    wildcard: "%QUERY",
+                },
+            });
+
+            $(".typeahead").typeahead(
+                {
+                    minLength: 3,
+                    highlight: true,
+                },
+                {
+                    name: "identifiers",
+                    source: topicIdentifiers,
+                    limit: 8
+                }
+            );
+
+            if (document.getElementById("goto-button") != null) {
+                document.getElementById("goto-button").addEventListener("click", (event) => {
+                    var gotoTopicIdentifier = document
+                        .getElementById("goto-topic-identifier")
+                        .value.trim();
+                    var gotoUrl = window.location.href.replace("#", "");
+                    gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
+                    if (gotoTopicIdentifier) {
+                        window.location.href = gotoUrl;
+                    }
+                });
+            }
+
+            // Associations component
+            let associationsComponent = new Vue({
+                el: "#associations-component",
+                delimiters: ['${', '}'],
+                data: {
+                    associations: window.__ASSOCIATIONS_STATE__
+                }
+            })
+        </script>
+    </body>
+
+</html>

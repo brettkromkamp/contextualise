@@ -208,7 +208,7 @@ def get_association_groups(map_identifier, topic_identifier):
 
     result = []
     for instance_of, roles in associations.dict.items():
-        result_roles = {}
+        result_roles = []
         for role, topic_refs in roles.items():
             result_topic_refs = []
             for topic_ref in topic_refs:
@@ -216,11 +216,9 @@ def get_association_groups(map_identifier, topic_identifier):
                 result_topic_refs.append({"identifier": topic_ref, "name": topic_ref_topic.first_base_name.name})
             else:
                 role_topic = topic_store.get_topic(map_identifier, role)
-                result_roles[role] = {
-                    "identifier": role,
-                    "name": role_topic.first_base_name.name,
-                    "topicRefs": result_topic_refs,
-                }
+                result_roles.append(
+                    {"identifier": role, "name": role_topic.first_base_name.name, "topicRefs": result_topic_refs,}
+                )
         else:
             instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
             result.append(
