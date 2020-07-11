@@ -484,195 +484,156 @@
                             </div>
                         </div>
                         <br />
-                        {% if associations %}
-                        <!--
-                        <h5>Related topics <span class="contextualise-small"> &mdash; <a
-                                    href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                                    network</a></span></h5>
-                        <nav class="accordion" id="accordion-related-topics">
-                            {% for instance_of, roles in associations.dict.items() %}
-                            <div class="card contextualise-card">
-                                <div class="card-header contextualise-card-header" id="heading-{{ instance_of }}">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link contextualise-btn-link" type="button"
-                                            data-toggle="collapse" data-target="#collapse-{{ instance_of }}"
-                                            aria-expanded="true" aria-controls="collapse-{{ instance_of }}">{{
-                                    instance_of|topic_name(topic_map.identifier) }}
-                                        </button>
-                                    </h2>
-                                </div>
-                                <div id="collapse-{{ instance_of }}"
-                                    class="collapse {% if instance_of != 'navigation' and instance_of != 'categorization' %}show{% endif %}"
-                                    aria-labelledby="heading-{{ instance_of }}" data-parent="#accordion-related-topics">
-                                    <div class="card-body">
-                                        <ul>
-                                            {% for role, topic_refs in roles.items() %}
-                                            <li>{{ role|topic_name(topic_map.identifier) }}
+                        <div id="associations-component">
+                            <template v-if="associations !== null">
+                                <h5>Related topics <span class="contextualise-small"> &mdash;
+                                        <a
+                                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                            network</a></span></h5>
+                                <nav class="accordion" id="accordion-related-topics">
+                                    <div v-for="association in associations" :key="association.identifier"
+                                        class="card contextualise-card">
+                                        <div class="card-header contextualise-card-header"
+                                            :id="'heading-' + association.identifier">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-link contextualise-btn-link" type="button"
+                                                    data-toggle="collapse"
+                                                    :data-target="'#collapse-' + association.identifier"
+                                                    aria-expanded="true"
+                                                    :aria-controls="'collapse-' + association.identifier">${
+                                                    association.name }
+                                                </button>
+                                            </h2>
+                                        </div>
+                                        <div :id="'collapse-' + association.identifier"
+                                            :class="'collapse ' + (association.identifier !== 'navigation' && association.identifier !== 'categorization' ? 'show': '')"
+                                            :aria-labelledby="'heading-' + association.identifier"
+                                            data-parent="#accordion-related-topics">
+                                            <div class="card-body">
                                                 <ul>
-                                                    {% for topic_ref in topic_refs %}
-                                                    <li>
-                                                        {% if session['current_scope'] == '*' %}
-                                                        <a
-                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
-                                                        {% else %}
-                                                        <a
-                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref, context=session['current_scope']) }}">{{
-                                                    topic_ref|topic_name(topic_map.identifier) }}</a>
-                                                        {% endif %}
+                                                    <li v-for="role in association.roles" :key="role.identifier">
+                                                        ${ role.name }
+                                                        <ul>
+                                                            <li v-for="topicRef in role.topicRefs"
+                                                                :key="topicRef.identifier">
+                                                                <a v-if="currentScope === '*'"
+                                                                    :href="topicRef.identifier">${
+                                                                    topicRef.name }</a>
+                                                                <a v-else
+                                                                    :href="'topicRef.identifier?context=' + currentScope">${
+                                                                    topicRef.name }</a>
+                                                            </li>
+                                                        </ul>
                                                     </li>
-                                                    {% endfor %}
                                                 </ul>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </nav>
+                                </nav>
+                            </template>
+                        </div>
                         <br />
-                        -->
-                        <h5>Related topics <span class="contextualise-small"> &mdash; <a
-                                    href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                                    network</a></span></h5>
-                        <nav class="accordion" id="associations-component">
-                            <div v-for="association in associations" :key="association.identifier"
-                                class="card contextualise-card">
-                                <div class="card-header contextualise-card-header"
-                                    :id="'heading-' + association.identifier">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link contextualise-btn-link" type="button"
-                                            data-toggle="collapse" :data-target="'#collapse-' + association.identifier"
-                                            aria-expanded="true"
-                                            :aria-controls="'collapse-' + association.identifier">${
-                                            association.name }
-                                        </button>
-                                    </h2>
-                                </div>
-                                <div :id="'collapse-' + association.identifier"
-                                    :class="'collapse ' + (association.identifier !== 'navigation' && association.identifier !== 'categorization' ? 'show': '')"
-                                    :aria-labelledby="'heading-' + association.identifier"
-                                    data-parent="#associations-component">
-                                    <div class="card-body">
-                                        <ul>
-                                            <li v-for="role in association.roles" :key="role.identifier">
-                                                ${ role.name }
-                                                <ul>
-                                                    <li v-for="topicRef in role.topicRefs" :key="topicRef.identifier">
-                                                        <a :href="topicRef.identifier">${ topicRef.name }</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                    <br />
-                    {% endif %}
-                    {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
-                    <h5>Topic resources</h5>
-                    <div class="card contextualise-card">
-                        <div class="collapse show">
-                            <div class="card-body">
-                                <ul>
-                                    {% if occurrences['images'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
-                                        <a
-                                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
-                                        {% else %}
-                                        Images
-                                        {% endif %}
-                                        <ul>
-                                            {% for image in occurrences['images'] %}
-                                            <li>
-                                                <a data-caption="{{ image.title }}" data-fancybox="images"
-                                                    href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                        {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
+                        <h5>Topic resources</h5>
+                        <div class="card contextualise-card">
+                            <div class="collapse show">
+                                <div class="card-body">
+                                    <ul>
+                                        {% if occurrences['images'] %}
+                                        <li>{% if current_user.id == topic_map.user_identifier %}
+                                            <a
+                                                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                                            {% else %}
+                                            Images
+                                            {% endif %}
+                                            <ul>
+                                                {% for image in occurrences['images'] %}
+                                                <li>
+                                                    <a data-caption="{{ image.title }}" data-fancybox="images"
+                                                        href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
                                                 image.title }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                    {% if occurrences['3d-scenes'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
-                                        <a
-                                            href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
-                                        {% else %}
-                                        3D
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
                                         {% endif %}
-                                        <ul>
-                                            {% for scene in occurrences['3d-scenes'] %}
-                                            <li>
-                                                <a data-fancybox
-                                                    data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
-                                                    data-type="iframe" href="javascript:;">{{ scene.title }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                    {% if occurrences['files'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
-                                        <a
-                                            href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
-                                        {% else %}
-                                        Files
+                                        {% if occurrences['3d-scenes'] %}
+                                        <li>{% if current_user.id == topic_map.user_identifier %}
+                                            <a
+                                                href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
+                                            {% else %}
+                                            3D
+                                            {% endif %}
+                                            <ul>
+                                                {% for scene in occurrences['3d-scenes'] %}
+                                                <li>
+                                                    <a data-fancybox
+                                                        data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
+                                                        data-type="iframe" href="javascript:;">{{ scene.title }}</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
                                         {% endif %}
-                                        <ul>
-                                            {% for file in occurrences['files'] %}
-                                            <li>
-                                                <a
-                                                    href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
+                                        {% if occurrences['files'] %}
+                                        <li>{% if current_user.id == topic_map.user_identifier %}
+                                            <a
+                                                href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+                                            {% else %}
+                                            Files
+                                            {% endif %}
+                                            <ul>
+                                                {% for file in occurrences['files'] %}
+                                                <li>
+                                                    <a
+                                                        href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
                                                 file.title }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                    {% if occurrences['links'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
-                                        <a
-                                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
-                                        {% else %}
-                                        Links
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
                                         {% endif %}
-                                        <ul>
-                                            {% for link in occurrences['links'] %}
-                                            <li>
-                                                <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                    {% if occurrences['videos'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
-                                        <a
-                                            href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
-                                        {% else %}
-                                        Videos
+                                        {% if occurrences['links'] %}
+                                        <li>{% if current_user.id == topic_map.user_identifier %}
+                                            <a
+                                                href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                                            {% else %}
+                                            Links
+                                            {% endif %}
+                                            <ul>
+                                                {% for link in occurrences['links'] %}
+                                                <li>
+                                                    <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
                                         {% endif %}
-                                        <ul>
-                                            {% for video in occurrences['videos'] %}
-                                            <li>
-                                                <a data-caption="{{ video.title }}" data-fancybox="gallery"
-                                                    href="{{ video.url }}">{{ video.title }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                </ul>
+                                        {% if occurrences['videos'] %}
+                                        <li>{% if current_user.id == topic_map.user_identifier %}
+                                            <a
+                                                href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                                            {% else %}
+                                            Videos
+                                            {% endif %}
+                                            <ul>
+                                                {% for video in occurrences['videos'] %}
+                                                <li>
+                                                    <a data-caption="{{ video.title }}" data-fancybox="gallery"
+                                                        href="{{ video.url }}">{{ video.title }}</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                        <br />
+                        {% endif %}
                     </div>
-                    <br />
-                    {% endif %}
                 </div>
-            </div>
             </div>
         </main>
         <footer class="footer mt-auto py-3">
@@ -721,7 +682,7 @@
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
         <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='app.js') }}"></script> -->
+        <script src="{{ url_for('static', filename='app.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
