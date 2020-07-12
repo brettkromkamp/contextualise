@@ -184,7 +184,7 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>")
+@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 @cross_origin()
 def get_association_groups(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     topic_store = get_topic_store()
