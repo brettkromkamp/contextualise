@@ -184,9 +184,9 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>")
+@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>")
 @cross_origin()
-def get_association_groups(map_identifier, topic_identifier):
+def get_association_groups(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
@@ -202,7 +202,10 @@ def get_association_groups(map_identifier, topic_identifier):
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
 
-    associations = topic_store.get_association_groups(map_identifier, topic_identifier)
+    if scope_filtered:
+        associations = topic_store.get_association_groups(map_identifier, topic_identifier, scope=scope_identifier)
+    else:
+        associations = topic_store.get_association_groups(map_identifier, topic_identifier)
     if not associations:
         return jsonify({"status": "error", "code": 404}), 404
 

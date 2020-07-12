@@ -487,8 +487,7 @@
                         <div id="associations-component">
                             <template v-if="associations !== null">
                                 <h5>Related topics <span class="contextualise-small"> &mdash;
-                                        <a
-                                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
                                             network</a></span></h5>
                                 <nav class="accordion" id="accordion-related-topics">
                                     <div v-for="association in associations" :key="association.identifier"
@@ -690,6 +689,8 @@
         <script type="text/javascript">
             window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
             window.__CURRENT_SCOPE__ = "{{ session['current_scope'] }}";
+            window.__TOPIC_IDENTIFIER = "{{ topic.identifier }}"
+            window.__MAP_IDENTIFIER = "{{ topic_map.identifier }}"
 
             var urlParts = window.location.pathname.split("/");
             var mapIdentifier = urlParts[3];
@@ -736,6 +737,8 @@
                 el: "#associations-component",
                 delimiters: ['${', '}'],
                 data: {
+                    mapIdentifier: window.__MAP_IDENTIFIER,
+                    topicIdentifier: window.__TOPIC_IDENTIFIER,
                     currentScope: window.__CURRENT_SCOPE__,
                     associations: window.__ASSOCIATIONS_STATE__
                 }

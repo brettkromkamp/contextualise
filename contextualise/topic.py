@@ -188,7 +188,9 @@ def view(map_identifier, topic_identifier):
 
     from contextualise import api
 
-    associations_state = api.get_association_groups(map_identifier, topic_identifier)
+    associations_state = api.get_association_groups(
+        map_identifier, topic_identifier, session["current_scope"], scope_filtered
+    )
     associations_state = associations_state.data.decode("utf-8") if associations_state.status_code == 200 else None
 
     return render_template(
