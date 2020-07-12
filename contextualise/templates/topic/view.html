@@ -686,20 +686,32 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Click on the "Create association" button to create an association of type "<a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='association') }}">association</a>"
-                            with both the source
-                            and destination roles being of type "<a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">related</a>".
+                        <p>Click on the "Create association" button to create an association with the following
+                            characteristics:
+                        <ul>
+                            <li>Type: <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='association') }}">Association</a>
+                            </li>
+                            <li>Source role: <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
+                            </li>
+                            <li>Destination role: <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
+                            </li>
+                            <li>Context: <a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='*') }}">Universal</a>
+                            </li>
+                            <li>Name: Undefined</li>
+                        </ul>
                         </p>
                         <form autocomplete="off">
                             <div class="form-group">
                                 <label for="association-dest-topic-ref"><strong>Destination
                                         topic</strong></label>
-                                <input class="form-control typeahead" id="association-dest-topic-ref"
-                                    name="association-dest-topic-ref" placeholder="Enter destination topic identifier"
-                                    autocomplete="off" required type="text"
-                                    value="{{ association_dest_topic_ref or '' }}">
+                                <input class="form-control typeahead" id="create-association-dest-topic-ref"
+                                    name="create-association-dest-topic-ref"
+                                    placeholder="Enter destination topic identifier" autocomplete="off" required
+                                    type="text" value="{{ association_dest_topic_ref or '' }}">
                             </div>
                         </form>
                     </div>
@@ -727,13 +739,30 @@
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
             <script type="text/javascript">
+                function getUrlParams(url) {
+                    var params = {};
+                    (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
+                        pair = (pair + '=').split('=').map(decodeURIComponent);
+                        if (pair[0].length) {
+                            params[pair[0]] = pair[1];
+                        }
+                    });
+                    return params;
+                }
+
                 window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
-                window.__CURRENT_SCOPE__ = "{{ session['current_scope'] }}";
+                window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
                 window.__TOPIC_IDENTIFIER = "{{ topic.identifier }}"
                 window.__MAP_IDENTIFIER = "{{ topic_map.identifier }}"
 
                 var urlParts = window.location.pathname.split("/");
                 var mapIdentifier = urlParts[3];
+                var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
+                var filter = getUrlParams(window.location)['filter'] === undefined ? 0 : 1;
+                var associationsGetGroupsApiUrl = "/api/get-association-groups/" + mapIdentifier
+                    + "/" + window.__TOPIC_IDENTIFIER
+                    + "/" + window.__SCOPE_IDENTIFIER__
+                    + filter;
                 var getIdentifiersApiUrl =
                     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
                 var createAssociation = false;
@@ -785,7 +814,7 @@
                     data: {
                         mapIdentifier: window.__MAP_IDENTIFIER,
                         topicIdentifier: window.__TOPIC_IDENTIFIER,
-                        currentScope: window.__CURRENT_SCOPE__,
+                        currentScope: window.__SCOPE_IDENTIFIER__,
                         associations: window.__ASSOCIATIONS_STATE__
                     }
                 });
@@ -794,8 +823,58 @@
                     .getElementById("create-association-link")
                     .addEventListener("click", function () {
                         $("#createAssociationModal").modal("show");
-                        // TODO: Implement missing logic
+                        createAssociation = false;
                     });
+
+                document
+                    .getElementById("create-association-modal-button")
+                    .addEventListener("click", function () {
+                        $("#createTopicModal").modal("hide");
+                        createAssociation = true;
+                    });
+
+                $("#createAssociationModal").on("hidden.bs.modal", function (e) {
+                    if (createAssociation) {
+                        var modal = $(this);
+                        var bodyFormData = new FormData();
+                        bodyFormData.set(
+                            "association-dest-topic-ref",
+                            modal.find(".modal-body #create-association-dest-topic-ref").val()
+                        );
+                        bodyFormData.set("association-dest-role-spec", "related");
+                        bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER);
+                        bodyFormData.set("association-src-role-spec", "related");
+                        bodyFormData.set("association-instance-of", "association");
+                        bodyFormData.set("association-scope", "*");
+                        bodyFormData.set("association-name", "Undefined");
+                        bodyFormData.set("association-identifier", "");
+
+                        axios({
+                            method: "post",
+                            url: associationCreateApiUrl,
+                            data: bodyFormData,
+                            headers: { "Content-Type": "multipart/form-data" },
+                        })
+                            .then(function (response) {
+                                // Handle success
+                                axios({
+                                    method: "get",
+                                    url: associationsGetGroupsApiUrl
+                                })
+                                    .then(function (response) {
+                                        // TODO: Retrieve associations to populate associationsComponent.associations
+                                        notyf.success("Association successfully created!");
+                                    })
+                                    .catch(function (error) {
+                                        notyf.error("Unable to retrieve associations!");
+                                    })
+                            })
+                            .catch(function (error) {
+                                // Handle error
+                                notyf.error("Unable to create association!");
+                            });
+                    }
+                });
             </script>
     </body>
 

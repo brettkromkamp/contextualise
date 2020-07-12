@@ -5,6 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
 from flask_cors import cross_origin
 from slugify import slugify
+from topicdb.core.models.association import Association
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
@@ -231,9 +232,9 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
     return (jsonify(result), 200)
 
 
-@bp.route("/api/create-association/<map_identifier>/<topic_identifier>", methods=["POST"])
+@bp.route("/api/create-association/<map_identifier>", methods=["POST"])
 @login_required
-def create_association(map_identifier, topic_identifier):
+def create_association(map_identifier):
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
@@ -241,6 +242,46 @@ def create_association(map_identifier, topic_identifier):
         return jsonify({"status": "error", "code": 404}), 404
 
     if request.method == "POST":
-        pass  # TODO: Implement logic
+        association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
+        association_dest_role_spec = request.form["association-dest-role-spec"].strip()
+        association_src_topic_ref = request.form["association-src-topic-ref"].strip()
+        association_src_role_spec = request.form["association-src-role-spec"].strip()
+        association_instance_of = request.form["association-instance-of"].strip()
+        association_scope = request.form["association-scope"].strip()
+        association_name = request.form["association-name"].strip()
+        association_identifier = request.form["association-identifier"].strip()
+
+        if not topic_store.topic_exists(topic_map.identifier, association_dest_topic_ref):
+            return jsonify({"status": "error", "code": 409}), 409
+        if not topic_store.topic_exists(topic_map.identifier, association_src_topic_ref):
+            return jsonify({"status": "error", "code": 409}), 409
+
+        # If no values have been provided set their default values
+        if not association_dest_role_spec:
+            association_dest_role_spec = "related"
+        if not association_src_role_spec:
+            association_src_role_spec = "related"
+        if not association_instance_of:
+            association_instance_of = "association"
+        if not association_scope:
+            association_scope = UNIVERSAL_SCOPE
+        if not association_name:
+            association_name = "Undefined"
+        if not association_identifier:
+            association_identifier = ""
+
+        association = Association(
+            identifier=association_identifier,
+            instance_of=association_instance_of,
+            name=association_name,
+            scope=association_scope,
+            src_topic_ref=association_src_topic_ref,
+            dest_topic_ref=association_dest_topic_ref,
+            src_role_spec=association_src_role_spec,
+            dest_role_spec=association_dest_role_spec,
+        )
+
+        # Persist association object to the topic store
+        topic_store.set_association(map_identifier, association)
 
     return jsonify({"status": "success", "code": 201}), 201

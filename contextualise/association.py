@@ -90,6 +90,8 @@ def create(map_identifier, topic_identifier):
             form_association_scope = session["current_scope"]
         if not form_association_name:
             form_association_name = "Undefined"
+        if not form_association_identifier:
+            form_association_identifier = ""
 
         # Validate form inputs
         if not topic_store.topic_exists(topic_map.identifier, form_association_dest_topic_ref):
