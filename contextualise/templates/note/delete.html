@@ -1,14 +1,14 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+<title>Delete note | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
 
 {% block content %}
 <h1>
-    {{ topic.identifier|topic_name(topic_map.identifier) }}
+    {{ topic_map.name }}
     <small class="text-muted">Delete note</small>
 </h1>
 <hr />
