@@ -32,6 +32,7 @@
             integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
             rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
         <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
     </head>
@@ -488,8 +489,9 @@
                             <template v-if="associations !== null">
                                 <h5>Related <span class="contextualise-small"> &mdash;
                                         <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
-                                            network</a>&nbsp;&nbsp;&middot;&nbsp;<a href="#"
-                                            id="create-association-link">Create association</a></span>
+                                            network</a></span>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
+                                        class="contextualise-small"><a href="#" id="create-association-link">Create
+                                            association</a></span>
                                 </h5>
                                 <nav class="accordion" id="accordion-related-topics">
                                     <div v-for="association in associations" :key="association.identifier"
@@ -686,8 +688,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Click on the "Create association" button to create an association with the following
-                            characteristics:
+                        <p>Provide a destination topic reference and click on the "Create association" button to create
+                            an association with the following characteristics:
                         <ul>
                             <li>Type: <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='association') }}">Association</a>
@@ -699,7 +701,8 @@
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
                             </li>
                             <li>Context: <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='*') }}">Universal</a>
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                    session['current_scope']|topic_name(topic_map.identifier) }}</a>
                             </li>
                             <li>Name: Undefined</li>
                         </ul>
@@ -711,7 +714,7 @@
                                 <input class="form-control typeahead" id="create-association-dest-topic-ref"
                                     name="create-association-dest-topic-ref"
                                     placeholder="Enter destination topic identifier" autocomplete="off" required
-                                    type="text" value="{{ association_dest_topic_ref or '' }}">
+                                    type="text">
                             </div>
                         </form>
                     </div>
@@ -752,17 +755,19 @@
 
                 window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
                 window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
-                window.__TOPIC_IDENTIFIER = "{{ topic.identifier }}"
-                window.__MAP_IDENTIFIER = "{{ topic_map.identifier }}"
+                window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}"
+                window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}"
 
                 var urlParts = window.location.pathname.split("/");
                 var mapIdentifier = urlParts[3];
                 var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
-                var filter = getUrlParams(window.location)['filter'] === undefined ? 0 : 1;
+                var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
                 var associationsGetGroupsApiUrl = "/api/get-association-groups/" + mapIdentifier
-                    + "/" + window.__TOPIC_IDENTIFIER
+                    + "/" + window.__TOPIC_IDENTIFIER__
                     + "/" + window.__SCOPE_IDENTIFIER__
-                    + filter;
+                    + "/" + filter;
+                console.log(getUrlParams(window.location)['filter']);
+                console.log(associationsGetGroupsApiUrl);
                 var getIdentifiersApiUrl =
                     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
                 var createAssociation = false;
@@ -812,8 +817,8 @@
                     el: "#associations-component",
                     delimiters: ['${', '}'],
                     data: {
-                        mapIdentifier: window.__MAP_IDENTIFIER,
-                        topicIdentifier: window.__TOPIC_IDENTIFIER,
+                        mapIdentifier: window.__MAP_IDENTIFIER__,
+                        topicIdentifier: window.__TOPIC_IDENTIFIER__,
                         currentScope: window.__SCOPE_IDENTIFIER__,
                         associations: window.__ASSOCIATIONS_STATE__
                     }
@@ -829,23 +834,22 @@
                 document
                     .getElementById("create-association-modal-button")
                     .addEventListener("click", function () {
-                        $("#createTopicModal").modal("hide");
+                        $("#createAssociationModal").modal("hide");
                         createAssociation = true;
                     });
 
                 $("#createAssociationModal").on("hidden.bs.modal", function (e) {
+                    var modal = $(this);
+                    var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
+                    modal.find(".modal-body #create-association-dest-topic-ref").val("");
                     if (createAssociation) {
-                        var modal = $(this);
                         var bodyFormData = new FormData();
-                        bodyFormData.set(
-                            "association-dest-topic-ref",
-                            modal.find(".modal-body #create-association-dest-topic-ref").val()
-                        );
+                        bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
                         bodyFormData.set("association-dest-role-spec", "related");
-                        bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER);
+                        bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER__);
                         bodyFormData.set("association-src-role-spec", "related");
                         bodyFormData.set("association-instance-of", "association");
-                        bodyFormData.set("association-scope", "*");
+                        bodyFormData.set("association-scope", window.__SCOPE_IDENTIFIER__);
                         bodyFormData.set("association-name", "Undefined");
                         bodyFormData.set("association-identifier", "");
 
@@ -856,21 +860,19 @@
                             headers: { "Content-Type": "multipart/form-data" },
                         })
                             .then(function (response) {
-                                // Handle success
+                                notyf.success("Association successfully created!");
                                 axios({
                                     method: "get",
                                     url: associationsGetGroupsApiUrl
                                 })
                                     .then(function (response) {
-                                        // TODO: Retrieve associations to populate associationsComponent.associations
-                                        notyf.success("Association successfully created!");
+                                        associationsComponent.associations = response.data;
                                     })
                                     .catch(function (error) {
                                         notyf.error("Unable to retrieve associations!");
                                     })
                             })
                             .catch(function (error) {
-                                // Handle error
                                 notyf.error("Unable to create association!");
                             });
                     }

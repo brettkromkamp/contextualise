@@ -168,6 +168,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(api.bp)
     csrf.exempt(api.create_topic)
+    csrf.exempt(api.create_association)
 
     from contextualise import map
 
