@@ -265,6 +265,8 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item"
                                         href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                                        advanced association</a>
+                                    <a class="dropdown-item create-association-link" href="#">Create generic
                                         association</a>
                                 </div>
                             </li>
@@ -490,7 +492,7 @@
                                 <h5>Related <span class="contextualise-small"> &mdash;
                                         <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
                                             network</a></span>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
-                                        class="contextualise-small"><a href="#" id="create-association-link">Create
+                                        class="contextualise-small"><a href="#" class="create-association-link">Create
                                             association</a></span>
                                 </h5>
                                 <nav class="accordion" id="accordion-related-topics">
@@ -689,7 +691,7 @@
                     </div>
                     <div class="modal-body">
                         <p>Provide a destination topic reference and click on the "Create association" button to create
-                            an association with the following characteristics:
+                            a <strong>generic</strong> association with the following characteristics:
                         <ul>
                             <li>Type: <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='association') }}">Association</a>
@@ -825,10 +827,11 @@
                 });
 
                 document
-                    .getElementById("create-association-link")
-                    .addEventListener("click", function () {
-                        $("#createAssociationModal").modal("show");
-                        createAssociation = false;
+                    .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
+                        element.addEventListener("click", function () {
+                            $("#createAssociationModal").modal("show");
+                            createAssociation = false;
+                        });
                     });
 
                 document
