@@ -491,9 +491,11 @@
                             <template v-if="associations !== null">
                                 <h5>Related <span class="contextualise-small"> &mdash;
                                         <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
-                                            network</a></span>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
-                                        class="contextualise-small"><a href="#" class="create-association-link">Create
-                                            association</a></span>
+                                            network</a></span><span
+                                        v-if="isAuthenticated">&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
+                                            class="contextualise-small"><a href="#"
+                                                class="create-association-link">Create
+                                                association</a></span></span>
                                 </h5>
                                 <nav class="accordion" id="accordion-related-topics">
                                     <div v-for="association in associations" :key="association.identifier"
@@ -743,6 +745,12 @@
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
             <script type="text/javascript">
+                window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
+                window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
+                window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}";
+                window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}";
+                window.__IS_AUTHENTICATED__ = JSON.parse({{ "true" if current_user.is_authenticated else "false" }});
+
                 function getUrlParams(url) {
                     var params = {};
                     (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
@@ -753,11 +761,6 @@
                     });
                     return params;
                 }
-
-                window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
-                window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
-                window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}"
-                window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}"
 
                 var urlParts = window.location.pathname.split("/");
                 var mapIdentifier = urlParts[3];
@@ -819,6 +822,7 @@
                         mapIdentifier: window.__MAP_IDENTIFIER__,
                         topicIdentifier: window.__TOPIC_IDENTIFIER__,
                         currentScope: window.__SCOPE_IDENTIFIER__,
+                        isAuthenticated: window.__IS_AUTHENTICATED__,
                         associations: window.__ASSOCIATIONS_STATE__
                     }
                 });
