@@ -453,7 +453,8 @@
                     <div class="col-md-4">
                         {% if current_user.id == topic_map.user_identifier %}
                         <h5>Context <span class="contextualise-small"> &mdash; <a
-                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change</a></span>&nbsp;&nbsp;&middot;&nbsp;
+                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
+                                    context</a></span>&nbsp;&nbsp;&middot;&nbsp;
                             {% if session['scope_filter'] == 1 %}
                             <span class="contextualise-small"><a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
@@ -489,7 +490,7 @@
                         <br />
                         <div id="associations-component">
                             <template v-if="associations !== null">
-                                <h5>Related topics<span class="contextualise-small"> &mdash;
+                                <h5>Related<span class="contextualise-small"> &mdash;
                                         <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
                                             network</a></span><span
                                         v-if="isAuthenticated">&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
@@ -541,7 +542,7 @@
                             </template>
                         </div>
                         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
-                        <h5>Topic resources</h5>
+                        <h5>Resources</h5>
                         <div class="card contextualise-card">
                             <div class="collapse show">
                                 <div class="card-body">
