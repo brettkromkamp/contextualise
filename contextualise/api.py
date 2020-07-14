@@ -3,14 +3,12 @@ from datetime import datetime
 
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
-from flask_cors import cross_origin
 from slugify import slugify
 from topicdb.core.models.association import Association
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
 from topicdb.core.models.occurrence import Occurrence
 from topicdb.core.models.topic import Topic
-from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store
 
@@ -186,7 +184,6 @@ def get_network(map_identifier, topic_identifier):
 
 
 @bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
-@cross_origin()
 def get_association_groups(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     topic_store = get_topic_store()
 

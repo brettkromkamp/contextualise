@@ -29,7 +29,6 @@ setup(
     zip_safe=False,
     install_requires=[
         "flask",
-        "flask-cors",
         "flask-security-too",
         "flask-sqlalchemy",
         "flask-seasurf",

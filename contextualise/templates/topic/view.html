@@ -489,7 +489,7 @@
                         <br />
                         <div id="associations-component">
                             <template v-if="associations !== null">
-                                <h5>Related <span class="contextualise-small"> &mdash;
+                                <h5>Related topics<span class="contextualise-small"> &mdash;
                                         <a :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
                                             network</a></span><span
                                         v-if="isAuthenticated">&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span
@@ -537,11 +537,11 @@
                                         </div>
                                     </div>
                                 </nav>
+                                <br />
                             </template>
                         </div>
-                        <br />
                         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
-                        <h5>Resources</h5>
+                        <h5>Topic resources</h5>
                         <div class="card contextualise-card">
                             <div class="collapse show">
                                 <div class="card-body">
@@ -770,6 +770,8 @@
                     + "/" + window.__TOPIC_IDENTIFIER__
                     + "/" + window.__SCOPE_IDENTIFIER__
                     + "/" + filter;
+                console.log(filter);
+                console.log(associationsGetGroupsApiUrl);
                 var getIdentifiersApiUrl =
                     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
                 var createAssociation = false;

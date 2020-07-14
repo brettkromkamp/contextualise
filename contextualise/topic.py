@@ -23,6 +23,8 @@ bp = Blueprint("topic", __name__)
 RESOURCES_DIRECTORY = "static/resources/"
 BREADCRUMBS_COUNT = 4
 UNIVERSAL_SCOPE = "*"
+RESPONSE = 0
+STATUS_CODE = 1
 
 
 @bp.route("/topics/view/<map_identifier>/<topic_identifier>")
@@ -191,7 +193,9 @@ def view(map_identifier, topic_identifier):
     associations_state = api.get_association_groups(
         map_identifier, topic_identifier, session["current_scope"], scope_filtered
     )
-    associations_state = associations_state.data.decode("utf-8") if associations_state.status_code == 200 else None
+    associations_state = (
+        associations_state[RESPONSE].data.decode("utf-8") if associations_state[STATUS_CODE] == 200 else None
+    )
 
     return render_template(
         "topic/view.html",

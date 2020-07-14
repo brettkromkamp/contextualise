@@ -1,7 +1,6 @@
 topic-db>=1.0.0
 SQLAlchemy>=1.3.17
 Flask>=1.1.2
-Flask-Cors>=3.0.8
 Flask-SQLAlchemy>=2.4.3
 Flask-Security-Too>=3.4.2
 flask-seasurf>=0.2.2
