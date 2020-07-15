@@ -122,7 +122,7 @@ def get_network(map_identifier, topic_identifier):
 
     topic = topic_store.get_topic(map_identifier, topic_identifier)
 
-    scope_identifier = request.args.get("context", type=str)
+    scope_identifier = request.args.get("scope", type=str)
     scope_filtered = request.args.get("filter", type=int)
     if not scope_filtered:
         scope_identifier = None

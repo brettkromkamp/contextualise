@@ -34,7 +34,7 @@ def index():
     own_maps = [map for map in maps if map.owner]
     collaboration_maps = [map for map in maps if not map.owner]
 
-    # Reset breadcrumbs and (current) scope/context
+    # Reset breadcrumbs and (current) scope/scope
     session["breadcrumbs"] = []
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1
@@ -48,7 +48,7 @@ def published():
 
     maps = topic_store.get_published_topic_maps()
 
-    # Reset breadcrumbs and (current) scope/context
+    # Reset breadcrumbs and (current) scope/scope
     session["breadcrumbs"] = []
     session["current_scope"] = UNIVERSAL_SCOPE
     session["scope_filter"] = 1

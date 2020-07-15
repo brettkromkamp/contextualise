@@ -37,18 +37,18 @@
             <div class="card-body">
                 <div class="card-text">
                     <div class="form-group">
-                        <label for="file-scope">Context
+                        <label for="file-scope">Scope
                             <small class="text-info">&mdash; If no value is provided the default will be
                                 "<strong>{{ session["current_scope"] }}</strong>" (that is,
-                                the current context)
+                                the current scope)
                             </small>
                         </label>
                         <input class="form-control typeahead" id="file-scope" name="file-scope"
-                            placeholder="Enter context identifier" type="text" value="{{ file_scope }}">
+                            placeholder="Enter scope identifier" type="text" value="{{ file_scope }}">
                         {% if error|bitwise_and(2) == 2 %}
                         <small class="text-danger">
-                            A context with this identifier doesn't exist. Please provide an identifier for an existing
-                            context.
+                            A scope with this identifier doesn't exist. Please provide an identifier for an existing
+                            scope.
                         </small>
                         {% endif %}
                     </div>

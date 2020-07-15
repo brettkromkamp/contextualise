@@ -90,7 +90,7 @@ def create_app(test_config=None):
     def home():
         maps = get_topic_store().get_promoted_topic_maps()
 
-        # Reset breadcrumbs and (current) scope/context
+        # Reset breadcrumbs and (current) scope/scope
         session["breadcrumbs"] = []
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1

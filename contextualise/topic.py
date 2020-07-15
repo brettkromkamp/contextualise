@@ -74,9 +74,9 @@ def view(map_identifier, topic_identifier):
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-    # If a context has been specified in the URL, then use that to set the
-    # context
-    scope_identifier = request.args.get("context", type=str)
+    # If a scope has been specified in the URL, then use that to set the
+    # scope
+    scope_identifier = request.args.get("scope", type=str)
     if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
         session["current_scope"] = scope_identifier
 
@@ -960,7 +960,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 
 
 @bp.route(
-    "/topics/change-context/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("GET", "POST"),
+    "/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("GET", "POST"),
 )
 @login_required
 def change_context(map_identifier, topic_identifier, scope_identifier):
@@ -1004,7 +1004,7 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
             )
         else:
             session["current_scope"] = form_scope
-            flash("Context successfully changed.", "success")
+            flash("Scope successfully changed.", "success")
             return redirect(
                 url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
             )

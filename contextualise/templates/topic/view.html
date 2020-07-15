@@ -69,7 +69,7 @@
                                     role="button">Home</a>
                                 {% else %}
                                 <a class="btn btn-outline-primary"
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', context=session['current_scope']) }}"
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
                                     role="button">Home</a>
                                 {% endif %}
                             </li>
@@ -132,7 +132,7 @@
                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
                             breadcrumb|topic_name(topic_map.identifier) }}</a>
                                     {% else %}<a
-                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, context=session['current_scope']) }}">{{
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
                                 breadcrumb|topic_name(topic_map.identifier) }}</a>
                                     {% endif %}
                                 </li>
@@ -342,7 +342,7 @@
                                                     topic.instance_of|topic_name(topic_map.identifier) }}</a>
                                                         {% else %}
                                                         <a
-                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, context=session['current_scope']) }}">{{
+                                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, scope=session['current_scope']) }}">{{
                                                     topic.instance_of|topic_name(topic_map.identifier) }}</a>
                                                         {% endif %}
                                                     </td>
@@ -452,9 +452,9 @@
                     </div>
                     <div class="col-md-4">
                         {% if current_user.id == topic_map.user_identifier %}
-                        <h5>Context <span class="contextualise-small"> &mdash; <a
+                        <h5>Scope <span class="contextualise-small"> &mdash; <a
                                     href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
-                                    context</a></span>&nbsp;&nbsp;&middot;&nbsp;
+                                    scope</a></span>&nbsp;&nbsp;&middot;&nbsp;
                             {% if session['scope_filter'] == 1 %}
                             <span class="contextualise-small"><a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
@@ -465,7 +465,7 @@
                                 filtering</a></span></h5>
                         {% endif %}
                         {% else %}
-                        <h5>Context</h5>
+                        <h5>Scope</h5>
                         {% endif %}
                         <div class="card contextualise-card">
                             <div class="collapse show">
@@ -475,12 +475,12 @@
                                                 href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
                                     topic_map.name }}</a></li>
                                         {% if session['current_scope'] == '*' %}
-                                        <li>Context: <a
+                                        <li>Scope: <a
                                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                                     session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                                         {% else %}
-                                        <li>Context: <a
-                                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], context=session['current_scope']) }}">{{
+                                        <li>Scope: <a
+                                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{
                                     session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                                         {% endif %}
                                     </ul>
@@ -528,7 +528,7 @@
                                                                     :href="topicRef.identifier">${
                                                                     topicRef.name }</a>
                                                                 <a v-else
-                                                                    :href="topicRef.identifier + '?context=' + currentScope">${
+                                                                    :href="topicRef.identifier + '?scope=' + currentScope">${
                                                                     topicRef.name }</a>
                                                             </li>
                                                         </ul>
@@ -705,7 +705,7 @@
                             <li>Destination role: <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
                             </li>
-                            <li>Context: <a
+                            <li>Scope: <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                     session['current_scope']|topic_name(topic_map.identifier) }}</a>
                             </li>
