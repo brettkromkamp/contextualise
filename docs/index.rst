@@ -19,11 +19,12 @@ Welcome to Contextualise's documentation!
    :caption: Getting started
    :name: sec-learn
 
-   getting_started/topicmaps/index
-   getting_started/topics/index
-   getting_started/occurrences/index
-   getting_started/associations/index
-   getting_started/scopes/index
+   getting_started/index
+   getting_started/topicmaps
+   getting_started/topics
+   getting_started/occurrences
+   getting_started/associations
+   getting_started/scopes
 
 
 .. toctree::
@@ -31,11 +32,12 @@ Welcome to Contextualise's documentation!
    :caption: Tutorials
    :name: sec-tutorials
 
-   tutorials/topics/index
-   tutorials/occurrences/index
-   tutorials/associations/index
-   tutorials/scope_filtering/index
-   tutorials/notes/index
+   tutorials/index
+   tutorials/topicmaps
+   tutorials/topics
+   tutorials/occurrences
+   tutorials/associations
+   tutorials/scopes
 
 
 Indices and tables
