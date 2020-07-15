@@ -74,8 +74,7 @@ def view(map_identifier, topic_identifier):
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-    # If a scope has been specified in the URL, then use that to set the
-    # scope
+    # If a scope has been specified in the URL, then use that to set the scope
     scope_identifier = request.args.get("scope", type=str)
     if scope_identifier and topic_store.topic_exists(map_identifier, scope_identifier):
         session["current_scope"] = scope_identifier
