@@ -1,6 +1,6 @@
 .. Contextualise documentation master file, created by on Wed Jul 15 17:48:25 2020.
 
-Welcome to Contextualise's documentation!
+Welcome to Contextualise's Documentation!
 =========================================
 
 .. toctree::
