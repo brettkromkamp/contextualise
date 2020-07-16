@@ -33,7 +33,7 @@ many kinds of hobbies.
 
 *Contextualise's interactive 3D viewer*
 
-Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph library. Topic maps provide
+Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph store. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
 Why?
@@ -59,7 +59,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Extensive support for notes including the ability to attach a note to an existing topic and convert a note into a topic
 * `Markdown`_-based text editor for topic text and notes
 * The ability to attach files (including images, PDFs, and so forth) to topics
-* The ability to attach (`glTF`_-based) 3D scenes to topics with an accompanying interactive 3D model viewer
+* The ability to attach (`glTF`_-based) 3D scenes to topics with an accompanying interactive 3D scene viewer
 * Powerful (semantic) associations with the ability to create typed associations with role-based members
 * Flexible filtering of base names, topic occurrences and associations by scope (that is, context)
 * Navigable network graph visualisation of related topics
@@ -204,7 +204,7 @@ A Contextualise (work-in-progress) overview and tutorial is available as a Conte
 Documentation
 -------------
 
-Pending.
+Work in progress (July 16, 2020).
 
 Miscellaneous
 -------------
