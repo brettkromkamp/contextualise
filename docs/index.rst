@@ -9,20 +9,14 @@ Welcome to Contextualise's Documentation!
    :name: sec-general
 
    about/index
-   about/resources
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting Started With Topic Maps
+   :caption: Getting Started
    :name: sec-learn
 
-   getting_started/index
-   getting_started/topicmaps_model
-   getting_started/topics
-   getting_started/occurrences
-   getting_started/associations
-   getting_started/scopes
+   getting_started/understanding_topicmaps/index
 
 
 .. toctree::
@@ -30,13 +24,30 @@ Welcome to Contextualise's Documentation!
    :caption: Tutorials
    :name: sec-tutorials
 
-   tutorials/index
-   tutorials/topicmaps
-   tutorials/topics
-   tutorials/resources/index
-   tutorials/associations
-   tutorials/scopes
-   tutorials/collaboration
+   tutorials/topic_maps/index
+   tutorials/topics/index
+   tutorials/occurrences/index
+   tutorials/associations/index
+   tutorials/scopes/index
+   tutorials/collaboration/index
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Development
+   :name: sec-development
+
+   development/installing_contextualise/index
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Community
+   :name: sec-community
+
+   community/ways_to_contribute/index
+   community/pull_request_workflow/index
+   community/documentation_guidelines/index
 
 
 Indices and Tables

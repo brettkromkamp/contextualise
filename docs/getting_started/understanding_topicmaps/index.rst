@@ -1,9 +1,9 @@
-Getting Started With Topic Maps
-===============================
+Understanding Topic Maps
+========================
 
 .. toctree::
    :maxdepth: 1
-   :name: toc-getting-started
+   :name: toc-understanding-topicmaps
 
    topicmaps_model
    topics
