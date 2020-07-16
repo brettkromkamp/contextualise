@@ -39,7 +39,7 @@ Welcome to Contextualise's documentation!
    tutorials/collaboration
 
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`
