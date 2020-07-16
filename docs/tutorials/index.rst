@@ -7,7 +7,7 @@ Tutorials
 
    topicmaps
    topics
-   occurrences
+   resources/index
    associations
    scopes
 

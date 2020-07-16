@@ -1,2 +1,2 @@
-Scopes
-======
+Scopes and Scope-Filtering
+==========================

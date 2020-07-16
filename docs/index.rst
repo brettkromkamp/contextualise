@@ -1,7 +1,4 @@
-.. Contextualise documentation master file, created by
-   sphinx-quickstart on Wed Jul 15 17:48:25 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. Contextualise documentation master file, created by on Wed Jul 15 17:48:25 2020.
 
 Welcome to Contextualise's documentation!
 =========================================
@@ -12,15 +9,16 @@ Welcome to Contextualise's documentation!
    :name: sec-general
 
    about/index
+   about/resources
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting started
+   :caption: Getting Started With Topic Maps
    :name: sec-learn
 
    getting_started/index
-   getting_started/topicmaps
+   getting_started/topicmaps_model
    getting_started/topics
    getting_started/occurrences
    getting_started/associations
@@ -35,9 +33,10 @@ Welcome to Contextualise's documentation!
    tutorials/index
    tutorials/topicmaps
    tutorials/topics
-   tutorials/occurrences
+   tutorials/resources/index
    tutorials/associations
    tutorials/scopes
+   tutorials/collaboration
 
 
 Indices and tables

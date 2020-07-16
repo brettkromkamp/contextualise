@@ -68,15 +68,17 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Support for user-defined `knowledge paths <https://brettkromkamp.com/posts/knowledge-paths/>`_
 * `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
 * `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
+* Quick association creation for frictionless linking and knowledge discovery
 
-**Features Currently in Development (June-August 2020)**
+**Features Currently in Development (July-September 2020)**
 
-* Associative tagging
-* Network graph visualisation filtering by association types
+* Documentation, including a user manual and tutorials
 * A topics index for each topic map with pagination and sorting (by name or modification date)
 
 **Post Version 1.0 Features**
 
+* Associative tagging
+* Network graph visualisation filtering by association types
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
 * Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand

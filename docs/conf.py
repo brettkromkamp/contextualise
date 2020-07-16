@@ -54,3 +54,10 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+# Theme options
+html_theme_options = {
+    # if we have a html_logo below, this shows /only/ the logo with no title text
+    "logo_only": True,
+    # Collapse navigation (False makes it tree-like)
+    "collapse_navigation": False,
+}
