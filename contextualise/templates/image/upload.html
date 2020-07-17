@@ -8,8 +8,8 @@
 <script>
     document.querySelector('.custom-file-input').addEventListener('change', function (e) {
         var fileName = document.getElementById("image-file").files[0].name;
-        var nextSibling = e.target.nextElementSibling
-        nextSibling.innerText = fileName
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
     })
 </script>
 {% if error %}
