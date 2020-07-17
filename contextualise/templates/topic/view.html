@@ -374,9 +374,9 @@
                         {% if ('categorization', 'category') in associations %}
                         <strong>Tags:</strong>&nbsp;
                         {% for identifier in associations['categorization', 'category'] %}
-                        <a
+                        <a class="btn btn-outline-secondary btn-sm"
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-                        identifier|tag_name }}</a>{% if loop.index < associations['categorization', 'category']|length %}&nbsp;&nbsp;&middot;&nbsp;{% endif %}
+                        identifier|tag_name }}</a>
                         {% endfor %}
                         {% endif %}
                         <hr />
