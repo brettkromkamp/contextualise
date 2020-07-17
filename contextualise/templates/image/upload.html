@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var fileName = document.getElementById("image-file").files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = fileName
+    })
+</script>
 {% if error %}
 <script>
     $('#advancedOptions').collapse('show');
@@ -28,7 +35,11 @@
     </div>
     <div class="form-group">
         <label for="image-file"><strong>File</strong></label>
-        <input accept=".jpg,.jpeg,.png,.gif" class="form-control-file" id="image-file" name="image-file" type="file">
+        <div class="custom-file">
+            <input type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input" id="image-file"
+                name="image-file">
+            <label class="custom-file-label" for="image-file">Choose file</label>
+        </div>
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             No file part.

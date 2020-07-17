@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var fileName = document.getElementById("file-file").files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = fileName
+    })
+</script>
 {% if error %}
 <script>
     $('#advancedOptions').collapse('show');
@@ -28,7 +35,10 @@
     </div>
     <div class="form-group">
         <label for="file-file"><strong>File</strong></label>
-        <input class="form-control-file" id="file-file" name="file-file" type="file">
+        <div class="custom-file">
+            <input type="file" accept=".gltf,.glb" class="custom-file-input" id="file-file" name="file-file">
+            <label class="custom-file-label" for="file-file">Choose file</label>
+        </div>
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             No file part.
