@@ -26,7 +26,7 @@ many kinds of hobbies.
 .. image:: resources/graph-view.png
    :alt: Contextualise's interactive network graph view (allowing for navigation between topics)
 
-*Contextualise's interactive network graph view (allowing for navigation between topics)*
+*Contextualise's navigable network graph view*
 
 .. image:: resources/interactive-3d-viewer.png
    :alt: Contextualise's interactive 3D viewer

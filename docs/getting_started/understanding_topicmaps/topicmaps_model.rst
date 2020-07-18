@@ -1,2 +1,0 @@
-The Topic Maps Model
-====================

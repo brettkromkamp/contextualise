@@ -1,2 +1,0 @@
-Collaboration With Other Users
-==============================

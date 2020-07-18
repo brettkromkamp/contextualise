@@ -1,2 +1,0 @@
-Installing Contextualise with Docker
-====================================
