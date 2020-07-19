@@ -115,6 +115,9 @@ def create(map_identifier, topic_identifier):
         if form_association_identifier and topic_store.topic_exists(topic_map.identifier, form_association_identifier):
             error = error | 32
 
+        # TODO: Flag an error to prevent the user from creating an association with the reserved
+        # 'navigation' or 'categorization' types
+
         # If role identifier topics are missing then create them
         if error & 2:  # Destination role spec
             pass
