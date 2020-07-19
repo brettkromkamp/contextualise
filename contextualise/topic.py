@@ -962,7 +962,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     "/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("GET", "POST"),
 )
 @login_required
-def change_context(map_identifier, topic_identifier, scope_identifier):
+def change_scope(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
 
@@ -1009,5 +1009,5 @@ def change_context(map_identifier, topic_identifier, scope_identifier):
             )
 
     return render_template(
-        "topic/change_context.html", error=error, topic_map=topic_map, topic=topic, scope_identifier=form_scope,
+        "topic/change_scope.html", error=error, topic_map=topic_map, topic=topic, scope_identifier=form_scope,
     )

@@ -453,7 +453,7 @@
                     <div class="col-md-4">
                         {% if current_user.id == topic_map.user_identifier %}
                         <h5>Scope <span class="contextualise-small"> &mdash; <a
-                                    href="{{ url_for('topic.change_context', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
+                                    href="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
                                     scope</a></span>&nbsp;&nbsp;&middot;&nbsp;
                             {% if session['scope_filter'] == 1 %}
                             <span class="contextualise-small"><a
