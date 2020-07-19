@@ -470,7 +470,6 @@
                                     {% endif %}
                                 </ul>
                             </div>
-
                             {% if current_user.id == topic_map.user_identifier %}
                             <div class="card-footer">
                                 <a class="card-link"
@@ -489,47 +488,6 @@
                             {% endif %}
                         </div>
                         <br />
-                        <div id="associations-component">
-                            <template v-if="visibleAssociations.length > 0">
-                                <div class="card contextualise-card">
-                                    <div class="card-header">
-                                        <strong>Related topics</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <ul>
-                                            <li v-for="association in visibleAssociations"
-                                                :key="association.identifier">${
-                                                association.name }
-                                                <ul>
-                                                    <li v-for="role in association.roles" :key="role.identifier">
-                                                        ${ role.name }
-                                                        <ul>
-                                                            <li v-for="topicRef in role.topicRefs"
-                                                                :key="topicRef.identifier">
-                                                                <a v-if="currentScope === '*'"
-                                                                    :href="topicRef.identifier">${
-                                                                    topicRef.name }</a>
-                                                                <a v-else
-                                                                    :href="topicRef.identifier + '?scope=' + currentScope">${
-                                                                    topicRef.name }</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a class="card-link"
-                                            :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
-                                            network</a>
-                                        <a v-if="isAuthenticated" href="#"
-                                            class="card-link create-association-link">Create association</a>
-                                    </div>
-                                </div>
-                                <br />
-                            </template>
-                        </div>
                         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
                         <div class="card contextualise-card">
                             <div class="card-header">
@@ -629,6 +587,47 @@
                         </div>
                         <br />
                         {% endif %}
+                        <div id="associations-component">
+                            <template v-if="visibleAssociations.length > 0">
+                                <div class="card contextualise-card">
+                                    <div class="card-header">
+                                        <strong>Related topics</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li v-for="association in visibleAssociations"
+                                                :key="association.identifier">${
+                                                association.name }
+                                                <ul>
+                                                    <li v-for="role in association.roles" :key="role.identifier">
+                                                        ${ role.name }
+                                                        <ul>
+                                                            <li v-for="topicRef in role.topicRefs"
+                                                                :key="topicRef.identifier">
+                                                                <a v-if="currentScope === '*'"
+                                                                    :href="topicRef.identifier">${
+                                                                    topicRef.name }</a>
+                                                                <a v-else
+                                                                    :href="topicRef.identifier + '?scope=' + currentScope">${
+                                                                    topicRef.name }</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="card-link"
+                                            :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
+                                            network</a>
+                                        <a v-if="isAuthenticated" href="#"
+                                            class="card-link create-association-link">Create association</a>
+                                    </div>
+                                </div>
+                                <br />
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
