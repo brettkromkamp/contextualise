@@ -96,8 +96,7 @@ def tags_cloud(map_identifier, topic_identifier):
                         count += 1
                         tags[topic_ref] = count
                     else:
-                        tags[topic_ref] = 0
-    print(tags)
+                        tags[topic_ref] = 1
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
