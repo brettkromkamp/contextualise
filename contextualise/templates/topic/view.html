@@ -820,9 +820,13 @@
                     },
                     computed: {
                         visibleAssociations: function () {
-                            return this.associations.filter(function (association) {
-                                return association.identifier !== 'navigation' && association.identifier !== 'categorization';
-                            })
+                            if (this.associations != null) {
+                                return this.associations.filter(function (association) {
+                                    return association.identifier !== 'navigation' && association.identifier !== 'categorization';
+                                })
+                            } else {
+                                return {}
+                            }
                         }
                     }
                 });

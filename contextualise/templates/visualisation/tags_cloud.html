@@ -152,7 +152,7 @@
 <hr />
 {% if tags|length > 0 %}
 {% for tag, count in tags.items() %}
-<a class="text-decoration-none" style="font-size: {{ (count / tags|length) * 30 }}pt;"
+<a class="text-decoration-none" style="font-size: {{ (count / tags|length) * 20 }}pt;"
     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=tag) }}">{{
                         tag|tag_name }}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {% endfor %}
