@@ -1,7 +1,7 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-<title>{{ topic.first_base_name.name }} &mdash; Tags cloud | {{ topic_map.name }}</title>
+<title>Tags cloud | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
@@ -150,11 +150,17 @@
 </h1>
 <p><em>{{ creation_date }}</em></p>
 <hr />
+{% if tags|length > 0 %}
 {% for tag, count in tags.items() %}
 <a class="text-decoration-none" style="font-size: {{ (count / tags|length) * 30 }}pt;"
     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=tag) }}">{{
                         tag|tag_name }}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {% endfor %}
+{% else %}
+<p class="alert alert-info" role="alert">
+    This map has no tags.
+</p>
+{% endif %}
 <br />
 <br />
 {% endblock %}
