@@ -151,9 +151,9 @@
 <p><em>{{ creation_date }}</em></p>
 <hr />
 {% for tag, count in tags.items() %}
-<a style="font-size: {{ count }}em;"
+<a class="text-decoration-none" style="font-size: {{ (count / tags|length) * 30 }}pt;"
     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=tag) }}">{{
-                        tag|tag_name }}</a>
+                        tag|tag_name }}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {% endfor %}
 <br />
 <br />
