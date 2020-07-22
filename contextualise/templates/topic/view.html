@@ -89,7 +89,7 @@
                                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                                     <a class="dropdown-item" href="#">Preferences</a>
                                     <div class="dropdown-divider"></div>
-                                    {% if current_user.id == topic_map.user_identifier %}
+                                    {% if is_map_owner %}
                                     <a class="dropdown-item" href="#">Search</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="#">Topics index</a>
@@ -394,7 +394,7 @@
                         <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to
                                     top</a></small></p>
                         {% else %}
-                        {% if current_user.id == topic_map.user_identifier %}
+                        {% if is_map_owner %}
                         <p class="alert alert-info" role="alert">
                             This topic has no text. Click on the "Edit topic" button below to add text to this topic.
                         </p>
@@ -462,7 +462,7 @@
                     <div class="col-md-4">
                         <div class="card contextualise-card">
                             <div class="card-header">
-                                <strong>Scope</strong>
+                                <strong>Map and scope</strong>
                             </div>
                             <div class="card-body">
                                 <ul>
@@ -477,9 +477,20 @@
                                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{
                                 session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                                     {% endif %}
+                                    {% if current_user.is_authenticated and not is_map_owner %}
+                                    <li>
+                                        Collaboration mode: {% if collaboration_mode.name == "VIEW" %}
+                                        <span class="text-info"><strong>Can view</strong></span>
+                                        {% elif collaboration_mode.name == "COMMENT" %}
+                                        <span class="text-secondary"><strong>Can comment</strong></span>
+                                        {% else %}
+                                        <span class="text-warning"><strong>Can edit</strong></span>
+                                        {% endif %}
+                                    </li>
+                                    {% endif %}
                                 </ul>
                             </div>
-                            {% if current_user.id == topic_map.user_identifier %}
+                            {% if is_map_owner %}
                             <div class="card-footer">
                                 <a class="card-link"
                                     href="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
@@ -505,7 +516,7 @@
                             <div class="card-body">
                                 <ul>
                                     {% if occurrences['images'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                    <li>{% if is_map_owner %}
                                         <a
                                             href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
                                         {% else %}
@@ -523,7 +534,7 @@
                                     </li>
                                     {% endif %}
                                     {% if occurrences['files'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                    <li>{% if is_map_owner %}
                                         <a
                                             href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
                                         {% else %}
@@ -541,7 +552,7 @@
                                     </li>
                                     {% endif %}
                                     {% if occurrences['videos'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                    <li>{% if is_map_owner %}
                                         <a
                                             href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
                                         {% else %}
@@ -558,7 +569,7 @@
                                     </li>
                                     {% endif %}
                                     {% if occurrences['links'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                    <li>{% if is_map_owner %}
                                         <a
                                             href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
                                         {% else %}
@@ -574,7 +585,7 @@
                                     </li>
                                     {% endif %}
                                     {% if occurrences['3d-scenes'] %}
-                                    <li>{% if current_user.id == topic_map.user_identifier %}
+                                    <li>{% if is_map_owner %}
                                         <a
                                             href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D</a>
                                         {% else %}
