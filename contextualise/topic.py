@@ -32,6 +32,7 @@ def view(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
     collaboration_mode = None
+    is_map_owner = False
     if current_user.is_authenticated:  # User is logged in
         is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
         if is_map_owner:
@@ -208,6 +209,7 @@ def view(map_identifier, topic_identifier):
         modification_date=modification_date,
         breadcrumbs=breadcrumbs,
         collaboration_mode=collaboration_mode,
+        is_map_owner=is_map_owner,
     )
 
 

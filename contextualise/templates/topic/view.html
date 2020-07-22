@@ -192,7 +192,9 @@
                                     <a class="dropdown-item"
                                         href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                                         network</a>
-                                    <a class="dropdown-item" href="#">View tags cloud</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                                        tags cloud</a>
                                     <a class="dropdown-item" href="#">View timeline</a>
                                     <a class="dropdown-item" href="#">View geographic map</a>
                                 </div>
@@ -628,7 +630,7 @@
                                         <a class="card-link"
                                             :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
                                             network</a>
-                                        <a v-if="isAuthenticated" href="#"
+                                        <a v-if="isAuthenticated && hasWriteAccess" href="#"
                                             class="card-link create-association-link">Create association</a>
                                     </div>
                                 </div>
@@ -746,6 +748,7 @@
                 window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}";
                 window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}";
                 window.__IS_AUTHENTICATED__ = JSON.parse({{ "true" if current_user.is_authenticated else "false" }});
+                window.__HAS_WRITE_ACCESS__ = JSON.parse({{ "true" if is_map_owner or collaboration_mode.name == 'EDIT' else "false" }});
 
                 function getUrlParams(url) {
                     var params = {};
@@ -819,6 +822,7 @@
                         topicIdentifier: window.__TOPIC_IDENTIFIER__,
                         currentScope: window.__SCOPE_IDENTIFIER__,
                         isAuthenticated: window.__IS_AUTHENTICATED__,
+                        hasWriteAccess: window.__HAS_WRITE_ACCESS__,
                         associations: window.__ASSOCIATIONS_STATE__
                     },
                     computed: {
