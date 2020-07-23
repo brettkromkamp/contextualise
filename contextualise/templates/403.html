@@ -2,6 +2,11 @@
 {% block title %}<title>Forbidden</title>{% endblock %}
 {% block body %}
 <h1>Forbidden</h1>
-<p>You seem to be trying to access something that doesn't belong to you. Find your way back <a
-        href="{{ url_for('map.index') }}">home</a>.</p>
+<p class="alert alert-warning">You seem to be trying to access something that doesn't belong to you. Find your way back
+    <a href="{{ url_for('map.index') }}">home</a>.</p>
+<br />
+<br />
+<p class="text-center">
+    <img width="560" class="img-fluid" src="{{ url_for('static', filename='access-denied.svg') }}">
+</p>
 {% endblock %}

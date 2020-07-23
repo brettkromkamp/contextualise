@@ -96,9 +96,14 @@ def view(map_identifier, topic_identifier):
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
+        if current_user.is_authenticated:  # User is logged in
+            current_app.logger.warning(
+                f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+            )
+        else:
+            current_app.logger.warning(
+                f"Topic not found: user identifier: [N/A], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+            )
         session["inexistent_topic_identifier"] = topic_identifier
         abort(404)
     else:

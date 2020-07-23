@@ -2,5 +2,11 @@
 {% block title %}<title>Page Not Found</title>{% endblock %}
 {% block body %}
 <h1>Page Not Found</h1>
-<p>What you were looking for is just not there. Find your way back <a href="{{ url_for('map.index') }}">home</a>.</p>
+<p class="alert alert-warning">What you were looking for is just not there. Find your way back <a
+        href="{{ url_for('map.index') }}">home</a>.</p>
+<br />
+<br />
+<p class="text-center">
+    <img width="560" class="img-fluid" src="{{ url_for('static', filename='page-not-found.svg') }}">
+</p>
 {% endblock %}

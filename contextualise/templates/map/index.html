@@ -67,6 +67,11 @@
                 <p class="alert alert-info" role="alert">
                     No topic maps. Click on the "Create map" button below to create a topic map.
                 </p>
+                <br />
+                <br />
+                <p class="text-center">
+                    <img width="560" class="img-fluid" src="{{ url_for('static', filename='blank-canvas.svg') }}">
+                </p>
                 {% endif %}
                 <a class="btn btn-primary" href="{{ url_for('map.create') }}">Create map</a>
             </div>
