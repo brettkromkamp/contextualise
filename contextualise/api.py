@@ -46,7 +46,7 @@ def topic_exists(map_identifier):
             "normalisedTopicIdentifier": normalised_topic_identifier,
             "normalisedTopicName": normalised_topic_name,
         }
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 @bp.route("/api/create-topic/<map_identifier>", methods=["POST"])
@@ -98,7 +98,7 @@ def get_identifiers(map_identifier):
 
     query_term = request.args.get("q").lower()
 
-    return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10))
+    return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)), 200
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
@@ -226,7 +226,7 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
                 {"identifier": instance_of, "name": instance_of_topic.first_base_name.name, "roles": result_roles,}
             )
 
-    return (jsonify(result), 200)
+    return jsonify(result), 200
 
 
 @bp.route("/api/create-association/<map_identifier>", methods=["POST"])
