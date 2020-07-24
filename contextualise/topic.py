@@ -58,7 +58,7 @@ def view(map_identifier, topic_identifier):
         topic_map = topic_store.get_topic_map(map_identifier)
         if topic_map is None:
             current_app.logger.warning(
-                f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+                f"Topic map not found: user identifier: [N/A], topic map identifier: [{map_identifier}]"
             )
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
