@@ -1,4 +1,4 @@
-Contextualise: Map Your Knowledge
+Contextualise: Structured thought
 =================================
 
 .. image:: resources/contextualise-logo.png
