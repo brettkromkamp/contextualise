@@ -1,4 +1,4 @@
-Contextualise: Structured thought
+Contextualise: Structured Thought
 =================================
 
 .. image:: resources/contextualise-logo.png
@@ -235,3 +235,14 @@ How to Contribute
 .. _AUTHORS: https://github.com/brettkromkamp/contextualise/blob/master/AUTHORS.rst
 .. _Markdown: https://daringfireball.net/projects/markdown/syntax
 .. _glTF: https://www.khronos.org/gltf/
+
+Final Words
+-----------
+I hope you enjoy using Contextualise as much as I enjoy developing it and I genuinely hope that Contextualise can help you to
+improve your thinking process. If you have any suggestions, questions or critique with regards to Contextualise, I would love
+to hear from you.
+
+.. epigraph::
+   *I will see you again, in the place where no shadows fall*.
+
+   -- Ambassador Delenn, Babylon 5
