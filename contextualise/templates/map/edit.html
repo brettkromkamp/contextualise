@@ -4,6 +4,16 @@
 <title>Edit map | Contextualise</title>
 {% endblock %}
 
+{% block javascript %}
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var fileName = document.getElementById("map-image-file").files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    })
+</script>
+{% endblock %}
+
 {% block content %}
 <h1>{{ topic_map.name }}
     <small class="text-muted">Edit map</small>
@@ -31,7 +41,11 @@
         <br />
         <br />
         {% endif %}
-        <input accept=".jpg,.jpeg,.png" class="form-control-file" id="map-image-file" name="map-image-file" type="file">
+        <div class="custom-file">
+            <input type="file" accept=".jpg,.jpeg,.png" class="custom-file-input" id="map-image-file"
+                name="map-image-file">
+            <label class="custom-file-label" for="map-image-file">Choose file</label>
+        </div>
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             No file selected.

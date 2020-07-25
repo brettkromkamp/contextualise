@@ -217,7 +217,7 @@ def edit(map_identifier):
                 promoted=promoted,
             )
 
-            flash("Map successfully created.", "success")
+            flash("Map successfully updated.", "success")
         return redirect(url_for("map.view", map_identifier=map_identifier))
 
     return render_template(
