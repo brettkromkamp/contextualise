@@ -209,7 +209,7 @@ Work in progress (July 16, 2020).
 Miscellaneous
 -------------
 
-Currently, I am using Contextualise for worldbuilding purposes of the Brave Robot fictional universe including its `Codex
+Currently, I am using Contextualise for, among others, worldbuilding purposes of the Brave Robot fictional universe including its `Codex
 Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_.
 
 .. image:: resources/codex-roboticus1.png
