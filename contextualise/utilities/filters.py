@@ -10,15 +10,10 @@ def topic_name(topic_identifier, topic_map_identifier):
     return result
 
 
-def tag_name(tag_identifier):
-    return tag_identifier[: tag_identifier.find("-tag")]
-
-
 def bitwise_and(value1, value2):
     return value1 & value2
 
 
 def register_filters(app):
     app.jinja_env.filters["topic_name"] = topic_name
-    app.jinja_env.filters["tag_name"] = tag_name
     app.jinja_env.filters["bitwise_and"] = bitwise_and
