@@ -227,7 +227,9 @@
                                     <a class="dropdown-item"
                                         href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                                         note</a>
-                                    <a class="dropdown-item" href="#">Add tag</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                                        tags</a>
                                     {% if 'admin' in current_user.roles %}
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item"
@@ -374,11 +376,14 @@
                         {% if topic.instance_of == 'tag' %}
                         <strong>Tagged topics:</strong>
                         <br />
-                        {% for identifier in associations['categorization', 'member'] %}
-                        <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-                        identifier|topic_name(topic_map.identifier) }}</a><br />
-                        {% endfor %}
+                        <ul>
+                            {% for identifier in associations['categorization', 'member'] %}
+                            <li><a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+                        identifier|topic_name(topic_map.identifier) }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
                         {% endif %}
                         {% if ('categorization', 'category') in associations %}
                         <strong>Tags:</strong>&nbsp;

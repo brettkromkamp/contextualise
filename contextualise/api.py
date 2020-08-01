@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
 from slugify import slugify
+from slugify.slugify import QUOTE_PATTERN
 from topicdb.core.models.association import Association
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
@@ -89,6 +90,7 @@ def create_topic(map_identifier):
 @bp.route("/api/get-identifiers/<map_identifier>")
 @login_required
 def get_identifiers(map_identifier):
+    result = []
     topic_store = get_topic_store()
 
     topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
@@ -97,8 +99,31 @@ def get_identifiers(map_identifier):
     # TODO: Missing logic?
 
     query_term = request.args.get("q").lower()
+    instance_of = request.args.get("instance-of")
+    if instance_of:
+        result = topic_store.get_topic_identifiers(
+            map_identifier, query_term, instance_ofs=[instance_of.lower()], limit=10
+        )
+    else:
+        result = topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)
+    return jsonify(result), 200
 
-    return jsonify(topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)), 200
+
+@bp.route("/api/get-tags/<map_identifier>")
+@login_required
+def get_tags(map_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        return jsonify({"status": "error", "code": 404}), 404
+    # TODO: Missing logic?
+
+    query_term = request.args.get("term").lower()
+    result = {
+        "suggestions": topic_store.get_topic_identifiers(map_identifier, query_term, instance_ofs=["tag"], limit=10)
+    }
+    return jsonify(result), 200
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
