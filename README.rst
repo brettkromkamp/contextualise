@@ -2,6 +2,7 @@ Contextualise: Structured Thought
 =================================
 
 .. image:: resources/contextualise-logo.png
+   :width: 560
    :alt: Contextualise logo
 
 Contextualise is a simple and flexible tool particularly suited for organising information-heavy projects and
@@ -69,15 +70,15 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * `Hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ associations; that is, the ability to assert a relationship between more than two topics by means of a single association -- one edge joining multiple vertices
 * `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 * Quick association creation for frictionless topic-linking and knowledge discovery
+* Associative tagging
 
-**Features Currently in Development (July-September 2020)**
+**Features Currently in Development (August - September 2020)**
 
 * Documentation (including tutorials)
 * A topics index for each topic map with pagination and sorting (by name or modification date)
 
 **Post Version 1.0 Features**
 
-* Associative tagging
 * Network graph visualisation filtering by association types
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
@@ -223,6 +224,17 @@ How to Contribute
 #. Write a test which shows that the bug was fixed or that the feature works as expected.
 #. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to AUTHORS_.
 
+Final Words
+-----------
+I hope you enjoy using Contextualise as much as I enjoy developing it. What's more,  I also  genuinely hope that Contextualise
+can help you to improve your thinking process. If you have any suggestions, questions or critique with regards to Contextualise,
+I would love to hear from you.
+
+.. epigraph::
+   *I will see you again, in the place where no shadows fall*.
+
+   -- Ambassador Delenn, Babylon 5
+
 .. _topic maps: https://msdn.microsoft.com/en-us/library/aa480048.aspx
 .. _world building: https://en.wikipedia.org/wiki/Worldbuilding
 .. _TopicDB: https://github.com/brettkromkamp/topic-db
@@ -235,14 +247,3 @@ How to Contribute
 .. _AUTHORS: https://github.com/brettkromkamp/contextualise/blob/master/AUTHORS.rst
 .. _Markdown: https://daringfireball.net/projects/markdown/syntax
 .. _glTF: https://www.khronos.org/gltf/
-
-Final Words
------------
-I hope you enjoy using Contextualise as much as I enjoy developing it. What's more,  I also  genuinely hope that Contextualise
-can help you to improve your thinking process. If you have any suggestions, questions or critique with regards to Contextualise,
-I would love to hear from you.
-
-.. epigraph::
-   *I will see you again, in the place where no shadows fall*.
-
-   -- Ambassador Delenn, Babylon 5
