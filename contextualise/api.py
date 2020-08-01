@@ -109,6 +109,7 @@ def get_identifiers(map_identifier):
     return jsonify(result), 200
 
 
+# Custom endpoint to integrate with https://github.com/amsify42/jquery.amsify.suggestags
 @bp.route("/api/get-tags/<map_identifier>")
 @login_required
 def get_tags(map_identifier):

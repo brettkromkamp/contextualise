@@ -215,7 +215,9 @@
             <a class="dropdown-item"
                 href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
                 note</a>
-            <a class="dropdown-item" href="#">Add tags</a>
+            <a class="dropdown-item"
+                href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                tags</a>
             {% if 'admin' in current_user.roles %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
