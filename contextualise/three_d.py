@@ -285,17 +285,30 @@ def delete(map_identifier, topic_identifier, file_identifier):
 @bp.route(
     "/3d/view/<map_identifier>/<topic_identifier>/<file_url>", methods=("GET", "POST"),
 )
-@login_required
 def view(map_identifier, topic_identifier, file_url):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
+    collaboration_mode = None
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+        else:
+            topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
+        if not topic_map.published and not is_map_owner:
+            if not collaboration_mode:  # The user is not collaborating on the map
+                abort(403)
+    else:  # User is not logged in
+        topic_map = topic_store.get_topic_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        if not topic_map.published:  # User is not logged in and the map is not published
+            abort(403)
 
     topic = topic_store.get_topic(
         map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
