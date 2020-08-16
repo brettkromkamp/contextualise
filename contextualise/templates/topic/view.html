@@ -35,6 +35,13 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
         <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
+        <style>
+            .fancybox-slide--iframe .fancybox-content {
+                max-width: 100%;
+                max-height: 100%;
+                margin: 0;
+            }
+        </style>
     </head>
 
     <body class="d-flex flex-column h-100">
@@ -598,9 +605,8 @@
                                         {% endif %}
                                         <ul>
                                             {% for scene in occurrences['3d-scenes'] %}
-                                            <li>
-                                                <a data-fancybox
-                                                    data-src="/static/3d_view.html?map_identifier={{ topic_map.identifier }}&topic_identifier={{ topic.identifier }}&file_identifier={{ scene.url }}"
+                                            <li><a data-fancybox
+                                                    data-src="{{ url_for('three_d.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_url=scene.url) }}"
                                                     data-type="iframe" href="javascript:;">{{ scene.title }}</a>
                                             </li>
                                             {% endfor %}

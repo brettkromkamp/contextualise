@@ -142,6 +142,3 @@ settings.ini
 
 # Application log files
 logs/
-
-# three.js
-three.js/
