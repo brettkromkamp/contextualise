@@ -5,7 +5,7 @@ Contextualise: Structured Thought
    :width: 560
    :alt: Contextualise logo
 
-Contextualise is a simple but flexible tool particularly suited for organising information-heavy projects and
+Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of investigative
 journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and
 many kinds of hobbies.
