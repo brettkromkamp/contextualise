@@ -36,7 +36,9 @@ def network(map_identifier, topic_identifier):
             abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -80,7 +82,9 @@ def tags_cloud(map_identifier, topic_identifier):
             abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -138,7 +142,9 @@ def timeline(map_identifier, topic_identifier):
             abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -182,7 +188,9 @@ def geographic_map(map_identifier, topic_identifier):
             abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)

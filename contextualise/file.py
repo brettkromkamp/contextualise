@@ -33,13 +33,18 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrences = topic_store.get_topic_occurrences(
-        map_identifier, topic_identifier, "file", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        "file",
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     files = []
@@ -57,7 +62,11 @@ def index(map_identifier, topic_identifier):
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
-        "file/index.html", topic_map=topic_map, topic=topic, files=files, creation_date=creation_date,
+        "file/index.html",
+        topic_map=topic_map,
+        topic=topic,
+        files=files,
+        creation_date=creation_date,
     )
 
 
@@ -75,7 +84,9 @@ def upload(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -104,7 +115,8 @@ def upload(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when uploading the file. Please review the warnings and fix accordingly.", "warning",
+                "An error occurred when uploading the file. Please review the warnings and fix accordingly.",
+                "warning",
             )
         else:
             file_extension = get_file_extension(form_upload_file.filename)
@@ -127,7 +139,10 @@ def upload(map_identifier, topic_identifier):
                 resource_ref=file_file_name,
             )
             title_attribute = Attribute(
-                "title", form_file_title, file_occurrence.identifier, data_type=DataType.STRING,
+                "title",
+                form_file_title,
+                file_occurrence.identifier,
+                data_type=DataType.STRING,
             )
 
             # Persist objects to the topic store
@@ -136,7 +151,11 @@ def upload(map_identifier, topic_identifier):
 
             flash("File successfully uploaded.", "success")
             return redirect(
-                url_for("file.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "file.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
         return render_template(
@@ -152,7 +171,8 @@ def upload(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/files/edit/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("GET", "POST"),
+    "/files/edit/<map_identifier>/<topic_identifier>/<file_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
@@ -167,13 +187,17 @@ def edit(map_identifier, topic_identifier, file_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrence = topic_store.get_occurrence(
-        map_identifier, file_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        file_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_file_title = file_occurrence.get_attribute_by_name("title").value
@@ -204,7 +228,9 @@ def edit(map_identifier, topic_identifier, file_identifier):
             # Update file's title if it has changed
             if file_occurrence.get_attribute_by_name("title").value != form_file_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, file_occurrence.get_attribute_by_name("title").identifier, form_file_title,
+                    topic_map.identifier,
+                    file_occurrence.get_attribute_by_name("title").identifier,
+                    form_file_title,
                 )
 
             # Update file's scope if it has changed
@@ -213,7 +239,11 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
             flash("File successfully updated.", "success")
             return redirect(
-                url_for("file.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "file.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -228,7 +258,8 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
 
 @bp.route(
-    "/files/delete/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("GET", "POST"),
+    "/files/delete/<map_identifier>/<topic_identifier>/<file_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
@@ -243,13 +274,17 @@ def delete(map_identifier, topic_identifier, file_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     file_occurrence = topic_store.get_occurrence(
-        map_identifier, file_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        file_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_file_title = file_occurrence.get_attribute_by_name("title").value
@@ -261,13 +296,23 @@ def delete(map_identifier, topic_identifier, file_identifier):
 
         # Delete file from file system
         file_file_path = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier, file_occurrence.resource_ref,
+            bp.root_path,
+            RESOURCES_DIRECTORY,
+            str(map_identifier),
+            topic_identifier,
+            file_occurrence.resource_ref,
         )
         if os.path.exists(file_file_path):
             os.remove(file_file_path)
 
         flash("File successfully deleted.", "warning")
-        return redirect(url_for("file.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(
+            url_for(
+                "file.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
+        )
 
     return render_template(
         "file/delete.html",

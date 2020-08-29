@@ -27,7 +27,9 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -62,7 +64,9 @@ def create(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -146,7 +150,11 @@ def create(map_identifier, topic_identifier):
 
             flash("Association successfully created.", "success")
             return redirect(
-                url_for("association.index", map_identifier=topic_map.identifier, topic_identifier=topic_identifier,)
+                url_for(
+                    "association.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic_identifier,
+                )
             )
 
         return render_template(
@@ -164,11 +172,17 @@ def create(map_identifier, topic_identifier):
             association_identifier=form_association_identifier,
         )
 
-    return render_template("association/create.html", error=error, topic_map=topic_map, topic=topic,)
+    return render_template(
+        "association/create.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+    )
 
 
 @bp.route(
-    "/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>", methods=("GET", "POST"),
+    "/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
@@ -183,7 +197,9 @@ def delete(map_identifier, topic_identifier, association_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -194,10 +210,19 @@ def delete(map_identifier, topic_identifier, association_identifier):
         topic_store.delete_association(map_identifier, association_identifier)
         flash("Association successfully deleted.", "warning")
         return redirect(
-            url_for("association.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+            url_for(
+                "association.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
         )
 
-    return render_template("association/delete.html", topic_map=topic_map, topic=topic, association=association,)
+    return render_template(
+        "association/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
+    )
 
 
 @bp.route("/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>")
@@ -214,14 +239,21 @@ def view(map_identifier, topic_identifier, association_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     association = topic_store.get_association(map_identifier, association_identifier)
 
-    return render_template("association/view.html", topic_map=topic_map, topic=topic, association=association,)
+    return render_template(
+        "association/view.html",
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
+    )
 
 
 @bp.route(
@@ -241,7 +273,9 @@ def view_member(map_identifier, topic_identifier, association_identifier, member
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -250,12 +284,17 @@ def view_member(map_identifier, topic_identifier, association_identifier, member
     member = association.get_member(member_identifier)
 
     return render_template(
-        "association/view_member.html", topic_map=topic_map, topic=topic, association=association, member=member,
+        "association/view_member.html",
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
+        member=member,
     )
 
 
 @bp.route(
-    "/associations/add-member/<map_identifier>/<topic_identifier>/<association_identifier>", methods=("GET", "POST"),
+    "/associations/add-member/<map_identifier>/<topic_identifier>/<association_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def add_member(map_identifier, topic_identifier, association_identifier):
@@ -270,7 +309,9 @@ def add_member(map_identifier, topic_identifier, association_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -326,7 +367,11 @@ def add_member(map_identifier, topic_identifier, association_identifier):
         )
 
     return render_template(
-        "association/add_member.html", error=error, topic_map=topic_map, topic=topic, association=association,
+        "association/add_member.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
     )
 
 
@@ -347,7 +392,9 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -377,7 +424,11 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
         )
 
     return render_template(
-        "association/delete_member.html", topic_map=topic_map, topic=topic, association=association, member=member,
+        "association/delete_member.html",
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
+        member=member,
     )
 
 
@@ -398,7 +449,9 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -467,7 +520,11 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
 )
 @login_required
 def delete_reference(
-    map_identifier, topic_identifier, association_identifier, member_identifier, reference_identifier,
+    map_identifier,
+    topic_identifier,
+    association_identifier,
+    member_identifier,
+    reference_identifier,
 ):
     topic_store = get_topic_store()
 
@@ -480,7 +537,9 @@ def delete_reference(
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)

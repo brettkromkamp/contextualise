@@ -317,7 +317,10 @@ def add_collaborator(map_identifier):
             else:
                 collaboration_mode = CollaborationMode.VIEW
             topic_store.collaborate(
-                topic_map.identifier, collaborator.id, collaborator.email, collaboration_mode,
+                topic_map.identifier,
+                collaborator.id,
+                collaborator.email,
+                collaboration_mode,
             )
             flash("Collaborator successfully added.", "success")
             return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))
@@ -332,7 +335,8 @@ def add_collaborator(map_identifier):
 
 
 @bp.route(
-    "/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"),
+    "/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete_collaborator(map_identifier, collaborator_identifier):
@@ -370,7 +374,8 @@ def delete_collaborator(map_identifier, collaborator_identifier):
 
 
 @bp.route(
-    "/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"),
+    "/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit_collaborator(map_identifier, collaborator_identifier):
@@ -401,7 +406,9 @@ def edit_collaborator(map_identifier, collaborator_identifier):
             )
         else:
             topic_store.update_collaboration_mode(
-                map_identifier, collaborator_identifier, CollaborationMode[form_collaboration_mode.upper()],
+                map_identifier,
+                collaborator_identifier,
+                CollaborationMode[form_collaboration_mode.upper()],
             )
             flash("Collaborator successfully updated.", "success")
             return redirect(url_for("map.collaborators", map_identifier=topic_map.identifier))

@@ -30,7 +30,9 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -82,13 +84,17 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_association(
-        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        entity_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         entity = topic_store.get_occurrence(map_identifier, entity_identifier)
@@ -155,7 +161,9 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -205,7 +213,11 @@ def add(map_identifier, topic_identifier):
 
             flash("Attribute successfully added.", "success")
             return redirect(
-                url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "attribute.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
         return render_template(
@@ -234,7 +246,8 @@ def add(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/attributes/add/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>", methods=("GET", "POST"),
+    "/attributes/add/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>",
+    methods=("GET", "POST"),
 )
 @login_required
 def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
@@ -251,13 +264,17 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     entity = topic_store.get_occurrence(
-        map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        entity_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
         abort(404)
@@ -343,7 +360,8 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 
 
 @bp.route(
-    "/attributes/edit/<map_identifier>/<topic_identifier>/<attribute_identifier>", methods=("GET", "POST"),
+    "/attributes/edit/<map_identifier>/<topic_identifier>/<attribute_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, attribute_identifier):
@@ -360,7 +378,9 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -414,7 +434,11 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
             flash("Attribute successfully updated.", "success")
             return redirect(
-                url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "attribute.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     entity_type = "topic"
@@ -450,7 +474,11 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 )
 @login_required
 def entity_edit(
-    map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
+    map_identifier,
+    topic_identifier,
+    entity_identifier,
+    attribute_identifier,
+    entity_type,
 ):
     topic_store = get_topic_store()
 
@@ -465,18 +493,24 @@ def entity_edit(
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     if entity_type == "association":
         entity = topic_store.get_association(
-            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+            map_identifier,
+            entity_identifier,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     else:
         entity = topic_store.get_occurrence(
-            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+            map_identifier,
+            entity_identifier,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     if entity is None:
         abort(404)
@@ -567,7 +601,8 @@ def entity_edit(
 
 
 @bp.route(
-    "/attributes/delete/<map_identifier>/<topic_identifier>/<attribute_identifier>", methods=("GET", "POST"),
+    "/attributes/delete/<map_identifier>/<topic_identifier>/<attribute_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, attribute_identifier):
@@ -584,7 +619,9 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -604,7 +641,11 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 
         flash("Attribute successfully deleted.", "warning")
         return redirect(
-            url_for("attribute.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+            url_for(
+                "attribute.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
         )
 
     entity_type = "topic"
@@ -632,7 +673,11 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 )
 @login_required
 def entity_delete(
-    map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type,
+    map_identifier,
+    topic_identifier,
+    entity_identifier,
+    attribute_identifier,
+    entity_type,
 ):
     topic_store = get_topic_store()
 
@@ -647,18 +692,24 @@ def entity_delete(
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     if entity_type == "association":
         entity = topic_store.get_association(
-            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+            map_identifier,
+            entity_identifier,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     else:
         entity = topic_store.get_occurrence(
-            map_identifier, entity_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+            map_identifier,
+            entity_identifier,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     if entity is None:
         abort(404)

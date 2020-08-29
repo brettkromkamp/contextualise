@@ -34,13 +34,18 @@ def index(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     image_occurrences = topic_store.get_topic_occurrences(
-        map_identifier, topic_identifier, "image", resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        "image",
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     images = []
@@ -58,7 +63,11 @@ def index(map_identifier, topic_identifier):
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
     return render_template(
-        "image/index.html", topic_map=topic_map, topic=topic, images=images, creation_date=creation_date,
+        "image/index.html",
+        topic_map=topic_map,
+        topic=topic,
+        images=images,
+        creation_date=creation_date,
     )
 
 
@@ -76,7 +85,9 @@ def upload(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
@@ -129,7 +140,10 @@ def upload(map_identifier, topic_identifier):
                 resource_ref=image_file_name,
             )
             title_attribute = Attribute(
-                "title", form_image_title, image_occurrence.identifier, data_type=DataType.STRING,
+                "title",
+                form_image_title,
+                image_occurrence.identifier,
+                data_type=DataType.STRING,
             )
 
             # Persist objects to the topic store
@@ -138,7 +152,11 @@ def upload(map_identifier, topic_identifier):
 
             flash("Image successfully uploaded.", "success")
             return redirect(
-                url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "image.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
         return render_template(
@@ -154,7 +172,8 @@ def upload(map_identifier, topic_identifier):
 
 
 @bp.route(
-    "/images/edit/<map_identifier>/<topic_identifier>/<image_identifier>", methods=("GET", "POST"),
+    "/images/edit/<map_identifier>/<topic_identifier>/<image_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def edit(map_identifier, topic_identifier, image_identifier):
@@ -169,13 +188,17 @@ def edit(map_identifier, topic_identifier, image_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     image_occurrence = topic_store.get_occurrence(
-        map_identifier, image_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        image_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_image_title = image_occurrence.get_attribute_by_name("title").value
@@ -207,7 +230,9 @@ def edit(map_identifier, topic_identifier, image_identifier):
             # Update image's title if it has changed
             if image_occurrence.get_attribute_by_name("title").value != form_image_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, image_occurrence.get_attribute_by_name("title").identifier, form_image_title,
+                    topic_map.identifier,
+                    image_occurrence.get_attribute_by_name("title").identifier,
+                    form_image_title,
                 )
 
             # Update image's scope if it has changed
@@ -216,7 +241,11 @@ def edit(map_identifier, topic_identifier, image_identifier):
 
             flash("Image successfully updated.", "success")
             return redirect(
-                url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "image.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -232,7 +261,8 @@ def edit(map_identifier, topic_identifier, image_identifier):
 
 
 @bp.route(
-    "/images/delete/<map_identifier>/<topic_identifier>/<image_identifier>", methods=("GET", "POST"),
+    "/images/delete/<map_identifier>/<topic_identifier>/<image_identifier>",
+    methods=("GET", "POST"),
 )
 @login_required
 def delete(map_identifier, topic_identifier, image_identifier):
@@ -247,13 +277,17 @@ def delete(map_identifier, topic_identifier, image_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         abort(404)
 
     image_occurrence = topic_store.get_occurrence(
-        map_identifier, image_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        image_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
     form_image_title = image_occurrence.get_attribute_by_name("title").value
@@ -266,13 +300,23 @@ def delete(map_identifier, topic_identifier, image_identifier):
 
         # Delete image from file system
         image_file_path = os.path.join(
-            bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier, image_occurrence.resource_ref,
+            bp.root_path,
+            RESOURCES_DIRECTORY,
+            str(map_identifier),
+            topic_identifier,
+            image_occurrence.resource_ref,
         )
         if os.path.exists(image_file_path):
             os.remove(image_file_path)
 
         flash("Image successfully deleted.", "warning")
-        return redirect(url_for("image.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(
+            url_for(
+                "image.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
+        )
 
     return render_template(
         "image/delete.html",

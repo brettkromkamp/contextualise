@@ -1,6 +1,15 @@
 from contextualise.topic_store import get_topic_store
 
-from flask import Blueprint, session, flash, render_template, request, url_for, redirect, current_app
+from flask import (
+    Blueprint,
+    session,
+    flash,
+    render_template,
+    request,
+    url_for,
+    redirect,
+    current_app,
+)
 from flask_security import login_required, current_user
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.store.retrievalmode import RetrievalMode
@@ -27,7 +36,9 @@ def add(map_identifier, topic_identifier):
         abort(403)
 
     topic = topic_store.get_topic(
-        map_identifier, topic_identifier, resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
         current_app.logger.warning(
@@ -57,7 +68,17 @@ def add(map_identifier, topic_identifier):
 
             flash("Tags successfully added.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
-    return render_template("tag/add.html", error=error, topic_map=topic_map, topic=topic, topic_name=form_tags,)
+    return render_template(
+        "tag/add.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        topic_name=form_tags,
+    )

@@ -76,7 +76,10 @@ def create_topic(map_identifier):
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, topic.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                topic.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -240,16 +243,29 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
             result_topic_refs = []
             for topic_ref in topic_refs:
                 topic_ref_topic = topic_store.get_topic(map_identifier, topic_ref)
-                result_topic_refs.append({"identifier": topic_ref, "name": topic_ref_topic.first_base_name.name})
+                result_topic_refs.append(
+                    {
+                        "identifier": topic_ref,
+                        "name": topic_ref_topic.first_base_name.name,
+                    }
+                )
             else:
                 role_topic = topic_store.get_topic(map_identifier, role)
                 result_roles.append(
-                    {"identifier": role, "name": role_topic.first_base_name.name, "topicRefs": result_topic_refs,}
+                    {
+                        "identifier": role,
+                        "name": role_topic.first_base_name.name,
+                        "topicRefs": result_topic_refs,
+                    }
                 )
         else:
             instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
             result.append(
-                {"identifier": instance_of, "name": instance_of_topic.first_base_name.name, "roles": result_roles,}
+                {
+                    "identifier": instance_of,
+                    "name": instance_of_topic.first_base_name.name,
+                    "roles": result_roles,
+                }
             )
 
     return jsonify(result), 200

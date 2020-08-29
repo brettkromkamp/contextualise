@@ -110,14 +110,23 @@ def add(map_identifier):
             )
         else:
             note_occurrence = Occurrence(
-                instance_of="note", topic_identifier="notes", scope=form_note_scope, resource_data=form_note_text,
+                instance_of="note",
+                topic_identifier="notes",
+                scope=form_note_scope,
+                resource_data=form_note_text,
             )
             title_attribute = Attribute(
-                "title", form_note_title, note_occurrence.identifier, data_type=DataType.STRING,
+                "title",
+                form_note_title,
+                note_occurrence.identifier,
+                data_type=DataType.STRING,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, note_occurrence.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                note_occurrence.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -187,7 +196,11 @@ def attach(map_identifier, note_identifier):
             topic_store.update_occurrence_topic_identifier(map_identifier, note_identifier, form_note_topic_identifier)
             flash("Note successfully attached.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=form_note_topic_identifier,)
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=form_note_topic_identifier,
+                )
             )
 
     return render_template(
@@ -261,11 +274,16 @@ def convert(map_identifier, note_identifier):
         else:
             new_topic = Topic(form_topic_identifier, form_topic_instance_of, form_topic_name)
             text_occurrence = Occurrence(
-                instance_of="text", topic_identifier=new_topic.identifier, resource_data=form_topic_text,
+                instance_of="text",
+                topic_identifier=new_topic.identifier,
+                resource_data=form_topic_text,
             )
             timestamp = str(datetime.now())
             modification_attribute = Attribute(
-                "modification-timestamp", timestamp, new_topic.identifier, data_type=DataType.TIMESTAMP,
+                "modification-timestamp",
+                timestamp,
+                new_topic.identifier,
+                data_type=DataType.TIMESTAMP,
             )
 
             # Persist objects to the topic store
@@ -278,7 +296,11 @@ def convert(map_identifier, note_identifier):
 
             flash("Note successfully converted.", "success")
             return redirect(
-                url_for("topic.view", map_identifier=topic_map.identifier, topic_identifier=new_topic.identifier,)
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=new_topic.identifier,
+                )
             )
 
         return render_template(
@@ -365,7 +387,9 @@ def edit(map_identifier, note_identifier):
             # Update note's title if it has changed
             if note_occurrence.get_attribute_by_name("title").value != form_note_title:
                 topic_store.update_attribute_value(
-                    topic_map.identifier, note_occurrence.get_attribute_by_name("title").identifier, form_note_title,
+                    topic_map.identifier,
+                    note_occurrence.get_attribute_by_name("title").identifier,
+                    form_note_title,
                 )
 
             # Update the note's modification (timestamp) attribute
@@ -385,7 +409,11 @@ def edit(map_identifier, note_identifier):
 
             flash("Note successfully updated.", "success")
             return redirect(
-                url_for("note.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,)
+                url_for(
+                    "note.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
             )
 
     return render_template(
@@ -435,7 +463,13 @@ def delete(map_identifier, note_identifier):
     if request.method == "POST":
         topic_store.delete_occurrence(map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
-        return redirect(url_for("note.index", map_identifier=topic_map.identifier, topic_identifier=topic.identifier,))
+        return redirect(
+            url_for(
+                "note.index",
+                map_identifier=topic_map.identifier,
+                topic_identifier=topic.identifier,
+            )
+        )
 
     return render_template(
         "note/delete.html",
