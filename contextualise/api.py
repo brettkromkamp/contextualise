@@ -4,7 +4,6 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask_security import login_required, current_user
 from slugify import slugify
-from slugify.slugify import QUOTE_PATTERN
 from topicdb.core.models.association import Association
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.datatype import DataType
