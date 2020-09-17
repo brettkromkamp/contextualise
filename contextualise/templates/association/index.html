@@ -149,7 +149,11 @@
             </td>
             <td class="contextualise-cell-2 align-middle">
                 <a
-                    href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">View</a><br />
+                    href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">View
+                    as association</a><br />
+                <a
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.identifier) }}">View
+                    as topic</a><br />
                 <a
                     href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
                 {% if 'admin' in current_user.roles %}<br /><a
