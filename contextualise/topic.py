@@ -525,7 +525,7 @@ def delete(map_identifier, topic_identifier):
                 shutil.rmtree(topic_directory)
         except TopicDbError:
             flash(
-                "Topic not deleted. Certain predefined topics are required for Contextualise to function correctly. Perhaps, you attempted to delete one of those topics.",
+                "Topic not deleted. Certain predefined topics cannot be deleted. Alternatively, you attempted to delete an association.",
                 "warning",
             )
             return redirect(
