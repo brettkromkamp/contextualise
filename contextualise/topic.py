@@ -91,12 +91,19 @@ def view(map_identifier, topic_identifier):
         session["current_scope"] = scope_identifier
 
     # Get topic
-    topic = topic_store.get_topic(
-        map_identifier,
-        topic_identifier,
-        scope=session["current_scope"],
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    if scope_filtered:
+        topic = topic_store.get_topic(
+            map_identifier,
+            topic_identifier,
+            scope=session["current_scope"],
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+    else:
+        topic = topic_store.get_topic(
+            map_identifier,
+            topic_identifier,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
     if topic is None:
         if current_user.is_authenticated:  # User is logged in
             current_app.logger.warning(
@@ -361,6 +368,7 @@ def edit(map_identifier, topic_identifier):
     topic = topic_store.get_topic(
         map_identifier,
         topic_identifier,
+        scope=session["current_scope"],
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if topic is None:
@@ -382,8 +390,7 @@ def edit(map_identifier, topic_identifier):
         if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]
     ]
 
-    scoped_base_name = topic.get_base_name_by_scope(session["current_scope"])
-    form_topic_name = scoped_base_name.name if scoped_base_name else "Undefined"
+    form_topic_name = topic.first_base_name.name
     form_topic_text = texts[0].resource_data.decode() if len(texts) > 0 and texts[0].resource_data else ""
     form_topic_instance_of = topic.instance_of
     form_topic_text_scope = texts[0].scope if len(texts) > 0 else session["current_scope"]
@@ -414,14 +421,13 @@ def edit(map_identifier, topic_identifier):
                 "warning",
             )
         else:
-            # Update topic's base name if it has changed
-            if scoped_base_name:
-                if scoped_base_name.name != form_topic_name:
+            if topic.get_base_name_by_scope(session["current_scope"]):
+                if topic.first_base_name.name != form_topic_name:
                     topic_store.update_basename(
                         map_identifier,
-                        scoped_base_name.identifier,
+                        topic.first_base_name.identifier,
                         form_topic_name,
-                        session["current_scope"],
+                        form_topic_text_scope,
                     )
             else:
                 base_name = BaseName(form_topic_name, session["current_scope"])
