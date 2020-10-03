@@ -422,6 +422,7 @@ def edit(map_identifier, topic_identifier):
             )
         else:
             if topic.get_base_name_by_scope(session["current_scope"]):
+                # Update the topic's base name if it has changed
                 if topic.first_base_name.name != form_topic_name:
                     topic_store.update_base_name(
                         map_identifier,
