@@ -423,7 +423,7 @@ def edit(map_identifier, topic_identifier):
         else:
             if topic.get_base_name_by_scope(session["current_scope"]):
                 if topic.first_base_name.name != form_topic_name:
-                    topic_store.update_basename(
+                    topic_store.update_base_name(
                         map_identifier,
                         topic.first_base_name.identifier,
                         form_topic_name,
@@ -431,7 +431,7 @@ def edit(map_identifier, topic_identifier):
                     )
             else:
                 base_name = BaseName(form_topic_name, session["current_scope"])
-                topic_store.set_basename(map_identifier, topic.identifier, base_name)
+                topic_store.set_base_name(map_identifier, topic.identifier, base_name)
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
@@ -926,7 +926,7 @@ def add_name(map_identifier, topic_identifier):
             )
         else:
             base_name = BaseName(form_topic_name, scope=form_topic_name_scope)
-            topic_store.set_basename(map_identifier, topic.identifier, base_name)
+            topic_store.set_base_name(map_identifier, topic.identifier, base_name)
 
             flash("Name successfully added.", "success")
             return redirect(
@@ -1009,7 +1009,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
                 form_topic_name != topic.get_base_name(name_identifier).name
                 or form_topic_name_scope != topic.get_base_name(name_identifier).scope
             ):
-                topic_store.update_basename(
+                topic_store.update_base_name(
                     map_identifier,
                     name_identifier,
                     form_topic_name,
@@ -1070,7 +1070,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     form_topic_name_scope = topic.get_base_name(name_identifier).scope
 
     if request.method == "POST":
-        topic_store.delete_basename(map_identifier, name_identifier)
+        topic_store.delete_base_name(map_identifier, name_identifier)
 
         flash("Name successfully deleted.", "warning")
         return redirect(
