@@ -4,22 +4,22 @@
 {% for category, message in messages %}
 {% if category == 'error' %}
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-{% else %}
-<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-{% endif %}
-    {% if category == 'danger' %}
-    <strong>Danger!</strong> {{ message }}
-    {% elif category == 'warning' %}
-    <strong>Warning!</strong> {{ message }}
-    {% elif category == 'success' %}
-    <strong>Success!</strong> {{ message }}
     {% else %}
-    <strong>Info!</strong> {{ message }}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {% endif %}
+        {% if category == 'danger' %}
+        <strong>Danger!</strong> {{ message|safe }}
+        {% elif category == 'warning' %}
+        <strong>Warning!</strong> {{ message|safe }}
+        {% elif category == 'success' %}
+        <strong>Success!</strong> {{ message|safe }}
+        {% else %}
+        <strong>Info!</strong> {{ message|safe }}
+        {% endif %}
+        <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
     {% endif %}
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
+    {% endwith %}

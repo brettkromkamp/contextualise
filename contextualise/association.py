@@ -73,6 +73,11 @@ def create(map_identifier, topic_identifier):
 
     error = 0
 
+    flash(
+        "Take a look at this page to see practical examples of <a href='https://brettkromkamp.com/posts/semantically-meaningful-relationships/'>semantically meaningful relationships</a>.",
+        "info",
+    )
+
     if request.method == "POST":
         form_association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
         form_association_dest_role_spec = request.form["association-dest-role-spec"].strip()
