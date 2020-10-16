@@ -41,9 +41,9 @@ Why?
 ----
 
 I built and published my first (topic maps-based) knowledge documentation tool in 2006 which I was still using until
-quite recently, almost unmodified, thirteen years later. If I remember correctly, it was built with `PHP version 5.2.5`_!
-Thirteen years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
-with the `Flask`_ web development framework. What's more, after thirteen years of using my own and other knowledge
+quite recently, almost unmodified, fourteen years later. If I remember correctly, it was built with `PHP version 5.2.5`_!
+Fourteen years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
+with the `Flask`_ web development framework. What's more, after fourteen years of using my own and other knowledge
 management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
 matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
 source: both Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
@@ -91,7 +91,7 @@ For a more exhaustive list of planned features take a look at Contextualise's `l
 Install the Development Version
 -------------------------------
 
-Contextualise officially supports Python 3.6–3.8.
+Contextualise officially supports Python 3.6–3.9.
 
 If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version
 of Contextualise.
