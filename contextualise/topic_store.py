@@ -20,6 +20,7 @@ def get_topic_store():
             dbname=current_app.config["TOPIC_STORE_DBNAME"],
         )
         g.topic_store.open()
+        current_app.logger.warning(f"Topic store has been opened")
     return g.topic_store
 
 
@@ -27,6 +28,7 @@ def close_topic_store(e=None):
     topic_store = g.pop("topicstore", None)
     if topic_store is not None:
         topic_store.close()
+        current_app.logger.warning(f"Topic store has been closed")
 
 
 def init_app(app):
