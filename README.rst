@@ -22,7 +22,7 @@ many kinds of hobbies.
 .. image:: resources/my-maps.png
    :alt: Contextualise's "My maps" view
 
-*Contextualise's interactive 3D viewer*
+*Contextualise's "My maps" view*
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
