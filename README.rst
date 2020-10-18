@@ -48,7 +48,7 @@ Why?
 I built and published my first (topic maps-based) knowledge documentation tool in 2006 which I was still using until
 quite recently, almost unmodified, fourteen years later. If I remember correctly, it was built with `PHP version 5.2.5`_!
 Fourteen years is an eternity in software terms. Nowadays, my preferred choice for web development is `Python`_ together
-with the `Flask`_ web development framework. What's more, after fourteen years of using my own and other knowledge
+with the `Flask`_ and `Django`_ web development frameworks. What's more, after fourteen years of using my own and other knowledge
 management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
 matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
 source: both Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
@@ -249,6 +249,7 @@ I would love to hear from you.
 .. _PHP version 5.2.5: http://php.net/ChangeLog-5.php#5.2.5
 .. _Python: https://www.python.org/
 .. _Flask: http://flask.pocoo.org/docs/1.0/
+.. _Django: https://www.djangoproject.com/
 .. _MIT license: https://github.com/brettkromkamp/contextualise/blob/master/LICENSE
 .. _the repository: https://github.com/brettkromkamp/contextualise
 .. _AUTHORS: https://github.com/brettkromkamp/contextualise/blob/master/AUTHORS.rst
