@@ -19,6 +19,11 @@ many kinds of hobbies.
     Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general
     and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
 
+.. image:: resources/my-maps.png
+   :alt: Contextualise's "My maps" view
+
+*Contextualise's interactive 3D viewer*
+
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
 
