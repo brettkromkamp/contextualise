@@ -19,25 +19,25 @@ many kinds of hobbies.
     Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general
     and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
 
+**Contextualise's "My maps" view**
+
 .. image:: resources/my-maps.png
    :alt: Contextualise's "My maps" view
 
-*Contextualise's "My maps" view*
+**Contextualise's topic view**
 
 .. image:: resources/topic-view.png
    :alt: Contextualise's topic view
 
-*Contextualise's topic view*
+**Contextualise's navigable network graph view**
 
 .. image:: resources/graph-view.png
    :alt: Contextualise's interactive network graph view (allowing for navigation between topics)
 
-*Contextualise's navigable network graph view*
+**Contextualise's interactive 3D viewer**
 
 .. image:: resources/interactive-3d-viewer.png
    :alt: Contextualise's interactive 3D viewer
-
-*Contextualise's interactive 3D viewer*
 
 Contextualise's main dependency is `TopicDB`_, an open source `topic maps`_-based graph store. Topic maps provide
 a way to describe complex relationships between abstract concepts and real-world (information) resources.
@@ -156,10 +156,10 @@ You should see something similar to the following in the terminal::
 Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing something similar to the
 application's *Welcome* page.
 
+**The Contextualise Welcome page**
+
 .. image:: resources/landing-page.png
    :alt: The Contextualise Welcome page
-
-*The Contextualise Welcome page*
 
 Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run
 Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python `WSGI <https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ HTTP server::
@@ -218,8 +218,10 @@ Miscellaneous
 Currently, I am using Contextualise for, among others, worldbuilding purposes of the Brave Robot fictional universe including its `Codex
 Roboticus <https://brettkromkamp.com/posts/codex-roboticus/>`_.
 
+**The Codex Roboticus project**
+
 .. image:: resources/codex-roboticus1.png
-   :alt: Codex Roboticus
+   :alt: The Codex Roboticus project
 
 How to Contribute
 -----------------
