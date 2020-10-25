@@ -24,8 +24,8 @@ def get_topic_store():
     return g.topic_store
 
 
-# Explicitly closing the topic store connection at the end of each request is
-# unnecessary as it manages its own connections (in a connection pool)
+# Explicitly closing the connection at the end of each request is unnecessary
+# as the topic store manages its own connections (in a connection pool)
 
 # def close_topic_store(e=None):
 #     topic_store = g.pop("topic_store", None)
