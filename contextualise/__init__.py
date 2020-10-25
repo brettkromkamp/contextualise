@@ -219,9 +219,9 @@ def create_app(test_config=None):
     app.register_blueprint(tag.bp)
 
     # Add topic store
-    from contextualise import topic_store
+    # from contextualise import topic_store
 
-    topic_store.init_app(app)
+    # topic_store.init_app(app)
 
     # Set up logging
     if not app.debug:
