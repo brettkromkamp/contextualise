@@ -475,7 +475,14 @@
                         <div class="card-body">
                             <ul>
                                 <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
-                                topic_map.name }}</a></li>
+                                topic_map.name }}</a>&nbsp;&nbsp;&nbsp;<small><i
+                                            class="fas fa-info-circle text-muted"></i> <a tabindex="0"
+                                            data-trigger="focus" aria-controls="advancedProperties"
+                                            data-placement="left" aria-expanded="false" data-toggle="popover"
+                                            title="{{ topic_map.name }}" data-html="true"
+                                            data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
+                                            href="#mapInfo">
+                                            Info</a></small></li>
                                 {% if session['current_scope'] == '*' %}
                                 <li>Scope: <a
                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
@@ -829,6 +836,10 @@
                     }
                 });
             }
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            })
 
             // Associations component
             let associationsComponent = new Vue({
