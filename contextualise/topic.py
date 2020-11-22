@@ -209,6 +209,12 @@ def view(map_identifier, topic_identifier):
     modification_date = maya.parse(modification_date_attribute.value) if modification_date_attribute else "Undefined"
 
     # Breadcrumbs
+    if "map_identifier" not in session:
+        session["map_identifier"] = topic_map.identifier
+    elif session["map_identifier"] != topic_map.identifier:
+        session["breadcrumbs"] = []
+    session["map_identifier"] = topic_map.identifier
+
     if "breadcrumbs" not in session:
         session["breadcrumbs"] = []
     breadcrumbs = deque(session["breadcrumbs"], BREADCRUMBS_COUNT)
