@@ -141,19 +141,24 @@ def create_app(test_config=None):
         user_store.init_db()
 
         # Create roles
-        user_datastore.find_or_create_role(name="admin", description="Administrator")
-        user_datastore.find_or_create_role(name="user", description="End user")
+        admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
+        user_role = user_datastore.find_or_create_role(name="user", description="End user")
 
         # Create users
-        if not user_datastore.get_user("admin@contextualise.dev"):
-            user_datastore.create_user(email="admin@contextualise.dev", password=hash_password("Passw0rd1"))
-        if not user_datastore.get_user("user@contextualise.dev"):
+        admin_user = user_datastore.find_user(email="admin@contextualise.dev")
+        if not admin_user:
+            admin_user = user_datastore.create_user(
+                email="admin@contextualise.dev", password=hash_password("Passw0rd1")
+            )
+
+        user_user = user_datastore.find_user(email="user@contextualise.dev")
+        if not user_user:
             user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
         user_store.db_session.commit()
 
         # Assign roles
-        user_datastore.add_role_to_user("user@contextualise.dev", "user")
-        user_datastore.add_role_to_user("admin@contextualise.dev", "admin")
+        user_datastore.add_role_to_user(user_user, user_role)
+        user_datastore.add_role_to_user(admin_user, admin_role)
         user_store.db_session.commit()
 
     @app.teardown_request
