@@ -183,14 +183,17 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
+    <script
+        src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
     {% block javascript %}{% endblock %}
     <script>
         var urlParts = window.location.pathname.split("/");
         var mapIdentifier = urlParts[3];
-        var getIdentifiersApiUrl =
-            "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+        // var getIdentifiersApiUrl =
+        //     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+        var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
+
         var topicExistsApiUrl = "/api/topic-exists/" + mapIdentifier;
         var topicCreateApiUrl = "/api/create-topic/" + mapIdentifier;
         var normalisedTopicIdentifier = "";
@@ -202,27 +205,32 @@
             duration: 3000,
         });
 
-        var topicIdentifiers = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            sufficient: 3,
-            remote: {
+        // var topicIdentifiers = new Bloodhound({
+        //     datumTokenizer: Bloodhound.tokenizers.whitespace,
+        //     queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //     sufficient: 3,
+        //     remote: {
+        //         url: getIdentifiersApiUrl,
+        //         wildcard: "%QUERY",
+        //     },
+        // });
+
+        // $(".typeahead").typeahead(
+        //     {
+        //         minLength: 3,
+        //         highlight: true,
+        //     },
+        //     {
+        //         name: "identifiers",
+        //         source: topicIdentifiers,
+        //         limit: 8
+        //     }
+        // );
+        $(".typeahead").autoComplete({
+            resolverSettings: {
                 url: getIdentifiersApiUrl,
-                wildcard: "%QUERY",
             },
         });
-
-        $(".typeahead").typeahead(
-            {
-                minLength: 3,
-                highlight: true,
-            },
-            {
-                name: "identifiers",
-                source: topicIdentifiers,
-                limit: 8
-            }
-        );
 
         $(".typeahead").change(function (e) {
             var queryTerm = this.value;
