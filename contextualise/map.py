@@ -297,7 +297,7 @@ def add_collaborator(map_identifier):
         form_collaborator_email = request.form["collaborator-email"].strip()
         form_collaboration_mode = request.form["collaboration-mode"]
 
-        collaborator = current_app.extensions["security"].datastore.get_user(form_collaborator_email)
+        collaborator = current_app.extensions["security"].datastore.find_user(email=form_collaborator_email)
         if not collaborator:
             error = error | 1
         if form_collaborator_email == current_user.email:

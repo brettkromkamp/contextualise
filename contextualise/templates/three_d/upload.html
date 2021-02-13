@@ -30,8 +30,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="file-title"><strong>Title</strong></label>
-        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required type="text"
-            value="{{ file_title or '' }}">
+        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required autofocus
+            type="text" value="{{ file_title or '' }}">
     </div>
     <div class="form-group">
         <label for="file-file"><strong>File</strong></label>

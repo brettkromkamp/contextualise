@@ -67,7 +67,7 @@
     <div class="form-group">
         <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
         <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
-            placeholder="Enter destination topic identifier" required type="text"
+            placeholder="Enter destination topic identifier" required autofocus type="text"
             value="{{ association_dest_topic_ref or '' }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">

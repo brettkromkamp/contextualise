@@ -23,8 +23,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="link-title"><strong>Title</strong></label>
-        <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required type="text"
-            value="{{ link_title or '' }}">
+        <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required autofocus
+            type="text" value="{{ link_title or '' }}">
     </div>
     <div class="form-group">
         <label for="link-url"><strong>Link (URL)</strong></label>

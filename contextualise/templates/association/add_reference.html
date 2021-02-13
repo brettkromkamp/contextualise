@@ -27,7 +27,7 @@
         <div class="form-group">
             <label for="topic-reference"><strong>Topic reference</strong></label>
             <input class="form-control typeahead" id="topic-reference" name="topic-reference"
-                placeholder="Enter topic reference" required type="text" value="{{ topic_reference }}">
+                placeholder="Enter topic reference" required autofocus type="text" value="{{ topic_reference }}">
             {% if error|bitwise_and(2) == 2 %}
             <small class="text-danger">
                 A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.

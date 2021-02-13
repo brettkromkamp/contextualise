@@ -21,11 +21,11 @@
     </div>
     <div class="form-group">
         <label for="collaboration-mode"><strong>Collaboration mode</strong></label>
-        <select class="form-control" id="collaboration-mode" name="collaboration-mode">
-            <option value="view" {% if collaboration_mode == 'view' %} selected="selected" {% endif %}>Can view</option>
-            <option value="comment" {% if collaboration_mode == 'comment' %} selected="selected" {% endif %}>Can comment
+        <select class="form-control" id="collaboration-mode" name="collaboration-mode" autofocus>
+            <option value="view" {% if collaboration_mode=='view' %} selected="selected" {% endif %}>Can view</option>
+            <option value="comment" {% if collaboration_mode=='comment' %} selected="selected" {% endif %}>Can comment
             </option>
-            <option value="edit" {% if collaboration_mode == 'edit' %} selected="selected" {% endif %}>Can edit</option>
+            <option value="edit" {% if collaboration_mode=='edit' %} selected="selected" {% endif %}>Can edit</option>
         </select>
     </div>
     <br />

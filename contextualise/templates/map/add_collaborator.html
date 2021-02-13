@@ -15,7 +15,7 @@
     <div class="form-group">
         <label for="collaborator-email"><strong>Email address</strong></label>
         <input class="form-control" id="collaborator-email" name="collaborator-email"
-            placeholder="Email address of user" required type="text" value="{{ collaborator_email }}">
+            placeholder="Email address of user" required autofocus type="text" value="{{ collaborator_email }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
             A Contextualise user with this user name does not exist. Please provide a different user name.
@@ -30,10 +30,10 @@
     <div class="form-group">
         <label for="collaboration-mode"><strong>Collaboration mode</strong></label>
         <select class="form-control" id="collaboration-mode" name="collaboration-mode">
-            <option value="view" {% if collaboration_mode == 'view' %} selected="selected" {% endif %}>Can view</option>
-            <option value="comment" {% if collaboration_mode == 'comment' %} selected="selected" {% endif %}>Can comment
+            <option value="view" {% if collaboration_mode=='view' %} selected="selected" {% endif %}>Can view</option>
+            <option value="comment" {% if collaboration_mode=='comment' %} selected="selected" {% endif %}>Can comment
             </option>
-            <option value="edit" {% if collaboration_mode == 'edit' %} selected="selected" {% endif %}>Can edit</option>
+            <option value="edit" {% if collaboration_mode=='edit' %} selected="selected" {% endif %}>Can edit</option>
         </select>
     </div>
     <br />

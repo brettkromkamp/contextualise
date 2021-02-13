@@ -24,8 +24,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="link-title">Title</label>
-        <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required type="text"
-            value="{{ link_title }}">
+        <input class="form-control" id="link-title" name="link-title" placeholder="Enter title" required autofocus
+            type="text" value="{{ link_title }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>

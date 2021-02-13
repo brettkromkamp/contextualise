@@ -30,7 +30,7 @@
         <div class="form-group">
             <label for="attribute-name"><strong>Name</strong></label>
             <input class="form-control" id="attribute-name" name="attribute-name" placeholder="Enter name" required
-                type="text" value="{{ attribute_name or '' }}">
+                autofocus type="text" value="{{ attribute_name or '' }}">
             {% if error|bitwise_and(8) == 8 %}
             <small class="text-danger">
                 An attribute with this name already exists for this topic, occurrence or association. Please provide a

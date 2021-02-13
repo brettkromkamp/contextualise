@@ -30,8 +30,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="note-title"><strong>Title</strong></label>
-        <input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required type="text"
-            value="{{ note_title or '' }}">
+        <input class="form-control" id="note-title" name="note-title" placeholder="Enter title" required autofocus
+            type="text" value="{{ note_title or '' }}">
     </div>
     <div class="form-group">
         <label for="note-text"><strong>Text</strong></label>

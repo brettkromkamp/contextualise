@@ -32,7 +32,7 @@
         <div class="form-group">
             <label for="attribute-name"><strong>Name</strong></label>
             <input class="form-control" id="attribute-name" name="attribute-name" placeholder="Enter name" required
-                type="text" value="{{ attribute_name }}">
+                autofocus type="text" value="{{ attribute_name }}">
         </div>
         <div class="form-group">
             <label for="attribute-value"><strong>Value</strong></label>
@@ -43,7 +43,7 @@
             <label for="attribute-type">Type</label>
             <select class="form-control" id="attribute-type" name="attribute-type">
                 {% for value, display in data_types %}
-                <option value="{{ value }}" {% if value == attribute_type.upper() %} selected {% endif %}>{{ display }}
+                <option value="{{ value }}" {% if value==attribute_type.upper() %} selected {% endif %}>{{ display }}
                 </option>
                 {% endfor %}
             </select>

@@ -25,7 +25,7 @@
                 scope</small>
         </label>
         <input class="form-control typeahead" id="new-scope" name="new-scope" placeholder="Enter scope identifier"
-            type="text" value="{{ scope_identifier or '' }}">
+            type="text" value="{{ scope_identifier or '' }}" autofocus>
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
             A scope with this identifier doesn't exist. Please provide an identifier for an existing

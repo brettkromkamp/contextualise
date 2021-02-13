@@ -20,7 +20,7 @@
     <div class="form-group">
         <label for="role-spec"><strong>Member role</strong></label>
         <input class="form-control typeahead" id="role-spec" name="role-spec" placeholder="Enter role" required
-            type="text" value="{{ role_spec or '' }}">
+            autofocus type="text" value="{{ role_spec or '' }}">
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
             A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.

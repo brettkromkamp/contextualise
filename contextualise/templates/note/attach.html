@@ -16,7 +16,7 @@
     <div class="form-group">
         <label for="note-topic-identifier"><strong>Topic</strong></label>
         <input class="form-control typeahead" id="note-topic-identifier" name="note-topic-identifier"
-            placeholder="Enter topic identifier" required type="text">
+            placeholder="Enter topic identifier" required autofocus type="text">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
             A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.

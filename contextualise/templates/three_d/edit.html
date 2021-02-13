@@ -25,8 +25,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="file-title">Title</label>
-        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required type="text"
-            value="{{ file_title }}">
+        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required autofocus
+            type="text" value="{{ file_title }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
