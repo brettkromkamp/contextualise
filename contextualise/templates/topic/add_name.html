@@ -17,8 +17,8 @@
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">
         <label for="topic-name"><strong>Name</strong></label>
-        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required type="text"
-            value="{{ topic_name or '' }}">
+        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required autofocus
+            type="text" value="{{ topic_name or '' }}">
     </div>
     <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
             data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
