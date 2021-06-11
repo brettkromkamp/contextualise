@@ -70,11 +70,11 @@
                         {% if topic.identifier != 'home' %}
                         <li class="nav-item">
                             {% if session['current_scope'] == '*' %}
-                            <a class="btn btn-outline-primary"
+                            <a class="btn btn-outline-info"
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
                                 role="button">Home</a>
                             {% else %}
-                            <a class="btn btn-outline-primary"
+                            <a class="btn btn-outline-info"
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
                                 role="button">Home</a>
                             {% endif %}
@@ -132,22 +132,22 @@
                         <ol class="breadcrumb">
                             {% if session['breadcrumbs'] %}
                             {% for breadcrumb in session['breadcrumbs'] %}
-                            {% if loop.index < session['breadcrumbs']|length %}
-                            <li class="breadcrumb-item">{% if session['current_scope'] == '*' %}<a
+                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">{% if
+                                session['current_scope'] == '*' %}<a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                            breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a>
                                 {% else %}<a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
-                                breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a>
                                 {% endif %}
-                            </li>
-                            {% else %}
-                            <li aria-current="page" class="breadcrumb-item active">{{
-                            breadcrumb|topic_name(topic_map.identifier) }}
-                            </li>
-                            {% endif %}
-                            {% endfor %}
-                            {% endif %}
+                                </li>
+                                {% else %}
+                                <li aria-current="page" class="breadcrumb-item active">{{
+                                    breadcrumb|topic_name(topic_map.identifier) }}
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% endif %}
                         </ol>
                     </nav>
                     {% endif %}
@@ -155,7 +155,8 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    {% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
+                    {% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name ==
+                    "VIEW" %}
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" href="#">Topic</a>
@@ -336,11 +337,9 @@
                                                 <th scope="row">Names</th>
                                                 <td>
                                                     {% for base_name in topic.base_names %}
-                                                    {{ base_name.name }}{% if loop.index < topic.base_names|length %}&nbsp;&nbsp;&middot;&nbsp;{%
-                                                endif %}
-                                                    {% endfor %}
-                                                </td>
-                                                {% else %}
+                                                    {{ base_name.name }}{% if loop.index < topic.base_names|length
+                                                        %}&nbsp;&nbsp;&middot;&nbsp;{% endif %} {% endfor %} </td>
+                                                        {% else %}
                                                 <th scope="row">Name</th>
                                                 <td>
                                                     {{ topic.first_base_name.name }}
@@ -353,11 +352,11 @@
                                                     {% if session['current_scope'] == '*' %}
                                                     <a
                                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
-                                                    topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                                        topic.instance_of|topic_name(topic_map.identifier) }}</a>
                                                     {% else %}
                                                     <a
                                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, scope=session['current_scope']) }}">{{
-                                                    topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                                        topic.instance_of|topic_name(topic_map.identifier) }}</a>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -383,7 +382,7 @@
                         {% for identifier in associations['categorization', 'member'] %}
                         <li><a
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
-                        identifier|topic_name(topic_map.identifier) }}</a>
+                                identifier|topic_name(topic_map.identifier) }}</a>
                         </li>
                         {% endfor %}
                     </ul>
@@ -428,7 +427,8 @@
                                 <small class="text-muted">{{ note.timestamp }}</small>
                             </h5>
                             <p class="card-text">{{ note.text|safe }}</p>
-                            {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or collaboration_mode.name ==
+                            {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or
+                            collaboration_mode.name ==
                             "COMMENT") %}
                             <a class="card-link"
                                 href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
@@ -475,7 +475,7 @@
                         <div class="card-body">
                             <ul>
                                 <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
-                                topic_map.name }}</a>&nbsp;&nbsp;&nbsp;<small><i
+                                        topic_map.name }}</a>&nbsp;&nbsp;&nbsp;<small><i
                                             class="fas fa-info-circle text-muted"></i> <a tabindex="-1"
                                             data-trigger="focus" aria-controls="advancedProperties"
                                             data-placement="right" aria-expanded="false" data-toggle="popover"
@@ -487,11 +487,11 @@
                                 {% if session['current_scope'] == '*' %}
                                 <li>Scope: <a
                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
-                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                                        session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                                 {% else %}
                                 <li>Scope: <a
                                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{
-                                session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
+                                        session['current_scope']|topic_name(topic_map.identifier) }}</a></li>
                                 {% endif %}
                                 {% if current_user.is_authenticated and not is_map_owner %}
                                 <li>
@@ -526,7 +526,8 @@
                         {% endif %}
                     </div>
                     <br />
-                    {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or occurrences['links'] or occurrences['videos'] %}
+                    {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or
+                    occurrences['links'] or occurrences['videos'] %}
                     <div class="card contextualise-card">
                         <div class="card-header">
                             <strong>Topic resources</strong>
@@ -545,7 +546,7 @@
                                         <li>
                                             <a data-caption="{{ image.title }}" data-fancybox="images"
                                                 href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
-                                            image.title }}</a>
+                                                image.title }}</a>
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -563,7 +564,7 @@
                                         <li>
                                             <a
                                                 href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
-                                            file.title }}</a>
+                                                file.title }}</a>
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -732,7 +733,7 @@
                         </li>
                         <li>Scope: <a
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
-                    session['current_scope']|topic_name(topic_map.identifier) }}</a>
+                                session['current_scope']|topic_name(topic_map.identifier) }}</a>
                         </li>
                     </ul>
                     </p>
