@@ -4,7 +4,7 @@ import maya
 import mistune
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
-from contextualise.highlight_renderer import HighlightRenderer
+from contextualise.utilities.highlight_renderer import HighlightRenderer
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.models.datatype import DataType

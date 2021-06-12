@@ -17,7 +17,7 @@ from flask import (
     current_app,
 )
 from flask_security import login_required, current_user
-from contextualise.highlight_renderer import HighlightRenderer
+from contextualise.utilities.highlight_renderer import HighlightRenderer
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
 from topicdb.core.models.collaborationmode import CollaborationMode
