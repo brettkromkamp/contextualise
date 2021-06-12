@@ -17,6 +17,7 @@ from flask import (
     current_app,
 )
 from flask_security import login_required, current_user
+from contextualise.highlight_renderer import HighlightRenderer
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
 from topicdb.core.models.collaborationmode import CollaborationMode
@@ -145,7 +146,15 @@ def view(map_identifier, topic_identifier):
     for occurrence in topic_occurrences:
         if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
             if occurrence.resource_data:
-                occurrences["text"] = mistune.html(occurrence.resource_data.decode())
+                markdown = mistune.create_markdown(
+                    renderer=HighlightRenderer(),
+                    plugins=[
+                        "strikethrough",
+                        "footnotes",
+                        "table",
+                    ],
+                )
+                occurrences["text"] = markdown(occurrence.resource_data.decode())
         elif occurrence.instance_of == "image":
             occurrences["images"].append(
                 {
@@ -182,12 +191,20 @@ def view(map_identifier, topic_identifier):
                 }
             )
         elif occurrence.instance_of == "note":
+            markdown = mistune.create_markdown(
+                renderer=HighlightRenderer(),
+                plugins=[
+                    "strikethrough",
+                    "footnotes",
+                    "table",
+                ],
+            )
             occurrences["notes"].append(
                 {
                     "identifier": occurrence.identifier,
                     "title": occurrence.get_attribute_by_name("title").value,
                     "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
-                    "text": mistune.html(occurrence.resource_data.decode()),
+                    "text": markdown(occurrence.resource_data.decode()),
                 }
             )
     if scope_filtered:
@@ -819,7 +836,15 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     )
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = mistune.html(note_occurrence.resource_data.decode())
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
+    form_note_text = markdown(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     if request.method == "POST":

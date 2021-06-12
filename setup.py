@@ -39,6 +39,7 @@ setup(
         "mistune",
         "python-slugify",
         "gunicorn",
+        "pygments",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",

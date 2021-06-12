@@ -4,6 +4,7 @@ import maya
 import mistune
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user
+from contextualise.highlight_renderer import HighlightRenderer
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.models.datatype import DataType
@@ -54,13 +55,21 @@ def index(map_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     notes = []
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
     for note_occurrence in note_occurrences:
         notes.append(
             {
                 "identifier": note_occurrence.identifier,
                 "title": note_occurrence.get_attribute_by_name("title").value,
                 "timestamp": maya.parse(note_occurrence.get_attribute_by_name("modification-timestamp").value),
-                "text": mistune.html(note_occurrence.resource_data.decode()),
+                "text": markdown(note_occurrence.resource_data.decode()),
             }
         )
 
@@ -175,7 +184,15 @@ def attach(map_identifier, note_identifier):
     )
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = mistune.html(note_occurrence.resource_data.decode())
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
+    form_note_text = markdown(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     error = 0
@@ -457,7 +474,15 @@ def delete(map_identifier, note_identifier):
     )
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
-    form_note_text = mistune.html(note_occurrence.resource_data.decode())
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
+    form_note_text = markdown(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
     if request.method == "POST":
