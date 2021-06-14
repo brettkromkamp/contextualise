@@ -56,7 +56,7 @@ def index(map_identifier):
     )
     notes = []
     markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(),
+        renderer=HighlightRenderer(escape=False),
         plugins=[
             "strikethrough",
             "footnotes",
@@ -185,7 +185,7 @@ def attach(map_identifier, note_identifier):
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
     markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(),
+        renderer=HighlightRenderer(escape=False),
         plugins=[
             "strikethrough",
             "footnotes",
@@ -475,7 +475,7 @@ def delete(map_identifier, note_identifier):
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
     markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(),
+        renderer=HighlightRenderer(escape=False),
         plugins=[
             "strikethrough",
             "footnotes",

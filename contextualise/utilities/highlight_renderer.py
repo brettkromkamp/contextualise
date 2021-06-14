@@ -5,6 +5,9 @@ from pygments.formatters import html
 
 
 class HighlightRenderer(mistune.HTMLRenderer):
+    def __init__(self, escape=True, allow_harmful_protocols=None):
+        super().__init__(escape, allow_harmful_protocols)
+
     def block_code(self, code, lang=None):
         if lang:
             lexer = get_lexer_by_name(lang, stripall=True)

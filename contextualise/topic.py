@@ -147,7 +147,7 @@ def view(map_identifier, topic_identifier):
         if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
             if occurrence.resource_data:
                 markdown = mistune.create_markdown(
-                    renderer=HighlightRenderer(),
+                    renderer=HighlightRenderer(escape=False),
                     plugins=[
                         "strikethrough",
                         "footnotes",
@@ -192,7 +192,7 @@ def view(map_identifier, topic_identifier):
             )
         elif occurrence.instance_of == "note":
             markdown = mistune.create_markdown(
-                renderer=HighlightRenderer(),
+                renderer=HighlightRenderer(escape=False),
                 plugins=[
                     "strikethrough",
                     "footnotes",
@@ -837,7 +837,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 
     form_note_title = note_occurrence.get_attribute_by_name("title").value
     markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(),
+        renderer=HighlightRenderer(escape=False),
         plugins=[
             "strikethrough",
             "footnotes",
