@@ -66,3 +66,8 @@ main > .container {
 .contextualise-cell-2 {
   min-width: 100px;
 }
+
+pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 92.5%;
+}
