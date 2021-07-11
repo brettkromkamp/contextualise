@@ -182,7 +182,9 @@ def get_network(map_identifier, topic_identifier):
             edge = {
                 "from": inner_identifier,
                 "to": child.pointer,
+                "label": child.type,
                 "font": {"align": "horizontal"},
+                # "arrows": "to, from",
                 "color": {"color": "#666", "opacity": 0.5},
             }
             result[edges].append(edge)
