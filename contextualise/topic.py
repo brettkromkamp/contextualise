@@ -1247,7 +1247,7 @@ def edit_identifier(map_identifier, topic_identifier):
                 )
                 return redirect(
                     url_for(
-                        "topic.view",
+                        "topic.edit_identifier",
                         map_identifier=topic_map.identifier,
                         topic_identifier=topic_identifier,
                     )

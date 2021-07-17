@@ -24,7 +24,12 @@
             <a class="dropdown-item"
                 href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
-            <a class="dropdown-item" href="#">Delete topic</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                identifier</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                topic</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                 href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
@@ -132,11 +137,13 @@
                 <tr>
                     <td>
                         <a data-caption="{{ image.title }}" data-fancybox="images"
-                            href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{ image.title }}</a>
+                            href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                            image.title }}</a>
                     </td>
                     <td>
                         <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{ image.scope|topic_name(topic_map.identifier) }}</a>
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{
+                            image.scope|topic_name(topic_map.identifier) }}</a>
                     </td>
                     <td>
                         <a

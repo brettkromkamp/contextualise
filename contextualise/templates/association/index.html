@@ -19,7 +19,12 @@
             <a class="dropdown-item"
                 href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
-            <a class="dropdown-item" href="#">Delete topic</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                identifier</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                topic</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                 href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
@@ -115,11 +120,13 @@
             <td class="align-middle">
                 <a
                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
-                association.instance_of|topic_name(topic_map.identifier) }}</a></td>
+                    association.instance_of|topic_name(topic_map.identifier) }}</a>
+            </td>
             <td class="align-middle">
                 <a
                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
-                association.scope|topic_name(topic_map.identifier) }}</a></td>
+                    association.scope|topic_name(topic_map.identifier) }}</a>
+            </td>
             <td>
                 <table class="table table-bordered table-sm">
                     <thead class="thead-light">
@@ -134,12 +141,13 @@
                             <td class="contextualise-cell-1 align-middle">
                                 <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
-                            member.role_spec|topic_name(topic_map.identifier) }}</a></td>
+                                    member.role_spec|topic_name(topic_map.identifier) }}</a>
+                            </td>
                             <td>
                                 {% for topic_ref in member.topic_refs %}
                                 <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                            topic_ref|topic_name(topic_map.identifier) }}</a><br />
+                                    topic_ref|topic_name(topic_map.identifier) }}</a><br />
                                 {% endfor %}
                             </td>
                         </tr>

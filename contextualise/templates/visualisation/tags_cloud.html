@@ -71,7 +71,12 @@
             <a class="dropdown-item"
                 href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
                 topic</a>
-            <a class="dropdown-item" href="#">Delete topic</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                identifier</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                topic</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
                 href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
@@ -155,7 +160,8 @@
 {% if tags|length > 0 %}
 {% for tag, count in tags.items() %}
 <a class="text-decoration-none" style="font-size: {{ ((count / tags|length) * 20) + 9 }}pt;"
-    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=tag) }}">{{ tag }}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=tag) }}">{{ tag
+    }}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {% endfor %}
 {% else %}
 <p class="alert alert-info" role="alert">
