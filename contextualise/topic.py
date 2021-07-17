@@ -1187,3 +1187,72 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
         topic=topic,
         scope_identifier=form_scope,
     )
+
+
+@bp.route(
+    "/topics/edit-identifier/<map_identifier>/<topic_identifier>",
+    methods=("GET", "POST"),
+)
+@login_required
+def edit_identifier(map_identifier, topic_identifier):
+    topic_store = get_topic_store()
+
+    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    if topic_map is None:
+        current_app.logger.warning(
+            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
+        )
+        abort(404)
+    # If the map doesn't belong to the user and they don't have the right
+    # collaboration mode on the map, then abort
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+        abort(403)
+
+    topic = topic_store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        current_app.logger.warning(
+            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
+        )
+        abort(404)
+
+    form_topic_identifier = topic.identifier
+    error = 0
+
+    if request.method == "POST":
+        form_topic_identifier = request.form["topic-identifier"].strip()
+
+        # Validate form inputs
+        if not form_topic_identifier:
+            error = error | 1
+        if topic_store.topic_exists(topic_map.identifier, form_topic_identifier):
+            error = error | 2
+
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            # Update topic identifier
+            topic_store.update_topic_identifier(map_identifier, topic_identifier, form_topic_identifier)
+
+            flash("Identifier successfully updated.", "success")
+            return redirect(
+                url_for(
+                    "topic.view",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=form_topic_identifier,
+                )
+            )
+
+    return render_template(
+        "topic/edit_identifier.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        topic_identifier=form_topic_identifier,
+    )
