@@ -1238,7 +1238,20 @@ def edit_identifier(map_identifier, topic_identifier):
             )
         else:
             # Update topic identifier
-            topic_store.update_topic_identifier(map_identifier, topic_identifier, form_topic_identifier)
+            try:
+                topic_store.update_topic_identifier(map_identifier, topic_identifier, form_topic_identifier)
+            except TopicDbError:
+                flash(
+                    "Topic identifier not updated. Certain predefined topics cannot be modified.",
+                    "warning",
+                )
+                return redirect(
+                    url_for(
+                        "topic.view",
+                        map_identifier=topic_map.identifier,
+                        topic_identifier=topic_identifier,
+                    )
+                )
 
             flash("Identifier successfully updated.", "success")
             return redirect(
