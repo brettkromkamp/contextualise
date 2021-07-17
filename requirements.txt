@@ -1,5 +1,5 @@
 topic-db>=1.0.0
-SQLAlchemy>=1.4.18
+SQLAlchemy>=1.4.21
 Flask>=2.0.1
 Flask-SQLAlchemy>=2.5.1
 Flask-Security-Too>=4.0.1
