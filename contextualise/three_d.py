@@ -62,12 +62,15 @@ def index(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "three_d/index.html",
         topic_map=topic_map,
         topic=topic,
         files=files,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -92,6 +95,7 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -165,9 +169,16 @@ def upload(map_identifier, topic_identifier):
             topic=topic,
             file_title=form_file_title,
             file_scope=form_file_scope,
+            map_notes_count=map_notes_count,
         )
 
-    return render_template("three_d/upload.html", error=error, topic_map=topic_map, topic=topic)
+    return render_template(
+        "three_d/upload.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route(
@@ -203,6 +214,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -254,6 +266,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
         file_identifier=file_occurrence.identifier,
         file_title=form_file_title,
         file_scope=form_file_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -290,6 +303,8 @@ def delete(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         # Delete file occurrence from topic store
         topic_store.delete_occurrence(map_identifier, file_occurrence.identifier)
@@ -321,6 +336,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         file_identifier=file_occurrence.identifier,
         file_title=form_file_title,
         file_scope=form_file_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -361,7 +377,15 @@ def view(map_identifier, topic_identifier, file_url):
     if topic is None:
         abort(404)
 
-    return render_template("three_d/view.html", topic_map=topic_map, topic=topic, file_url=file_url)
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
+    return render_template(
+        "three_d/view.html",
+        topic_map=topic_map,
+        topic=topic,
+        file_url=file_url,
+        map_notes_count=map_notes_count,
+    )
 
 
 # ========== HELPER METHODS ==========

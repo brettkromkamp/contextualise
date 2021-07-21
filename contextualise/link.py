@@ -58,12 +58,15 @@ def index(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "link/index.html",
         topic_map=topic_map,
         topic=topic,
         links=links,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -88,6 +91,7 @@ def add(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -147,9 +151,16 @@ def add(map_identifier, topic_identifier):
             link_title=form_link_title,
             link_url=form_link_url,
             link_scope=form_link_scope,
+            map_notes_count=map_notes_count,
         )
 
-    return render_template("link/add.html", error=error, topic_map=topic_map, topic=topic)
+    return render_template(
+        "link/add.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route(
@@ -185,6 +196,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
     form_link_title = link_occurrence.get_attribute_by_name("title").value
     form_link_scope = link_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -236,6 +248,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
         link_identifier=link_occurrence.identifier,
         link_title=form_link_title,
         link_scope=form_link_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -272,6 +285,8 @@ def delete(map_identifier, topic_identifier, link_identifier):
     form_link_title = link_occurrence.get_attribute_by_name("title").value
     form_link_scope = link_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         # Delete link occurrence from topic store
         topic_store.delete_occurrence(map_identifier, link_occurrence.identifier)
@@ -292,4 +307,5 @@ def delete(map_identifier, topic_identifier, link_identifier):
         link_identifier=link_occurrence.identifier,
         link_title=form_link_title,
         link_scope=form_link_scope,
+        map_notes_count=map_notes_count,
     )

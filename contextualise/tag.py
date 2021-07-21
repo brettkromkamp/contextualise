@@ -48,6 +48,7 @@ def add(map_identifier, topic_identifier):
 
     form_tags = None
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -81,4 +82,5 @@ def add(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_name=form_tags,
+        map_notes_count=map_notes_count,
     )

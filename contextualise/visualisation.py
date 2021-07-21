@@ -46,12 +46,15 @@ def network(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "visualisation/network.html",
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
         collaboration_mode=collaboration_mode,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -105,6 +108,8 @@ def tags_cloud(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "visualisation/tags_cloud.html",
         topic_map=topic_map,
@@ -112,6 +117,7 @@ def tags_cloud(map_identifier, topic_identifier):
         creation_date=creation_date,
         collaboration_mode=topic_map.collaboration_mode,
         tags=tags,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -152,12 +158,15 @@ def timeline(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "visualisation/timeline.html",
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
         collaboration_mode=topic_map.collaboration_mode,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -198,10 +207,13 @@ def geographic_map(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "visualisation/geographic_map.html",
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
         collaboration_mode=topic_map.collaboration_mode,
+        map_notes_count=map_notes_count,
     )

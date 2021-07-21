@@ -41,12 +41,15 @@ def index(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "association/index.html",
         topic_map=topic_map,
         topic=topic,
         associations=associations,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -71,6 +74,7 @@ def create(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     flash(
@@ -175,6 +179,7 @@ def create(map_identifier, topic_identifier):
             association_scope=form_association_scope,
             association_name=form_association_name,
             association_identifier=form_association_identifier,
+            map_notes_count=map_notes_count,
         )
 
     return render_template(
@@ -182,6 +187,7 @@ def create(map_identifier, topic_identifier):
         error=error,
         topic_map=topic_map,
         topic=topic,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -211,6 +217,8 @@ def delete(map_identifier, topic_identifier, association_identifier):
 
     association = topic_store.get_association(map_identifier, association_identifier)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         topic_store.delete_association(map_identifier, association_identifier)
         flash("Association successfully deleted.", "warning")
@@ -227,6 +235,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
         topic_map=topic_map,
         topic=topic,
         association=association,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -253,11 +262,14 @@ def view(map_identifier, topic_identifier, association_identifier):
 
     association = topic_store.get_association(map_identifier, association_identifier)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "association/view.html",
         topic_map=topic_map,
         topic=topic,
         association=association,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -288,12 +300,15 @@ def view_member(map_identifier, topic_identifier, association_identifier, member
     association = topic_store.get_association(map_identifier, association_identifier)
     member = association.get_member(member_identifier)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "association/view_member.html",
         topic_map=topic_map,
         topic=topic,
         association=association,
         member=member,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -325,6 +340,7 @@ def add_member(map_identifier, topic_identifier, association_identifier):
     if association is None:
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -369,6 +385,7 @@ def add_member(map_identifier, topic_identifier, association_identifier):
             association=association,
             role_spec=form_role_spec,
             topic_reference=form_topic_reference,
+            map_notes_count=map_notes_count,
         )
 
     return render_template(
@@ -377,6 +394,7 @@ def add_member(map_identifier, topic_identifier, association_identifier):
         topic_map=topic_map,
         topic=topic,
         association=association,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -410,6 +428,8 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
 
     member = association.get_member(member_identifier)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         if len(association.members) > 2:
             association.remove_member(member_identifier)
@@ -434,6 +454,7 @@ def delete_member(map_identifier, topic_identifier, association_identifier, memb
         topic=topic,
         association=association,
         member=member,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -467,6 +488,7 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
 
     member = association.get_member(member_identifier)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -507,6 +529,7 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
             association=association,
             member=member,
             topic_reference=form_topic_reference,
+            map_notes_count=map_notes_count,
         )
 
     return render_template(
@@ -516,6 +539,7 @@ def add_reference(map_identifier, topic_identifier, association_identifier, memb
         topic=topic,
         association=association,
         member=member,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -557,6 +581,8 @@ def delete_reference(
 
     form_topic_reference = reference_identifier
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         if len(member.topic_refs) > 1:
             member.remove_topic_ref(form_topic_reference)
@@ -583,4 +609,5 @@ def delete_reference(
         association=association,
         member=member,
         topic_reference=form_topic_reference,
+        map_notes_count=map_notes_count,
     )

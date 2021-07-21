@@ -57,6 +57,8 @@ def index(map_identifier, topic_identifier):
     entity_type = "topic"
     return_url = "topic.view"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "attribute/index.html",
         topic_map=topic_map,
@@ -65,6 +67,7 @@ def index(map_identifier, topic_identifier):
         return_url=return_url,
         attributes=attributes,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -133,6 +136,8 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "attribute/index.html",
         topic_map=topic_map,
@@ -142,6 +147,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         return_url=return_url,
         attributes=attributes,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -172,6 +178,7 @@ def add(map_identifier, topic_identifier):
     post_url = "attribute.add"
     cancel_url = "attribute.index"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -232,6 +239,7 @@ def add(map_identifier, topic_identifier):
             attribute_value=form_attribute_value,
             attribute_type=form_attribute_type,
             attribute_scope=form_attribute_scope,
+            map_notes_count=map_notes_count,
         )
 
     return render_template(
@@ -242,6 +250,7 @@ def add(map_identifier, topic_identifier):
         entity_type=entity_type,
         post_url=post_url,
         cancel_url=cancel_url,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -282,6 +291,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     post_url = "attribute.entity_add"
     cancel_url = "attribute.entity_index"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -345,6 +355,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             attribute_value=form_attribute_value,
             attribute_type=form_attribute_type,
             attribute_scope=form_attribute_scope,
+            map_notes_count=map_notes_count,
         )
 
     return render_template(
@@ -356,6 +367,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         entity_type=entity_type,
         post_url=post_url,
         cancel_url=cancel_url,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -394,6 +406,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -465,6 +478,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         attribute_value=form_attribute_value,
         attribute_type=form_attribute_type,
         attribute_scope=form_attribute_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -524,6 +538,7 @@ def entity_edit(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -597,6 +612,7 @@ def entity_edit(
         attribute_value=form_attribute_value,
         attribute_type=form_attribute_type,
         attribute_scope=form_attribute_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -635,6 +651,8 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         # Delete attribute from topic store
         topic_store.delete_attribute(map_identifier, attribute.identifier)
@@ -664,6 +682,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         attribute_value=form_attribute_value,
         attribute_type=form_attribute_type,
         attribute_scope=form_attribute_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -723,6 +742,8 @@ def entity_delete(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         # Delete attribute from topic store
         topic_store.delete_attribute(map_identifier, attribute.identifier)
@@ -754,4 +775,5 @@ def entity_delete(
         attribute_value=form_attribute_value,
         attribute_type=form_attribute_type,
         attribute_scope=form_attribute_scope,
+        map_notes_count=map_notes_count,
     )

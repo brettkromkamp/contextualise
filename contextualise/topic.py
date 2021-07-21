@@ -249,6 +249,8 @@ def view(map_identifier, topic_identifier):
         associations_state[RESPONSE].data.decode("utf-8") if associations_state[STATUS_CODE] == 200 else None
     )
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "topic/view.html",
         topic_map=topic_map,
@@ -262,6 +264,7 @@ def view(map_identifier, topic_identifier):
         breadcrumbs=breadcrumbs,
         collaboration_mode=collaboration_mode,
         is_map_owner=is_map_owner,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -292,6 +295,7 @@ def create(map_identifier, topic_identifier):
         )
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -367,9 +371,16 @@ def create(map_identifier, topic_identifier):
             topic_text=form_topic_text,
             topic_instance_of=form_topic_instance_of,
             topic_text_scope=form_topic_text_scope,
+            map_notes_count=map_notes_count,
         )
 
-    return render_template("topic/create.html", error=error, topic_map=topic_map, topic=topic)
+    return render_template(
+        "topic/create.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route("/topics/edit/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
@@ -418,6 +429,7 @@ def edit(map_identifier, topic_identifier):
     form_topic_instance_of = topic.instance_of
     form_topic_text_scope = texts[0].scope if len(texts) > 0 else session["current_scope"]
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -511,6 +523,7 @@ def edit(map_identifier, topic_identifier):
         topic_instance_of=form_topic_instance_of,
         topic_text_scope=form_topic_text_scope,
         collaboration_mode=topic_map.collaboration_mode,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -540,6 +553,8 @@ def delete(map_identifier, topic_identifier):
             f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
         )
         abort(404)
+
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
         try:
@@ -575,7 +590,12 @@ def delete(map_identifier, topic_identifier):
             )
         )
 
-    return render_template("topic/delete.html", topic_map=topic_map, topic=topic)
+    return render_template(
+        "topic/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route("/topics/add-note/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
@@ -608,6 +628,7 @@ def add_note(map_identifier, topic_identifier):
         )
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -675,9 +696,16 @@ def add_note(map_identifier, topic_identifier):
             note_title=form_note_title,
             note_text=form_note_text,
             note_scope=form_note_scope,
+            map_notes_count=map_notes_count,
         )
 
-    return render_template("topic/add_note.html", error=error, topic_map=topic_map, topic=topic)
+    return render_template(
+        "topic/add_note.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route(
@@ -725,6 +753,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     form_note_text = note_occurrence.resource_data.decode()
     form_note_scope = note_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -791,6 +820,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
         note_title=form_note_title,
         note_text=form_note_text,
         note_scope=form_note_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -847,6 +877,8 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
     form_note_text = markdown(note_occurrence.resource_data.decode())
     form_note_scope = note_occurrence.scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         topic_store.delete_occurrence(map_identifier, note_occurrence.identifier)
         flash("Note successfully deleted.", "warning")
@@ -866,6 +898,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         note_title=form_note_title,
         note_text=form_note_text,
         note_scope=form_note_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -900,11 +933,14 @@ def view_names(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     return render_template(
         "topic/view_names.html",
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -935,6 +971,7 @@ def add_name(map_identifier, topic_identifier):
         )
         abort(404)
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -976,9 +1013,16 @@ def add_name(map_identifier, topic_identifier):
             topic=topic,
             topic_name=form_topic_name,
             topic_name_scope=form_topic_name_scope,
+            map_notes_count=map_notes_count,
         )
 
-    return render_template("topic/add_name.html", error=error, topic_map=topic_map, topic=topic)
+    return render_template(
+        "topic/add_name.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route(
@@ -1014,6 +1058,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     form_topic_name = topic.get_base_name(name_identifier).name
     form_topic_name_scope = topic.get_base_name(name_identifier).scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -1065,6 +1110,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
         topic_name=form_topic_name,
         topic_name_scope=form_topic_name_scope,
         name_identifier=name_identifier,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -1101,6 +1147,8 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     form_topic_name = topic.get_base_name(name_identifier).name
     form_topic_name_scope = topic.get_base_name(name_identifier).scope
 
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+
     if request.method == "POST":
         topic_store.delete_base_name(map_identifier, name_identifier)
 
@@ -1120,6 +1168,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         topic_name=form_topic_name,
         topic_name_scope=form_topic_name_scope,
         name_identifier=name_identifier,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -1151,6 +1200,7 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
         abort(404)
 
     form_scope = scope_identifier
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -1186,6 +1236,7 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
         topic_map=topic_map,
         topic=topic,
         scope_identifier=form_scope,
+        map_notes_count=map_notes_count,
     )
 
 
@@ -1220,6 +1271,7 @@ def edit_identifier(map_identifier, topic_identifier):
         abort(404)
 
     form_topic_identifier = topic.identifier
+    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -1268,4 +1320,5 @@ def edit_identifier(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         topic_identifier=form_topic_identifier,
+        map_notes_count=map_notes_count,
     )
