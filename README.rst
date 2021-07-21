@@ -76,6 +76,8 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * `In place topic creation <https://brettkromkamp.com/posts/in-place-topic-creation/>`_
 * Quick association creation for frictionless topic-linking and knowledge discovery
 * Associative tagging
+* `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
+* Syntax highlighing for numerous programming languages based on [Pygments](https://pygments.org/docs/)
 
 **Features Currently in Development (August - September 2020)**
 
@@ -85,7 +87,6 @@ The following provides an overview of Contextualise's existing (and planned) fea
 **Post Version 1.0 Features**
 
 * Network graph visualisation filtering by association types
-* `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
 * Full-text search
 * Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand
 * `Timeline <https://timeline.knightlab.com/docs/index.html>`_ support allowing for the navigation between topics using a visual timeline component
@@ -131,7 +132,7 @@ Then, if you want to update TopicDB at any time, in the same directory do::
 
     $ git pull
 
-After having installed Contextualise, you would have to separately install and configure the PostgreSQL database. Brief
+After installing Contextualise, you will have to separately install and configure the PostgreSQL database. Brief
 instructions on how to do so are provided, here: `Setting up the TopicDB
 database <https://gist.github.com/brettkromkamp/87aaa99b056578ff1dc23a43a49aca89>`_. You need to ensure that the
 database username, password and database name match with the ``settings.ini`` file in the project's root folder.
