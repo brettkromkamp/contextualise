@@ -77,7 +77,7 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Quick association creation for frictionless topic-linking and knowledge discovery
 * Associative tagging
 * `Augmented Reality <https://en.wikipedia.org/wiki/Augmented_reality>`_ (AR) support for 3D occurrences
-* Syntax highlighing for numerous programming languages based on [Pygments](https://pygments.org/docs/)
+* Syntax highlighing for numerous programming languages based on `Pygments <https://pygments.org/docs/>`_
 
 **Features Currently in Development (August - September 2020)**
 
