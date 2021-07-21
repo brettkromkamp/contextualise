@@ -52,7 +52,7 @@ with the `Flask`_ and `Django`_ web development frameworks. What's more, after f
 management tools, I have several improvements in mind for the next version (many of which are simplifications, for that
 matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open
 source: both Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise
-is built -- also written by me) are licensed with the permissive open source `MIT license`_.
+is built -- also developed by me) are licensed with the permissive open source `MIT license`_.
 
 Feature Support
 ---------------
@@ -110,6 +110,7 @@ Then do::
 
     $ git clone https://github.com/brettkromkamp/contextualise
     $ cd contextualise
+    $ git checkout develop
     $ pip install -e .
 
 The ``pip install -e .`` command allows you to follow the development branch as it changes by creating links in the
@@ -126,6 +127,7 @@ recommended that you also install TopicDB directly from GitHub::
     $ pip uninstall topic-db
     $ git clone https://github.com/brettkromkamp/topic-db.git
     $ cd topic-db
+    $ git checkout develop
     $ pip install -e .
 
 Then, if you want to update TopicDB at any time, in the same directory do::
