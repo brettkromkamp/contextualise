@@ -53,6 +53,8 @@
                         <a class="card-link"
                             href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
                             map</a>
+                        <a class="card-link" href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
+                            notes</a>
                         <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map
                             details</a>
                     </div>
@@ -106,6 +108,8 @@
                         <a class="card-link"
                             href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
                             map</a>
+                        <a class="card-link" href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
+                            notes</a>
                         <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map
                             details</a>
                     </div>

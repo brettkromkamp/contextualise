@@ -24,7 +24,10 @@
                 map</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item"
-                href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Home</a>
+                href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">View
+                map</a>
+            <a class="dropdown-item" href="{{ url_for('note.index', map_identifier=topic_map['identifier']) }}">View
+                notes</a>
         </div>
     </li>
     <li class="nav-item">
