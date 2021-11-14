@@ -14,6 +14,8 @@ with open(os.path.join(here, "README.rst")) as f:
     README = f.read()
 with open(os.path.join(here, "HISTORY.rst")) as f:
     HISTORY = f.read()
+with open(os.path.join(here, "requirements.txt")) as f:
+    REQUIRED = f.read().splitlines()
 
 setup(
     name="contextualise",
@@ -27,20 +29,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        "flask",
-        "flask-security-too",
-        "flask-sqlalchemy",
-        "flask-seasurf",
-        "sqlalchemy",
-        "bcrypt",
-        "topic-db",
-        "maya",
-        "mistune",
-        "python-slugify",
-        "gunicorn",
-        "pygments",
-    ],
+    install_requires=REQUIRED,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
@@ -52,6 +41,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Education",
     ],
