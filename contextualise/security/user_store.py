@@ -26,7 +26,6 @@ engine = create_engine(
     f"postgresql://{database_username}:{database_password}@{database_host}/{database_name}",
     pool_size=10,
     max_overflow=20,
-    convert_unicode=True,
 )
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
