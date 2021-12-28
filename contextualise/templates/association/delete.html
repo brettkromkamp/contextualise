@@ -27,30 +27,39 @@
             <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope" readonly
                 type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
         </div>
-        <label><strong>Members</strong></label>
+        <label><strong>Member</strong></label>
         <table class="table table-bordered table-sm">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">Role</th>
                     <th scope="col">Topic reference</th>
+                    <th scope="col">Role</th>
                 </tr>
             </thead>
             <tbody>
-                {% for member in association.members %}
                 <tr>
                     <td>
                         <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=member.role_spec) }}">{{
-                        member.role_spec|topic_name(topic_map.identifier) }}</a></td>
-                    <td>
-                        {% for topic_ref in member.topic_refs %}
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
+                            association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a><br />
+                    </td>
+                    <td class="align-middle">
                         <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
-                        topic_ref|topic_name(topic_map.identifier) }}</a><br />
-                        {% endfor %}
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
+                            association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>
                     </td>
                 </tr>
-                {% endfor %}
+                <tr>
+                    <td>
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
+                            association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a><br />
+                    </td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
+                            association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
