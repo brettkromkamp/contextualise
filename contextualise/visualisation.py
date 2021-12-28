@@ -95,15 +95,14 @@ def tags_cloud(map_identifier, topic_identifier):
     associations = topic_store.get_topic_associations(map_identifier, "tags", instance_ofs=["categorization"])
     tags = {}
     for association in associations:
-        for member in association.members:
-            if member.role_spec == "narrower":
-                for topic_ref in member.topic_refs:
-                    if topic_ref in tags:
-                        count = tags[topic_ref]
-                        count += 1
-                        tags[topic_ref] = count
-                    else:
-                        tags[topic_ref] = 1
+        if association.member.dest_role_spec == "narrower":
+            dest_topic_ref = association.member.dest_topic_ref
+            if dest_topic_ref in tags:
+                count = tags[dest_topic_ref]
+                count += 1
+                tags[dest_topic_ref] = count
+            else:
+                tags[dest_topic_ref] = 1
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
