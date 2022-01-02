@@ -10,9 +10,9 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, "README.rst")) as f:
+with open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     README = f.read()
-with open(os.path.join(here, "HISTORY.rst")) as f:
+with open(os.path.join(here, "HISTORY.rst"), encoding="utf-8") as f:
     HISTORY = f.read()
 with open(os.path.join(here, "requirements.txt")) as f:
     REQUIRED = f.read().splitlines()
@@ -27,6 +27,7 @@ setup(
     url="https://github.com/brettkromkamp/contextualise",
     keywords="knowledge management, personal knowledge management, topic map, knowledge graph",
     packages=find_packages(),
+    package_data={"": ["LICENSE"]},
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIRED,
