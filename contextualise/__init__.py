@@ -143,6 +143,7 @@ def create_app(test_config=None):
         # Create roles
         admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
         user_role = user_datastore.find_or_create_role(name="user", description="End user")
+        user_store.db_session.commit()
 
         # Create users
         admin_user = user_datastore.find_user(email="admin@contextualise.dev")
@@ -150,10 +151,9 @@ def create_app(test_config=None):
             admin_user = user_datastore.create_user(
                 email="admin@contextualise.dev", password=hash_password("Passw0rd1")
             )
-
         user_user = user_datastore.find_user(email="user@contextualise.dev")
         if not user_user:
-            user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
+            user_user = user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
         user_store.db_session.commit()
 
         # Assign roles
