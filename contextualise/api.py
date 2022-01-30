@@ -31,7 +31,7 @@ def get_slug():
 def topic_exists(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
@@ -54,7 +54,7 @@ def topic_exists(map_identifier):
 def create_topic(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
@@ -95,7 +95,7 @@ def get_identifiers(map_identifier):
     result = []
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
     # TODO: Missing logic?
@@ -117,7 +117,7 @@ def get_identifiers(map_identifier):
 def get_tags(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
     # TODO: Missing logic?
@@ -134,15 +134,15 @@ def get_network(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
         if not topic_map.published:  # User is not logged in and the map is not published
@@ -218,15 +218,15 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
     topic_store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
 
@@ -277,7 +277,7 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
 def create_association(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 

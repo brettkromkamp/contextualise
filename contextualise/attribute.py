@@ -21,7 +21,7 @@ def index(map_identifier, topic_identifier):
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -78,7 +78,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -158,7 +158,7 @@ def add(map_identifier, topic_identifier):
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -264,7 +264,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -381,7 +381,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -498,7 +498,7 @@ def entity_edit(
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -626,7 +626,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -702,7 +702,7 @@ def entity_delete(
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right

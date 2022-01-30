@@ -24,7 +24,7 @@ bp = Blueprint("tag", __name__)
 def add(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"

@@ -25,7 +25,7 @@ EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg", "gif"}
 def index(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -79,7 +79,7 @@ def index(map_identifier, topic_identifier):
 def upload(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -190,7 +190,7 @@ def upload(map_identifier, topic_identifier):
 def edit(map_identifier, topic_identifier, image_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -281,7 +281,7 @@ def edit(map_identifier, topic_identifier, image_identifier):
 def delete(map_identifier, topic_identifier, image_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right

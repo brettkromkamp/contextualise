@@ -15,11 +15,11 @@ def network(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
@@ -29,7 +29,7 @@ def network(map_identifier, topic_identifier):
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
@@ -64,11 +64,11 @@ def tags_cloud(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
@@ -78,7 +78,7 @@ def tags_cloud(map_identifier, topic_identifier):
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
@@ -126,11 +126,11 @@ def timeline(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
@@ -140,7 +140,7 @@ def timeline(map_identifier, topic_identifier):
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
@@ -175,11 +175,11 @@ def geographic_map(map_identifier, topic_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
@@ -189,7 +189,7 @@ def geographic_map(map_identifier, topic_identifier):
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published

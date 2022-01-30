@@ -154,6 +154,10 @@ def create_app(test_config=None):
         user_datastore.add_role_to_user(admin_user, admin_role)
         user_store.db_session.commit()
 
+        # Create database structure
+        topic_store = get_topic_store()
+        topic_store.create_database()
+
     @app.teardown_request
     def checkin_db(exc):
         user_store.db_session.remove()

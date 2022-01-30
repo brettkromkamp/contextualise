@@ -44,11 +44,11 @@ def view(map_identifier, topic_identifier):
     collaboration_mode = None
     is_map_owner = False
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             current_app.logger.warning(
                 f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -66,7 +66,7 @@ def view(map_identifier, topic_identifier):
                 if not collaboration_mode:  # The user is not collaborating on the map
                     abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             current_app.logger.warning(
                 f"Topic map not found: user identifier: [N/A], topic map identifier: [{map_identifier}]"
@@ -273,7 +273,7 @@ def view(map_identifier, topic_identifier):
 def create(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -388,7 +388,7 @@ def create(map_identifier, topic_identifier):
 def edit(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -532,7 +532,7 @@ def edit(map_identifier, topic_identifier):
 def delete(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -603,7 +603,7 @@ def delete(map_identifier, topic_identifier):
 def add_note(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -716,7 +716,7 @@ def add_note(map_identifier, topic_identifier):
 def edit_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -832,7 +832,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 def delete_note(map_identifier, topic_identifier, note_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -907,7 +907,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 def view_names(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -949,7 +949,7 @@ def view_names(map_identifier, topic_identifier):
 def add_name(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -1033,7 +1033,7 @@ def add_name(map_identifier, topic_identifier):
 def edit_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -1122,7 +1122,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 def delete_name(map_identifier, topic_identifier, name_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -1179,7 +1179,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 @login_required
 def change_scope(map_identifier, topic_identifier, scope_identifier):
     topic_store = get_topic_store()
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
 
     if topic_map is None:
         current_app.logger.warning(
@@ -1248,7 +1248,7 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
 def edit_identifier(map_identifier, topic_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"

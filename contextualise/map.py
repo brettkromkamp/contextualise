@@ -29,7 +29,7 @@ UNIVERSAL_SCOPE = "*"
 def index():
     topic_store = get_topic_store()
 
-    maps = topic_store.get_topic_maps(current_user.id)
+    maps = topic_store.get_maps(current_user.id)
 
     own_maps = [map for map in maps if map.owner]
     collaboration_maps = [map for map in maps if not map.owner]
@@ -46,7 +46,7 @@ def index():
 def published():
     topic_store = get_topic_store()
 
-    maps = topic_store.get_published_topic_maps()
+    maps = topic_store.get_published_maps()
 
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []
@@ -93,7 +93,7 @@ def create():
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create and initialise the topic map
-            map_identifier = topic_store.set_topic_map(
+            map_identifier = topic_store.set_map(
                 current_user.id,
                 form_map_name,
                 form_map_description,
@@ -103,7 +103,7 @@ def create():
                 promoted=False,
             )
             if map_identifier:
-                topic_store.initialise_topic_map(map_identifier, current_user.id)
+                topic_store.populate_map(map_identifier, current_user.id)
 
                 # Create the directory for this topic map
                 topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
@@ -117,7 +117,7 @@ def create():
                 flash("Map successfully created.", "success")
             else:
                 flash(
-                    "An error occurred while creating the topic map. Get in touch with Support if the problem persists.",
+                    "An error occurred while creating the map. Get in touch with Support if the problem persists.",
                     "danger",
                 )
             return redirect(url_for("map.index"))
@@ -136,7 +136,7 @@ def create():
 def delete(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
@@ -144,7 +144,7 @@ def delete(map_identifier):
 
     if request.method == "POST":
         # Remove map from topic store
-        topic_store.delete_topic_map(map_identifier, current_user.id)
+        topic_store.delete_map(map_identifier, current_user.id)
 
         # Delete the map's directory
         topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
@@ -162,7 +162,7 @@ def delete(map_identifier):
 def edit(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
@@ -208,7 +208,7 @@ def edit(map_identifier):
 
             # Update the topic map
             promoted = form_map_published and topic_map.promoted
-            topic_store.update_topic_map(
+            topic_store.update_map(
                 map_identifier,
                 form_map_name,
                 form_map_description,
@@ -236,11 +236,11 @@ def view(map_identifier):
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_topic_map_owner(map_identifier, current_user.id)
+        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+            topic_map = topic_store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_topic_map(map_identifier)
+            topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
@@ -250,7 +250,7 @@ def view(map_identifier):
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_topic_map(map_identifier)
+        topic_map = topic_store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
@@ -264,7 +264,7 @@ def view(map_identifier):
 def collaborators(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
@@ -282,7 +282,7 @@ def collaborators(map_identifier):
 def add_collaborator(map_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
@@ -342,7 +342,7 @@ def add_collaborator(map_identifier):
 def delete_collaborator(map_identifier, collaborator_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
@@ -381,7 +381,7 @@ def delete_collaborator(map_identifier, collaborator_identifier):
 def edit_collaborator(map_identifier, collaborator_identifier):
     topic_store = get_topic_store()
 
-    topic_map = topic_store.get_topic_map(map_identifier, current_user.id)
+    topic_map = topic_store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     if not topic_map.owner:
