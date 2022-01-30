@@ -32,11 +32,7 @@ SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 config = configparser.ConfigParser()
 config.read(SETTINGS_FILE_PATH)
 
-database_username = config["DATABASE"]["Username"]
-database_password = config["DATABASE"]["Password"]
-database_name = config["DATABASE"]["Database"]
-database_host = config["DATABASE"]["Host"]
-database_port = config["DATABASE"]["Port"]
+database_path = config["DATABASE"]["Path"]
 email_username = config["EMAIL"]["Username"]
 email_password = config["EMAIL"]["Password"]
 email_server = config["EMAIL"]["Server"]
@@ -50,11 +46,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         DEBUG=False,
         SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
-        TOPIC_STORE_USER=database_username,
-        TOPIC_STORE_PASSWORD=database_password,
-        TOPIC_STORE_DBNAME=database_name,
-        TOPIC_STORE_HOST=database_host,
-        TOPIC_STORE_PORT=database_port,
+        DATABASE_PATH=database_path,
         SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
@@ -88,7 +80,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def home():
-        maps = get_topic_store().get_promoted_topic_maps()
+        maps = get_topic_store().get_promoted_maps()
 
         # Reset breadcrumbs and (current) scope
         session["breadcrumbs"] = []
@@ -148,11 +140,13 @@ def create_app(test_config=None):
         # Create users
         admin_user = user_datastore.find_user(email="admin@contextualise.dev")
         if not admin_user:
-            admin_user = user_datastore.create_user(email="admin@contextualise.dev", password=hash_password("Passw0rd1"))
+            admin_user = user_datastore.create_user(
+                email="admin@contextualise.dev", password=hash_password("Passw0rd1")
+            )
             user_store.db_session.commit()
         user_user = user_datastore.find_user(email="user@contextualise.dev")
         if not user_user:
-            user_user = user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))        
+            user_user = user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
             user_store.db_session.commit()
 
         # Assign roles
