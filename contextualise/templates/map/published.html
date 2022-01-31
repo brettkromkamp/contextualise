@@ -43,5 +43,18 @@
     </div>
     {% endfor %}
 </div>
+{% else %}
+<div class="row">
+    <div class="col">
+        <p class="alert alert-info" role="alert">
+            Currently, nobody has published a topic map. Patience, my friend, patience!
+        </p>
+        <br />
+        <br />
+        <p class="text-center">
+            <img width="410" class="img-fluid" src="{{ url_for('static', filename='void.svg') }}">
+        </p>
+    </div>
+</div>
 {% endif %}
 {% endblock %}
