@@ -19,7 +19,7 @@ with open(os.path.join(here, "requirements.txt")) as f:
 
 setup(
     name="contextualise",
-    version="0.3.0",
+    version="0.4.0",
     description="Contextualise",
     long_description=README + "\n\n" + HISTORY,
     author="Brett Alistair Kromkamp",
