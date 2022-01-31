@@ -59,8 +59,7 @@ def create_app(test_config=None):
         MAIL_USE_SSL=False,
         MAIL_USERNAME=email_username,
         MAIL_PASSWORD=email_password,
-        MAX_CONTENT_LENGTH=4 * 1024 * 1024,
-        # 4 megabytes (temporarily - will be 2)
+        MAX_CONTENT_LENGTH=4 * 1024 * 1024,  # 4 megabytes
     )
     mail = Mail(app)
     csrf = SeaSurf(app)
@@ -218,11 +217,6 @@ def create_app(test_config=None):
     from contextualise import tag
 
     app.register_blueprint(tag.bp)
-
-    # Add topic store
-    # from contextualise import topic_store
-
-    # topic_store.init_app(app)
 
     # Set up logging
     if not app.debug:
