@@ -128,9 +128,8 @@ def upload(map_identifier, topic_identifier):
         else:
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
-            # Create the image directory for this topic map and topic if it
-            # doesn't already exist
-            image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            # Create the image directory for this topic map if it doesn't already exist
+            image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
             if not os.path.isdir(image_directory):
                 os.makedirs(image_directory)
 
@@ -318,7 +317,6 @@ def delete(map_identifier, topic_identifier, image_identifier):
             bp.root_path,
             RESOURCES_DIRECTORY,
             str(map_identifier),
-            topic_identifier,
             image_occurrence.resource_ref,
         )
         if os.path.exists(image_file_path):

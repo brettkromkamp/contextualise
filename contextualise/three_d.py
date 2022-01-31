@@ -127,9 +127,8 @@ def upload(map_identifier, topic_identifier):
             file_extension = get_file_extension(form_upload_file.filename)
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
-            # Create the file directory for this topic map and topic if it
-            # doesn't already exist
-            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            # Create the file directory for this topic map if it doesn't already exist
+            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -314,7 +313,6 @@ def delete(map_identifier, topic_identifier, file_identifier):
             bp.root_path,
             RESOURCES_DIRECTORY,
             str(map_identifier),
-            topic_identifier,
             file_occurrence.resource_ref,
         )
         if os.path.exists(file_file_path):

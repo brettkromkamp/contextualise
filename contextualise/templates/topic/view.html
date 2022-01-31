@@ -559,7 +559,7 @@
                                         {% for image in occurrences['images'] %}
                                         <li>
                                             <a data-caption="{{ image.title }}" data-fancybox="images"
-                                                href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.url }}">{{
+                                                href="/static/resources/{{ topic_map.identifier }}/{{ image.url }}">{{
                                                 image.title }}</a>
                                         </li>
                                         {% endfor %}
@@ -576,8 +576,7 @@
                                     <ul>
                                         {% for file in occurrences['files'] %}
                                         <li>
-                                            <a
-                                                href="/static/resources/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.url }}">{{
+                                            <a href="/static/resources/{{ topic_map.identifier }}/{{ file.url }}">{{
                                                 file.title }}</a>
                                         </li>
                                         {% endfor %}
