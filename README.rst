@@ -5,8 +5,7 @@ Contextualise: Structured Thought
    :width: 560
    :alt: Contextualise logo
 
-Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and
-activities consisting of unstructured and widely diverse data and information resources -- think of investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and many kinds of hobbies.
+Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources -- think of investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and many kinds of hobbies.
 
     Check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, a curated list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space. Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
 
@@ -135,18 +134,12 @@ For further information for properly running a flask application in production, 
 First-Time Use
 --------------
 
-Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application for testing purposes. To log in as the admin user, provide the following credentials:
-``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
-
-Tutorial
---------
-
-A Contextualise (work-in-progress) overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
+Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application for testing purposes. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
 
 Documentation
 -------------
 
-Work in progress (January 2022).
+Work in progress (February 2022).
 
 Miscellaneous
 -------------
