@@ -8,11 +8,7 @@ Contextualise: Structured Thought
 Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and
 activities consisting of unstructured and widely diverse data and information resources -- think of investigative journalism, personal and professional research projects, `world building`_ (for books, movies or computer games) and many kinds of hobbies.
 
-    On a side note, an **alpha** version of Contextualise is already available at `https://contextualise.dev <https://contextualise.dev/>`_.
-
-    A Contextualise overview and tutorial is available as a Contextualise `topic map <https://contextualise.dev/topics/view/1/home>`_.
-
-    Finally, check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, a curated list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space. Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
+    Check out the `Awesome Knowledge Management <https://github.com/brettkromkamp/awesome-knowledge-management>`_ resource, a curated list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space. Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general and Contextualise in particular, then check out my `blog <https://brettkromkamp.com/>`_.
 
 **Contextualise's "My maps" view**
 
@@ -78,7 +74,7 @@ For a more exhaustive list of planned features take a look at Contextualise's `l
 Install the Development Version
 -------------------------------
 
-Contextualise officially supports Python 3.6–3.10.
+Contextualise officially supports Python 3.7–3.10.
 
 If you have `Git <https://git-scm.com/>`_ installed on your system, it is possible to install the development version of Contextualise.
 
@@ -130,13 +126,11 @@ Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result i
 .. image:: resources/landing-page.png
    :alt: The Contextualise Welcome page
 
-Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run
-Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python `WSGI <https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ HTTP server::
+Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run Contextualise using `Gunicorn <https://gunicorn.org/>`_, a Python `WSGI <https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ HTTP server::
 
     $ gunicorn -w 4 -b 0.0.0.0:5000 contextualise.wsgi:app
 
-For further information for properly running a flask application in production, take a look at Flask's own
-`documentation <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_.
+For further information for properly running a flask application in production, take a look at Flask's own `documentation <https://flask.palletsprojects.com/en/1.1.x/deploying/#deployment>`_.
 
 First-Time Use
 --------------
