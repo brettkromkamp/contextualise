@@ -82,9 +82,9 @@ def create_topic(map_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_topic(topic_map.identifier, topic)
-            topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.create_topic(topic_map.identifier, topic)
+            topic_store.create_occurrence(topic_map.identifier, text_occurrence)
+            topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             return jsonify({"status": "success", "code": 201}), 201
 
@@ -322,6 +322,6 @@ def create_association(map_identifier):
         )
 
         # Persist association object to the topic store
-        topic_store.set_association(map_identifier, association)
+        topic_store.create_association(map_identifier, association)
 
     return jsonify({"status": "success", "code": 201}), 201

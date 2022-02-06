@@ -155,7 +155,7 @@ def create(map_identifier, topic_identifier):
             )
 
             # Persist association object to the topic store
-            topic_store.set_association(map_identifier, association)
+            topic_store.create_association(map_identifier, association)
 
             flash("Association successfully created.", "success")
             return redirect(

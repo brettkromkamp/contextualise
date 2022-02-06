@@ -348,9 +348,9 @@ def create(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_topic(topic_map.identifier, new_topic)
-            topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.create_topic(topic_map.identifier, new_topic)
+            topic_store.create_occurrence(topic_map.identifier, text_occurrence)
+            topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             flash("Topic successfully created.", "success")
             return redirect(
@@ -467,7 +467,7 @@ def edit(map_identifier, topic_identifier):
                     )
             else:
                 base_name = BaseName(form_topic_name, session["current_scope"])
-                topic_store.set_base_name(map_identifier, topic.identifier, base_name)
+                topic_store.create_base_name(map_identifier, topic.identifier, base_name)
 
             # Update topic's 'instance of' if it has changed
             if topic.instance_of != form_topic_instance_of:
@@ -484,7 +484,7 @@ def edit(map_identifier, topic_identifier):
                     scope=form_topic_text_scope,
                     resource_data=form_topic_text,
                 )
-                topic_store.set_occurrence(topic_map.identifier, text_occurrence)
+                topic_store.create_occurrence(topic_map.identifier, text_occurrence)
 
             # Update the topic's modification (timestamp) attribute
             timestamp = str(datetime.now())
@@ -501,7 +501,7 @@ def edit(map_identifier, topic_identifier):
                     topic.identifier,
                     data_type=DataType.TIMESTAMP,
                 )
-                topic_store.set_attribute(topic_map.identifier, modification_attribute)
+                topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             flash("Topic successfully updated.", "success")
             return redirect(
@@ -675,9 +675,9 @@ def add_note(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_occurrence(topic_map.identifier, note_occurrence)
-            topic_store.set_attribute(topic_map.identifier, title_attribute)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.create_occurrence(topic_map.identifier, note_occurrence)
+            topic_store.create_attribute(topic_map.identifier, title_attribute)
+            topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             flash("Note successfully added.", "success")
             return redirect(
@@ -995,7 +995,7 @@ def add_name(map_identifier, topic_identifier):
             )
         else:
             base_name = BaseName(form_topic_name, scope=form_topic_name_scope)
-            topic_store.set_base_name(map_identifier, topic.identifier, base_name)
+            topic_store.create_base_name(map_identifier, topic.identifier, base_name)
 
             flash("Name successfully added.", "success")
             return redirect(

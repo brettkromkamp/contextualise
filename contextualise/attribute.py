@@ -216,7 +216,7 @@ def add(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_attribute(topic_map.identifier, attribute)
+            topic_store.create_attribute(topic_map.identifier, attribute)
 
             flash("Attribute successfully added.", "success")
             return redirect(
@@ -329,7 +329,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             )
 
             # Persist objects to the topic store
-            topic_store.set_attribute(topic_map.identifier, attribute)
+            topic_store.create_attribute(topic_map.identifier, attribute)
 
             flash("Attribute successfully added.", "success")
             return redirect(
@@ -443,7 +443,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
                 data_type=DataType[form_attribute_type],
                 scope=form_attribute_scope,
             )
-            topic_store.set_attribute(topic_map.identifier, updated_attribute)
+            topic_store.create_attribute(topic_map.identifier, updated_attribute)
 
             flash("Attribute successfully updated.", "success")
             return redirect(
@@ -575,7 +575,7 @@ def entity_edit(
                 data_type=DataType[form_attribute_type],
                 scope=form_attribute_scope,
             )
-            topic_store.set_attribute(topic_map.identifier, updated_attribute)
+            topic_store.create_attribute(topic_map.identifier, updated_attribute)
 
             flash("Attribute successfully updated.", "success")
             return redirect(

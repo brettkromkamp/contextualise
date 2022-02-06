@@ -65,7 +65,7 @@ def add(map_identifier, topic_identifier):
             )
         else:
             for form_tag in form_tags.split(","):
-                topic_store.set_tag(map_identifier, topic.identifier, form_tag)
+                topic_store.create_tag(map_identifier, topic.identifier, form_tag)
 
             flash("Tags successfully added.", "success")
             return redirect(

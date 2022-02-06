@@ -139,9 +139,9 @@ def add(map_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_occurrence(topic_map.identifier, note_occurrence)
-            topic_store.set_attribute(topic_map.identifier, title_attribute)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.create_occurrence(topic_map.identifier, note_occurrence)
+            topic_store.create_attribute(topic_map.identifier, title_attribute)
+            topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             flash("Note successfully added.", "success")
             return redirect(url_for("note.index", map_identifier=topic_map.identifier))
@@ -304,9 +304,9 @@ def convert(map_identifier, note_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_topic(topic_map.identifier, new_topic)
-            topic_store.set_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.set_attribute(topic_map.identifier, modification_attribute)
+            topic_store.create_topic(topic_map.identifier, new_topic)
+            topic_store.create_occurrence(topic_map.identifier, text_occurrence)
+            topic_store.create_attribute(topic_map.identifier, modification_attribute)
 
             # Remove the original note occurrence
             topic_store.delete_occurrence(topic_map.identifier, note_identifier)

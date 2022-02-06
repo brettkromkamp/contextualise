@@ -93,7 +93,7 @@ def create():
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create and initialise the topic map
-            map_identifier = topic_store.set_map(
+            map_identifier = topic_store.create_map(
                 current_user.id,
                 form_map_name,
                 form_map_description,

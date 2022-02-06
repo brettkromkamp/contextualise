@@ -150,8 +150,8 @@ def upload(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.set_occurrence(topic_map.identifier, image_occurrence)
-            topic_store.set_attribute(topic_map.identifier, title_attribute)
+            topic_store.create_occurrence(topic_map.identifier, image_occurrence)
+            topic_store.create_attribute(topic_map.identifier, title_attribute)
 
             flash("Image successfully uploaded.", "success")
             return redirect(
