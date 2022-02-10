@@ -14,13 +14,13 @@ with open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     README = f.read()
 with open(os.path.join(here, "HISTORY.rst"), encoding="utf-8") as f:
     HISTORY = f.read()
-with open(os.path.join(here, "requirements.txt")) as f:
+with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as f:
     REQUIRED = f.read().splitlines()
 
 setup(
     name="contextualise",
-    version="0.4.0",
-    description="Contextualise",
+    version="1.0.0",
+    description="Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources.",
     long_description=README + "\n\n" + HISTORY,
     author="Brett Alistair Kromkamp",
     author_email="brett.kromkamp@gmail.com",
@@ -31,8 +31,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIRED,
+    python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
