@@ -64,9 +64,13 @@ The following provides an overview of Contextualise's existing (and planned) fea
 
 For a more exhaustive list of planned features take a look at Contextualise's list of [issues](https://github.com/brettkromkamp/contextualise/issues).
 
-## Install the Development Version
+## Installation
 
-Contextualise officially supports Python 3.7–3.10.
+Contextualise officially supports Python 3.7–3.10. To install Contextualise, simply:
+
+    $ pip install --upgrade contextualise
+
+## Install the Development Version
 
 If you have [Git](https://git-scm.com/) installed on your system, it is possible to install the development version of Contextualise.
 
