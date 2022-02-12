@@ -1,8 +1,10 @@
-# Contextualise: Structured Thought
+# Contextualise: Structured Knowledge
 
 ![Contextualise logo](https://github.com/brettkromkamp/contextualise/blob/master/resources/contextualise-logo.png)
 
-Contextualise is a simple but effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources &mdash; think of investigative journalism, personal and professional research projects, [world building](https://en.wikipedia.org/wiki/Worldbuilding) (for books, movies or computer games) and many kinds of hobbies.
+Contextualise is an effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources &mdash; think of investigative journalism, personal and professional research projects, [world building](https://en.wikipedia.org/wiki/Worldbuilding) (for books, movies or computer games) and many kinds of hobbies.
+
+Contextualise's main dependency is [TopicDB](https://github.com/brettkromkamp/topic-db), an open source [topic maps](https://msdn.microsoft.com/en-us/library/aa480048.aspx)-based graph store. Topic maps provide a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
 > Check out the [Awesome Knowledge Management](https://github.com/brettkromkamp/awesome-knowledge-management) resource, a curated list of amazingly awesome articles, people, projects, applications, software libraries and projects related to the knowledge management space. Alternatively, if you are interested in reading more in-depth articles in relation to knowledge management in general and Contextualise in particular, then check out my [blog](https://brettkromkamp.com/).
 
@@ -21,8 +23,6 @@ Contextualise is a simple but effective tool particularly suited for organising 
 **Contextualise's interactive 3D viewer**
 
 ![Contextualise's interactive 3D viewer](https://github.com/brettkromkamp/contextualise/blob/master/resources/interactive-3d-viewer.png)
-
-Contextualise's main dependency is [TopicDB](https://github.com/brettkromkamp/topic-db), an open source [topic maps](https://msdn.microsoft.com/en-us/library/aa480048.aspx)-based graph store. Topic maps provide a way to describe complex relationships between abstract concepts and real-world (information) resources.
 
 ## Why?
 
@@ -121,7 +121,7 @@ Flask's built-in server is not suitable for production purposes. However, it is 
 
     $ gunicorn -w 4 -b 0.0.0.0:5000 contextualise.wsgi:app
 
-For further information for properly running a flask application in production, take a look at Flask's own [documentation](https://flask.palletsprojects.com/en/2.0.x/deploying/).
+For further information for properly running a flask application in production, take a look at Flask's own documentation regarding [deploying](https://flask.palletsprojects.com/en/2.0.x/deploying/).
 
 ## First-Time Use
 
@@ -137,18 +137,18 @@ Currently, I am using Contextualise for, among others, worldbuilding purposes of
 
 **The Codex Roboticus project**
 
-![Contextualise logo](https://github.com/brettkromkamp/contextualise/blob/master/resources/contextualise-logo.png)
+![The Codex Roboticus project](https://github.com/brettkromkamp/contextualise/blob/master/resources/codex-roboticus.png)
 
 
 ## How to Contribute
 
 1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
-2. Fork ``the repository``_ on GitHub to start making your changes to the **master** branch (or branch off of it).
+2. Fork [the repository](https://github.com/brettkromkamp/contextualise) on GitHub to start making your changes to the **master** branch (or branch off of it).
 3. Write a test which shows that the bug was fixed or that the feature works as expected.
 4. Send a pull request and bug the maintainer until it gets merged and published :)
 
 ## Final Words
 
-I hope you enjoy using Contextualise as much as I enjoy developing it. What's more,  I also  genuinely hope that Contextualise can help you to improve your thinking process. If you have any suggestions, questions or critique with regards to Contextualise, I would love to hear from you.
+I hope you enjoy using Contextualise as much as I enjoy developing it. What's more, I also genuinely hope that Contextualise can help you to improve how you organize your knowledge. If you have any suggestions, questions or critique with regards to Contextualise, I would love to hear from you.
 
 > *I will see you again, in the place where no shadows fall*. &mdash; Ambassador Delenn, Babylon 5
