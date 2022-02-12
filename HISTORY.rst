@@ -1,6 +1,0 @@
-.. :changelog:
-
-Release History
----------------
-
-
