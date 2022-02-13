@@ -98,7 +98,7 @@ def create():
                 form_map_name,
                 form_map_description,
                 image_file_name,
-                initialised=False,
+                initialised=True,
                 published=form_map_published,
                 promoted=False,
             )

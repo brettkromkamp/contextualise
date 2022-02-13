@@ -5,9 +5,8 @@ March 4, 2019
 Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
 """
 
-import configparser
-import logging
 import os
+import logging
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask, session, render_template
@@ -28,34 +27,29 @@ from contextualise.topic_store import get_topic_store
 
 UNIVERSAL_SCOPE = "*"
 
-config = configparser.ConfigParser()
-
 # Application factory function
 def create_app(test_config=None):
-    # Create and configure the app
+    # Create app
     app = Flask(__name__, instance_relative_config=True)
 
-    config.read(os.path.join(app.instance_path, "settings.ini"))
-    database_path = os.path.join(app.instance_path, config["DATABASE"]["Filename"])
-
+    # Configure app
+    app.config.from_object("contextualise.settings")
+    app.config.from_envvar("CONTEXTUALISE_SETTINGS")
     app.config.from_mapping(
         DEBUG=False,
+        DATABASE_PATH=os.path.join(app.instance_path, app.config["DATABASE_FILE"]),
         SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
-        DATABASE_PATH=database_path,
         SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
-        SECURITY_EMAIL_SENDER=config["EMAIL"]["Sender"],
         SECURITY_URL_PREFIX="/auth",
         SECURITY_POST_LOGIN_VIEW="/maps/",
         SECURITY_POST_REGISTER_VIEW="/maps/",
-        MAIL_SERVER=config["EMAIL"]["Server"],
-        MAIL_PORT=587,
         MAIL_USE_SSL=False,
-        MAIL_USERNAME=config["EMAIL"]["Username"],
-        MAIL_PASSWORD=config["EMAIL"]["Password"],
         MAX_CONTENT_LENGTH=4 * 1024 * 1024,  # 4 megabytes
     )
+
+    # Set up app
     mail = Mail(app)
     csrf = SeaSurf(app)
 
@@ -75,6 +69,7 @@ def create_app(test_config=None):
     @app.route("/")
     def home():
         maps = get_topic_store().get_promoted_maps()
+        maps = [map for map in maps if map.published]
 
         # Reset breadcrumbs and (current) scope
         session["breadcrumbs"] = []
