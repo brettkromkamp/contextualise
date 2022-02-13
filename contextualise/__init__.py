@@ -27,38 +27,34 @@ from contextualise.utilities import filters
 from contextualise.topic_store import get_topic_store
 
 UNIVERSAL_SCOPE = "*"
-SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
 
 config = configparser.ConfigParser()
-config.read(SETTINGS_FILE_PATH)
-
-database_path = config["DATABASE"]["Path"]
-email_username = config["EMAIL"]["Username"]
-email_password = config["EMAIL"]["Password"]
-email_server = config["EMAIL"]["Server"]
-email_sender = config["EMAIL"]["Sender"]
-
 
 # Application factory function
 def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+
+    config.read(os.path.join(app.instance_path, "settings.ini"))
+
+    user_store.database_path = config["DATABASE"]["Path"]
+
     app.config.from_mapping(
         DEBUG=False,
         SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
-        DATABASE_PATH=database_path,
+        DATABASE_PATH=config["DATABASE"]["Path"],
         SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
-        SECURITY_EMAIL_SENDER=email_sender,
+        SECURITY_EMAIL_SENDER=config["EMAIL"]["Sender"],
         SECURITY_URL_PREFIX="/auth",
         SECURITY_POST_LOGIN_VIEW="/maps/",
         SECURITY_POST_REGISTER_VIEW="/maps/",
-        MAIL_SERVER=email_server,
+        MAIL_SERVER=config["EMAIL"]["Server"],
         MAIL_PORT=587,
         MAIL_USE_SSL=False,
-        MAIL_USERNAME=email_username,
-        MAIL_PASSWORD=email_password,
+        MAIL_USERNAME=config["EMAIL"]["Username"],
+        MAIL_PASSWORD=config["EMAIL"]["Password"],
         MAX_CONTENT_LENGTH=4 * 1024 * 1024,  # 4 megabytes
     )
     mail = Mail(app)
@@ -220,9 +216,12 @@ def create_app(test_config=None):
 
     # Set up logging
     if not app.debug:
-        if not os.path.exists("logs"):
-            os.mkdir("logs")
-        file_handler = RotatingFileHandler("logs/contextualise.log", maxBytes=10240, backupCount=10)
+        logs_directory = os.path.join(app.instance_path, "logs")
+        if not os.path.exists(logs_directory):
+            os.mkdir(logs_directory)
+        file_handler = RotatingFileHandler(
+            os.path.join(logs_directory, "contextualise.log"), maxBytes=10240, backupCount=10
+        )
         file_handler.setFormatter(
             logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
         )

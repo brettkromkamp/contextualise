@@ -19,7 +19,7 @@ from werkzeug.utils import redirect
 
 bp = Blueprint("map", __name__)
 
-RESOURCES_DIRECTORY = "static/resources/"
+RESOURCES_DIRECTORY = "resources"
 EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg"}
 UNIVERSAL_SCOPE = "*"
 
@@ -106,7 +106,7 @@ def create():
                 topic_store.populate_map(map_identifier, current_user.id)
 
                 # Create the directory for this topic map
-                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+                topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
                 if not os.path.isdir(topic_map_directory):
                     os.makedirs(topic_map_directory)
 
@@ -147,7 +147,7 @@ def delete(map_identifier):
         topic_store.delete_map(map_identifier, current_user.id)
 
         # Delete the map's directory
-        topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+        topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
         if os.path.isdir(topic_map_directory):
             shutil.rmtree(topic_map_directory)
 
@@ -198,7 +198,7 @@ def edit(map_identifier):
             if form_upload_file:
                 # Upload the image for the topic map to the map's directory
                 image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-                topic_map_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+                topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
                 file_path = os.path.join(topic_map_directory, image_file_name)
                 form_upload_file.save(file_path)
 

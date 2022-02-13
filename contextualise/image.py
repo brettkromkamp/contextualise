@@ -2,7 +2,7 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, session, render_template, request, flash, url_for, redirect
+from flask import Blueprint, session, render_template, request, flash, url_for, redirect, current_app
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
@@ -16,7 +16,7 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("image", __name__)
 
-RESOURCES_DIRECTORY = "static/resources/"
+RESOURCES_DIRECTORY = "resources"
 EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg", "gif"}
 
 
@@ -129,7 +129,7 @@ def upload(map_identifier, topic_identifier):
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create the image directory for this topic map if it doesn't already exist
-            image_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+            image_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
             if not os.path.isdir(image_directory):
                 os.makedirs(image_directory)
 
@@ -314,7 +314,7 @@ def delete(map_identifier, topic_identifier, image_identifier):
 
         # Delete image from file system
         image_file_path = os.path.join(
-            bp.root_path,
+            current_app.static_folder,
             RESOURCES_DIRECTORY,
             str(map_identifier),
             image_occurrence.resource_ref,

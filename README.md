@@ -1,6 +1,6 @@
 # Contextualise: Structured Knowledge
 
-![Contextualise logo](https://github.com/brettkromkamp/contextualise/blob/master/resources/contextualise-logo.png)
+![Contextualise logo](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/contextualise-logo.png)
 
 Contextualise is an effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources &mdash; think of investigative journalism, personal and professional research projects, [world building](https://en.wikipedia.org/wiki/Worldbuilding) (for books, movies or computer games) and many kinds of hobbies.
 
@@ -10,19 +10,19 @@ Contextualise's main dependency is [TopicDB](https://github.com/brettkromkamp/to
 
 **Contextualise's "My maps" view**
 
-![Contextualise's "My maps" view](https://github.com/brettkromkamp/contextualise/blob/master/resources/my-maps.png)
+![Contextualise's "My maps" view](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/my-maps.png)
 
 **Contextualise's topic view**
 
-![Contextualise's topic view](https://github.com/brettkromkamp/contextualise/blob/master/resources/topic-view.png)
+![Contextualise's topic view](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/topic-view.png)
 
 **Contextualise's navigable network graph view**
 
-![Contextualise's navigable network graph view](https://github.com/brettkromkamp/contextualise/blob/master/resources/graph-view.png)
+![Contextualise's navigable network graph view](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/graph-view.png)
 
 **Contextualise's interactive 3D viewer**
 
-![Contextualise's interactive 3D viewer](https://github.com/brettkromkamp/contextualise/blob/master/resources/interactive-3d-viewer.png)
+![Contextualise's interactive 3D viewer](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/interactive-3d-viewer.png)
 
 ## Why?
 
@@ -115,7 +115,7 @@ Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result i
 
 **The Contextualise Welcome page**
 
-![The Contextualise Welcome page](https://github.com/brettkromkamp/contextualise/blob/master/resources/landing-page.png)
+![The Contextualise Welcome page](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/landing-page.png)
 
 Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server:
 
@@ -137,8 +137,7 @@ Currently, I am using Contextualise for, among others, worldbuilding purposes of
 
 **The Codex Roboticus project**
 
-![The Codex Roboticus project](https://github.com/brettkromkamp/contextualise/blob/master/resources/codex-roboticus.png)
-
+![The Codex Roboticus project](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/codex-roboticus.png)
 
 ## How to Contribute
 

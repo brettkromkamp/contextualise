@@ -2,7 +2,7 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, session, render_template, request, flash, url_for, redirect
+from flask import Blueprint, session, render_template, request, flash, url_for, redirect, current_app
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute
@@ -16,7 +16,7 @@ from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("three_d", __name__)
 
-RESOURCES_DIRECTORY = "static/resources/"
+RESOURCES_DIRECTORY = "resources"
 EXTENSIONS_WHITELIST = {"gltf", "glb"}
 
 
@@ -128,7 +128,7 @@ def upload(map_identifier, topic_identifier):
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
             # Create the file directory for this topic map if it doesn't already exist
-            file_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier))
+            file_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -310,7 +310,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
 
         # Delete file from file system
         file_file_path = os.path.join(
-            bp.root_path,
+            current_app.static_folder,
             RESOURCES_DIRECTORY,
             str(map_identifier),
             file_occurrence.resource_ref,
