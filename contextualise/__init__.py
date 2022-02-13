@@ -36,13 +36,12 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     config.read(os.path.join(app.instance_path, "settings.ini"))
-
-    user_store.database_path = config["DATABASE"]["Path"]
+    database_path = os.path.join(app.instance_path, config["DATABASE"]["Filename"])
 
     app.config.from_mapping(
         DEBUG=False,
         SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
-        DATABASE_PATH=config["DATABASE"]["Path"],
+        DATABASE_PATH=database_path,
         SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
