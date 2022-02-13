@@ -2,7 +2,7 @@
 wsgi.py file. Part of the Contextualise project.
 
 November 10, 2019
-Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 from contextualise import create_app

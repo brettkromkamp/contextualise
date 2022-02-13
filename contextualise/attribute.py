@@ -1,3 +1,10 @@
+"""
+attribute.py file. Part of the Contextualise project.
+
+February 13, 2022
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
+"""
+
 import maya
 from flask import Blueprint, session, render_template, request, flash, url_for
 from flask_login import current_user

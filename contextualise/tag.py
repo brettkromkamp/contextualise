@@ -1,3 +1,10 @@
+"""
+tag.py file. Part of the Contextualise project.
+
+February 13, 2022
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
+"""
+
 from contextualise.topic_store import get_topic_store
 
 from flask import (

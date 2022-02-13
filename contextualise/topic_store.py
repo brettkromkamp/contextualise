@@ -2,7 +2,7 @@
 topic_store.py file. Part of the Contextualise project.
 
 March 5, 2019
-Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 

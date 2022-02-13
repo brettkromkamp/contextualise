@@ -2,7 +2,7 @@
 settings.py file. Part of the Contextualise project.
 
 February 13, 2022
-Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 DATABASE_FILE = "changeme.db"

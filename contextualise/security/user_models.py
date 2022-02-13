@@ -2,7 +2,7 @@
 user_models.py file. Part of the Contextualise project.
 
 March 4, 2019
-Brett Alistair Kromkamp (brett.kromkamp@gmail.com)
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 from flask_security import UserMixin, RoleMixin

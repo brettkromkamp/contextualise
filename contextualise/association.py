@@ -1,3 +1,10 @@
+"""
+association.py file. Part of the Contextualise project.
+
+February 13, 2022
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
+"""
+
 import maya
 from flask import Blueprint, session, flash, render_template, request, url_for, redirect
 from flask_security import login_required, current_user

@@ -1,4 +1,12 @@
+"""
+visualization.py file. Part of the Contextualise project.
+
+February 13, 2022
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
+"""
+
 import maya
+
 from flask import Blueprint, render_template
 from flask_login import current_user
 from topicdb.core.store.retrievalmode import RetrievalMode
