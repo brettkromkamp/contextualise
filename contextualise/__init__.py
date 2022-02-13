@@ -20,9 +20,15 @@ from flask_security import (
     hash_password,
 )
 
-from contextualise.security import user_store, user_models
-from contextualise.utilities import filters
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
 
+from flask_security import UserMixin, RoleMixin
+from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
+
+from contextualise.utilities import filters
 from contextualise.topic_store import get_topic_store
 
 UNIVERSAL_SCOPE = "*"
@@ -104,14 +110,48 @@ def create_app(test_config=None):
     app.register_error_handler(413, request_entity_too_large)
 
     # Setup Flask-Security
-    user_datastore = SQLAlchemySessionUserDatastore(user_store.db_session, user_models.User, user_models.Role)
+    engine = create_engine(f"sqlite:///{app.config['DATABASE_PATH']}")
+    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+    Base = declarative_base()
+    Base.query = db_session.query_property()
+
+    class RolesUsers(Base):
+        __tablename__ = "roles_users"
+        id = Column(Integer(), primary_key=True)
+        user_id = Column("user_id", Integer(), ForeignKey("user.id"))
+        role_id = Column("role_id", Integer(), ForeignKey("role.id"))
+
+    class Role(Base, RoleMixin):
+        __tablename__ = "role"
+        id = Column(Integer(), primary_key=True)
+        name = Column(String(80), unique=True)
+        description = Column(String(255))
+
+    class User(Base, UserMixin):
+        __tablename__ = "user"
+        id = Column(Integer, primary_key=True)
+        email = Column(String(255), unique=True)
+        username = Column(String(255), unique=True, nullable=True)
+        password = Column(String(255), nullable=False)
+        last_login_at = Column(DateTime())
+        current_login_at = Column(DateTime())
+        last_login_ip = Column(String(100))
+        current_login_ip = Column(String(100))
+        login_count = Column(Integer)
+        active = Column(Boolean())
+        fs_uniquifier = Column(String(255), unique=True, nullable=False)
+        confirmed_at = Column(DateTime())
+        roles = relationship("Role", secondary="roles_users", backref=backref("users", lazy="dynamic"))
+
+    user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
     security = Security(app, user_datastore)
 
     @user_registered.connect_via(app)
     def user_registered_handler(app, user, confirm_token, form_data, **extra_args):
         default_role = user_datastore.find_role("user")
         user_datastore.add_role_to_user(user, default_role)
-        user_store.db_session.commit()
+        db_session.commit()
 
     @user_authenticated.connect_via(app)
     def user_authenticated_handler(app, user, authn_via, **extra_args):
@@ -119,12 +159,11 @@ def create_app(test_config=None):
 
     @app.before_first_request
     def create_user():
-        user_store.init_db()
-
+        Base.metadata.create_all(bind=engine)
         # Create roles
         admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
         user_role = user_datastore.find_or_create_role(name="user", description="End user")
-        user_store.db_session.commit()
+        db_session.commit()
 
         # Create users
         admin_user = user_datastore.find_user(email="admin@contextualise.dev")
@@ -132,23 +171,23 @@ def create_app(test_config=None):
             admin_user = user_datastore.create_user(
                 email="admin@contextualise.dev", password=hash_password("Passw0rd1")
             )
-            user_store.db_session.commit()
+            db_session.commit()
         user_user = user_datastore.find_user(email="user@contextualise.dev")
         if not user_user:
             user_user = user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
-            user_store.db_session.commit()
+            db_session.commit()
 
         # Assign roles
         user_datastore.add_role_to_user(user_user, user_role)
         user_datastore.add_role_to_user(admin_user, admin_role)
-        user_store.db_session.commit()
+        db_session.commit()
 
         # Create database structure
         get_topic_store().create_database()
 
     @app.teardown_request
     def checkin_db(exc):
-        user_store.db_session.remove()
+        db_session.remove()
 
     # Register custom filters
     filters.register_filters(app)
