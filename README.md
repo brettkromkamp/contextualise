@@ -64,9 +64,40 @@ The following provides an overview of Contextualise's existing (and planned) fea
 
 For a more exhaustive list of planned features take a look at Contextualise's list of [issues](https://github.com/brettkromkamp/contextualise/issues).
 
-## Install the Development Version
+## Installation
 
-Contextualise officially supports Python 3.7–3.10.
+Contextualise can be installed using ``pip``:
+
+    $ pip install --upgrade contextualise
+
+Contextualise requires Python 3.7 or higher. 
+
+## Basic Usage
+    
+Create a file with the following content:
+
+    DATABASE_FILE = "contextualise.db"
+
+Save the file in, for example, your home directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following two environment variables:
+
+    $ export FLASK_APP=contextualise
+    $ export CONTEXTUALISE_SETTINGS=/home/brettk/settings.cfg
+
+The ``CONTEXTUALISE_SETTINGS`` environment variable ìs the path to the ``settings.cfg`` file you created (and saved) previously. In the example above, ``/home/brettk`` is my home directory and that is where I have saved the settings file. Now, you can actually run Contextualise:
+
+    $ flask run
+
+This will start the Flask development server on port 5000 &mdash; visit ``http://localhost:5000/`` to access Contextualise.
+
+Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
+
+Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server:
+
+    $ gunicorn -w 2 -b 0.0.0.0:5000 contextualise.wsgi:app
+
+For further information for properly running a flask application in production, take a look at Flask's own documentation regarding [deploying](https://flask.palletsprojects.com/en/2.0.x/deploying/).
+
+## Install the Development Version
 
 If you have [Git](https://git-scm.com/) installed on your system, it is possible to install the development version of Contextualise.
 
@@ -116,16 +147,6 @@ Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result i
 **The Contextualise Welcome page**
 
 ![The Contextualise Welcome page](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/landing-page.png)
-
-Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server:
-
-    $ gunicorn -w 4 -b 0.0.0.0:5000 contextualise.wsgi:app
-
-For further information for properly running a flask application in production, take a look at Flask's own documentation regarding [deploying](https://flask.palletsprojects.com/en/2.0.x/deploying/).
-
-## First-Time Use
-
-Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application for testing purposes. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
 
 ## Documentation
 
