@@ -84,7 +84,7 @@ Save the file in, for example, your home directory with the file name ``settings
 
 The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you created (and saved) previously. In the example above, ``/home/brettk`` is my home directory and that is where I have saved the settings file. 
 
-Flask's built-in server is not suitable for production purposes. However, it is straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server. Now, you can actually run Contextualise:
+Flask's built-in server is not suitable for production purposes. However, it is straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server. To run Contextualise do:
 
     $ gunicorn -w 2 -b 0.0.0.0:5000 contextualise.wsgi:app
 
@@ -128,12 +128,14 @@ Finally, to run the application in **development** mode you need to change to th
 This will start the Flask development server on port 5000 &mdash; you should see something similar to the following in the terminal:
 
     * Serving Flask app 'contextualise' (lazy loading)
-    * Environment: production
-      WARNING: This is a development server. Do not use it in a production deployment.
-      Use a production WSGI server instead.
-    * Debug mode: off
-    [2022-02-15 18:36:03,152] INFO in __init__: Contextualise startup
+    * Environment: development
+    * Debug mode: on
+    [2022-02-15 18:45:29,133] INFO in __init__: Contextualise startup
     * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+    * Restarting with stat
+    * Debugger is active!
+    * Debugger PIN: 122-493-008
+    [2022-02-15 18:45:29,866] INFO in __init__: Contextualise startup
 
 Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *Welcome* page.
 
