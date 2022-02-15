@@ -78,11 +78,11 @@ Create a file with the following content:
 
     DATABASE_FILE = "contextualise.db"
 
-Save the file in, for example, your home directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following environment variable:
+Save the file in, for example, your **home** directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following environment variable:
 
-    $ export CONTEXTUALISE_SETTINGS=/home/brettk/settings.cfg
+    $ export CONTEXTUALISE_SETTINGS=$HOME/settings.cfg
 
-The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you created (and saved) previously. In the example above, ``/home/brettk`` is my home directory and that is where I have saved the settings file. 
+The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you have just created.
 
 Flask's built-in server is not suitable for production purposes. However, it is straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server. To run Contextualise do:
 
