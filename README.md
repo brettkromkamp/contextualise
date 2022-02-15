@@ -78,30 +78,23 @@ Create a file with the following content:
 
     DATABASE_FILE = "contextualise.db"
 
-Save the file in, for example, your home directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following two environment variables:
+Save the file in, for example, your home directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following environment variable:
 
-    $ export FLASK_APP=contextualise
     $ export CONTEXTUALISE_SETTINGS=/home/brettk/settings.cfg
 
-The ``CONTEXTUALISE_SETTINGS`` environment variable ìs the path to the ``settings.cfg`` file you created (and saved) previously. In the example above, ``/home/brettk`` is my home directory and that is where I have saved the settings file. Now, you can actually run Contextualise:
+The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you created (and saved) previously. In the example above, ``/home/brettk`` is my home directory and that is where I have saved the settings file. 
 
-    $ flask run
-
-This will start the Flask development server on port 5000 &mdash; visit ``http://localhost:5000/`` to access Contextualise.
-
-Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
-
-Flask's built-in server is not suitable for production purposes. However, it is quite straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server:
+Flask's built-in server is not suitable for production purposes. However, it is straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server. Now, you can actually run Contextualise:
 
     $ gunicorn -w 2 -b 0.0.0.0:5000 contextualise.wsgi:app
 
 For further information for properly running a flask application in production, take a look at Flask's own documentation regarding [deploying](https://flask.palletsprojects.com/en/2.0.x/deploying/).
 
+Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
+
 ## Install the Development Version
 
-If you have [Git](https://git-scm.com/) installed on your system, it is possible to install the development version of Contextualise.
-
-Do:
+If you have [Git](https://git-scm.com/) installed on your system, it is possible to install the development version of Contextualise. Do:
 
     $ git clone https://github.com/brettkromkamp/contextualise
     $ cd contextualise
@@ -132,17 +125,17 @@ Finally, to run the application in **development** mode you need to change to th
     $ export FLASK_ENV=development
     $ flask run
 
-You should see something similar to the following in the terminal:
+This will start the Flask development server on port 5000 &mdash; you should see something similar to the following in the terminal:
 
-    * Serving Flask app "contextualise" (lazy loading)
-    * Environment: development
-    * Debug mode: on
+    * Serving Flask app 'contextualise' (lazy loading)
+    * Environment: production
+      WARNING: This is a development server. Do not use it in a production deployment.
+      Use a production WSGI server instead.
+    * Debug mode: off
+    [2022-02-15 18:36:03,152] INFO in __init__: Contextualise startup
     * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-    * Restarting with stat
-    * Debugger is active!
-    * Debugger PIN: 521-258-444
 
-Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing something similar to the application's *Welcome* page.
+Opening the browser and navigating to ``http://127.0.0.1:5000/`` should result in showing the application's *Welcome* page.
 
 **The Contextualise Welcome page**
 
