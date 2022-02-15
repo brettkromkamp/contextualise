@@ -88,7 +88,7 @@ Flask's built-in server is not suitable for production purposes. However, it is 
 
     $ gunicorn -w 2 -b 0.0.0.0:5000 contextualise.wsgi:app
 
-This will start the application on port 5000 &mdash; visit http://localhost:5000/ to access Contextualise.
+This will start the application &mdash; visit ``http://127.0.0.1:5000/`` to access Contextualise.
 
 Several users (with the roles of ``admin`` and ``user``, respectively) are created by the application. To log in as the admin user, provide the following credentials: ``admin@contextualise.dev`` (user name) and ``Passw0rd1`` (password). To log in as a non-admin user, provide the following credentials: ``user@contextualise.dev`` and ``Passw0rd1``.
 
