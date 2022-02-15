@@ -82,7 +82,7 @@ Save the file in, for example, your **home** directory with the file name ``sett
 
     $ export CONTEXTUALISE_SETTINGS=$HOME/settings.cfg
 
-The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you have just created.
+The ``CONTEXTUALISE_SETTINGS`` environment variable is the path to the ``settings.cfg`` file you just created.
 
 Flask's built-in server is not suitable for production purposes. However, it is straightforward to run Contextualise using [Gunicorn](https://gunicorn.org/), a Python [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) HTTP server. To run Contextualise do:
 
