@@ -1,5 +1,5 @@
 [![PyPI](https://img.shields.io/pypi/v/contextualise.svg)](https://pypi.org/project/contextualise/)
-[![Python 3.x](https://img.shields.io/pypi/v/contextualise.svg?logo=python&logoColor=white)](https://img.shields.io/pypi/v/contextualise.svg)
+[![Python 3.x](https://img.shields.io/pypi/pyversions/contextualise.svg?logo=python&logoColor=white)](https://pypi.org/project/contextualise/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/brettkromkamp/contextualise/blob/master/LICENSE)
 
 # Contextualise: Structured Knowledge
