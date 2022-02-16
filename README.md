@@ -1,6 +1,8 @@
-# Contextualise: Structured Knowledge
+[![PyPI](https://img.shields.io/pypi/v/contextualise.svg)](https://pypi.org/project/contextualise/)
+[![Python 3.x](https://img.shields.io/pypi/v/contextualise.svg?logo=python&logoColor=white)](https://img.shields.io/pypi/v/contextualise.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/brettkromkamp/contextualise/blob/master/LICENSE)
 
-![Contextualise logo](https://raw.githubusercontent.com/brettkromkamp/contextualise/master/resources/contextualise-logo.png)
+# Contextualise: Structured Knowledge
 
 Contextualise is an effective tool particularly suited for organising information-heavy projects and activities consisting of unstructured and widely diverse data and information resources &mdash; think of investigative journalism, personal and professional research projects, [world building](https://en.wikipedia.org/wiki/Worldbuilding) (for books, movies or computer games) and many kinds of hobbies.
 
