@@ -33,11 +33,22 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
-                <a class="card-link"
-                    href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
-                    map</a>
-                <a class="card-link" href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View notes</a>
-                <a class="card-link" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">Map details</a>
+                <div class="btn-group">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-expanded="false">
+                        Options
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                            map</a>
+                        <a class="dropdown-item"
+                            href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View notes</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View
+                            map details</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

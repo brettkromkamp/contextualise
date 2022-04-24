@@ -524,20 +524,32 @@
                         </div>
                         {% if is_map_owner %}
                         <div class="card-footer">
-                            <a class="card-link"
-                                href="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
-                                scope</a>
-                            {% if session['scope_filter'] == 1 %}
-                            <a class="card-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
-                                filtering</a>
-                            {% else %}
-                            <a class="card-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
-                                filtering</a>
-                            {% endif %}
+                            <div class="btn-group">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                    Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
+                                        scope</a>
+                                    <div class="dropdown-divider"></div>
+                                    {% if session['scope_filter'] == 1 %}
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=0) }}">Disable
+                                        filtering</a>
+                                    <a class="dropdown-item disabled">Enable filtering</a>
+                                    {% else %}
+                                    <a class="dropdown-item disabled">Disable filtering</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, filter=1) }}">Enable
+                                        filtering</a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
+
                     </div>
                     <br />
                     {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or
@@ -668,11 +680,20 @@
                                     </ul>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="card-link"
-                                        :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
-                                        network</a>
-                                    <a v-if="isAuthenticated && hasWriteAccess" href="#"
-                                        class="card-link create-association-link">Create association</a>
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item"
+                                                :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
+                                                network</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a v-if="isAuthenticated && hasWriteAccess" href="#"
+                                                class="dropdown-item create-association-link">Create association</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <br />
