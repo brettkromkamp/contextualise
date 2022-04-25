@@ -151,7 +151,7 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
             href="#" role="button">Visualisations</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item disabled" href="#">View network</a>
+            <a class="dropdown-item disabled" href="#">View network graph</a>
             <a class="dropdown-item"
                 href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 tags cloud</a>
@@ -275,7 +275,7 @@
             <a class="dropdown-item disabled" data-scope-filtered="{{ session['scope_filter'] }}"
                 data-scope-identifier="{{ session['current_scope'] }}"
                 href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-                id="view-graph-link">View graph</a>
+                id="view-graph-link">View network graph</a>
             <a class="dropdown-item"
                 href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                 tags cloud</a>
