@@ -9,20 +9,13 @@ import os
 import shutil
 import uuid
 
-from contextualise.topic_store import get_topic_store
-from flask import (
-    Blueprint,
-    session,
-    request,
-    flash,
-    render_template,
-    url_for,
-    current_app,
-)
-from flask_security import login_required, current_user
+from flask import Blueprint, current_app, flash, render_template, request, session, url_for
+from flask_security import current_user, login_required
 from topicdb.core.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
+
+from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("map", __name__)
 

@@ -6,7 +6,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 import maya
-from flask import Blueprint, session, render_template, request, flash, url_for
+from flask import Blueprint, flash, render_template, request, session, url_for
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute

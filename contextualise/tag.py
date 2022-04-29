@@ -5,23 +5,13 @@ February 13, 2022
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-from contextualise.topic_store import get_topic_store
-
-from flask import (
-    Blueprint,
-    session,
-    flash,
-    render_template,
-    request,
-    url_for,
-    redirect,
-    current_app,
-)
-from flask_security import login_required, current_user
+from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
+from flask_security import current_user, login_required
 from topicdb.core.models.collaborationmode import CollaborationMode
 from topicdb.core.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
+from contextualise.topic_store import get_topic_store
 
 bp = Blueprint("tag", __name__)
 

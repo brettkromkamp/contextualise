@@ -8,8 +8,8 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 import os
 from datetime import datetime
 
-from flask import Blueprint, request, jsonify
-from flask_security import login_required, current_user
+from flask import Blueprint, jsonify, request
+from flask_security import current_user, login_required
 from slugify import slugify
 from topicdb.core.models.association import Association
 from topicdb.core.models.attribute import Attribute

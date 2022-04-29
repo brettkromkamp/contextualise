@@ -9,7 +9,7 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, session, render_template, request, flash, url_for, redirect, current_app
+from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.core.models.attribute import Attribute

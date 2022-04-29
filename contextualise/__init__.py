@@ -5,31 +5,28 @@ March 4, 2019
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-import os
 import logging
+import os
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, session, render_template
+from flask import Flask, render_template, session
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
 from flask_security import (
+    RoleMixin,
     Security,
     SQLAlchemySessionUserDatastore,
-    user_registered,
-    user_authenticated,
+    UserMixin,
     hash_password,
+    user_authenticated,
+    user_registered,
 )
-
-from sqlalchemy import create_engine
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import backref, relationship, scoped_session, sessionmaker
 
-from flask_security import UserMixin, RoleMixin
-from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, backref
-
-from contextualise.utilities import filters
 from contextualise.topic_store import get_topic_store
+from contextualise.utilities import filters
 
 UNIVERSAL_SCOPE = "*"
 

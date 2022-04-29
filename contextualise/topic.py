@@ -12,19 +12,8 @@ from datetime import datetime
 
 import maya
 import mistune
-from contextualise.topic_store import get_topic_store
-from flask import (
-    Blueprint,
-    session,
-    flash,
-    render_template,
-    request,
-    url_for,
-    redirect,
-    current_app,
-)
-from flask_security import login_required, current_user
-from contextualise.utilities.highlight_renderer import HighlightRenderer
+from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
+from flask_security import current_user, login_required
 from topicdb.core.models.attribute import Attribute
 from topicdb.core.models.basename import BaseName
 from topicdb.core.models.collaborationmode import CollaborationMode
@@ -34,6 +23,9 @@ from topicdb.core.models.topic import Topic
 from topicdb.core.store.retrievalmode import RetrievalMode
 from topicdb.core.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
+
+from contextualise.topic_store import get_topic_store
+from contextualise.utilities.highlight_renderer import HighlightRenderer
 
 bp = Blueprint("topic", __name__)
 
