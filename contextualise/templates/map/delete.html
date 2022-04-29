@@ -10,8 +10,12 @@
     <small class="text-muted">Delete map</small>
 </h1>
 <hr />
-<p class="text-danger">Deleting a topic map also deletes its resources. Once you delete a topic map, there is no going
-    back. Please be certain.</p>
+<div class="alert alert-danger alert-dismissible" role="alert">Deleting a topic map also deletes all of its resources.
+    Once you delete a topic map, there is no going back. Please be certain.
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     <div class="form-group">

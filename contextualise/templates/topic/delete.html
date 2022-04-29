@@ -12,8 +12,12 @@
     <small class="text-muted">Delete topic</small>
 </h1>
 <hr />
-<p class="text-danger">Deleting a topic also deletes its associations and resources. Once you delete a topic, there is
-    no going back. Please be certain.</p>
+<div class="alert alert-danger alert-dismissible" role="alert">Deleting a topic also deletes all of its associations and
+    resources. Once you delete a topic, there is no going back. Please be certain.
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <form action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
     method="post" role="form">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
