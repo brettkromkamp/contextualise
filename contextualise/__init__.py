@@ -48,6 +48,11 @@ def create_app(test_config=None):
         SECURITY_URL_PREFIX="/auth",
         SECURITY_POST_LOGIN_VIEW="/maps/",
         SECURITY_POST_REGISTER_VIEW="/maps/",
+        MAIL_SERVER=app.config["EMAIL_SERVER"],
+        MAIL_PORT=app.config["EMAIL_PORT"],
+        MAIL_USERNAME=app.config["EMAIL_USERNAME"],
+        MAIL_PASSWORD=app.config["EMAIL_PASSWORD"],
+        MAIL_DEFAULT_SENDER=app.config["EMAIL_SENDER"],
         MAIL_USE_SSL=False,
         MAX_CONTENT_LENGTH=4 * 1024 * 1024,  # 4 megabytes
     )
