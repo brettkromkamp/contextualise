@@ -60,35 +60,60 @@
                 <div class="collapse navbar-collapse" id="navbars">
                     {% if topic_map %}
                     <ul class="navbar-nav mr-auto">
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-expanded="false">Maps</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url_for('map.index') }}">View maps</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('map.create') }}">Create map</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-expanded="false">Notes</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% if map_notes_count == 0 %}
+                                <a class="dropdown-item"
+                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
+                                    notes&nbsp;&nbsp;<span class="badge badge-primary">{{ map_notes_count
+                                        }}</span></span></a>
+                                {% else %}
+                                <a class="dropdown-item"
+                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
+                                    notes&nbsp;&nbsp;<span class="badge badge-danger">{{ map_notes_count
+                                        }}</span></span></a>
+                                {% endif %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item"
+                                    href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
+                            </div>
+                        </li>
+                        {% else %}
                         <li class="nav-item">
-                            {% if current_user.is_authenticated %}
-                            <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
-                            {% else %}
                             <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
-                            {% endif %}
                         </li>
                         <li class="nav-item">
-                            {% if map_notes_count == 0 %}
                             <a class="nav-link"
-                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
-                                    class="badge badge-primary">0</span></span></a>
-                            {% else %}
-                            <a class="nav-link"
-                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
-                                    class="badge badge-danger">{{ map_notes_count }}</span></span></a>
-                            {% endif %}
+                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
                         </li>
+                        {% endif %}
                         {% if topic.identifier != 'home' %}
                         <li class="nav-item">
                             {% if session['current_scope'] == '*' %}
-                            <a class="btn btn-outline-info"
+                            <a class="nav-link"
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
                                 role="button">Home</a>
                             {% else %}
-                            <a class="btn btn-outline-info"
+                            <a class="nav-link"
                                 href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
                                 role="button">Home</a>
                             {% endif %}
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link disabled">Home</a>
                         </li>
                         {% endif %}
                     </ul>
