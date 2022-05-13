@@ -28,12 +28,15 @@ from sqlalchemy.orm import backref, relationship, scoped_session, sessionmaker
 from contextualise.topic_store import get_topic_store
 from contextualise.utilities import filters
 
+from .version import __version__
+
 UNIVERSAL_SCOPE = "*"
 
 # Application factory function
 def create_app(test_config=None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)
+    app.version = __version__
 
     # Configure app
     app.config.from_object("contextualise.settings")
@@ -84,7 +87,7 @@ def create_app(test_config=None):
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-        return render_template("index.html", maps=maps)
+        return render_template("index.html", maps=maps, version=app.version)
 
     @app.route("/health")
     def hello():
