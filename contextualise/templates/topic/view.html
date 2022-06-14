@@ -72,12 +72,12 @@
                                 <a class="dropdown-item"
                                     href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
                                     notes&nbsp;&nbsp;<span class="badge badge-primary">{{ map_notes_count
-                                        }}</span></span></a>
+                                        }}</span></a>
                                 {% else %}
                                 <a class="dropdown-item"
                                     href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
                                     notes&nbsp;&nbsp;<span class="badge badge-danger">{{ map_notes_count
-                                        }}</span></span></a>
+                                        }}</span></a>
                                 {% endif %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item"
