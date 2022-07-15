@@ -319,7 +319,6 @@ def add_collaborator(map_identifier):
             topic_store.collaborate(
                 topic_map.identifier,
                 collaborator.id,
-                collaborator.email,
                 collaboration_mode,
             )
             flash("Collaborator successfully added.", "success")
