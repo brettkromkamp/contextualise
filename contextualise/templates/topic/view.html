@@ -162,18 +162,21 @@
                         <ol class="breadcrumb">
                             {% if session['breadcrumbs'] %}
                             {% for breadcrumb in session['breadcrumbs'] %}
-                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">{% if
-                                session['current_scope'] == '*' %}<a
+                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">
+                                {% if session['current_scope'] == '*' %}<a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
+                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
                                 {% else %}<a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
+                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
                                 {% endif %}
                                 </li>
                                 {% else %}
-                                <li aria-current="page" class="breadcrumb-item active">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}
+                                <li aria-current="page" class="breadcrumb-item active">
+                                    {{ breadcrumb|topic_name(topic_map.identifier) }} {% if breadcrumb == 'home'
+                                    %}<i class="fas fa-home text-black-50"></i>{% endif %}
                                 </li>
                                 {% endif %}
                                 {% endfor %}
@@ -336,13 +339,13 @@
                     <h1>{% if topic.instance_of == 'tag' %}{{ topic.identifier }} <small class="text-muted"
                             style="font-size: 60%;"><i class="fas fa-tag"></i></small>
                         {% else %}
-                        {{ topic.first_base_name.name }}
+                        {{ topic.first_base_name.name }} {% if topic.identifier == 'home' %}<small><i
+                                class="fas fa-home text-black-50"></i></small>{% endif %}
                         {% endif %}
                     </h1>
-                    <p><em>{{ creation_date }}</em>&nbsp;&nbsp;&nbsp;<small><i
-                                class="fas fa-info-circle text-muted"></i> <a aria-controls="advancedProperties"
-                                aria-expanded="false" data-toggle="collapse" href="#advancedProperties">
-                                Properties</a></small>
+                    <p><em>{{ creation_date }}</em> &mdash; <small><a aria-controls="advancedProperties"
+                                aria-expanded="false" data-toggle="collapse"
+                                href="#advancedProperties">Properties</a></small>
                     </p>
                     <div class="collapse" id="advancedProperties">
                         <div class="card">
@@ -431,8 +434,7 @@
                     <hr />
                     {% if occurrences['text'] %}
                     {{ occurrences['text']|safe }}
-                    <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to
-                                top</a></small></p>
+                    <p><small><a href="#page-top">Back to top</a></small></p>
                     {% else %}
                     {% if is_map_owner %}
                     <p class="alert alert-info" role="alert">
@@ -472,8 +474,7 @@
                     </div>
                     <br />
                     {% endfor %}
-                    <p><small><i class="fas fa-arrow-circle-up"></i>&nbsp;<a href="#page-top">Back to
-                                top</a></small></p>
+                    <p><small><a href="#page-top">Back to top</a></small></p>
                     {% endif %}
                     {% if is_knowledge_path_topic %}
                     <hr />
@@ -507,12 +508,10 @@
                         </div>
                         <div class="card-body">
                             <ul>
-                                <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
-                                        topic_map.name }}</a>&nbsp;&nbsp;&nbsp;<small><i
-                                            class="fas fa-info-circle text-muted"></i> <a tabindex="-1"
-                                            data-trigger="focus" aria-controls="advancedProperties"
-                                            data-placement="right" aria-expanded="false" data-toggle="popover"
-                                            title="{{ topic_map.name }}" data-html="true"
+                                <li>Map: {{ topic_map.name }} &mdash; <small><a tabindex="-1" data-trigger="focus"
+                                            aria-controls="advancedProperties" data-placement="right"
+                                            aria-expanded="false" data-toggle="popover" title="{{ topic_map.name }}"
+                                            data-html="true"
                                             data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
                                             href="#mapInfo">Info</a></small>
                                 </li>

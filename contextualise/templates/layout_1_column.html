@@ -130,12 +130,21 @@
                         <ol class="breadcrumb">
                             {% if session['breadcrumbs'] %}
                             {% for breadcrumb in session['breadcrumbs'] %}
-                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item"><a
+                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">
+                                {% if session['current_scope'] == '*' %}<a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}</a></li>
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
+                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
+                                {% else %}<a
+                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
+                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
+                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
+                                {% endif %}
+                                </li>
                                 {% else %}
-                                <li aria-current="page" class="breadcrumb-item active">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}
+                                <li aria-current="page" class="breadcrumb-item active">
+                                    {{ breadcrumb|topic_name(topic_map.identifier) }} {% if breadcrumb == 'home'
+                                    %}<i class="fas fa-home text-black-50"></i>{% endif %}
                                 </li>
                                 {% endif %}
                                 {% endfor %}
