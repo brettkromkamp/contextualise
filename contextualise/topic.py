@@ -30,7 +30,7 @@ from contextualise.utilities.highlight_renderer import HighlightRenderer
 bp = Blueprint("topic", __name__)
 
 RESOURCES_DIRECTORY = "static/resources/"
-BREADCRUMBS_COUNT = 5
+BREADCRUMBS_COUNT = 4
 UNIVERSAL_SCOPE = "*"
 RESPONSE = 0
 STATUS_CODE = 1
