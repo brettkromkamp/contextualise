@@ -33,8 +33,12 @@
             <div class="col mb-4">
                 <div class="card h-100 shadow-sm">
                     <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                        {% if map.image_path %}
                         <img alt="{{ map.name }}" class="card-img-top"
                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                        {% else %}
+                        <img alt="{{ map.name }}" class="card-img-top" src="/static/blank-canvas.svg">
+                        {% endif %}
                     </a>
                     <div class="card-header">
                         {% if map.published %}
@@ -99,8 +103,12 @@
             <div class="col mb-4">
                 <div class="card h-100 shadow-sm">
                     <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
+                        {% if map.image_path %}
                         <img alt="{{ map.name }}" class="card-img-top"
                             src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                        {% else %}
+                        <img alt="{{ map.name }}" class="card-img-top" src="/static/blank-canvas.svg">
+                        {% endif %}
                     </a>
                     <div class="card-header">
                         {% if map.collaboration_mode.name == "VIEW" %}

@@ -511,7 +511,11 @@
                                 <li>Map: {{ topic_map.name }} &mdash; <small><a tabindex="-1" data-trigger="focus"
                                             aria-controls="advancedProperties" data-placement="right"
                                             aria-expanded="false" data-toggle="popover" title="{{ topic_map.name }}"
-                                            data-html="true"
+                                            data-html="true" {% if topic_map.image_path %}
+                                            data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
+                                            {% else %}
+                                            data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/blank-canvas.svg"><hr /><p>{{ topic_map.description }}</p>'
+                                            {% endif %}
                                             data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
                                             href="#mapInfo">Info</a></small>
                                 </li>
