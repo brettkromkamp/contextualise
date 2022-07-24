@@ -23,9 +23,9 @@ UNIVERSAL_SCOPE = "*"
 @bp.route("/associations/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -33,7 +33,7 @@ def index(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -41,14 +41,14 @@ def index(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    associations = topic_store.get_topic_associations(map_identifier, topic_identifier)
+    associations = store.get_topic_associations(map_identifier, topic_identifier)
 
-    # occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "association/index.html",
@@ -63,9 +63,9 @@ def index(map_identifier, topic_identifier):
 @bp.route("/associations/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def create(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -73,7 +73,7 @@ def create(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -81,7 +81,7 @@ def create(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     flash(
@@ -114,25 +114,25 @@ def create(map_identifier, topic_identifier):
             form_association_identifier = ""
 
         # Validate form inputs
-        if not topic_store.topic_exists(topic_map.identifier, form_association_dest_topic_ref):
+        if not store.topic_exists(topic_map.identifier, form_association_dest_topic_ref):
             error = error | 1
-        if form_association_dest_role_spec != "related" and not topic_store.topic_exists(
+        if form_association_dest_role_spec != "related" and not store.topic_exists(
             topic_map.identifier, form_association_dest_role_spec
         ):
             error = error | 2
-        if form_association_src_role_spec != "related" and not topic_store.topic_exists(
+        if form_association_src_role_spec != "related" and not store.topic_exists(
             topic_map.identifier, form_association_src_role_spec
         ):
             error = error | 4
-        if form_association_instance_of != "association" and not topic_store.topic_exists(
+        if form_association_instance_of != "association" and not store.topic_exists(
             topic_map.identifier, form_association_instance_of
         ):
             error = error | 8
-        if form_association_scope != UNIVERSAL_SCOPE and not topic_store.topic_exists(
+        if form_association_scope != UNIVERSAL_SCOPE and not store.topic_exists(
             topic_map.identifier, form_association_scope
         ):
             error = error | 16
-        if form_association_identifier and topic_store.topic_exists(topic_map.identifier, form_association_identifier):
+        if form_association_identifier and store.topic_exists(topic_map.identifier, form_association_identifier):
             error = error | 32
 
         # TODO: Flag an error to prevent the user from creating an association with the reserved
@@ -162,7 +162,7 @@ def create(map_identifier, topic_identifier):
             )
 
             # Persist association object to the topic store
-            topic_store.create_association(map_identifier, association)
+            store.create_association(map_identifier, association)
 
             flash("Association successfully created.", "success")
             return redirect(
@@ -204,9 +204,9 @@ def create(map_identifier, topic_identifier):
 )
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -214,7 +214,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -222,12 +222,12 @@ def delete(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
-    association = topic_store.get_association(map_identifier, association_identifier)
+    association = store.get_association(map_identifier, association_identifier)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
-        topic_store.delete_association(map_identifier, association_identifier)
+        store.delete_association(map_identifier, association_identifier)
         flash("Association successfully deleted.", "warning")
         return redirect(
             url_for(
@@ -249,9 +249,9 @@ def delete(map_identifier, topic_identifier, association_identifier):
 @bp.route("/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>")
 @login_required
 def view(map_identifier, topic_identifier, association_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -259,7 +259,7 @@ def view(map_identifier, topic_identifier, association_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -267,9 +267,9 @@ def view(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
-    association = topic_store.get_association(map_identifier, association_identifier)
+    association = store.get_association(map_identifier, association_identifier)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "association/view.html",

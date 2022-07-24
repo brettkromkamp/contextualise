@@ -340,7 +340,7 @@
                             style="font-size: 60%;"><i class="fas fa-tag"></i></small>
                         {% else %}
                         {{ topic.first_base_name.name }} {% if topic.identifier == 'home' %}<small><i
-                                class="fas fa-home text-black-50"></i></small>{% endif %}
+                                class="fas fa-home text-black-50" style="font-size: 90%;"></i></small>{% endif %}
                         {% endif %}
                     </h1>
                     <p><em>{{ creation_date }}</em> &mdash; <small><a aria-controls="advancedProperties"
@@ -508,7 +508,8 @@
                         </div>
                         <div class="card-body">
                             <ul>
-                                <li>Map: {{ topic_map.name }} &mdash; <small><a tabindex="-1" data-trigger="focus"
+                                <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
+                                        topic_map.name }}</a> &mdash; <small><a tabindex="-1" data-trigger="focus"
                                             aria-controls="advancedProperties" data-placement="right"
                                             aria-expanded="false" data-toggle="popover" title="{{ topic_map.name }}"
                                             data-html="true" {% if topic_map.image_path %}
@@ -824,7 +825,7 @@
         <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <script type="text/javascript">
             window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});

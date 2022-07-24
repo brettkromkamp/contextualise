@@ -72,6 +72,8 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item"
                                     href="{{ url_for('map.edit', map_identifier=map['identifier']) }}">Edit map</a>
+                                <a class="dropdown-item"
+                                    href="{{ url_for('map.delete', map_identifier=map['identifier']) }}">Delete map</a>
                             </div>
                         </div>
                     </div>

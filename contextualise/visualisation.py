@@ -18,31 +18,31 @@ bp = Blueprint("visualisation", __name__)
 
 @bp.route("/visualisations/network/<map_identifier>/<topic_identifier>")
 def network(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -53,7 +53,7 @@ def network(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "visualisation/network.html",
@@ -67,31 +67,31 @@ def network(map_identifier, topic_identifier):
 
 @bp.route("/visualisations/tags-cloud/<map_identifier>/<topic_identifier>")
 def tags_cloud(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -99,7 +99,7 @@ def tags_cloud(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    associations = topic_store.get_topic_associations(map_identifier, "tags", instance_ofs=["categorization"])
+    associations = store.get_topic_associations(map_identifier, "tags", instance_ofs=["categorization"])
     tags = {}
     for association in associations:
         if association.member.dest_role_spec == "narrower":
@@ -114,7 +114,7 @@ def tags_cloud(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "visualisation/tags_cloud.html",
@@ -129,31 +129,31 @@ def tags_cloud(map_identifier, topic_identifier):
 
 @bp.route("/visualisations/timeline/<map_identifier>/<topic_identifier>")
 def timeline(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -164,7 +164,7 @@ def timeline(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "visualisation/timeline.html",
@@ -178,31 +178,31 @@ def timeline(map_identifier, topic_identifier):
 
 @bp.route("/visualisations/map/<map_identifier>/<topic_identifier>")
 def geographic_map(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -213,7 +213,7 @@ def geographic_map(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "visualisation/geographic_map.html",
