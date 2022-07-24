@@ -19,9 +19,9 @@ bp = Blueprint("tag", __name__)
 @bp.route("/tags/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         current_app.logger.warning(
             f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
@@ -32,7 +32,7 @@ def add(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -45,7 +45,7 @@ def add(map_identifier, topic_identifier):
 
     form_tags = None
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -62,7 +62,7 @@ def add(map_identifier, topic_identifier):
             )
         else:
             for form_tag in form_tags.split(","):
-                topic_store.create_tag(map_identifier, topic.identifier, form_tag)
+                store.create_tag(map_identifier, topic.identifier, form_tag)
 
             flash("Tags successfully added.", "success")
             return redirect(

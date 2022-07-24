@@ -30,9 +30,9 @@ EXTENSIONS_WHITELIST = {"gltf", "glb"}
 @bp.route("/3d/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -40,7 +40,7 @@ def index(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -48,7 +48,7 @@ def index(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    file_occurrences = topic_store.get_topic_occurrences(
+    file_occurrences = store.get_topic_occurrences(
         map_identifier,
         topic_identifier,
         "3d-scene",
@@ -69,7 +69,7 @@ def index(map_identifier, topic_identifier):
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "three_d/index.html",
@@ -84,9 +84,9 @@ def index(map_identifier, topic_identifier):
 @bp.route("/3d/upload/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def upload(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -94,7 +94,7 @@ def upload(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -102,7 +102,7 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -122,7 +122,7 @@ def upload(map_identifier, topic_identifier):
         else:
             if form_upload_file.filename == "":
                 error = error | 4
-        if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
+        if not store.topic_exists(topic_map.identifier, form_file_scope):
             error = error | 8
 
         if error != 0:
@@ -156,8 +156,8 @@ def upload(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.create_occurrence(topic_map.identifier, file_occurrence)
-            topic_store.create_attribute(topic_map.identifier, title_attribute)
+            store.create_occurrence(topic_map.identifier, file_occurrence)
+            store.create_attribute(topic_map.identifier, title_attribute)
 
             flash("3D content successfully uploaded.", "success")
             return redirect(
@@ -193,9 +193,9 @@ def upload(map_identifier, topic_identifier):
 )
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -203,7 +203,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -211,7 +211,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
     if topic is None:
         abort(404)
 
-    file_occurrence = topic_store.get_occurrence(
+    file_occurrence = store.get_occurrence(
         map_identifier,
         file_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -220,7 +220,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -234,7 +234,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
         # Validate form inputs
         if not form_file_title:
             error = error | 1
-        if not topic_store.topic_exists(topic_map.identifier, form_file_scope):
+        if not store.topic_exists(topic_map.identifier, form_file_scope):
             error = error | 2
 
         if error != 0:
@@ -245,7 +245,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
         else:
             # Update file's title if it has changed
             if file_occurrence.get_attribute_by_name("title").value != form_file_title:
-                topic_store.update_attribute_value(
+                store.update_attribute_value(
                     topic_map.identifier,
                     file_occurrence.get_attribute_by_name("title").identifier,
                     form_file_title,
@@ -253,7 +253,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
             # Update file's scope if it has changed
             if file_occurrence.scope != form_file_scope:
-                topic_store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
+                store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
 
             flash("3D content successfully updated.", "success")
             return redirect(
@@ -282,9 +282,9 @@ def edit(map_identifier, topic_identifier, file_identifier):
 )
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -292,7 +292,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -300,7 +300,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
     if topic is None:
         abort(404)
 
-    file_occurrence = topic_store.get_occurrence(
+    file_occurrence = store.get_occurrence(
         map_identifier,
         file_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -309,11 +309,11 @@ def delete(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
         # Delete file occurrence from topic store
-        topic_store.delete_occurrence(map_identifier, file_occurrence.identifier)
+        store.delete_occurrence(map_identifier, file_occurrence.identifier)
 
         # Delete file from file system
         file_file_path = os.path.join(
@@ -350,31 +350,31 @@ def delete(map_identifier, topic_identifier, file_identifier):
     methods=("GET", "POST"),
 )
 def view(map_identifier, topic_identifier, file_url):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     collaboration_mode = None
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
-        collaboration_mode = topic_store.get_collaboration_mode(map_identifier, current_user.id)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
         # The map is private and doesn't belong to the user who is trying to
         # access it
         if not topic_map.published and not is_map_owner:
             if not collaboration_mode:  # The user is not collaborating on the map
                 abort(403)
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             abort(404)
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -382,7 +382,7 @@ def view(map_identifier, topic_identifier, file_url):
     if topic is None:
         abort(404)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "three_d/view.html",

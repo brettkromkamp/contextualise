@@ -36,15 +36,15 @@ def get_slug():
 @bp.route("/api/topic-exists/<map_identifier>")
 @login_required
 def topic_exists(map_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
     normalised_topic_identifier = slugify(str(request.args.get("q").lower()))
     normalised_topic_name = " ".join([word.capitalize() for word in normalised_topic_identifier.split("-")])
-    exists = topic_store.topic_exists(map_identifier, normalised_topic_identifier)
+    exists = store.topic_exists(map_identifier, normalised_topic_identifier)
     if exists:
         result = {"topicExists": True}
     else:
@@ -59,9 +59,9 @@ def topic_exists(map_identifier):
 @bp.route("/api/create-topic/<map_identifier>", methods=["POST"])
 @login_required
 def create_topic(map_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
@@ -70,7 +70,7 @@ def create_topic(map_identifier):
         topic_name = request.form["topic-name"].strip()
         if not topic_name:
             topic_name = "Undefined"
-        if topic_store.topic_exists(topic_map.identifier, topic_identifier):
+        if store.topic_exists(topic_map.identifier, topic_identifier):
             return jsonify({"status": "error", "code": 409}), 409
         else:
             topic = Topic(topic_identifier, "topic", topic_name)
@@ -89,9 +89,9 @@ def create_topic(map_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.create_topic(topic_map.identifier, topic)
-            topic_store.create_occurrence(topic_map.identifier, text_occurrence)
-            topic_store.create_attribute(topic_map.identifier, modification_attribute)
+            store.create_topic(topic_map.identifier, topic)
+            store.create_occurrence(topic_map.identifier, text_occurrence)
+            store.create_attribute(topic_map.identifier, modification_attribute)
 
             return jsonify({"status": "success", "code": 201}), 201
 
@@ -100,9 +100,9 @@ def create_topic(map_identifier):
 @login_required
 def get_identifiers(map_identifier):
     result = []
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
     # TODO: Missing logic?
@@ -110,11 +110,9 @@ def get_identifiers(map_identifier):
     query_term = request.args.get("q").lower()
     instance_of = request.args.get("instance-of")
     if instance_of:
-        result = topic_store.get_topic_identifiers(
-            map_identifier, query_term, instance_ofs=[instance_of.lower()], limit=10
-        )
+        result = store.get_topic_identifiers(map_identifier, query_term, instance_ofs=[instance_of.lower()], limit=10)
     else:
-        result = topic_store.get_topic_identifiers(map_identifier, query_term, limit=10)
+        result = store.get_topic_identifiers(map_identifier, query_term, limit=10)
     return jsonify(result), 200
 
 
@@ -122,40 +120,38 @@ def get_identifiers(map_identifier):
 @bp.route("/api/get-tags/<map_identifier>")
 @login_required
 def get_tags(map_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
     # TODO: Missing logic?
 
     query_term = request.args.get("term").lower()
-    result = {
-        "suggestions": topic_store.get_topic_identifiers(map_identifier, query_term, instance_ofs=["tag"], limit=10)
-    }
+    result = {"suggestions": store.get_topic_identifiers(map_identifier, query_term, instance_ofs=["tag"], limit=10)}
     return jsonify(result), 200
 
 
 @bp.route("/api/get-network/<map_identifier>/<topic_identifier>")
 def get_network(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
         if not topic_map.published:  # User is not logged in and the map is not published
             return jsonify({"status": "error", "code": 403}), 403
 
-    topic = topic_store.get_topic(map_identifier, topic_identifier)
+    topic = store.get_topic(map_identifier, topic_identifier)
 
     scope_identifier = request.args.get("scope", type=str)
     scope_filtered = request.args.get("filter", type=int)
@@ -185,7 +181,7 @@ def get_network(map_identifier, topic_identifier):
         result[nodes].append(node)
 
         for child in children:
-            # child_type_topic = topic_store.get_topic(map_identifier, child.type)
+            # child_type_topic = store.get_topic(map_identifier, child.type)
             edge = {
                 "from": inner_identifier,
                 "to": child.pointer,
@@ -198,7 +194,7 @@ def get_network(map_identifier, topic_identifier):
             build_network(child.pointer)  # Recursive call
 
     if topic:
-        tree = topic_store.get_topics_network(map_identifier, topic_identifier, scope=scope_identifier)
+        tree = store.get_topics_network(map_identifier, topic_identifier, scope=scope_identifier)
         if len(tree) > 1:
             nodes = 0
             edges = 1
@@ -222,25 +218,25 @@ def get_network(map_identifier, topic_identifier):
 
 @bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 def get_association_groups(map_identifier, topic_identifier, scope_identifier, scope_filtered):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if current_user.is_authenticated:  # User is logged in
-        is_map_owner = topic_store.is_map_owner(map_identifier, current_user.id)
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:
-            topic_map = topic_store.get_map(map_identifier, current_user.id)
+            topic_map = store.get_map(map_identifier, current_user.id)
         else:
-            topic_map = topic_store.get_map(map_identifier)
+            topic_map = store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
     else:  # User is not logged in
-        topic_map = topic_store.get_map(map_identifier)
+        topic_map = store.get_map(map_identifier)
         if topic_map is None:
             return jsonify({"status": "error", "code": 404}), 404
 
     if scope_filtered:
-        associations = topic_store.get_association_groups(map_identifier, topic_identifier, scope=scope_identifier)
+        associations = store.get_association_groups(map_identifier, topic_identifier, scope=scope_identifier)
     else:
-        associations = topic_store.get_association_groups(map_identifier, topic_identifier)
+        associations = store.get_association_groups(map_identifier, topic_identifier)
     if not associations:
         return jsonify({"status": "error", "code": 404}), 404
 
@@ -250,7 +246,7 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
         for role, topic_refs in roles.items():
             result_topic_refs = []
             for topic_ref in topic_refs:
-                topic_ref_topic = topic_store.get_topic(map_identifier, topic_ref)
+                topic_ref_topic = store.get_topic(map_identifier, topic_ref)
                 result_topic_refs.append(
                     {
                         "identifier": topic_ref,
@@ -258,7 +254,7 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
                     }
                 )
             else:
-                role_topic = topic_store.get_topic(map_identifier, role)
+                role_topic = store.get_topic(map_identifier, role)
                 result_roles.append(
                     {
                         "identifier": role,
@@ -267,7 +263,7 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
                     }
                 )
         else:
-            instance_of_topic = topic_store.get_topic(map_identifier, instance_of)
+            instance_of_topic = store.get_topic(map_identifier, instance_of)
             result.append(
                 {
                     "identifier": instance_of,
@@ -282,9 +278,9 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
 @bp.route("/api/create-association/<map_identifier>", methods=["POST"])
 @login_required
 def create_association(map_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
@@ -298,9 +294,9 @@ def create_association(map_identifier):
         association_name = request.form["association-name"].strip()
         association_identifier = request.form["association-identifier"].strip()
 
-        if not topic_store.topic_exists(topic_map.identifier, association_dest_topic_ref):
+        if not store.topic_exists(topic_map.identifier, association_dest_topic_ref):
             return jsonify({"status": "error", "code": 409}), 409
-        if not topic_store.topic_exists(topic_map.identifier, association_src_topic_ref):
+        if not store.topic_exists(topic_map.identifier, association_src_topic_ref):
             return jsonify({"status": "error", "code": 409}), 409
 
         # If no values have been provided set their default values
@@ -329,6 +325,6 @@ def create_association(map_identifier):
         )
 
         # Persist association object to the topic store
-        topic_store.create_association(map_identifier, association)
+        store.create_association(map_identifier, association)
 
     return jsonify({"status": "success", "code": 201}), 201

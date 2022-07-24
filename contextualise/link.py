@@ -24,9 +24,9 @@ bp = Blueprint("link", __name__)
 @bp.route("/links/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -34,7 +34,7 @@ def index(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -42,7 +42,7 @@ def index(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    link_occurrences = topic_store.get_topic_occurrences(
+    link_occurrences = store.get_topic_occurrences(
         map_identifier,
         topic_identifier,
         "url",
@@ -60,12 +60,12 @@ def index(map_identifier, topic_identifier):
             }
         )
 
-    # occurrences_stats = topic_store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
+    # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "link/index.html",
@@ -80,9 +80,9 @@ def index(map_identifier, topic_identifier):
 @bp.route("/links/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -90,7 +90,7 @@ def add(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -98,7 +98,7 @@ def add(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -115,7 +115,7 @@ def add(map_identifier, topic_identifier):
             error = error | 1
         if not form_link_url:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_link_scope):
+        if not store.topic_exists(topic_map.identifier, form_link_scope):
             error = error | 4
 
         if error != 0:
@@ -138,8 +138,8 @@ def add(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.create_occurrence(topic_map.identifier, link_occurrence)
-            topic_store.create_attribute(topic_map.identifier, title_attribute)
+            store.create_occurrence(topic_map.identifier, link_occurrence)
+            store.create_attribute(topic_map.identifier, title_attribute)
 
             flash("Link successfully added.", "success")
             return redirect(
@@ -176,9 +176,9 @@ def add(map_identifier, topic_identifier):
 )
 @login_required
 def edit(map_identifier, topic_identifier, link_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -186,7 +186,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -194,7 +194,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
     if topic is None:
         abort(404)
 
-    link_occurrence = topic_store.get_occurrence(
+    link_occurrence = store.get_occurrence(
         map_identifier,
         link_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -203,7 +203,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
     form_link_title = link_occurrence.get_attribute_by_name("title").value
     form_link_scope = link_occurrence.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -217,7 +217,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
         # Validate form inputs
         if not form_link_title:
             error = error | 1
-        if not topic_store.topic_exists(topic_map.identifier, form_link_scope):
+        if not store.topic_exists(topic_map.identifier, form_link_scope):
             error = error | 2
 
         if error != 0:
@@ -228,7 +228,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
         else:
             # Update link's title if it has changed
             if link_occurrence.get_attribute_by_name("title").value != form_link_title:
-                topic_store.update_attribute_value(
+                store.update_attribute_value(
                     topic_map.identifier,
                     link_occurrence.get_attribute_by_name("title").identifier,
                     form_link_title,
@@ -236,7 +236,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
 
             # Update link's scope if it has changed
             if link_occurrence.scope != form_link_scope:
-                topic_store.update_occurrence_scope(map_identifier, link_occurrence.identifier, form_link_scope)
+                store.update_occurrence_scope(map_identifier, link_occurrence.identifier, form_link_scope)
 
             flash("Link successfully updated.", "success")
             return redirect(
@@ -265,9 +265,9 @@ def edit(map_identifier, topic_identifier, link_identifier):
 )
 @login_required
 def delete(map_identifier, topic_identifier, link_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -275,7 +275,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -283,7 +283,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
     if topic is None:
         abort(404)
 
-    link_occurrence = topic_store.get_occurrence(
+    link_occurrence = store.get_occurrence(
         map_identifier,
         link_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -292,11 +292,11 @@ def delete(map_identifier, topic_identifier, link_identifier):
     form_link_title = link_occurrence.get_attribute_by_name("title").value
     form_link_scope = link_occurrence.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
         # Delete link occurrence from topic store
-        topic_store.delete_occurrence(map_identifier, link_occurrence.identifier)
+        store.delete_occurrence(map_identifier, link_occurrence.identifier)
 
         flash("Link successfully deleted.", "warning")
         return redirect(

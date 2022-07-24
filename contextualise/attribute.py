@@ -24,11 +24,11 @@ bp = Blueprint("attribute", __name__)
 @bp.route("/attributes/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -36,7 +36,7 @@ def index(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -45,7 +45,7 @@ def index(map_identifier, topic_identifier):
         abort(404)
 
     attributes = []
-    entity_attributes = topic_store.get_attributes(map_identifier, topic_identifier)
+    entity_attributes = store.get_attributes(map_identifier, topic_identifier)
 
     for entity_attribute in entity_attributes:
         attributes.append(
@@ -64,7 +64,7 @@ def index(map_identifier, topic_identifier):
     entity_type = "topic"
     return_url = "topic.view"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "attribute/index.html",
@@ -81,11 +81,11 @@ def index(map_identifier, topic_identifier):
 @bp.route("/attributes/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>")
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -93,7 +93,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -101,13 +101,13 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_association(
+    entity = store.get_association(
         map_identifier,
         entity_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     if entity is None:
-        entity = topic_store.get_occurrence(map_identifier, entity_identifier)
+        entity = store.get_occurrence(map_identifier, entity_identifier)
 
     if entity is None:
         abort(404)
@@ -127,7 +127,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         return_url = "video.index"
 
     attributes = []
-    entity_attributes = topic_store.get_attributes(map_identifier, entity_identifier)
+    entity_attributes = store.get_attributes(map_identifier, entity_identifier)
 
     for entity_attribute in entity_attributes:
         attributes.append(
@@ -143,7 +143,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     return render_template(
         "attribute/index.html",
@@ -161,11 +161,11 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
 @bp.route("/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -173,7 +173,7 @@ def add(map_identifier, topic_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -185,7 +185,7 @@ def add(map_identifier, topic_identifier):
     post_url = "attribute.add"
     cancel_url = "attribute.index"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -203,7 +203,7 @@ def add(map_identifier, topic_identifier):
             error = error | 1
         if not form_attribute_value:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+        if not store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
         if topic.get_attribute_by_name(form_attribute_name):
             error = error | 8
@@ -223,7 +223,7 @@ def add(map_identifier, topic_identifier):
             )
 
             # Persist objects to the topic store
-            topic_store.create_attribute(topic_map.identifier, attribute)
+            store.create_attribute(topic_map.identifier, attribute)
 
             flash("Attribute successfully added.", "success")
             return redirect(
@@ -267,11 +267,11 @@ def add(map_identifier, topic_identifier):
 )
 @login_required
 def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -279,7 +279,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -287,7 +287,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     if topic is None:
         abort(404)
 
-    entity = topic_store.get_occurrence(
+    entity = store.get_occurrence(
         map_identifier,
         entity_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -298,7 +298,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     post_url = "attribute.entity_add"
     cancel_url = "attribute.entity_index"
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -316,7 +316,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             error = error | 1
         if not form_attribute_value:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+        if not store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
         if entity.get_attribute_by_name(form_attribute_name):
             error = error | 8
@@ -336,7 +336,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
             )
 
             # Persist objects to the topic store
-            topic_store.create_attribute(topic_map.identifier, attribute)
+            store.create_attribute(topic_map.identifier, attribute)
 
             flash("Attribute successfully added.", "success")
             return redirect(
@@ -384,11 +384,11 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 )
 @login_required
 def edit(map_identifier, topic_identifier, attribute_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -396,7 +396,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -413,7 +413,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -431,7 +431,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
             error = error | 1
         if not form_attribute_value:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+        if not store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
 
         if error != 0:
@@ -442,7 +442,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         else:
             # Update the attribute by deleting the existing attribute and
             # adding a new one
-            topic_store.delete_attribute(map_identifier, attribute.identifier)
+            store.delete_attribute(map_identifier, attribute.identifier)
             updated_attribute = Attribute(
                 form_attribute_name,
                 form_attribute_value,
@@ -450,7 +450,7 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
                 data_type=DataType[form_attribute_type],
                 scope=form_attribute_scope,
             )
-            topic_store.create_attribute(topic_map.identifier, updated_attribute)
+            store.create_attribute(topic_map.identifier, updated_attribute)
 
             flash("Attribute successfully updated.", "success")
             return redirect(
@@ -501,11 +501,11 @@ def entity_edit(
     attribute_identifier,
     entity_type,
 ):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -513,7 +513,7 @@ def entity_edit(
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -522,13 +522,13 @@ def entity_edit(
         abort(404)
 
     if entity_type == "association":
-        entity = topic_store.get_association(
+        entity = store.get_association(
             map_identifier,
             entity_identifier,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     else:
-        entity = topic_store.get_occurrence(
+        entity = store.get_occurrence(
             map_identifier,
             entity_identifier,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -545,7 +545,7 @@ def entity_edit(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -563,7 +563,7 @@ def entity_edit(
             error = error | 1
         if not form_attribute_value:
             error = error | 2
-        if not topic_store.topic_exists(topic_map.identifier, form_attribute_scope):
+        if not store.topic_exists(topic_map.identifier, form_attribute_scope):
             error = error | 4
 
         if error != 0:
@@ -574,7 +574,7 @@ def entity_edit(
         else:
             # Update the attribute by deleting the existing attribute and
             # adding a new one
-            topic_store.delete_attribute(map_identifier, attribute.identifier)
+            store.delete_attribute(map_identifier, attribute.identifier)
             updated_attribute = Attribute(
                 form_attribute_name,
                 form_attribute_value,
@@ -582,7 +582,7 @@ def entity_edit(
                 data_type=DataType[form_attribute_type],
                 scope=form_attribute_scope,
             )
-            topic_store.create_attribute(topic_map.identifier, updated_attribute)
+            store.create_attribute(topic_map.identifier, updated_attribute)
 
             flash("Attribute successfully updated.", "success")
             return redirect(
@@ -629,11 +629,11 @@ def entity_edit(
 )
 @login_required
 def delete(map_identifier, topic_identifier, attribute_identifier):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -641,7 +641,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -658,11 +658,11 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
         # Delete attribute from topic store
-        topic_store.delete_attribute(map_identifier, attribute.identifier)
+        store.delete_attribute(map_identifier, attribute.identifier)
 
         flash("Attribute successfully deleted.", "warning")
         return redirect(
@@ -705,11 +705,11 @@ def entity_delete(
     attribute_identifier,
     entity_type,
 ):
-    topic_store = get_topic_store()
+    store = get_topic_store()
 
     if "admin" not in current_user.roles:
         abort(403)
-    topic_map = topic_store.get_map(map_identifier, current_user.id)
+    topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
@@ -717,7 +717,7 @@ def entity_delete(
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
-    topic = topic_store.get_topic(
+    topic = store.get_topic(
         map_identifier,
         topic_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -726,13 +726,13 @@ def entity_delete(
         abort(404)
 
     if entity_type == "association":
-        entity = topic_store.get_association(
+        entity = store.get_association(
             map_identifier,
             entity_identifier,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
     else:
-        entity = topic_store.get_occurrence(
+        entity = store.get_occurrence(
             map_identifier,
             entity_identifier,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
@@ -749,11 +749,11 @@ def entity_delete(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = topic_store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
     if request.method == "POST":
         # Delete attribute from topic store
-        topic_store.delete_attribute(map_identifier, attribute.identifier)
+        store.delete_attribute(map_identifier, attribute.identifier)
 
         flash("Attribute successfully deleted.", "warning")
         return redirect(
