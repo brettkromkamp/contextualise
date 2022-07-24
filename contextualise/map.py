@@ -76,13 +76,11 @@ def create():
         # Validate form inputs
         if not form_map_name:
             error = error | 1
-        if not form_upload_file:
-            error = error | 2
-        else:
+        if form_upload_file:
             if form_upload_file.filename == "":
-                error = error | 4
+                error = error | 2
             elif not allowed_file(form_upload_file.filename):
-                error = error | 8
+                error = error | 4
 
         if error != 0:
             flash(
@@ -90,7 +88,9 @@ def create():
                 "warning",
             )
         else:
-            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
+            image_file_name = (
+                f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}" if form_upload_file else ""
+            )
 
             # Create and initialise the topic map
             map_identifier = store.create_map(
@@ -110,9 +110,10 @@ def create():
                 if not os.path.isdir(topic_map_directory):
                     os.makedirs(topic_map_directory)
 
-                # Upload the image for the topic map to the map's directory
-                file_path = os.path.join(topic_map_directory, image_file_name)
-                form_upload_file.save(file_path)
+                # If there is an image for the topic map then upload it to the map's directory
+                if form_upload_file:
+                    file_path = os.path.join(topic_map_directory, image_file_name)
+                    form_upload_file.save(file_path)
 
                 flash("Map successfully created.", "success")
             else:

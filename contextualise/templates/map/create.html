@@ -36,17 +36,7 @@
                 name="map-image-file">
             <label class="custom-file-label" for="map-image-file">Choose file</label>
         </div>
-        {% if error|bitwise_and(1) == 1 %}
-        <small class="text-danger">
-            No file part.
-        </small>
-        {% endif %}
         {% if error|bitwise_and(2) == 2 %}
-        <small class="text-danger">
-            No file selected.
-        </small>
-        {% endif %}
-        {% if error|bitwise_and(4) == 4 %}
         <small class="text-danger">
             Unsupported file type; that is, not of type PNG or JPG.
         </small>
