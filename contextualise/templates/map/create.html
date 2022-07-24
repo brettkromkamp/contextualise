@@ -35,10 +35,15 @@
             <input type="file" accept=".jpg,.jpeg,.png" class="custom-file-input" id="map-image-file"
                 name="map-image-file">
             <label class="custom-file-label" for="map-image-file">Choose file
-                <small class="text-info">&mdash; If no file is uploaded a default image will be used"</small>
+                <small class="text-info">&mdash; If no file is uploaded a default image will be used</small>
             </label>
         </div>
         {% if error|bitwise_and(2) == 2 %}
+        <small class="text-danger">
+            Filename not provided.
+        </small>
+        {% endif %}
+        {% if error|bitwise_and(4) == 4 %}
         <small class="text-danger">
             Unsupported file type; that is, not of type PNG or JPG.
         </small>

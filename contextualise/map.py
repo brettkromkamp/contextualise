@@ -217,9 +217,8 @@ def edit(map_identifier):
                 published=form_map_published,
                 promoted=promoted,
             )
-
             flash("Map successfully updated.", "success")
-        return redirect(url_for("map.view", map_identifier=map_identifier))
+            return redirect(url_for("map.view", map_identifier=map_identifier))
 
     return render_template(
         "map/edit.html",
