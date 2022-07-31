@@ -106,7 +106,7 @@
                 };
 
                 var network = new vis.Network(container, data, options);
-                network.on("click", function (params) {
+                network.on("doubleClick", function (params) {
                     if (params.nodes[0] !== undefined) {
                         var selectedNode = searchArray(params.nodes[0], "id", nodes);
                         if (selectedNode.id !== topicIdentifier) {
