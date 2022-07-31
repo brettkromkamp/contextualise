@@ -87,29 +87,22 @@
                 };
 
                 var options = {
-                    autoResize: true,
-                    height: "100%",
-                    width: "100%",
-                    layout: {
-                        randomSeed: 2
-                    },
-                    interaction: { hover: true },
                     nodes: {
                         shape: "dot",
-                    },
-                    edges: {
-                        smooth: {
-                            forceDirection: "none",
-                            roundness: 0.7,
-                        },
+                        size: 16,
                     },
                     physics: {
-                        repulsion: {
-                            springLength: 205,
+                        forceAtlas2Based: {
+                            gravitationalConstant: -26,
+                            centralGravity: 0.005,
+                            springLength: 230,
+                            springConstant: 0.18,
                         },
-                        minVelocity: 0.75,
-                        solver: "repulsion",
-                    }
+                        maxVelocity: 146,
+                        solver: "forceAtlas2Based",
+                        timestep: 0.35,
+                        stabilization: { iterations: 150 },
+                    },
                 };
 
                 var network = new vis.Network(container, data, options);
