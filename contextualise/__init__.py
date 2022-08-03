@@ -9,7 +9,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
 from flask_security import (
@@ -24,6 +24,7 @@ from flask_security import (
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, scoped_session, sessionmaker
+import werkzeug
 
 from contextualise.topic_store import get_topic_store
 from contextualise.utilities import filters
@@ -94,25 +95,21 @@ def create_app(test_config=None):
         return "Healthy!"
 
     # HTTP error handlers
+    @app.errorhandler(403)
     def forbidden(e):
         return render_template("403.html"), 403
 
-    app.register_error_handler(403, forbidden)
-
+    @app.errorhandler(404)
     def page_not_found(e):
         return render_template("404.html"), 404
 
-    app.register_error_handler(404, page_not_found)
-
-    def internal_server_error(e):
-        return render_template("500.html"), 500
-
-    app.register_error_handler(500, internal_server_error)
-
+    @app.errorhandler(413)
     def request_entity_too_large(e):
         return render_template("413.html"), 413
 
-    app.register_error_handler(413, request_entity_too_large)
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template("500.html"), 500
 
     # Setup Flask-Security
     engine = create_engine(f"sqlite:///{app.config['DATABASE_PATH']}")

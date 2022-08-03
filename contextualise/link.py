@@ -290,6 +290,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
     )
 
     form_link_title = link_occurrence.get_attribute_by_name("title").value
+    form_link_url = link_occurrence.resource_ref
     form_link_scope = link_occurrence.scope
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
@@ -313,6 +314,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
         topic=topic,
         link_identifier=link_occurrence.identifier,
         link_title=form_link_title,
+        link_url=form_link_url,
         link_scope=form_link_scope,
         map_notes_count=map_notes_count,
     )
