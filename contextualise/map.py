@@ -29,10 +29,10 @@ UNIVERSAL_SCOPE = "*"
 def index():
     store = get_topic_store()
 
-    maps = store.get_maps(current_user.id)
+    topic_maps = store.get_maps(current_user.id)
 
-    own_maps = [map for map in maps if map.owner]
-    collaboration_maps = [map for map in maps if not map.owner]
+    own_maps = [own_map for own_map in topic_maps if own_map.owner]
+    collaboration_maps = [collaboration_map for collaboration_map in topic_maps if not collaboration_map.owner]
 
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []

@@ -9,7 +9,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session
 from flask_mail import Mail
 from flask_seasurf import SeaSurf
 from flask_security import (
@@ -24,7 +24,6 @@ from flask_security import (
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, scoped_session, sessionmaker
-import werkzeug
 
 from contextualise.topic_store import get_topic_store
 from contextualise.utilities import filters
@@ -32,6 +31,7 @@ from contextualise.utilities import filters
 from .version import __version__
 
 UNIVERSAL_SCOPE = "*"
+
 
 # Application factory function
 def create_app(test_config=None):
@@ -80,18 +80,18 @@ def create_app(test_config=None):
 
     @app.route("/")
     def home():
-        maps = get_topic_store().get_promoted_maps()
-        maps = [map for map in maps if map.published]
+        promoted_maps = get_topic_store().get_promoted_maps()
+        promoted_maps = [promoted_map for promoted_map in promoted_maps if promoted_map.published]
 
         # Reset breadcrumbs and (current) scope
         session["breadcrumbs"] = []
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-        return render_template("index.html", maps=maps, version=app.version)
+        return render_template("index.html", maps=promoted_maps, version=app.version)
 
     @app.route("/health")
-    def hello():
+    def health():
         return "Healthy!"
 
     # HTTP error handlers
@@ -271,8 +271,8 @@ def create_app(test_config=None):
 
 # For debugging purposes (inside PyCharm)
 if __name__ == "__main__":
-    app = create_app()
-    app.run(
+    flask_app = create_app()
+    flask_app.run(
         debug=True,
         use_debugger=False,
         use_reloader=False,
