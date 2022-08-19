@@ -5,7 +5,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2662092-19"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-2662092-19');
@@ -16,12 +20,12 @@
     <meta content="Personal Knowledge Management System" name="description">
     <meta content="Brett Kromkamp" name="author">
     <meta content="Contextualise" name="generator">
-    <meta property="og:title" content="Contextualise &mdash; Structured Knowledge" />
-    <meta property="og:url" content="{{ request.url }}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="Contextualise &mdash; Personal Knowledge Management System" />
-    <meta property="og:image" content="{{ request.url_root }}static/contextualise-isometric.png" />
-    <meta property="og:site_name" content="Contextualise" />
+    <meta property="og:title" content="Contextualise &mdash; Structured Knowledge"/>
+    <meta property="og:url" content="{{ request.url }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="Contextualise &mdash; Personal Knowledge Management System"/>
+    <meta property="og:image" content="{{ request.url_root }}static/contextualise-isometric.png"/>
+    <meta property="og:site_name" content="Contextualise"/>
     <title>Contextualise | Structured Knowledge</title>
     <link rel="canonical" href="https://contextualise.dev">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -34,9 +38,9 @@
     <meta name="theme-color" content="#ffffff">
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -57,55 +61,55 @@
 </head>
 
 <body>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Contextualise <sup><small>V{{ version }}</small></sup> &mdash;
-            Structured
-            Knowledge</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/maps/published/">Published maps</a>
-            {% if current_user.is_authenticated %}
-            <a class="p-2 text-dark" href="/maps/">My maps</a>
-            {% endif %}
-            <a class="p-2 text-dark" href="https://brettkromkamp.com/tags/contextualise/">Blog</a>
-            <a class="p-2 text-dark"
-                href="https://docs.google.com/forms/d/e/1FAIpQLSfI-qbcL_zTKQj9P0MaOvYLngO78IWAtOtmP4jT0DG4skBWLg/viewform?usp=sf_link">User
-                feedback</a>
-            {% if not current_user.is_authenticated %}
-            <a class="p-2 text-dark" href="{{ url_for('security.login') }}">Log in</a>
-            {% endif %}
-        </nav>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Contextualise <sup><small>V{{ version }}</small></sup> &mdash;
+        Structured
+        Knowledge</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="/maps/published/">Published maps</a>
         {% if current_user.is_authenticated %}
+            <a class="p-2 text-dark" href="/maps/">My maps</a>
+        {% endif %}
+        <a class="p-2 text-dark" href="https://brettkromkamp.com/tags/contextualise/">Blog</a>
+        <a class="p-2 text-dark"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSfI-qbcL_zTKQj9P0MaOvYLngO78IWAtOtmP4jT0DG4skBWLg/viewform?usp=sf_link">User
+            feedback</a>
+        {% if not current_user.is_authenticated %}
+            <a class="p-2 text-dark" href="{{ url_for('security.login') }}">Log in</a>
+        {% endif %}
+    </nav>
+    {% if current_user.is_authenticated %}
         <a class="btn btn-outline-primary" href="{{ url_for('security.logout') }}">Log out</a>
-        {% else %}
+    {% else %}
         <a class="btn btn-outline-primary" href="{{ url_for('security.register') }}">Sign up</a>
-        {% endif %}
-    </div>
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-        <img class="img-fluid" src="{{ url_for('static', filename='contextualise-full-logo.png') }}" alt="Contextualise"
-            style="width: 550px;">
-        <br />
-        <br />
-        <p class="lead">Contextualise is an effective tool particularly suited for organising
-            information-heavy projects and activities consisting of unstructured and widely diverse data and
-            information resources.</p>
-        <p class="text-muted"><a href="https://en.wikipedia.org/wiki/Personal_knowledge_management">Personal
-                knowledge management</a> &middot; Investigative journalism &middot; <a
-                href="https://www.accionlabs.com/semantic-content-management-systems">Semantic content management</a>
-            &middot; Research projects &middot; <a href="https://en.wikipedia.org/wiki/Worldbuilding">World building</a>
-            and storytelling
-        </p>
-        <br />
-        {% if maps|length > 0 %}
+    {% endif %}
+</div>
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <img class="img-fluid" src="{{ url_for('static', filename='contextualise-full-logo.png') }}" alt="Contextualise"
+         style="width: 550px;">
+    <br/>
+    <br/>
+    <p class="lead">Contextualise is an effective tool particularly suited for organising
+        information-heavy projects and activities consisting of unstructured and widely diverse data and
+        information resources.</p>
+    <p class="text-muted"><a href="https://en.wikipedia.org/wiki/Personal_knowledge_management">Personal
+        knowledge management</a> &middot; Investigative journalism &middot; <a
+            href="https://www.accionlabs.com/semantic-content-management-systems">Semantic content management</a>
+        &middot; Research projects &middot; <a href="https://en.wikipedia.org/wiki/Worldbuilding">World building</a>
+        and storytelling
+    </p>
+    <br/>
+    {% if maps|length > 0 %}
         <p class="h5 text-muted">&mdash; SHOWCASE &mdash;</p>
-        {% endif %}
-    </div>
-    <div class="container">
-        <div class="card-deck mb-3 text-center">
-            {% for map in maps %}
+    {% endif %}
+</div>
+<div class="container">
+    <div class="card-deck mb-3 text-center">
+        {% for map in maps %}
             <div class="card mb-4 shadow-sm">
                 <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
                     <img alt="{{ map.name }}" class="card-img-top"
-                        src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">
@@ -115,63 +119,63 @@
                 </div>
                 <div class="card-footer">
                     <a class="btn btn-lg btn-block btn-outline-primary"
-                        href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                       href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
                         map</a>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <img class="mb-2" src="{{ url_for('static', filename='contextualise-logo.svg') }}" alt="" width="24"
-                        height="24">
-                    <small class="d-block mb-3 text-muted">&copy; 2019-2022 Brett Kromkamp</small>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Features</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="https://brettkromkamp.com/posts/knowledge-paths/">Knowledge
-                                paths</a></li>
-                        <li><a class="text-muted"
-                                href="https://brettkromkamp.com/posts/contextualise-collaboration/">Collaboration</a>
-                        </li>
-                        <li><a class="text-muted"
-                                href="https://brettkromkamp.com/posts/hypergraph-associations/">Hypergraph
-                                associations</a></li>
-                        <li><a class="text-muted" href="#">Navigable network graph</a></li>
-                        <li><a class="text-muted" href="#">Visual markdown editor</a></li>
-                        <li><a class="text-muted" href="#">Scope-based filtering</a></li>
-                        <li><a class="text-muted" href="#">Associative tagging</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Resources</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="https://github.com/brettkromkamp/contextualise">Contextualise on
-                                GitHub</a></li>
-                        <li><a class="text-muted"
-                                href="https://brettkromkamp.com/posts/semantically-meaningful-relationships/">Semantic
-                                relationships</a></li>
-                        <li><a class="text-muted"
-                                href="https://docs.microsoft.com/en-us/previous-versions/aa480048(v=msdn.10)?redirectedfrom=MSDN">
-                                An introduction to topic maps</a></li>
-                        <li><a class="text-muted" href="https://ontopia.net/topicmaps/materials/tao.html">The TAO of
-                                topic maps</a></li>
-                        <li><a class="text-muted"
-                                href="https://github.com/brettkromkamp/awesome-knowledge-management">Awesome
-                                knowledge management</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>About</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="https://brettkromkamp.com/">Brett Kromkamp</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
+        {% endfor %}
     </div>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                <img class="mb-2" src="{{ url_for('static', filename='contextualise-logo.svg') }}" alt="" width="24"
+                     height="24">
+                <small class="d-block mb-3 text-muted">&copy; 2019-2022 Brett Kromkamp</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Features</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="https://brettkromkamp.com/posts/knowledge-paths/">Knowledge
+                        paths</a></li>
+                    <li><a class="text-muted"
+                           href="https://brettkromkamp.com/posts/contextualise-collaboration/">Collaboration</a>
+                    </li>
+                    <li><a class="text-muted"
+                           href="https://brettkromkamp.com/posts/hypergraph-associations/">Hypergraph
+                        associations</a></li>
+                    <li><a class="text-muted" href="#">Navigable network graph</a></li>
+                    <li><a class="text-muted" href="#">Visual markdown editor</a></li>
+                    <li><a class="text-muted" href="#">Scope-based filtering</a></li>
+                    <li><a class="text-muted" href="#">Associative tagging</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Resources</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="https://github.com/brettkromkamp/contextualise">Contextualise on
+                        GitHub</a></li>
+                    <li><a class="text-muted"
+                           href="https://brettkromkamp.com/posts/semantically-meaningful-relationships/">Semantic
+                        relationships</a></li>
+                    <li><a class="text-muted"
+                           href="https://docs.microsoft.com/en-us/previous-versions/aa480048(v=msdn.10)?redirectedfrom=MSDN">
+                        An introduction to topic maps</a></li>
+                    <li><a class="text-muted" href="https://ontopia.net/topicmaps/materials/tao.html">The TAO of
+                        topic maps</a></li>
+                    <li><a class="text-muted"
+                           href="https://github.com/brettkromkamp/awesome-knowledge-management">Awesome
+                        knowledge management</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>About</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="https://brettkromkamp.com/">Brett Kromkamp</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
 </body>
 
 </html>

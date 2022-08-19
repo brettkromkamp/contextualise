@@ -1,59 +1,60 @@
 {% extends "layout_notes.html" %}
 
 {% block title %}
-<title>Attach note | {{ topic_map.name }}</title>
+    <title>Attach note | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic_map.name }}
-    <small class="text-muted">Attach note</small>
-</h1>
-<hr />
-<form action="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
-    autocomplete="off" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="note-topic-identifier"><strong>Topic</strong></label>
-        <input class="form-control typeahead" id="note-topic-identifier" name="note-topic-identifier"
-            placeholder="Enter topic identifier" required autofocus type="text">
-        {% if error|bitwise_and(1) == 1 %}
-        <small class="text-danger">
-            A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
-        </small>
-        {% endif %}
-    </div>
-    <div class="form-group">
-        <label for="note-title"><strong>Title</strong></label>
-        <input aria-readonly="true" class="form-control" id="note-title" name="note-title" readonly type="text"
-            value="{{ note_title }}">
-    </div>
-    <div class="form-group">
-        <label><strong>Text</strong></label>
-        {{ note_text|safe }}
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
-            </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="note-scope"><strong>Scope</strong></label>
-                        <input aria-readonly="true" class="form-control" id="note-scope" name="note-scope" readonly
-                            type="text" value="{{ note_scope }}">
+    <h1>
+        {{ topic_map.name }}
+        <small class="text-muted">Attach note</small>
+    </h1>
+    <hr/>
+    <form action="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note_identifier) }}"
+          autocomplete="off" method="post" role="form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="note-topic-identifier"><strong>Topic</strong></label>
+            <input class="form-control typeahead" id="note-topic-identifier" name="note-topic-identifier"
+                   placeholder="Enter topic identifier" required autofocus type="text">
+            {% if error|bitwise_and(1) == 1 %}
+                <small class="text-danger">
+                    A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
+                </small>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="note-title"><strong>Title</strong></label>
+            <input aria-readonly="true" class="form-control" id="note-title" name="note-title" readonly type="text"
+                   value="{{ note_title }}">
+        </div>
+        <div class="form-group">
+            <label><strong>Text</strong></label>
+            {{ note_text|safe }}
+        </div>
+        <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                                 data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
+        </p>
+        <div class="collapse" id="advancedOptions">
+            <div class="card">
+                <div class="card-header">
+                    Advanced options
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="form-group">
+                            <label for="note-scope"><strong>Scope</strong></label>
+                            <input aria-readonly="true" class="form-control" id="note-scope" name="note-scope" readonly
+                                   type="text" value="{{ note_scope }}">
+                        </div>
                     </div>
                 </div>
             </div>
+            <br/>
         </div>
-        <br />
-    </div>
-    <a class="btn btn-secondary" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Attach note</button>
-</form>
-<br />
+        <a class="btn btn-secondary" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}"
+           role="button">Cancel</a>
+        <button class="btn btn-success" type="submit">Attach note</button>
+    </form>
+    <br/>
 {% endblock %}

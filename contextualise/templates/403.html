@@ -1,14 +1,16 @@
 {% extends "layout_1_column.html" %}
 {% block title %}<title>Forbidden</title>{% endblock %}
 {% block body %}
-<h1>Forbidden</h1>
-<p class="alert alert-warning">You seem to be trying to access something that doesn't belong to you. Find your way back
-    <a
-        href="{% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.published') }}{% endif %}">home</a>.
-</p>
-<br />
-<br />
-<p class="text-center">
-    <img width="480" class="img-fluid" src="{{ url_for('static', filename='access-denied.svg') }}">
-</p>
+    <h1>Forbidden</h1>
+    <p class="alert alert-warning">You seem to be trying to access something that doesn't belong to you. Find your way
+        back
+        <a
+                href="
+                        {% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.published') }}{% endif %}">home</a>.
+    </p>
+    <br/>
+    <br/>
+    <p class="text-center">
+        <img width="480" class="img-fluid" src="{{ url_for('static', filename='access-denied.svg') }}">
+    </p>
 {% endblock %}

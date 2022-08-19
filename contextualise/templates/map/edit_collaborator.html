@@ -1,37 +1,40 @@
 {% extends "layout_maps.html" %}
 
 {% block title %}
-<title>Edit collaborator | Contextualise</title>
+    <title>Edit collaborator | Contextualise</title>
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic_map.name }}
-    <small class="text-muted">Edit collaborator</small>
-</h1>
-<hr />
-<form
-    action="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator_identifier) }}"
-    autocomplete="off" enctype="multipart/form-data" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="collaborator-email"><strong>Email address</strong></label>
-        <input class="form-control" id="collaborator-email" name="collaborator-email"
-            placeholder="Email address of user" aria-readonly="true" readonly type="text"
-            value="{{ collaborator_email }}">
-    </div>
-    <div class="form-group">
-        <label for="collaboration-mode"><strong>Collaboration mode</strong></label>
-        <select class="form-control" id="collaboration-mode" name="collaboration-mode" autofocus>
-            <option value="view" {% if collaboration_mode=='view' %} selected="selected" {% endif %}>Can view</option>
-            <option value="comment" {% if collaboration_mode=='comment' %} selected="selected" {% endif %}>Can comment
-            </option>
-            <option value="edit" {% if collaboration_mode=='edit' %} selected="selected" {% endif %}>Can edit</option>
-        </select>
-    </div>
-    <br />
-    <a class="btn btn-secondary" href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Update collaborator</button>
-</form>
-<br />
+    <h1>{{ topic_map.name }}
+        <small class="text-muted">Edit collaborator</small>
+    </h1>
+    <hr/>
+    <form
+            action="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator_identifier) }}"
+            autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="collaborator-email"><strong>Email address</strong></label>
+            <input class="form-control" id="collaborator-email" name="collaborator-email"
+                   placeholder="Email address of user" aria-readonly="true" readonly type="text"
+                   value="{{ collaborator_email }}">
+        </div>
+        <div class="form-group">
+            <label for="collaboration-mode"><strong>Collaboration mode</strong></label>
+            <select class="form-control" id="collaboration-mode" name="collaboration-mode" autofocus>
+                <option value="view" {% if collaboration_mode=='view' %} selected="selected" {% endif %}>Can view
+                </option>
+                <option value="comment" {% if collaboration_mode=='comment' %} selected="selected" {% endif %}>Can
+                    comment
+                </option>
+                <option value="edit" {% if collaboration_mode=='edit' %} selected="selected" {% endif %}>Can edit
+                </option>
+            </select>
+        </div>
+        <br/>
+        <a class="btn btn-secondary" href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}"
+           role="button">Cancel</a>
+        <button class="btn btn-success" type="submit">Update collaborator</button>
+    </form>
+    <br/>
 {% endblock %}

@@ -1,55 +1,57 @@
 {% extends "layout_maps.html" %}
 
 {% block title %}
-<title>Delete map | Contextualise</title>
+    <title>Delete map | Contextualise</title>
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic_map.name }}
-    <small class="text-muted">Delete map</small>
-</h1>
-<hr />
-<div class="alert alert-danger alert-dismissible" role="alert">Deleting a topic map also deletes all of its resources.
-    Once you delete a topic map, there is no going back. Please be certain.
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="map-name"><strong>Name</strong></label>
-        <input aria-readonly="true" class="form-control" id="map-name" name="map-name" readonly type="text"
-            value="{{ topic_map.name }}">
+    <h1>
+        {{ topic_map.name }}
+        <small class="text-muted">Delete map</small>
+    </h1>
+    <hr/>
+    <div class="alert alert-danger alert-dismissible" role="alert">Deleting a topic map also deletes all of its
+        resources.
+        Once you delete a topic map, there is no going back. Please be certain.
+        <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <div class="form-group">
-        <label><strong>Description</strong></label><br />
-        {{ topic_map.description|safe }}
-    </div>
-    <div class="form-group">
-        <label><strong>Image</strong></label>
-        <br />
-        {% if topic_map.image_path %}
-        <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
-            src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
-        {% else %}
-        <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail" src="/static/blank-canvas.svg">
-        {% endif %}
-    </div>
-    <div class="form-group">
-        <label><strong>Access</strong></label>
-        <br />
-        {% if topic_map.published %}
-        <span class="badge badge-success">Published</span>
-        {% else %}
-        <span class="badge badge-warning">Private</span>
-        {% endif %}
-    </div>
-    <hr />
-    <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-danger" type="submit">Delete map</button>
-</form>
-<br />
+    <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="map-name"><strong>Name</strong></label>
+            <input aria-readonly="true" class="form-control" id="map-name" name="map-name" readonly type="text"
+                   value="{{ topic_map.name }}">
+        </div>
+        <div class="form-group">
+            <label><strong>Description</strong></label><br/>
+            {{ topic_map.description|safe }}
+        </div>
+        <div class="form-group">
+            <label><strong>Image</strong></label>
+            <br/>
+            {% if topic_map.image_path %}
+                <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
+                     src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
+            {% else %}
+                <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
+                     src="/static/blank-canvas.svg">
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label><strong>Access</strong></label>
+            <br/>
+            {% if topic_map.published %}
+                <span class="badge badge-success">Published</span>
+            {% else %}
+                <span class="badge badge-warning">Private</span>
+            {% endif %}
+        </div>
+        <hr/>
+        <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
+           role="button">Cancel</a>
+        <button class="btn btn-danger" type="submit">Delete map</button>
+    </form>
+    <br/>
 {% endblock %}

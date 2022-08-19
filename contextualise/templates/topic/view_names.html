@@ -1,53 +1,53 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-<title>{{ topic.first_base_name.name }} &mdash; Names | {{ topic_map.name }}</title>
+    <title>{{ topic.first_base_name.name }} &mdash; Names | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}
-    <small class="text-muted">Topic names</small>
-</h1>
-<p><em>{{ creation_date }}</em></p>
-{% if topic.base_names %}
-<table class="table table-bordered">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Scope</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for base_name in topic.base_names %}
-        <tr>
-            <td>{{ base_name.name }}</td>
-            <td><a
-                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=base_name.scope) }}">{{
-            base_name.scope|topic_name(topic_map.identifier) }}</a></td>
-            <td>
-                <a
-                    href="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                    href="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p class="alert alert-info" role="alert">
-    This topic has no names. Click on the "Add name" button below to add a name.
-</p>
-{% endif %}
-<a class="btn btn-secondary"
-    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-    role="button">Return</a>
-<a class="btn btn-primary"
-    href="{{ url_for('topic.add_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-    name</a>
-<br />
-<br />
+    <h1>
+        {{ topic.first_base_name.name }}
+        <small class="text-muted">Topic names</small>
+    </h1>
+    <p><em>{{ creation_date }}</em></p>
+    {% if topic.base_names %}
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Scope</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for base_name in topic.base_names %}
+                <tr>
+                    <td>{{ base_name.name }}</td>
+                    <td><a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=base_name.scope) }}">{{ base_name.scope|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td>
+                        <a
+                                href="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="alert alert-info" role="alert">
+            This topic has no names. Click on the "Add name" button below to add a name.
+        </p>
+    {% endif %}
+    <a class="btn btn-secondary"
+       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+       role="button">Return</a>
+    <a class="btn btn-primary"
+       href="{{ url_for('topic.add_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+        name</a>
+    <br/>
+    <br/>
 {% endblock %}

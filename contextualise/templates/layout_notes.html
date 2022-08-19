@@ -5,7 +5,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2662092-19"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-2662092-19');
@@ -27,122 +31,122 @@
     <meta name="theme-color" content="#ffffff">
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
     <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='default.css', version='1.0') }}" rel="stylesheet">
 </head>
 
 <body class="d-flex flex-column h-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/">Contextualise</a>
-                <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Contextualise</a>
+            <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
                     class="navbar-toggler" data-target="#navbars" data-toggle="collapse" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbars">
-                    {% if topic_map %}
+            <div class="collapse navbar-collapse" id="navbars">
+                {% if topic_map %}
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
-                            <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+                                <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
                             {% else %}
-                            <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+                                <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
                             {% endif %}
                         </li>
                         <li class="nav-item">
                             {% if session['current_scope'] == '*' %}
-                            <a class="nav-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+                                <a class="nav-link"
+                                   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
                             {% else %}
-                            <a class="nav-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}">Home</a>
+                                <a class="nav-link"
+                                   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}">Home</a>
                             {% endif %}
                         </li>
                     </ul>
                     {% if current_user.is_authenticated %}
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
-                                data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
-                                <strong>{{ current_user.email }}</strong>
-                            </a>
-                            <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Preferences</a>
-                                <div class="dropdown-divider"></div>
-                                {% if current_user.id == topic_map.user_identifier %}
-                                <a class="dropdown-item" href="#">Advanced search</a>
-                                {% endif %}
-                                <a class="dropdown-item" href="#">Topics index</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
-                            </div>
-                        </li>
-                    </ul>
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                                   data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                                    <strong>{{ current_user.email }}</strong>
+                                </a>
+                                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Preferences</a>
+                                    <div class="dropdown-divider"></div>
+                                    {% if current_user.id == topic_map.user_identifier %}
+                                        <a class="dropdown-item" href="#">Advanced search</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="#">Topics index</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
+                                </div>
+                            </li>
+                        </ul>
                     {% else %}
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
-                        </li>
-                    </ul>
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
+                            </li>
+                        </ul>
                     {% endif %}
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
-        </nav>
-    </header>
-
-    <main class="flex-shrink-0" role="main">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {% include "_messages.html" %}
-                </div>
-            </div>
-            {% block body %}
-            {% block content %}{% endblock %}
-            {% endblock %}
         </div>
-    </main>
+    </nav>
+</header>
 
-    <footer class="footer mt-auto py-3">
-        <div class="container">
+<main class="flex-shrink-0" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% include "_messages.html" %}
+            </div>
+        </div>
+        {% block body %}
+            {% block content %}{% endblock %}
+        {% endblock %}
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3">
+    <div class="container">
             <span class="text-muted"><small><a href="/">Contextualise</a> &mdash; Structured Knowledge. Contextualise
                     is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
                         class="fas fa-coffee"></i>
                     by <a href="https://brettkromkamp.com">Brett Kromkamp</a>, a software developer living in
                     Norway.</small></span>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script
         src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-    {% block javascript %}{% endblock %}
-    <script>
-        var urlParts = window.location.pathname.split("/");
-        var mapIdentifier = urlParts[3];
-        var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block javascript %}{% endblock %}
+<script>
+    var urlParts = window.location.pathname.split("/");
+    var mapIdentifier = urlParts[3];
+    var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
 
-        $(".typeahead").autoComplete({
-            resolverSettings: {
-                url: getIdentifiersApiUrl,
-            },
-        });
-    </script>
+    $(".typeahead").autoComplete({
+        resolverSettings: {
+            url: getIdentifiersApiUrl,
+        },
+    });
+</script>
 </body>
 
 </html>

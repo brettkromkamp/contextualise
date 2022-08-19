@@ -1,90 +1,92 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-<title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
+    <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}
-<script>
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-        var fileName = document.getElementById("file-file").files[0].name;
-        var nextSibling = e.target.nextElementSibling;
-        nextSibling.innerText = fileName;
-    })
-</script>
-{% if error %}
-<script>
-    $('#advancedOptions').collapse('show');
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var fileName = document.getElementById("file-file").files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        })
+    </script>
+    {% if error %}
+        <script>
+            $('#advancedOptions').collapse('show');
 
-</script>
-{% endif %}
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.identifier|topic_name(topic_map.identifier) }}
-    <small class="text-muted">Upload file</small>
-</h1>
-<hr />
-<form action="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-    autocomplete="off" enctype="multipart/form-data" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="file-title"><strong>Title</strong></label>
-        <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required autofocus
-            type="text" value="{{ file_title or '' }}">
-    </div>
-    <div class="form-group">
-        <label for="file-file"><strong>File</strong></label>
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="file-file" name="file-file">
-            <label class="custom-file-label" for="file-file">Choose file</label>
+    <h1>
+        {{ topic.identifier|topic_name(topic_map.identifier) }}
+        <small class="text-muted">Upload file</small>
+    </h1>
+    <hr/>
+    <form action="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+          autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="file-title"><strong>Title</strong></label>
+            <input class="form-control" id="file-title" name="file-title" placeholder="Enter title" required autofocus
+                   type="text" value="{{ file_title or '' }}">
         </div>
-        {% if error|bitwise_and(2) == 2 %}
-        <small class="text-danger">
-            No file part.
-        </small>
-        {% endif %}
-        {% if error|bitwise_and(4) == 4 %}
-        <small class="text-danger">
-            No file selected.
-        </small>
-        {% endif %}
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a></p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+        <div class="form-group">
+            <label for="file-file"><strong>File</strong></label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file-file" name="file-file">
+                <label class="custom-file-label" for="file-file">Choose file</label>
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="file-scope"><strong>Scope</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be
-                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
-                                the current scope)
-                            </small>
-                        </label>
-                        <input class="form-control typeahead" id="file-scope" name="file-scope"
-                            placeholder="Enter scope identifier" type="text" value="{{ file_scope or '' }}">
-                        {% if error|bitwise_and(8) == 8 %}
-                        <small class="text-danger">
-                            A scope with this identifier doesn't exist. Please provide an identifier for an existing
-                            scope.
-                        </small>
-                        {% endif %}
+            {% if error|bitwise_and(2) == 2 %}
+                <small class="text-danger">
+                    No file part.
+                </small>
+            {% endif %}
+            {% if error|bitwise_and(4) == 4 %}
+                <small class="text-danger">
+                    No file selected.
+                </small>
+            {% endif %}
+        </div>
+        <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
+                                                 data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
+        </p>
+        <div class="collapse" id="advancedOptions">
+            <div class="card">
+                <div class="card-header">
+                    Advanced options
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="form-group">
+                            <label for="file-scope"><strong>Scope</strong>
+                                <small class="text-info">&mdash; If no value is provided the default will be
+                                    "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                    the current scope)
+                                </small>
+                            </label>
+                            <input class="form-control typeahead" id="file-scope" name="file-scope"
+                                   placeholder="Enter scope identifier" type="text" value="{{ file_scope or '' }}">
+                            {% if error|bitwise_and(8) == 8 %}
+                                <small class="text-danger">
+                                    A scope with this identifier doesn't exist. Please provide an identifier for an
+                                    existing
+                                    scope.
+                                </small>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
+            <br/>
         </div>
-        <br />
-    </div>
-    <a class="btn btn-secondary"
-        href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Upload file</button>
-</form>
-<br />
+        <a class="btn btn-secondary"
+           href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+           role="button">Cancel</a>
+        <button class="btn btn-success" type="submit">Upload file</button>
+    </form>
+    <br/>
 {% endblock %}

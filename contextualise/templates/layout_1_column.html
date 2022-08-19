@@ -20,81 +20,80 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
     <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='typeahead.css', version='1.0') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='default.css', version='1.0') }}" rel="stylesheet">
 </head>
 
 <body class="d-flex flex-column h-100">
-    <header>
-        <a name="page-top"></a>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/">Contextualise</a>
-                <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
+<header>
+    <a name="page-top"></a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Contextualise</a>
+            <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
                     class="navbar-toggler" data-target="#navbars" data-toggle="collapse" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbars">
-                    {% if topic_map %}
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbars">
+                {% if topic_map %}
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-expanded="false">Notes</a>
+                               data-toggle="dropdown" aria-expanded="false">Notes</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {% if map_notes_count == 0 %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
-                                    notes&nbsp;&nbsp;<span class="badge badge-primary">{{ map_notes_count
-                                        }}</span></a>
+                                    <a class="dropdown-item"
+                                       href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
+                                        notes&nbsp;&nbsp;<span class="badge badge-primary">{{ map_notes_count }}</span></a>
                                 {% else %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
-                                    notes&nbsp;&nbsp;<span class="badge badge-danger">{{ map_notes_count
-                                        }}</span></a>
+                                    <a class="dropdown-item"
+                                       href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
+                                        notes&nbsp;&nbsp;<span
+                                                class="badge badge-danger">{{ map_notes_count }}</span></a>
                                 {% endif %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item"
-                                    href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
+                                   href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
                             </div>
                         </li>
                         {% if topic.identifier != 'home' %}
-                        <li class="nav-item">
-                            {% if session['current_scope'] == '*' %}
-                            <a class="nav-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
-                                role="button">Home</a>
-                            {% else %}
-                            <a class="nav-link"
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
-                                role="button">Home</a>
-                            {% endif %}
-                        </li>
+                            <li class="nav-item">
+                                {% if session['current_scope'] == '*' %}
+                                    <a class="nav-link"
+                                       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+                                       role="button">Home</a>
+                                {% else %}
+                                    <a class="nav-link"
+                                       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
+                                       role="button">Home</a>
+                                {% endif %}
+                            </li>
                         {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Home</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled">Home</a>
+                            </li>
                         {% endif %}
                     </ul>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
+                {% endif %}
+                {% if current_user.is_authenticated %}
                     <ul class="nav navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
-                                data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                               data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
                                 <strong>{{ current_user.email }}</strong>
                             </a>
                             <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                                 <a class="dropdown-item" href="#">Preferences</a>
                                 <div class="dropdown-divider"></div>
                                 {% if topic_map and current_user.id == topic_map.user_identifier %}
-                                <a class="dropdown-item" href="#">Search</a>
+                                    <a class="dropdown-item" href="#">Search</a>
                                 {% endif %}
                                 <a class="dropdown-item" href="#">Topics index</a>
                                 <div class="dropdown-divider"></div>
@@ -102,7 +101,7 @@
                             </div>
                         </li>
                     </ul>
-                    {% else %}
+                {% else %}
                     <ul class="nav navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
@@ -111,238 +110,241 @@
                             <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
                         </li>
                     </ul>
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
-        </nav>
-    </header>
-    <main class="flex-shrink-0" role="main">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {% include "_messages.html" %}
-                </div>
+        </div>
+    </nav>
+</header>
+<main class="flex-shrink-0" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% include "_messages.html" %}
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% if topic and topic_map %}
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if topic and topic_map %}
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             {% if session['breadcrumbs'] %}
-                            {% for breadcrumb in session['breadcrumbs'] %}
-                            {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">
-                                {% if session['current_scope'] == '*' %}<a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
-                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
-                                {% else %}<a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
-                                    breadcrumb|topic_name(topic_map.identifier) }}</a> {% if breadcrumb == 'home'
-                                %}<i class="fas fa-home text-black-50"></i>{% endif %}
-                                {% endif %}
-                                </li>
-                                {% else %}
-                                <li aria-current="page" class="breadcrumb-item active">
-                                    {{ breadcrumb|topic_name(topic_map.identifier) }} {% if breadcrumb == 'home'
-                                    %}<i class="fas fa-home text-black-50"></i>{% endif %}
-                                </li>
-                                {% endif %}
+                                {% for breadcrumb in session['breadcrumbs'] %}
+                                    {% if loop.index < session['breadcrumbs']|length %}
+                                        <li class="breadcrumb-item">
+                                            {% if session['current_scope'] == '*' %}<a
+                                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{ breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                                {% if breadcrumb == 'home' %}<i class="fas fa-home text-black-50"></i>
+                                                {% endif %}
+                                            {% else %}<a
+                                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{ breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                                {% if breadcrumb == 'home' %}<i class="fas fa-home text-black-50"></i>
+                                                {% endif %}
+                                            {% endif %}
+                                        </li>
+                                    {% else %}
+                                        <li aria-current="page" class="breadcrumb-item active">
+                                            {{ breadcrumb|topic_name(topic_map.identifier) }}
+                                            {% if breadcrumb == 'home' %}
+                                                <i class="fas fa-home text-black-50"></i>{% endif %}
+                                        </li>
+                                    {% endif %}
                                 {% endfor %}
-                                {% endif %}
+                            {% endif %}
                         </ol>
                     </nav>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% block menu %}{% endblock %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% block body %}
-                    {% block content %}{% endblock %}
-                    {% endblock %}
-                </div>
+                {% endif %}
             </div>
         </div>
-    </main>
-    <footer class="footer mt-auto py-3">
-        <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% block menu %}{% endblock %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% block body %}
+                    {% block content %}{% endblock %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="footer mt-auto py-3">
+    <div class="container">
             <span class="text-muted"><small><a href="/">Contextualise</a> &mdash; Structured Knowledge. Contextualise
                     is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
                         class="fas fa-coffee"></i>
                     by <a href="https://brettkromkamp.com">Brett Kromkamp</a>, a software developer living in
                     Norway.</small></span>
-        </div>
-    </footer>
-    <!-- Modal -->
-    <div class="modal fade" id="createTopicModal" tabindex="-1" role="dialog" aria-labelledby="createTopicModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createTopicModalLabel">Topic doesn't exist. Create topic?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    </div>
+</footer>
+<!-- Modal -->
+<div class="modal fade" id="createTopicModal" tabindex="-1" role="dialog" aria-labelledby="createTopicModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTopicModalLabel">Topic doesn't exist. Create topic?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>A topic with the identifier you provided does not exist. Check the identifier and the
+                    suggested name
+                    and click the "Create topic" button if you want to create a topic with this identifier.</p>
+                <div class="form-group">
+                    <label for="create-topic-identifier" class="col-form-label"><strong>Topic
+                        identifier</strong></label>
+                    <input aria-readonly="true" readonly type="text" class="form-control"
+                           id="create-topic-identifier" name="create-topic-identifier">
                 </div>
-                <div class="modal-body">
-                    <p>A topic with the identifier you provided does not exist. Check the identifier and the
-                        suggested name
-                        and click the "Create topic" button if you want to create a topic with this identifier.</p>
-                    <div class="form-group">
-                        <label for="create-topic-identifier" class="col-form-label"><strong>Topic
-                                identifier</strong></label>
-                        <input aria-readonly="true" readonly type="text" class="form-control"
-                            id="create-topic-identifier" name="create-topic-identifier">
-                    </div>
-                    <div class="form-group">
-                        <label for="create-topic-name" class="col-form-label"><strong>Topic name</strong></label>
-                        <input type="text" class="form-control" id="create-topic-name" name="create-topic-name"
-                            placeholder="Enter name" autofocus>
-                    </div>
+                <div class="form-group">
+                    <label for="create-topic-name" class="col-form-label"><strong>Topic name</strong></label>
+                    <input type="text" class="form-control" id="create-topic-name" name="create-topic-name"
+                           placeholder="Enter name" autofocus>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="create-topic-modal-button">Create
-                        topic</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="create-topic-modal-button">Create
+                    topic
+                </button>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script
         src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-    {% block javascript %}{% endblock %}
-    <script>
-        var urlParts = window.location.pathname.split("/");
-        var mapIdentifier = urlParts[3];
-        // var getIdentifiersApiUrl =
-        //     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
-        var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block javascript %}{% endblock %}
+<script>
+    var urlParts = window.location.pathname.split("/");
+    var mapIdentifier = urlParts[3];
+    // var getIdentifiersApiUrl =
+    //     "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+    var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier;
 
-        var topicExistsApiUrl = "/api/topic-exists/" + mapIdentifier;
-        var topicCreateApiUrl = "/api/create-topic/" + mapIdentifier;
-        var normalisedTopicIdentifier = "";
-        var normalisedTopicName = "";
-        var createTopic = false;
-        var notyf = new Notyf({
-            position: { x: "right", y: "top" },
-            dismissible: true,
-            duration: 3000,
-        });
+    var topicExistsApiUrl = "/api/topic-exists/" + mapIdentifier;
+    var topicCreateApiUrl = "/api/create-topic/" + mapIdentifier;
+    var normalisedTopicIdentifier = "";
+    var normalisedTopicName = "";
+    var createTopic = false;
+    var notyf = new Notyf({
+        position: {x: "right", y: "top"},
+        dismissible: true,
+        duration: 3000,
+    });
 
-        // var topicIdentifiers = new Bloodhound({
-        //     datumTokenizer: Bloodhound.tokenizers.whitespace,
-        //     queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //     sufficient: 3,
-        //     remote: {
-        //         url: getIdentifiersApiUrl,
-        //         wildcard: "%QUERY",
-        //     },
-        // });
+    // var topicIdentifiers = new Bloodhound({
+    //     datumTokenizer: Bloodhound.tokenizers.whitespace,
+    //     queryTokenizer: Bloodhound.tokenizers.whitespace,
+    //     sufficient: 3,
+    //     remote: {
+    //         url: getIdentifiersApiUrl,
+    //         wildcard: "%QUERY",
+    //     },
+    // });
 
-        // $(".typeahead").typeahead(
-        //     {
-        //         minLength: 3,
-        //         highlight: true,
-        //     },
-        //     {
-        //         name: "identifiers",
-        //         source: topicIdentifiers,
-        //         limit: 8
-        //     }
-        // );
-        $(".typeahead").autoComplete({
-            resolverSettings: {
-                url: getIdentifiersApiUrl,
-            },
-        });
+    // $(".typeahead").typeahead(
+    //     {
+    //         minLength: 3,
+    //         highlight: true,
+    //     },
+    //     {
+    //         name: "identifiers",
+    //         source: topicIdentifiers,
+    //         limit: 8
+    //     }
+    // );
+    $(".typeahead").autoComplete({
+        resolverSettings: {
+            url: getIdentifiersApiUrl,
+        },
+    });
 
-        $(".typeahead").change(function (e) {
-            var queryTerm = this.value;
-            createTopic = false;
-            axios
-                .get(topicExistsApiUrl, {
-                    params: {
-                        q: queryTerm,
-                    },
-                })
-                .then(function (response) {
-                    if (
-                        response.data.topicExists === false &&
-                        response.data.normalisedTopicIdentifier !== ""
-                    ) {
-                        normalisedTopicIdentifier = response.data.normalisedTopicIdentifier;
-                        normalisedTopicName = response.data.normalisedTopicName;
-                        this.value = normalisedTopicIdentifier;
-                        $("#createTopicModal").modal();
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .then(function () {
-                    // always executed
-                });
-        });
-
-        $("#createTopicModal").on("show.bs.modal", function (event) {
-            var modal = $(this);
-
-            modal
-                .find(".modal-body #create-topic-identifier")
-                .val(normalisedTopicIdentifier);
-            modal.find(".modal-body #create-topic-name").val(normalisedTopicName);
-
-            //$("#create-topic-name").trigger("focus"); // Has no effect, just doesn't work!
-        });
-
-        document
-            .getElementById("create-topic-modal-button")
-            .addEventListener("click", function () {
-                $("#createTopicModal").modal("hide");
-                createTopic = true;
+    $(".typeahead").change(function (e) {
+        var queryTerm = this.value;
+        createTopic = false;
+        axios
+            .get(topicExistsApiUrl, {
+                params: {
+                    q: queryTerm,
+                },
+            })
+            .then(function (response) {
+                if (
+                    response.data.topicExists === false &&
+                    response.data.normalisedTopicIdentifier !== ""
+                ) {
+                    normalisedTopicIdentifier = response.data.normalisedTopicIdentifier;
+                    normalisedTopicName = response.data.normalisedTopicName;
+                    this.value = normalisedTopicIdentifier;
+                    $("#createTopicModal").modal();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
             });
+    });
 
-        $("#createTopicModal").on("hidden.bs.modal", function (e) {
-            if (createTopic) {
-                var modal = $(this);
-                var bodyFormData = new FormData();
-                bodyFormData.set(
-                    "topic-identifier",
-                    modal.find(".modal-body #create-topic-identifier").val()
-                );
-                bodyFormData.set(
-                    "topic-name",
-                    modal.find(".modal-body #create-topic-name").val()
-                );
+    $("#createTopicModal").on("show.bs.modal", function (event) {
+        var modal = $(this);
 
-                axios({
-                    method: "post",
-                    url: topicCreateApiUrl,
-                    data: bodyFormData,
-                    headers: { "Content-Type": "multipart/form-data" },
-                })
-                    .then(function (response) {
-                        // Handle success
-                        notyf.success("Topic successfully created!");
-                    })
-                    .catch(function (response) {
-                        // Handle error
-                        notyf.error("Unable to create topic!");
-                    });
-            }
+        modal
+            .find(".modal-body #create-topic-identifier")
+            .val(normalisedTopicIdentifier);
+        modal.find(".modal-body #create-topic-name").val(normalisedTopicName);
+
+        //$("#create-topic-name").trigger("focus"); // Has no effect, just doesn't work!
+    });
+
+    document
+        .getElementById("create-topic-modal-button")
+        .addEventListener("click", function () {
+            $("#createTopicModal").modal("hide");
+            createTopic = true;
         });
-    </script>
+
+    $("#createTopicModal").on("hidden.bs.modal", function (e) {
+        if (createTopic) {
+            var modal = $(this);
+            var bodyFormData = new FormData();
+            bodyFormData.set(
+                "topic-identifier",
+                modal.find(".modal-body #create-topic-identifier").val()
+            );
+            bodyFormData.set(
+                "topic-name",
+                modal.find(".modal-body #create-topic-name").val()
+            );
+
+            axios({
+                method: "post",
+                url: topicCreateApiUrl,
+                data: bodyFormData,
+                headers: {"Content-Type": "multipart/form-data"},
+            })
+                .then(function (response) {
+                    // Handle success
+                    notyf.success("Topic successfully created!");
+                })
+                .catch(function (response) {
+                    // Handle error
+                    notyf.error("Unable to create topic!");
+                });
+        }
+    });
+</script>
 </body>
 
 </html>
