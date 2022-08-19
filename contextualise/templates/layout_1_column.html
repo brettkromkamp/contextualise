@@ -242,27 +242,6 @@
         duration: 3000,
     });
 
-    // var topicIdentifiers = new Bloodhound({
-    //     datumTokenizer: Bloodhound.tokenizers.whitespace,
-    //     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    //     sufficient: 3,
-    //     remote: {
-    //         url: getIdentifiersApiUrl,
-    //         wildcard: "%QUERY",
-    //     },
-    // });
-
-    // $(".typeahead").typeahead(
-    //     {
-    //         minLength: 3,
-    //         highlight: true,
-    //     },
-    //     {
-    //         name: "identifiers",
-    //         source: topicIdentifiers,
-    //         limit: 8
-    //     }
-    // );
     $(".typeahead").autoComplete({
         resolverSettings: {
             url: getIdentifiersApiUrl,
