@@ -113,6 +113,12 @@ Then, if you want to update Contextualise at any time, in the same directory do:
 
     $ git pull
 
+### Tools
+
+[JetBrains](https://www.jetbrains.com/) has kindly provided me with a license for their development tools for Contextualise as part of their [Licenses for Open Source Development](https://www.jetbrains.com/community/opensource/#support) program.
+
+![JetBrains logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
 [TopicDB](https://github.com/brettkromkamp/topic-db), the topic maps engine on top of which Contextualise is built is regularly updated. However, the version of TopicDB published on [PyPI](https://pypi.org/project/topic-db/) could lag behind. For that reason, it is recommended that you also install TopicDB directly from GitHub:
 
     $ pip uninstall topic-db
