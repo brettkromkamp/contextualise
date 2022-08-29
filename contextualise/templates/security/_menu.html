@@ -10,10 +10,10 @@
                 up</a><br/>
         {% endif %}
         {% if security.recoverable %}
-            <a href="{{ url_for_security('forgot_password') }}">{{ _('Forgot password') }}</a><br/>
+            <a href="{{ url_for_security('forgot_password') }}">{{ _fsdomain('Forgot password') }}</a><br/>
         {% endif %}
         {% if security.confirmable %}
-            <a href="{{ url_for_security('send_confirmation') }}">{{ _('Confirm account') }}</a>
+            <a href="{{ url_for_security('send_confirmation') }}">{{ _fsdomain('Confirm account') }}</a>
             </p>
         {% endif %}
     <hr/>
