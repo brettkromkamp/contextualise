@@ -419,8 +419,7 @@
                     <br/>
                 </div>
                 {% if topic.instance_of == 'tag' %}
-                    <strong>Tagged topics:</strong>
-                    <br/>
+                    <strong>Tagged topics: </strong>
                     <ul>
                         {% for identifier in associations['categorization', 'member'] %}
                             <li><a
@@ -432,7 +431,7 @@
                 {% if ('categorization', 'category') in associations %}
                     <strong>Tags:</strong>&nbsp;
                     {% for identifier in associations['categorization', 'category'] %}
-                        <a class="btn btn-outline-secondary btn-sm"
+                        <a class="btn btn-outline-primary btn-sm"
                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{ identifier }}</a>
                     {% endfor %}
                 {% endif %}
