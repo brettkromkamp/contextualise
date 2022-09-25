@@ -1,0 +1,27 @@
+{% extends "security/layout.html" %}
+
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+
+{% block content %}
+    {% include "security/_messages.html" %}
+    <form action="{{ url_for_security('register') }}" class="form-signin" method="POST" name="register_user_form">
+        {{ register_user_form.hidden_tag() }}
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+        <label class="sr-only" for="email">Email address</label>
+        <input autofocus class="form-control" id="email" name="email" placeholder="Email address" required autofocus
+               type="email">
+        <label class="sr-only" for="password">Password</label>
+        <input class="form-control" id="password" name="password" placeholder="Password" required type="password">
+        {% if register_user_form.password_confirm %}
+            <label class="sr-only" for="password_confirm">Confirm password</label>
+            <input class="form-control" id="password_confirm" name="password_confirm" placeholder="Retype password"
+                   type="password">
+        {% endif %}
+        <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Register</button>
+        {% include "security/_menu.html" %}
+        <p class="mt-5 mb-3 text-muted"><a href="/static">Contextualise</a> &mdash; Copyright &copy; 2019-2022 by Brett
+            Kromkamp
+        </p>
+    </form>
+{% endblock %}

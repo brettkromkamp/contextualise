@@ -1,0 +1,200 @@
+<!doctype html>
+<html class="h-100" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="Personal Knowledge Management System" name="description">
+    <meta content="Brett Kromkamp" name="author">
+    <meta content="Contextualise" name="generator">
+    <title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+    <link rel="canonical" href="https://contextualise.dev">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+    <link href="{{ url_for('static', filename='app.css', version='1.3') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='amsify.suggestags.css', version='1.1') }}" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100">
+<header>
+    <a name="page-top"></a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/static">Contextualise</a>
+            <button aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler" data-target="#navbars" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbars">
+                {% if topic_map %}
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if map_notes_count == 0 %}
+                                <a class="nav-link"
+                                   href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
+                                        class="badge badge-primary">0</span></span></a>
+                            {% else %}
+                                <a class="nav-link"
+                                   href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
+                                        class="badge badge-danger">{{ map_notes_count }}</span></span></a>
+                            {% endif %}
+                        </li>
+                        {% if topic and topic.identifier != 'home' %}
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary"
+                                   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+                                   role="button">Home</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                               data-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                                <strong>{{ current_user.email }}</strong>
+                            </a>
+                            <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Preferences</a>
+                                <div class="dropdown-divider"></div>
+                                {% if topic_map and current_user.id == topic_map.user_identifier %}
+                                    <a class="dropdown-item" href="#">Search</a>
+                                {% endif %}
+                                <a class="dropdown-item" href="#">Topics index</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a>
+                            </div>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-info" href="{{ url_for('security.register') }}">Sign up</a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+<main class="flex-shrink-0" role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% include "_messages.html" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if topic and topic_map %}
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            {% if session['breadcrumbs'] %}
+                                {% for breadcrumb in session['breadcrumbs'] %}
+                                    {% if loop.index < session['breadcrumbs']|length %}
+                                        <li class="breadcrumb-item">
+                                            {% if session['current_scope'] == '*' %}<a
+                                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{ breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                                {% if breadcrumb == 'home' %}<i class="fas fa-home text-black-50"></i>
+                                                {% endif %}
+                                            {% else %}<a
+                                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{ breadcrumb|topic_name(topic_map.identifier) }}</a>
+                                                {% if breadcrumb == 'home' %}<i class="fas fa-home text-black-50"></i>
+                                                {% endif %}
+                                            {% endif %}
+                                        </li>
+                                    {% else %}
+                                        <li aria-current="page" class="breadcrumb-item active">
+                                            {{ breadcrumb|topic_name(topic_map.identifier) }}
+                                            {% if breadcrumb == 'home' %}
+                                                <i class="fas fa-home text-black-50"></i>{% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </ol>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% block menu %}{% endblock %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    {{ topic.first_base_name.name }}
+                    <small class="text-muted">Add tags</small>
+                </h1>
+                <hr/>
+                <form
+                        action="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                        autocomplete="off" method="post" role="form">
+                    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                    <div class="form-group">
+                        <label for="topic-tags"><strong>Tags</strong>
+                            <small class="text-info">&mdash; Multiple tags are comma-separated.</small>
+                        </label>
+                        <input class="form-control" id="topic-tags" name="topic-tags" placeholder="Enter tags"
+                               required autofocus type="text">
+                    </div>
+                    <a class="btn btn-secondary"
+                       href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                       role="button">Cancel</a>
+                    <button class="btn btn-success" type="submit">Add tags</button>
+                </form>
+                <br/>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="footer mt-auto py-3">
+    <div class="container">
+            <span class="text-muted"><small><a href="/static">Contextualise</a> &mdash; Structured Knowledge. Contextualise
+                    is handcrafted with <i class="fas fa-heart" style="color:#c91818;"></i> and a lot of <i
+                        class="fas fa-coffee"></i>
+                    by <a href="https://brettkromkamp.com">Brett Kromkamp</a>, a software developer living in
+                    Norway.</small></span>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ url_for('static', filename='jquery.amsify.suggestags.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+    var urlParts = window.location.pathname.split("/");
+    var mapIdentifier = urlParts[3];
+    var getIdentifiersApiUrl = "/api/get-tags/" + mapIdentifier;
+
+    $('input[name="topic-tags"]').amsifySuggestags({
+        suggestionsAction: {
+            url: getIdentifiersApiUrl
+        }
+    });
+</script>
+</body>
+
+</html>
