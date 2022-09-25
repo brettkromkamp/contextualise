@@ -27,7 +27,7 @@
                                 <img alt="{{ map.name }}" class="card-img-top"
                                      src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
                             {% else %}
-                                <img alt="{{ map.name }}" class="card-img-top" src="/blank-canvas.svg">
+                                <img alt="{{ map.name }}" class="card-img-top" src="{{ url_for('static', filename='blank-canvas.svg') }}">
                             {% endif %}
                         </a>
                         <div class="card-body">

@@ -36,7 +36,7 @@
                      src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
             {% else %}
                 <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
-                     src="/blank-canvas.svg">
+                     src="{{ url_for('static', filename='blank-canvas.svg') }}">
             {% endif %}
         </div>
         <div class="form-group">
