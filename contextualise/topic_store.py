@@ -7,7 +7,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 
 from flask import current_app, g
-from topicdb.core.store.topicstore import TopicStore
+from topicdb.store.topicstore import TopicStore
 
 
 def get_topic_store():

@@ -7,8 +7,8 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_security import current_user, login_required
-from topicdb.core.models.collaborationmode import CollaborationMode
-from topicdb.core.store.retrievalmode import RetrievalMode
+from topicdb.models.collaborationmode import CollaborationMode
+from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise.topic_store import get_topic_store

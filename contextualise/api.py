@@ -11,11 +11,11 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from flask_security import current_user, login_required
 from slugify import slugify
-from topicdb.core.models.association import Association
-from topicdb.core.models.attribute import Attribute
-from topicdb.core.models.datatype import DataType
-from topicdb.core.models.occurrence import Occurrence
-from topicdb.core.models.topic import Topic
+from topicdb.models.association import Association
+from topicdb.models.attribute import Attribute
+from topicdb.models.datatype import DataType
+from topicdb.models.occurrence import Occurrence
+from topicdb.models.topic import Topic
 
 from contextualise.topic_store import get_topic_store
 

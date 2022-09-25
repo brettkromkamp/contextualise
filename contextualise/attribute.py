@@ -9,10 +9,10 @@ import maya
 from flask import Blueprint, flash, render_template, request, session, url_for
 from flask_login import current_user
 from flask_security import login_required
-from topicdb.core.models.attribute import Attribute
-from topicdb.core.models.collaborationmode import CollaborationMode
-from topicdb.core.models.datatype import DataType
-from topicdb.core.store.retrievalmode import RetrievalMode
+from topicdb.models.attribute import Attribute
+from topicdb.models.collaborationmode import CollaborationMode
+from topicdb.models.datatype import DataType
+from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
