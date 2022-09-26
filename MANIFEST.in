@@ -1,5 +1,5 @@
 include LICENSE
 include README.md
 include pyproject.toml
-graft contextualise/static
-graft contextualise/templates
+graft src/contextualise/static
+graft src/contextualise/templates
