@@ -196,57 +196,57 @@ def create_app(test_config=None):
     # Register Blueprints
     import contextualise.api
 
-    app.register_blueprint(api.bp)
-    csrf.exempt(api.create_topic)
-    csrf.exempt(api.create_association)
+    app.register_blueprint(contextualise.api.bp)
+    csrf.exempt(contextualise.api.create_topic)
+    csrf.exempt(contextualise.api.create_association)
 
     import contextualise.map
 
-    app.register_blueprint(map.bp)
+    app.register_blueprint(contextualise.map.bp)
 
     import contextualise.topic
 
-    app.register_blueprint(topic.bp)
+    app.register_blueprint(contextualise.topic.bp)
 
     import contextualise.image
 
-    app.register_blueprint(image.bp)
+    app.register_blueprint(contextualise.image.bp)
 
     import contextualise.file
 
-    app.register_blueprint(file.bp)
+    app.register_blueprint(contextualise.file.bp)
 
     import contextualise.link
 
-    app.register_blueprint(link.bp)
+    app.register_blueprint(contextualise.link.bp)
 
     import contextualise.video
 
-    app.register_blueprint(video.bp)
+    app.register_blueprint(contextualise.video.bp)
 
     import contextualise.association
 
-    app.register_blueprint(association.bp)
+    app.register_blueprint(contextualise.association.bp)
 
     import contextualise.note
 
-    app.register_blueprint(note.bp)
+    app.register_blueprint(contextualise.note.bp)
 
     import contextualise.three_d
 
-    app.register_blueprint(three_d.bp)
+    app.register_blueprint(contextualise.three_d.bp)
 
     import contextualise.attribute
 
-    app.register_blueprint(attribute.bp)
+    app.register_blueprint(contextualise.attribute.bp)
 
     import contextualise.visualisation
 
-    app.register_blueprint(visualisation.bp)
+    app.register_blueprint(contextualise.visualisation.bp)
 
     import contextualise.tag
 
-    app.register_blueprint(tag.bp)
+    app.register_blueprint(contextualise.tag.bp)
 
     # Set up logging
     if not app.debug:
