@@ -46,11 +46,11 @@
                             {% if map_notes_count == 0 %}
                                 <a class="nav-link"
                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
-                                        class="badge badge-primary">0</span></span></a>
+                                        class="badge badge-primary">0</span></a>
                             {% else %}
                                 <a class="nav-link"
                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes <span
-                                        class="badge badge-danger">{{ map_notes_count }}</span></span></a>
+                                        class="badge badge-danger">{{ map_notes_count }}</span></a>
                             {% endif %}
                         </li>
                         {% if topic and topic.identifier != 'home' %}

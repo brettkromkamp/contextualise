@@ -113,10 +113,10 @@ def view(map_identifier, topic_identifier):
             current_app.logger.warning(
                 f"Topic not found: user identifier: [N/A], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
             )
-        session["inexistent_topic_identifier"] = topic_identifier
+        session["nonexistent_topic_identifier"] = topic_identifier
         abort(404)
     else:
-        session.pop("inexistent_topic_identifier", None)
+        session.pop("nonexistent_topic_identifier", None)
 
     if scope_filtered:
         topic_occurrences = store.get_topic_occurrences(
