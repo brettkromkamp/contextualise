@@ -1,71 +1,71 @@
 {% extends "layout_notes.html" %}
 
 {% block title %}
-    <title>Notes | {{ topic_map.name }}</title>
+<title>Notes | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col">
-            <h2>Notes &mdash;
-                <small class="text-muted">{{ topic_map.name }}</small>
-            </h2>
-            <br/>
-        </div>
+<div class="row">
+    <div class="col">
+        <h2>Notes &mdash;
+            <small class="text-muted">{{ topic_map.name }}</small>
+        </h2>
+        <br />
     </div>
-    <div class="row">
-        <div class="col">
-            {% if notes %}
-                {% for note in notes %}
-                    <div class="card border-warning">
-                        <div class="card-body text-secondary">
-                            <h5 class="card-title">{{ note.title }} &mdash;
-                                <small class="text-muted">{{ note.timestamp }}</small>
-                            </h5>
-                            <p class="card-text">{{ note.text|safe }}</p>
-                            {% if current_user.id == topic_map.user_identifier %}
-                                <a class="card-link"
-                                   href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
-                                <a class="card-link"
-                                   href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
-                                    to topic</a>
-                                <a class="card-link"
-                                   href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert
-                                    to topic</a>
-                                <a class="card-link"
-                                   href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <br/>
-                {% endfor %}
-            {% else %}
+</div>
+<div class="row">
+    <div class="col">
+        {% if notes %}
+        {% for note in notes %}
+        <div class="card border-warning">
+            <div class="card-body text-secondary">
+                <h5 class="card-title">{{ note.title }} &mdash;
+                    <small class="text-muted">{{ note.timestamp }}</small>
+                </h5>
+                <p class="card-text">{{ note.text|safe }}</p>
                 {% if current_user.id == topic_map.user_identifier %}
-                    <div class="row">
-                        <div class="col">
-                            <p class="alert alert-info" role="alert">
-                                This map has no notes. Click on the "Add note" button below to create a note.
-                            </p>
-                            <br/>
-                            <br/>
-                            <p class="text-center">
-                                <img width="410" class="img-fluid" src="{{ url_for('static', filename='void.svg') }}">
-                            </p>
-                        </div>
-                    </div>
+                <a class="card-link"
+                    href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
+                <a class="card-link"
+                    href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
+                    to topic</a>
+                <a class="card-link"
+                    href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert
+                    to topic</a>
+                <a class="card-link"
+                    href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
                 {% endif %}
-            {% endif %}
-            {% if current_user.id == topic_map.user_identifier %}
-                <div class="row">
-                    <div class="col">
-                        <a class="btn btn-primary"
-                           href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add
-                            note</a>
-                        <br/>
-                        <br/>
-                    </div>
-                </div>
-            {% endif %}
+            </div>
         </div>
+        <br />
+        {% endfor %}
+        {% else %}
+
+        <div class="row">
+            <div class="col">
+                <p class="alert alert-info" role="alert">
+                    This map has no notes. {% if current_user.id == topic_map.user_identifier %}Click on the "Add note"
+                    button below to create a note.{% endif %}
+                </p>
+                <br />
+                <br />
+                <p class="text-center">
+                    <img width="410" class="img-fluid" src="{{ url_for('static', filename='void.svg') }}">
+                </p>
+            </div>
+        </div>
+
+        {% endif %}
+        {% if current_user.id == topic_map.user_identifier %}
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-primary" href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add
+                    note</a>
+                <br />
+                <br />
+            </div>
+        </div>
+        {% endif %}
     </div>
+</div>
 {% endblock %}
