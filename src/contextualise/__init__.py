@@ -148,18 +148,7 @@ def create_app(test_config=None):
     user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
     security = Security(app, user_datastore)
 
-    @user_registered.connect_via(app)
-    def user_registered_handler(app, user, confirm_token, form_data, **extra_args):
-        default_role = user_datastore.find_role("user")
-        user_datastore.add_role_to_user(user, default_role)
-        db_session.commit()
-
-    @user_authenticated.connect_via(app)
-    def user_authenticated_handler(app, user, authn_via, **extra_args):
-        app.logger.info(f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]")
-
-    @app.before_first_request
-    def create_user():
+    with app.app_context():
         Base.metadata.create_all(bind=engine)
         # Create roles
         admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
@@ -185,6 +174,16 @@ def create_app(test_config=None):
 
         # Create database structure
         get_topic_store().create_database()
+
+    @user_registered.connect_via(app)
+    def user_registered_handler(app, user, confirm_token, form_data, **extra_args):
+        default_role = user_datastore.find_role("user")
+        user_datastore.add_role_to_user(user, default_role)
+        db_session.commit()
+
+    @user_authenticated.connect_via(app)
+    def user_authenticated_handler(app, user, authn_via, **extra_args):
+        app.logger.info(f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]")
 
     @app.teardown_request
     def checkin_db(exc):
