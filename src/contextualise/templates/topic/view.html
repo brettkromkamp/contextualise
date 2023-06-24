@@ -515,10 +515,12 @@
                             <ul>
                                 <li>Map: <a href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}">{{
                                         topic_map.name }}</a>
+                                    {% if current_user.is_authenticated %}
                                     {% if topic_map.published %}
                                     <span class="badge badge-success">Published</span>
                                     {% else %}
                                     <span class="badge badge-warning">Private</span>
+                                    {% endif %}
                                     {% endif %}
                                     &mdash; <small><a tabindex="-1" data-trigger="focus"
                                             aria-controls="advancedProperties" data-placement="right"
