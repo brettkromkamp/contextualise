@@ -371,7 +371,7 @@
                                             <tr>
                                                 <th scope="row">Identifier</th>
                                                 <td>
-                                                    <span class="badge badge-warning">{{ topic.identifier }}</span>
+                                                    <span class="badge badge-info">{{ topic.identifier }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -837,173 +837,174 @@
                 </div>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-            crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='app.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-        <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://kit.fontawesome.com/2d71936155.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <script type="text/javascript">
-            window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
-            window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
-            window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}";
-            window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}";
-            window.__IS_AUTHENTICATED__ = JSON.parse({{ "true" if current_user.is_authenticated else "false" }});
-            window.__HAS_WRITE_ACCESS__ = JSON.parse({{ "true" if is_map_owner or collaboration_mode.name == 'EDIT' else "false" }});
+    <script type="text/javascript">
+        window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
+        window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
+        window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}";
+        window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}";
+        window.__IS_AUTHENTICATED__ = JSON.parse({{ "true" if current_user.is_authenticated else "false" }});
+        window.__HAS_WRITE_ACCESS__ = JSON.parse({{ "true" if is_map_owner or collaboration_mode.name == 'EDIT' else "false" }});
 
-            function getUrlParams(url) {
-                var params = {};
-                (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
-                    pair = (pair + '=').split('=').map(decodeURIComponent);
-                    if (pair[0].length) {
-                        params[pair[0]] = pair[1];
-                    }
-                });
-                return params;
-            }
-
-            var urlParts = window.location.pathname.split("/");
-            var mapIdentifier = urlParts[3];
-            var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
-            var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
-            var associationsGetGroupsApiUrl = "/api/get-association-groups/" + mapIdentifier
-                + "/" + window.__TOPIC_IDENTIFIER__
-                + "/" + window.__SCOPE_IDENTIFIER__
-                + "/" + filter;
-            var getIdentifiersApiUrl =
-                "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
-            var createAssociation = false;
-            var notyf = new Notyf({
-                position: { x: "right", y: "top" },
-                dismissible: true,
-                duration: 3000,
-            });
-
-            var topicIdentifiers = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                sufficient: 3,
-                remote: {
-                    url: getIdentifiersApiUrl,
-                    wildcard: "%QUERY",
-                },
-            });
-
-            $(".typeahead").typeahead(
-                {
-                    minLength: 3,
-                    highlight: true,
-                },
-                {
-                    name: "identifiers",
-                    source: topicIdentifiers,
-                    limit: 8
-                }
-            );
-
-            if (document.getElementById("goto-button") != null) {
-                document.getElementById("goto-button").addEventListener("click", (event) => {
-                    var gotoTopicIdentifier = document
-                        .getElementById("goto-topic-identifier")
-                        .value.trim();
-                    var gotoUrl = window.location.href.replace("#", "");
-                    gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
-                    if (gotoTopicIdentifier) {
-                        window.location.href = gotoUrl;
-                    }
-                });
-            }
-
-            $(function () {
-                $('[data-toggle="popover"]').popover()
-            })
-
-            // Associations component
-            let associationsComponent = new Vue({
-                el: "#associations-component",
-                delimiters: ['${', '}'],
-                data: {
-                    mapIdentifier: window.__MAP_IDENTIFIER__,
-                    topicIdentifier: window.__TOPIC_IDENTIFIER__,
-                    currentScope: window.__SCOPE_IDENTIFIER__,
-                    isAuthenticated: window.__IS_AUTHENTICATED__,
-                    hasWriteAccess: window.__HAS_WRITE_ACCESS__,
-                    associations: window.__ASSOCIATIONS_STATE__
-                },
-                computed: {
-                    visibleAssociations: function () {
-                        if (this.associations != null) {
-                            return this.associations.filter(function (association) {
-                                return association.identifier !== 'navigation' && association.identifier !== 'categorization';
-                            })
-                        } else {
-                            return {}
-                        }
-                    }
+        function getUrlParams(url) {
+            var params = {};
+            (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
+                pair = (pair + '=').split('=').map(decodeURIComponent);
+                if (pair[0].length) {
+                    params[pair[0]] = pair[1];
                 }
             });
+            return params;
+        }
 
-            document
-                .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
-                    element.addEventListener("click", function () {
-                        $("#createAssociationModal").modal("show");
-                        createAssociation = false;
-                    });
-                });
+        var urlParts = window.location.pathname.split("/");
+        var mapIdentifier = urlParts[3];
+        var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
+        var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
+        var associationsGetGroupsApiUrl = "/api/get-association-groups/" + mapIdentifier
+            + "/" + window.__TOPIC_IDENTIFIER__
+            + "/" + window.__SCOPE_IDENTIFIER__
+            + "/" + filter;
+        var getIdentifiersApiUrl =
+            "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+        var createAssociation = false;
+        var notyf = new Notyf({
+            position: { x: "right", y: "top" },
+            dismissible: true,
+            duration: 3000,
+        });
 
-            document
-                .getElementById("create-association-modal-button")
-                .addEventListener("click", function () {
-                    $("#createAssociationModal").modal("hide");
-                    createAssociation = true;
-                });
+        var topicIdentifiers = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            sufficient: 3,
+            remote: {
+                url: getIdentifiersApiUrl,
+                wildcard: "%QUERY",
+            },
+        });
 
-            $("#createAssociationModal").on("hidden.bs.modal", function (e) {
-                var modal = $(this);
-                var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
-                modal.find(".modal-body #create-association-dest-topic-ref").val("");
-                if (createAssociation) {
-                    var bodyFormData = new FormData();
-                    bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
-                    bodyFormData.set("association-dest-role-spec", "related");
-                    bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER__);
-                    bodyFormData.set("association-src-role-spec", "related");
-                    bodyFormData.set("association-instance-of", "association");
-                    bodyFormData.set("association-scope", window.__SCOPE_IDENTIFIER__);
-                    bodyFormData.set("association-name", "Undefined");
-                    bodyFormData.set("association-identifier", "");
+        $(".typeahead").typeahead(
+            {
+                minLength: 3,
+                highlight: true,
+            },
+            {
+                name: "identifiers",
+                source: topicIdentifiers,
+                limit: 8
+            }
+        );
 
-                    axios({
-                        method: "post",
-                        url: associationCreateApiUrl,
-                        data: bodyFormData,
-                        headers: { "Content-Type": "multipart/form-data" },
-                    })
-                        .then(function (response) {
-                            notyf.success("Association successfully created!");
-                            axios({
-                                method: "get",
-                                url: associationsGetGroupsApiUrl
-                            })
-                                .then(function (response) {
-                                    associationsComponent.associations = response.data;
-                                })
-                                .catch(function (error) {
-                                    notyf.error("Unable to retrieve associations!");
-                                })
+        if (document.getElementById("goto-button") != null) {
+            document.getElementById("goto-button").addEventListener("click", (event) => {
+                var gotoTopicIdentifier = document
+                    .getElementById("goto-topic-identifier")
+                    .value.trim();
+                var gotoUrl = window.location.href.replace("#", "");
+                gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
+                if (gotoTopicIdentifier) {
+                    window.location.href = gotoUrl;
+                }
+            });
+        }
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        // Associations component
+        let associationsComponent = new Vue({
+            el: "#associations-component",
+            delimiters: ['${', '}'],
+            data: {
+                mapIdentifier: window.__MAP_IDENTIFIER__,
+                topicIdentifier: window.__TOPIC_IDENTIFIER__,
+                currentScope: window.__SCOPE_IDENTIFIER__,
+                isAuthenticated: window.__IS_AUTHENTICATED__,
+                hasWriteAccess: window.__HAS_WRITE_ACCESS__,
+                associations: window.__ASSOCIATIONS_STATE__
+            },
+            computed: {
+                visibleAssociations: function () {
+                    if (this.associations != null) {
+                        return this.associations.filter(function (association) {
+                            return association.identifier !== 'navigation' && association.identifier !== 'categorization';
                         })
-                        .catch(function (error) {
-                            notyf.error("Unable to create association!");
-                        });
+                    } else {
+                        return {}
+                    }
                 }
+            }
+        });
+
+        document
+            .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
+                element.addEventListener("click", function () {
+                    $("#createAssociationModal").modal("show");
+                    createAssociation = false;
+                });
             });
-        </script>
+
+        document
+            .getElementById("create-association-modal-button")
+            .addEventListener("click", function () {
+                $("#createAssociationModal").modal("hide");
+                createAssociation = true;
+            });
+
+        $("#createAssociationModal").on("hidden.bs.modal", function (e) {
+            var modal = $(this);
+            var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
+            modal.find(".modal-body #create-association-dest-topic-ref").val("");
+            if (createAssociation) {
+                var bodyFormData = new FormData();
+                bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
+                bodyFormData.set("association-dest-role-spec", "related");
+                bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER__);
+                bodyFormData.set("association-src-role-spec", "related");
+                bodyFormData.set("association-instance-of", "association");
+                bodyFormData.set("association-scope", window.__SCOPE_IDENTIFIER__);
+                bodyFormData.set("association-name", "Undefined");
+                bodyFormData.set("association-identifier", "");
+
+                axios({
+                    method: "post",
+                    url: associationCreateApiUrl,
+                    data: bodyFormData,
+                    headers: { "Content-Type": "multipart/form-data" },
+                })
+                    .then(function (response) {
+                        notyf.success("Association successfully created!");
+                        axios({
+                            method: "get",
+                            url: associationsGetGroupsApiUrl
+                        })
+                            .then(function (response) {
+                                associationsComponent.associations = response.data;
+                            })
+                            .catch(function (error) {
+                                notyf.error("Unable to retrieve associations!");
+                            })
+                    })
+                    .catch(function (error) {
+                        notyf.error("Unable to create association!");
+                    });
+            }
+        });
+    </script>
 </body>
 
 </html>
