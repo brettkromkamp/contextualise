@@ -15,9 +15,11 @@ class HighlightRenderer(mistune.HTMLRenderer):
     def __init__(self, escape=True, allow_harmful_protocols=None):
         super().__init__(escape, allow_harmful_protocols)
 
-    def block_code(self, code, lang=None, **kwargs):
-        if lang:
-            lexer = get_lexer_by_name(lang, stripall=True)
+    def block_code(self, code, **kwargs):
+        language = kwargs.get("info")
+        print("Language: ", language)
+        if language:
+            lexer = get_lexer_by_name(language, stripall=True)
             formatter = html.HtmlFormatter()
             return highlight(code, lexer, formatter)
         return "<pre><code>" + mistune.escape(code) + "</code></pre>"
