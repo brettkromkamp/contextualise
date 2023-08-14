@@ -109,7 +109,7 @@
     <div class="container">
         <div class="card-deck mb-3 text-center">
             {% for map in maps %}
-            <div class="card mb-4 shadow-sm">
+            <div class="card mb-4">
                 <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">
                     <img alt="{{ map.name }}" class="card-img-top"
                         src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
