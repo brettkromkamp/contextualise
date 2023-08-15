@@ -17,7 +17,6 @@ class HighlightRenderer(mistune.HTMLRenderer):
 
     def block_code(self, code, **kwargs):
         language = kwargs.get("info")
-        print("Language: ", language)
         if language:
             lexer = get_lexer_by_name(language, stripall=True)
             formatter = html.HtmlFormatter()

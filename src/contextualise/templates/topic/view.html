@@ -467,6 +467,8 @@
                                 <small class="text-muted">{{ note.timestamp }}</small>
                             </h5>
                             <p class="card-text">{{ note.text|safe }}</p>
+                        </div>
+                        <div class="card-footer">
                             {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or
                             collaboration_mode.name ==
                             "COMMENT") %}

@@ -23,6 +23,8 @@
                     <small class="text-muted">{{ note.timestamp }}</small>
                 </h5>
                 <p class="card-text">{{ note.text|safe }}</p>
+            </div>
+            <div class="card-footer">
                 {% if current_user.id == topic_map.user_identifier %}
                 <a class="card-link"
                     href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
