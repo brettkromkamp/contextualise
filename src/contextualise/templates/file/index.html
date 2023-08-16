@@ -1,171 +1,168 @@
 {% extends "layout_1_column.html" %} {% block title %}
-    <title>
-        {{ topic.first_base_name.name }} &mdash; Files | {{ topic_map.name }}
-    </title>
+<title>
+    {{ topic.first_base_name.name }} &mdash; Files | {{ topic_map.name }}
+</title>
 {% endblock %}
 {% block javascript %}
-    <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 {% endblock %}
 
 {% block menu %}
-    <ul class="nav nav-tabs">
-        <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-               href="#"
-               role="button">Topic</a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                    topic</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                    topic</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                    identifier</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
-                    topic</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                    names</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item"
-                   href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                    note</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                    tags</a>
-                {% if 'admin' in current_user.roles %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item"
-                       href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                        attributes</a>
-                {% endif %}
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-               href="#" role="button">Resources</a>
-            <div class="dropdown-menu">
-                <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item"
-                   href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                    image</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                    file</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                    video</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                    link</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                    3D scene</a>
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-               href="#"
-               role="button">Associations</a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item"
-                   href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item"
-                   href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                    association</a>
-                <a class="dropdown-item disabled" href="#">Create generic association</a>
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-               href="#"
-               role="button">Visualisations</a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item"
-                   href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                    network graph</a>
-                <a class="dropdown-item"
-                   href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                    tags cloud</a>
-                <a class="dropdown-item" href="#">View timeline</a>
-                <a class="dropdown-item" href="#">View geographic map</a>
-            </div>
-        </li>
-    </ul>
+<ul class="nav nav-tabs">
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+            role="button">Topic</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                topic</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                topic</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                identifier</a>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                topic</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                names</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                note</a>
+            <a class="dropdown-item"
+                href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                tags</a>
+            {% if 'admin' in current_user.roles %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                attributes</a>
+            {% endif %}
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
+            href="#" role="button">Resources</a>
+        <div class="dropdown-menu">
+            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                image</a>
+            <a class="dropdown-item"
+                href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                file</a>
+            <a class="dropdown-item"
+                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                video</a>
+            <a class="dropdown-item"
+                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                link</a>
+            <a class="dropdown-item"
+                href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                3D scene</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+            role="button">Associations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                association</a>
+            <a class="dropdown-item disabled" href="#">Create generic association</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+            role="button">Visualisations</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                network graph</a>
+            <a class="dropdown-item"
+                href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                tags cloud</a>
+            <a class="dropdown-item" href="#">View timeline</a>
+            <a class="dropdown-item" href="#">View geographic map</a>
+        </div>
+    </li>
+</ul>
 {% endblock %} {% block content %}
-    <h1>
-        {{ topic.first_base_name.name }}
-        <small class="text-muted">Files</small>
-    </h1>
-    <p><em>{{ creation_date }}</em></p>
-    <hr/>
-    <div class="row">
+<h1>
+    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Files</small>
+</h1>
+<p><em>{{ creation_date }}</em></p>
+<hr />
+<div class="row">
     <div class="col-md-2">
         <nav class="nav nav-pills flex-column">
             <a class="nav-link"
-               href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
             <a class="nav-link active btn-light" href="#">Files</a>
             <a class="nav-link"
-               href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
             <a class="nav-link"
-               href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+                href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
             <a class="nav-link"
-               href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
+                href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
                 scenes</a>
         </nav>
     </div>
     <div class="col-md-10">
-    {% if files %}
+        {% if files %}
         <table class="table table-bordered">
             <thead class="thead-light">
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Scope</th>
-                <th scope="col">Action</th>
-            </tr>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Scope</th>
+                    <th scope="col">Action</th>
+                </tr>
             </thead>
             <tbody>
-            {% for file in files %}
+                {% for file in files %}
                 <tr>
                     <td><a href="/static/resources/{{ topic_map.identifier }}/{{ file.url }}">{{ file.title }}</a></td>
                     <td><a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{ file.scope|topic_name(topic_map.identifier) }}</a>
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=file.scope) }}">{{
+                            file.scope|topic_name(topic_map.identifier) }}</a>
                     </td>
                     <td>
                         <a
-                                href="{{ url_for('file.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="{{ url_for('file.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('file.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Delete</a>
                         {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                                href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=file.identifier, entity_type='file') }}">View
+                            href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=file.identifier, entity_type='file') }}">View
                             attributes</a>
                         {% endif %}
                     </td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
-    {% elif current_user.id == topic_map.user_identifier %}
+        {% elif current_user.id == topic_map.user_identifier %}
         <p class="alert alert-info" role="alert">
             This topic has no associated files. Click on the "Upload file" button below to add a file.
         </p>
-    {% endif %}
-    {% if current_user.id == topic_map.user_identifier %}
+        {% endif %}
+        {% if current_user.id == topic_map.user_identifier %}
         <a class="btn btn-primary"
-           href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+            href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
             file</a>
-        <br/>
-        <br/>
-    {% endif %}
-{% endblock %}
-</div>
+        <br />
+        <br />
+        {% endif %}
+        {% endblock %}
+    </div>
 </div>

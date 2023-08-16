@@ -1,91 +1,93 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-    <title>{{ topic.first_base_name.name }} &mdash; Attributes | {{ topic_map.name }}</title>
+<title>{{ topic.first_base_name.name }} &mdash; Attributes | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {{ topic.first_base_name.name }}
-        {% if entity_type == 'topic' %}
-            <small class="text-muted">Topic attributes</small>
-        {% elif entity_type == 'image' %}
-            <small class="text-muted">Image attributes</small>
-        {% elif entity_type == '3d-scene' %}
-            <small class="text-muted">3D content attributes</small>
-        {% elif entity_type == 'file' %}
-            <small class="text-muted">File attributes</small>
-        {% elif entity_type == 'link' %}
-            <small class="text-muted">Link attributes</small>
-        {% elif entity_type == 'video' %}
-            <small class="text-muted">Video attributes</small>
-        {% else %}
-            <small class="text-muted">Association attributes</small>
-        {% endif %}
-    </h1>
-    <p><em>{{ creation_date }}</em></p>
-    {% if attributes %}
-        <table class="table table-bordered">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Value</th>
-                <th scope="col">Data Type</th>
-                <th scope="col">Scope</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for attribute in attributes %}
-                <tr>
-                    <td>{{ attribute.name }}</td>
-                    <td style="max-width: 36em;">{{ attribute.value }}</td>
-                    <td>
-                        <a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.type) }}">{{ attribute.type|topic_name(topic_map.identifier) }}</a>
-                    </td>
-                    <td>
-                        <a
-                                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.scope) }}">{{ attribute.scope|topic_name(topic_map.identifier) }}</a>
-                    </td>
-                    <td>{% if entity_type == 'topic' %}
-                        <a
-                                href="{{ url_for('attribute.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}">Edit</a>
-                    {% else %}
-                        <a
-                                href="{{ url_for('attribute.entity_edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}">Edit</a>
-                    {% endif %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                        {% if entity_type == 'topic' %}
-                            <a
-                                    href="{{ url_for('attribute.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}">Delete</a>
-                        {% else %}
-                            <a
-                                    href="{{ url_for('attribute.entity_delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}">Delete</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% elif current_user.id == topic_map.user_identifier %}
-        <p>This entity has no associated attributes. Click on the "Add attribute" button below to add an attribute.</p>
+<h1>
+    {{ topic.first_base_name.name }}&nbsp;&middot;
+    {% if entity_type == 'topic' %}
+    <small class="text-muted">Topic attributes</small>
+    {% elif entity_type == 'image' %}
+    <small class="text-muted">Image attributes</small>
+    {% elif entity_type == '3d-scene' %}
+    <small class="text-muted">3D content attributes</small>
+    {% elif entity_type == 'file' %}
+    <small class="text-muted">File attributes</small>
+    {% elif entity_type == 'link' %}
+    <small class="text-muted">Link attributes</small>
+    {% elif entity_type == 'video' %}
+    <small class="text-muted">Video attributes</small>
+    {% else %}
+    <small class="text-muted">Association attributes</small>
     {% endif %}
-    {% if current_user.id == topic_map.user_identifier %}
-        <a class="btn btn-secondary"
-           href="{{ url_for(return_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-           role="button">Return</a>
-        {% if entity_type == 'topic' %}
-            <a class="btn btn-primary"
-               href="{{ url_for('attribute.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                attribute</a>
-        {% else %}
-            <a class="btn btn-primary"
-               href="{{ url_for('attribute.entity_add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}">Add
-                attribute</a>
-        {% endif %}
-        <br/>
-        <br/>
-    {% endif %}
+</h1>
+<p><em>{{ creation_date }}</em></p>
+{% if attributes %}
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Value</th>
+            <th scope="col">Data Type</th>
+            <th scope="col">Scope</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attribute in attributes %}
+        <tr>
+            <td>{{ attribute.name }}</td>
+            <td style="max-width: 36em;">{{ attribute.value }}</td>
+            <td>
+                <a
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.type) }}">{{
+                    attribute.type|topic_name(topic_map.identifier) }}</a>
+            </td>
+            <td>
+                <a
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=attribute.scope) }}">{{
+                    attribute.scope|topic_name(topic_map.identifier) }}</a>
+            </td>
+            <td>{% if entity_type == 'topic' %}
+                <a
+                    href="{{ url_for('attribute.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}">Edit</a>
+                {% else %}
+                <a
+                    href="{{ url_for('attribute.entity_edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}">Edit</a>
+                {% endif %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                {% if entity_type == 'topic' %}
+                <a
+                    href="{{ url_for('attribute.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=attribute.identifier) }}">Delete</a>
+                {% else %}
+                <a
+                    href="{{ url_for('attribute.entity_delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=attribute.identifier, entity_type=entity_type) }}">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif current_user.id == topic_map.user_identifier %}
+<p>This entity has no associated attributes. Click on the "Add attribute" button below to add an attribute.</p>
+{% endif %}
+{% if current_user.id == topic_map.user_identifier %}
+<a class="btn btn-secondary"
+    href="{{ url_for(return_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+    role="button">Return</a>
+{% if entity_type == 'topic' %}
+<a class="btn btn-primary"
+    href="{{ url_for('attribute.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+    attribute</a>
+{% else %}
+<a class="btn btn-primary"
+    href="{{ url_for('attribute.entity_add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, entity_type=entity_type) }}">Add
+    attribute</a>
+{% endif %}
+<br />
+<br />
+{% endif %}
 {% endblock %}

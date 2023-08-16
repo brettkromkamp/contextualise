@@ -1,43 +1,41 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-    <title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>
-        {{ topic.first_base_name.name }}
-        <small class="text-muted">Change scope</small>
-    </h1>
-    <hr/>
-    <form
-            action="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=scope_identifier) }}"
-            autocomplete="off" method="post" role="form">
-        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-        <div class="form-group">
-            <label for="current-scope"><strong>Current scope</strong></label>
-            <input aria-readonly="true" class="form-control" id="current-scope" name="current-scope" readonly
-                   type="text"
-                   value="{{ scope_identifier|topic_name(topic_map.identifier) }}">
-        </div>
-        <div class="form-group">
-            <label for="new-scope"><strong>New scope</strong>
-                <small class="text-info">&mdash; If no value is provided the default will be "<strong>universal</strong>"
-                    scope</small>
-            </label>
-            <input class="form-control typeahead" id="new-scope" name="new-scope" placeholder="Enter scope identifier"
-                   type="text" value="{{ scope_identifier or '' }}" autofocus>
-            {% if error|bitwise_and(1) == 1 %}
-                <small class="text-danger">
-                    A scope with this identifier doesn't exist. Please provide an identifier for an existing
-                    scope.
-                </small>
-            {% endif %}
-        </div>
-        <a class="btn btn-secondary"
-           href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-           role="button">Cancel</a>
-        <button class="btn btn-success" type="submit">Change scope</button>
-    </form>
-    <br/>
+<h1>
+    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Change scope</small>
+</h1>
+<hr />
+<form
+    action="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=scope_identifier) }}"
+    autocomplete="off" method="post" role="form">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="current-scope"><strong>Current scope</strong></label>
+        <input aria-readonly="true" class="form-control" id="current-scope" name="current-scope" readonly type="text"
+            value="{{ scope_identifier|topic_name(topic_map.identifier) }}">
+    </div>
+    <div class="form-group">
+        <label for="new-scope"><strong>New scope</strong>
+            <small class="text-info">&mdash; If no value is provided the default will be "<strong>universal</strong>"
+                scope</small>
+        </label>
+        <input class="form-control typeahead" id="new-scope" name="new-scope" placeholder="Enter scope identifier"
+            type="text" value="{{ scope_identifier or '' }}" autofocus>
+        {% if error|bitwise_and(1) == 1 %}
+        <small class="text-danger">
+            A scope with this identifier doesn't exist. Please provide an identifier for an existing
+            scope.
+        </small>
+        {% endif %}
+    </div>
+    <a class="btn btn-secondary"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+        role="button">Cancel</a>
+    <button class="btn btn-success" type="submit">Change scope</button>
+</form>
+<br />
 {% endblock %}

@@ -1,89 +1,92 @@
 {% extends "layout_1_column.html" %}
 
 {% block title %}
-    <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
+<title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
 
 {% block content %}
-    <h1>
-        {{ topic.identifier|topic_name(topic_map.identifier) }}
-        <small class="text-muted">View association</small>
-    </h1>
-    <hr/>
+<h1>
+    {{ topic.identifier|topic_name(topic_map.identifier) }}&nbsp;&middot;&nbsp;<small class="text-muted">View
+        association</small>
+</h1>
+<hr />
+<div class="form-group">
     <div class="form-group">
-        <div class="form-group">
-            <label for="association-instance-of"><strong>Type</strong></label>
-            <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
-                   readonly type="text" value="{{ association.instance_of|topic_name(topic_map.identifier) }}">
-        </div>
-        <div class="form-group">
-            <label for="association-scope"><strong>Scope</strong></label>
-            <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope" readonly
-                   type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
-        </div>
-        <label><strong>Member</strong></label>
-        <table class="table table-bordered table-sm">
-            <thead class="thead-light">
+        <label for="association-instance-of"><strong>Type</strong></label>
+        <input aria-readonly="true" class="form-control" id="association-instance-of" name="association-instance-of"
+            readonly type="text" value="{{ association.instance_of|topic_name(topic_map.identifier) }}">
+    </div>
+    <div class="form-group">
+        <label for="association-scope"><strong>Scope</strong></label>
+        <input aria-readonly="true" class="form-control" id="association-scope" name="association-scope" readonly
+            type="text" value="{{ association.scope|topic_name(topic_map.identifier) }}">
+    </div>
+    <label><strong>Member</strong></label>
+    <table class="table table-bordered table-sm">
+        <thead class="thead-light">
             <tr>
                 <th scope="col">Topic reference</th>
                 <th scope="col">Role</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             <tr>
                 <td>
                     <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{ association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a><br/>
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
+                        association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a><br />
                 </td>
                 <td class="align-middle">
                     <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{ association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
+                        association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{ association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a><br/>
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
+                        association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a><br />
                 </td>
                 <td class="align-middle">
                     <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{ association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>
+                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
+                        association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>
                 </td>
             </tr>
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
+</div>
 
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-                                             data-toggle="collapse"
-                                             href="#advancedOptions"> Advanced options</a></p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
-            </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="association-name"><strong>Name</strong></label>
-                        <input aria-readonly="true" class="form-control" id="association-name" name="association-name"
-                               readonly type="text" value="{{ association.first_base_name.name }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="association-identifier"><strong>Identifier</strong></label>
-                        <input aria-readonly="true" class="form-control" id="association-identifier"
-                               name="association-identifier" readonly type="text" value="{{ association.identifier }}">
-                    </div>
+<p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false" data-toggle="collapse"
+        href="#advancedOptions"> Advanced options</a></p>
+<div class="collapse" id="advancedOptions">
+    <div class="card">
+        <div class="card-header">
+            Advanced options
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <div class="form-group">
+                    <label for="association-name"><strong>Name</strong></label>
+                    <input aria-readonly="true" class="form-control" id="association-name" name="association-name"
+                        readonly type="text" value="{{ association.first_base_name.name }}">
+                </div>
+                <div class="form-group">
+                    <label for="association-identifier"><strong>Identifier</strong></label>
+                    <input aria-readonly="true" class="form-control" id="association-identifier"
+                        name="association-identifier" readonly type="text" value="{{ association.identifier }}">
                 </div>
             </div>
         </div>
-        <br/>
     </div>
-    <a class="btn btn-secondary"
-       href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-       role="button">Return</a>
-    <br/>
-    <br/>
+    <br />
+</div>
+<a class="btn btn-secondary"
+    href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+    role="button">Return</a>
+<br />
+<br />
 {% endblock %}
