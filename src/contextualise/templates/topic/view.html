@@ -68,32 +68,29 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-expanded="false">Notes</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {% if map_notes_count == 0 %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
-                                    notes&nbsp;&nbsp;<span class="badge badge-primary">{{ map_notes_count }}</span></a>
-                                {% else %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">View
-                                    notes&nbsp;&nbsp;<span class="badge badge-danger">{{ map_notes_count }}</span></a>
-                                {% endif %}
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item"
-                                    href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add
-                                    note</a>
-                            </div>
+                        <li class="nav-item">
+                            {% if map_notes_count == 0 %}
+                            <a class="nav-link"
+                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+                            {% else %}
+                            <a class="nav-link"
+                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;&nbsp;<span
+                                    class="badge badge-danger">{{ map_notes_count }}</span></a>
+                            {% endif %}
                         </li>
                         {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
                         </li>
                         <li class="nav-item">
+                            {% if map_notes_count == 0 %}
                             <a class="nav-link"
                                 href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+                            {% else %}
+                            <a class="nav-link"
+                                href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;&nbsp;<span
+                                    class="badge badge-danger">{{ map_notes_count }}</span></a>
+                            {% endif %}
                         </li>
                         {% endif %}
                         {% if topic.identifier != 'home' %}
