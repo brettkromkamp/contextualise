@@ -468,16 +468,16 @@
                             </h5>
                             <p class="card-text">{{ note.text|safe }}</p>
                         </div>
+                        {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or
+                        collaboration_mode.name ==
+                        "COMMENT") %}
                         <div class="card-footer">
-                            {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or
-                            collaboration_mode.name ==
-                            "COMMENT") %}
                             <a class="card-link"
                                 href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
                             <a class="card-link"
                                 href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
-                            {% endif %}
                         </div>
+                        {% endif %}
                     </div>
                     <br />
                     {% endfor %}
