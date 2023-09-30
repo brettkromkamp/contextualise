@@ -31,7 +31,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -63,9 +66,15 @@ def index(map_identifier, topic_identifier):
     # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "link/index.html",
@@ -87,7 +96,10 @@ def add(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -98,7 +110,9 @@ def add(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -183,7 +197,10 @@ def edit(map_identifier, topic_identifier, link_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -203,7 +220,9 @@ def edit(map_identifier, topic_identifier, link_identifier):
     form_link_title = link_occurrence.get_attribute_by_name("title").value
     form_link_scope = link_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -236,7 +255,9 @@ def edit(map_identifier, topic_identifier, link_identifier):
 
             # Update link's scope if it has changed
             if link_occurrence.scope != form_link_scope:
-                store.update_occurrence_scope(map_identifier, link_occurrence.identifier, form_link_scope)
+                store.update_occurrence_scope(
+                    map_identifier, link_occurrence.identifier, form_link_scope
+                )
 
             flash("Link successfully updated.", "success")
             return redirect(
@@ -272,7 +293,10 @@ def delete(map_identifier, topic_identifier, link_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -293,7 +317,9 @@ def delete(map_identifier, topic_identifier, link_identifier):
     form_link_url = link_occurrence.resource_ref
     form_link_scope = link_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete link occurrence from topic store

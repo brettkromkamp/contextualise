@@ -9,7 +9,16 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.models.attribute import Attribute
@@ -37,7 +46,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -67,9 +79,15 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "image/index.html",
@@ -91,7 +109,10 @@ def upload(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -102,13 +123,17 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
         form_image_title = request.form["image-title"].strip()
         form_image_scope = request.form["image-scope"].strip()
-        form_upload_file = request.files["image-file"] if "image-file" in request.files else None
+        form_upload_file = (
+            request.files["image-file"] if "image-file" in request.files else None
+        )
 
         # If no values have been provided set their default values
         if not form_image_scope:
@@ -133,10 +158,14 @@ def upload(map_identifier, topic_identifier):
                 "warning",
             )
         else:
-            image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
+            image_file_name = (
+                f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
+            )
 
             # Create the image directory for this topic map if it doesn't already exist
-            image_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+            image_directory = os.path.join(
+                current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier)
+            )
             if not os.path.isdir(image_directory):
                 os.makedirs(image_directory)
 
@@ -201,7 +230,10 @@ def edit(map_identifier, topic_identifier, image_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -222,7 +254,9 @@ def edit(map_identifier, topic_identifier, image_identifier):
     form_image_resource_ref = image_occurrence.resource_ref
     form_image_scope = image_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -246,7 +280,10 @@ def edit(map_identifier, topic_identifier, image_identifier):
             )
         else:
             # Update image's title if it has changed
-            if image_occurrence.get_attribute_by_name("title").value != form_image_title:
+            if (
+                image_occurrence.get_attribute_by_name("title").value
+                != form_image_title
+            ):
                 store.update_attribute_value(
                     topic_map.identifier,
                     image_occurrence.get_attribute_by_name("title").identifier,
@@ -255,7 +292,9 @@ def edit(map_identifier, topic_identifier, image_identifier):
 
             # Update image's scope if it has changed
             if image_occurrence.scope != form_image_scope:
-                store.update_occurrence_scope(map_identifier, image_occurrence.identifier, form_image_scope)
+                store.update_occurrence_scope(
+                    map_identifier, image_occurrence.identifier, form_image_scope
+                )
 
             flash("Image successfully updated.", "success")
             return redirect(
@@ -292,7 +331,10 @@ def delete(map_identifier, topic_identifier, image_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -313,7 +355,9 @@ def delete(map_identifier, topic_identifier, image_identifier):
     form_image_resource_ref = image_occurrence.resource_ref
     form_image_scope = image_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete image occurrence from topic store

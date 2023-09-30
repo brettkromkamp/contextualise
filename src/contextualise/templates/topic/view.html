@@ -459,20 +459,29 @@
                     {% for note in occurrences['notes'] %}
                     <a name="note-{{ note.identifier }}"></a>
                     <div class="card border-warning">
+                      <div class="card-header">
+                        <small class="text-muted">{{ note.timestamp }}</small>
+                      </div>
                         <div class="card-body text-secondary">
-                            <h5 class="card-title">{{ note.title }} &mdash;
-                                <small class="text-muted">{{ note.timestamp }}</small>
-                            </h5>
+                            <h5 class="card-title">{{ note.title }}</h5>
                             <p class="card-text">{{ note.text|safe }}</p>
                         </div>
                         {% if current_user.is_authenticated and (collaboration_mode.name == "EDIT" or
                         collaboration_mode.name ==
                         "COMMENT") %}
                         <div class="card-footer">
-                            <a class="card-link"
-                                href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
-                            <a class="card-link"
-                                href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+                          <div class="btn-group">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                Options
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item"
+                                  href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
+                              <a class="dropdown-item"
+                                  href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+                            </div>
+                          </div>
                         </div>
                         {% endif %}
                     </div>

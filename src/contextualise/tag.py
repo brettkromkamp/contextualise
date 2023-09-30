@@ -5,7 +5,15 @@ February 13, 2022
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_security import current_user, login_required
 from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.store.retrievalmode import RetrievalMode
@@ -29,7 +37,10 @@ def add(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -45,7 +56,9 @@ def add(map_identifier, topic_identifier):
 
     form_tags = None
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":

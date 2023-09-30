@@ -31,7 +31,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -63,9 +66,15 @@ def index(map_identifier, topic_identifier):
     # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "video/index.html",
@@ -87,7 +96,10 @@ def add(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -98,7 +110,9 @@ def add(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -183,7 +197,10 @@ def edit(map_identifier, topic_identifier, video_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -203,7 +220,9 @@ def edit(map_identifier, topic_identifier, video_identifier):
     form_video_title = video_occurrence.get_attribute_by_name("title").value
     form_video_scope = video_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -227,7 +246,10 @@ def edit(map_identifier, topic_identifier, video_identifier):
             )
         else:
             # Update video's title if it has changed
-            if video_occurrence.get_attribute_by_name("title").value != form_video_title:
+            if (
+                video_occurrence.get_attribute_by_name("title").value
+                != form_video_title
+            ):
                 store.update_attribute_value(
                     topic_map.identifier,
                     video_occurrence.get_attribute_by_name("title").identifier,
@@ -236,7 +258,9 @@ def edit(map_identifier, topic_identifier, video_identifier):
 
             # Update video's scope if it has changed
             if video_occurrence.scope != form_video_scope:
-                store.update_occurrence_scope(map_identifier, video_occurrence.identifier, form_video_scope)
+                store.update_occurrence_scope(
+                    map_identifier, video_occurrence.identifier, form_video_scope
+                )
 
             flash("Video link successfully updated.", "success")
             return redirect(
@@ -272,7 +296,10 @@ def delete(map_identifier, topic_identifier, video_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -292,7 +319,9 @@ def delete(map_identifier, topic_identifier, video_identifier):
     form_video_title = video_occurrence.get_attribute_by_name("title").value
     form_video_scope = video_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete video occurrence from topic store

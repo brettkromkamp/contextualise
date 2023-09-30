@@ -9,7 +9,16 @@ import os
 import uuid
 
 import maya
-from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.models.attribute import Attribute
@@ -36,7 +45,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -66,9 +78,15 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "file/index.html",
@@ -90,7 +108,10 @@ def upload(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -101,13 +122,17 @@ def upload(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
         form_file_title = request.form["file-title"].strip()
         form_file_scope = request.form["file-scope"].strip()
-        form_upload_file = request.files["file-file"] if "file-file" in request.files else None
+        form_upload_file = (
+            request.files["file-file"] if "file-file" in request.files else None
+        )
 
         # If no values have been provided set their default values
         if not form_file_scope:
@@ -135,7 +160,9 @@ def upload(map_identifier, topic_identifier):
             form_file_title = f"{form_file_title} (.{file_extension})"
 
             # Create the file directory for this topic map if it doesn't already exist
-            file_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+            file_directory = os.path.join(
+                current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier)
+            )
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -200,7 +227,10 @@ def edit(map_identifier, topic_identifier, file_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -220,7 +250,9 @@ def edit(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -253,7 +285,9 @@ def edit(map_identifier, topic_identifier, file_identifier):
 
             # Update file's scope if it has changed
             if file_occurrence.scope != form_file_scope:
-                store.update_occurrence_scope(map_identifier, file_occurrence.identifier, form_file_scope)
+                store.update_occurrence_scope(
+                    map_identifier, file_occurrence.identifier, form_file_scope
+                )
 
             flash("File successfully updated.", "success")
             return redirect(
@@ -289,7 +323,10 @@ def delete(map_identifier, topic_identifier, file_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -309,7 +346,9 @@ def delete(map_identifier, topic_identifier, file_identifier):
     form_file_title = file_occurrence.get_attribute_by_name("title").value
     form_file_scope = file_occurrence.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete file occurrence from topic store

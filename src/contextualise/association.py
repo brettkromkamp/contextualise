@@ -30,7 +30,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -46,9 +49,15 @@ def index(map_identifier, topic_identifier):
     # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "association/index.html",
@@ -60,7 +69,9 @@ def index(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/associations/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route(
+    "/associations/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
+)
 @login_required
 def create(map_identifier, topic_identifier):
     store = get_topic_store()
@@ -70,7 +81,10 @@ def create(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -81,7 +95,9 @@ def create(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     flash(
@@ -90,10 +106,16 @@ def create(map_identifier, topic_identifier):
     )
 
     if request.method == "POST":
-        form_association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
-        form_association_dest_role_spec = request.form["association-dest-role-spec"].strip()
+        form_association_dest_topic_ref = request.form[
+            "association-dest-topic-ref"
+        ].strip()
+        form_association_dest_role_spec = request.form[
+            "association-dest-role-spec"
+        ].strip()
         form_association_src_topic_ref = topic_identifier
-        form_association_src_role_spec = request.form["association-src-role-spec"].strip()
+        form_association_src_role_spec = request.form[
+            "association-src-role-spec"
+        ].strip()
         form_association_instance_of = request.form["association-instance-of"].strip()
         form_association_scope = request.form["association-scope"].strip()
         form_association_name = request.form["association-name"].strip()
@@ -114,7 +136,9 @@ def create(map_identifier, topic_identifier):
             form_association_identifier = ""
 
         # Validate form inputs
-        if not store.topic_exists(topic_map.identifier, form_association_dest_topic_ref):
+        if not store.topic_exists(
+            topic_map.identifier, form_association_dest_topic_ref
+        ):
             error = error | 1
         if form_association_dest_role_spec != "related" and not store.topic_exists(
             topic_map.identifier, form_association_dest_role_spec
@@ -132,7 +156,9 @@ def create(map_identifier, topic_identifier):
             topic_map.identifier, form_association_scope
         ):
             error = error | 16
-        if form_association_identifier and store.topic_exists(topic_map.identifier, form_association_identifier):
+        if form_association_identifier and store.topic_exists(
+            topic_map.identifier, form_association_identifier
+        ):
             error = error | 32
 
         # TODO: Flag an error to prevent the user from creating an association with the reserved
@@ -211,7 +237,10 @@ def delete(map_identifier, topic_identifier, association_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -224,7 +253,9 @@ def delete(map_identifier, topic_identifier, association_identifier):
 
     association = store.get_association(map_identifier, association_identifier)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         store.delete_association(map_identifier, association_identifier)
@@ -246,7 +277,9 @@ def delete(map_identifier, topic_identifier, association_identifier):
     )
 
 
-@bp.route("/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>")
+@bp.route(
+    "/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>"
+)
 @login_required
 def view(map_identifier, topic_identifier, association_identifier):
     store = get_topic_store()
@@ -256,7 +289,10 @@ def view(map_identifier, topic_identifier, association_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -269,7 +305,9 @@ def view(map_identifier, topic_identifier, association_identifier):
 
     association = store.get_association(map_identifier, association_identifier)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "association/view.html",

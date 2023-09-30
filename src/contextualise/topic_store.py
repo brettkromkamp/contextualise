@@ -14,6 +14,7 @@ def get_topic_store():
         g.topic_store = TopicStore(database_path=current_app.config["DATABASE_PATH"])
     return g.topic_store
 
+
 # Explicitly closing the connection at the end of each request is unnecessary
 # as the topic store manages its own connections
 

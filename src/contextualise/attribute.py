@@ -33,7 +33,10 @@ def index(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -59,12 +62,18 @@ def index(map_identifier, topic_identifier):
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
     entity_type = "topic"
     return_url = "topic.view"
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "attribute/index.html",
@@ -78,7 +87,9 @@ def index(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/attributes/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>")
+@bp.route(
+    "/attributes/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>"
+)
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
     store = get_topic_store()
@@ -90,7 +101,10 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -141,9 +155,15 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
-    creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
+    creation_date = (
+        maya.parse(creation_date_attribute.value)
+        if creation_date_attribute
+        else "Undefined"
+    )
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     return render_template(
         "attribute/index.html",
@@ -158,7 +178,9 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     )
 
 
-@bp.route("/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route(
+    "/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST")
+)
 @login_required
 def add(map_identifier, topic_identifier):
     store = get_topic_store()
@@ -170,7 +192,10 @@ def add(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -185,7 +210,9 @@ def add(map_identifier, topic_identifier):
     post_url = "attribute.add"
     cancel_url = "attribute.index"
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -276,7 +303,10 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -298,7 +328,9 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     post_url = "attribute.entity_add"
     cancel_url = "attribute.entity_index"
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -393,7 +425,10 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -413,7 +448,9 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -510,7 +547,10 @@ def entity_edit(
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -545,7 +585,9 @@ def entity_edit(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
     error = 0
 
     if request.method == "POST":
@@ -638,7 +680,10 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -658,7 +703,9 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete attribute from topic store
@@ -714,7 +761,10 @@ def entity_delete(
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
+    if (
+        not topic_map.owner
+        and topic_map.collaboration_mode is not CollaborationMode.EDIT
+    ):
         abort(403)
 
     topic = store.get_topic(
@@ -749,7 +799,9 @@ def entity_delete(
     form_attribute_type = str(attribute.data_type).capitalize()
     form_attribute_scope = attribute.scope
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
+        "note"
+    ]
 
     if request.method == "POST":
         # Delete attribute from topic store
