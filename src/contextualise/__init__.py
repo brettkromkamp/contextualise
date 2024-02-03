@@ -11,7 +11,7 @@ from logging.handlers import RotatingFileHandler
 
 from flask import Flask, render_template, session
 from flask_mail import Mail
-from flask_seasurf import SeaSurf
+from flask_wtf.csrf import CSRFProtect
 from flask_security import (
     RoleMixin,
     Security,
@@ -74,7 +74,7 @@ def create_app(test_config=None):
 
     # Set up app
     mail = Mail(app)
-    csrf = SeaSurf(app)
+    csrf = CSRFProtect(app)
 
     if test_config is None:
         # Load the instance config, if it exists, when not testing
