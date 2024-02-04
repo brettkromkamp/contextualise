@@ -459,9 +459,9 @@
                     {% for note in occurrences['notes'] %}
                     <a name="note-{{ note.identifier }}"></a>
                     <div class="card border-warning">
-                      <div class="card-header">
-                        <small class="text-muted">{{ note.timestamp }}</small>
-                      </div>
+                        <div class="card-header">
+                            <small class="text-muted">{{ note.timestamp }}</small>
+                        </div>
                         <div class="card-body text-secondary">
                             <h5 class="card-title">{{ note.title }}</h5>
                             <p class="card-text">{{ note.text|safe }}</p>
@@ -470,18 +470,18 @@
                         collaboration_mode.name ==
                         "COMMENT") %}
                         <div class="card-footer">
-                          <div class="btn-group">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                                id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                                Options
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item"
-                                  href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
-                              <a class="dropdown-item"
-                                  href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                    Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.edit_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Edit</a>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.delete_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, note_identifier=note.identifier) }}">Delete</a>
+                                </div>
                             </div>
-                          </div>
                         </div>
                         {% endif %}
                     </div>
@@ -536,8 +536,7 @@
                                             data-html="true" {% if topic_map.image_path %}
                                             data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
                                             {% else %}
-                                            data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="{{ url_for('
-                                            static', filename='blank-canvas.svg' ) }}">
+                                            data-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="{{ url_for('static', filename='blank-canvas.svg' ) }}">
                                             <hr />
                                             <p>{{ topic_map.description }}</p>'
                                             {% endif %}
@@ -552,13 +551,11 @@
                                 <li>Topic: {{ topic.first_base_name.name }}</li>
                                 {% if session['current_scope'] == '*' %}
                                 <li>Scope: <a
-                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
-                                        session['current_scope']|topic_name(topic_map.identifier) }}</a>
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{ session['current_scope']|topic_name(topic_map.identifier) }}</a>
                                 </li>
                                 {% else %}
                                 <li>Scope: <a
-                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{
-                                        session['current_scope']|topic_name(topic_map.identifier) }}</a>
+                                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{ session['current_scope']|topic_name(topic_map.identifier) }}</a>
                                 </li>
                                 {% endif %}
                                 {% if current_user.is_authenticated and not is_map_owner %}
@@ -625,8 +622,7 @@
                                         {% for image in occurrences['images'] %}
                                         <li>
                                             <a data-caption="{{ image.title }}" data-fancybox="images"
-                                                href="/static/resources/{{ topic_map.identifier }}/{{ image.url }}">{{
-                                                image.title }}</a>
+                                                href="/static/resources/{{ topic_map.identifier }}/{{ image.url }}">{{ image.title }}</a>
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -642,8 +638,7 @@
                                     <ul>
                                         {% for file in occurrences['files'] %}
                                         <li>
-                                            <a href="/static/resources/{{ topic_map.identifier }}/{{ file.url }}">{{
-                                                file.title }}</a>
+                                            <a href="/static/resources/{{ topic_map.identifier }}/{{ file.url }}">{{ file.title }}</a>
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -746,8 +741,7 @@
                                             <div v-if="isAuthenticated && hasWriteAccess" class="dropdown-divider">
                                             </div>
                                             <a v-if="isAuthenticated && hasWriteAccess" href="#"
-                                                class="dropdown-item create-association-link">Create generic
-                                                association</a>
+                                                class="dropdown-item create-association-link">Create generic association</a>
                                         </div>
                                     </div>
                                 </div>
@@ -782,9 +776,7 @@
                 <div class="modal-body">
                     <form autocomplete="off">
                         <div class="form-group">
-                            <label class="col-form-label" for="goto-topic-identifier">Please provide
-                                a valid topic
-                                identifier</label>
+                            <label class="col-form-label" for="goto-topic-identifier">Please provide a valid topic identifier</label>
                             <input aria-label="Enter topic identifier" class="form-control typeahead"
                                 id="goto-topic-identifier" placeholder="Enter identifier" type="text">
                         </div>
@@ -830,8 +822,7 @@
                     </p>
                     <form autocomplete="off">
                         <div class="form-group">
-                            <label for="association-dest-topic-ref"><strong>Destination
-                                    topic</strong></label>
+                            <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
                             <input class="form-control typeahead" id="create-association-dest-topic-ref"
                                 name="create-association-dest-topic-ref"
                                 placeholder="Enter destination topic identifier" autocomplete="off" required
