@@ -12,15 +12,20 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, session
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
-from flask_security import (
+from flask_security.datastore import SQLAlchemySessionUserDatastore
+from flask_security.core import (
     RoleMixin,
     Security,
-    SQLAlchemySessionUserDatastore,
     UserMixin,
-    hash_password,
+)
+from flask_security.signals import (
     user_authenticated,
     user_registered,
 )
+from flask_security.utils import (
+    hash_password,
+)
+
 from sqlalchemy import (
     Boolean,
     Column,
@@ -44,7 +49,7 @@ UNIVERSAL_SCOPE = "*"
 def create_app(test_config=None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)
-    app.version = __version__
+    app.config['version'] = __version__
 
     # Configure app
     app.config.from_object("contextualise.settings")
@@ -101,7 +106,7 @@ def create_app(test_config=None):
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-        return render_template("index.html", maps=promoted_maps, version=app.version)
+        return render_template("index.html", maps=promoted_maps, version=app.config['version'])
 
     @app.route("/health")
     def health():
