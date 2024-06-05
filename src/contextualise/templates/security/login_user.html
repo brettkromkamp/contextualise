@@ -1,33 +1,29 @@
 {% extends "security/layout.html" %}
 
-{% from "security/_macros.html" import render_field_with_errors, render_field %}
-
 {% block content %}
-<div class="alert alert-danger alert-dismissible" role="alert">
-    <strong>Here be dragons!</strong> Contextualise is in its alpha stage of development, so it is not advised to
-    use it
-    for anything other than testing purposes. Data could be irrevocably lost!
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<form action="{{ url_for_security('login') }}" class="form-signin" method="POST" name="login_user_form">
+<form action="{{ url_for_security('login') }}" class="form-login" method="POST" name="login_user_form">
     {{ login_user_form.hidden_tag() }}
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <h1 class="h3 mb-3 font-weight-normal">Log In</h1>
-    <label class="sr-only" for="email">Email address</label>
-    <input autofocus class="form-control" id="email" name="email" placeholder="Email address" required autofocus
-        type="email">
-    <label class="sr-only" for="password">Password</label>
-    <input class="form-control" id="password" name="password" placeholder="Password" required type="password">
-    <div class="checkbox mb-3">
-        <label>
-            <input id="remember" name="remember" type="checkbox"> Remember me
+
+    <h1 class="h3 mb-3 fw-normal">Log in</h1>
+    <div class="form-floating">
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+        <label for="email">Email address</label>
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        <label for="password">Password</label>
+    </div>
+
+    <div class="form-check text-start my-3">
+        <input class="form-check-input" type="checkbox" value="remember-me" id="checkbox">
+        <label class="form-check-label" for="checkbox">
+            Remember me
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Log in</button>
+    <button class="btn btn-primary w-100 py-2" id="submit" name="submit" type="submit">Log in</button>
     {% include "security/_menu.html" %}
-    <p class="mt-5 mb-3 text-muted"><a href="/">Contextualise</a> &mdash; Copyright &copy; 2019-2023 by Brett
+    <p class="mt-3 mb-3 text-body-secondary"><a href="/">Contextualise</a> &mdash; Copyright &copy; 2019-2024 by Brett
         Kromkamp
     </p>
 </form>
