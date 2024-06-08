@@ -35,7 +35,7 @@
                             }}-alpha</sup></small></span>
             </a>
 
-            <ul class="nav nav-pills">
+            <ul class="nav">
                 <li class="nav-item"><a href="/maps/published" class="nav-link">Published maps</a></li>
                 <li class="nav-item"><a href="https://brettkromkamp.com/tags/contextualise/" class="nav-link">Blog</a>
                 </li>
@@ -48,10 +48,10 @@
                 </li>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <li class="nav-item"><a href="{{ url_for('security.logout') }}" class="nav-link active"
+                <li class="nav-item"><a href="{{ url_for('security.logout') }}" class="btn btn-outline-primary"
                         aria-current="page">Log out</a></li>
                 {% else %}
-                <li class="nav-item"><a href="{{ url_for('security.register') }}" class="nav-link active"
+                <li class="nav-item"><a href="{{ url_for('security.register') }}" class="btn btn-outline-primary"
                         aria-current="page">Sign up</a></li>
                 {% endif %}
             </ul>
@@ -66,7 +66,7 @@
                 </p>
                 <p class="fs-5 text-body-secondary">Contextualise is an effective tool particularly suited for
                     organising information-heavy projects and activities consisting of unstructured and widely diverse
-                    data and information resources.</p>
+                    data and information resources</p>
                 <p class="text-muted"><a href="https://en.wikipedia.org/wiki/Personal_knowledge_management">Personal
                         knowledge management</a> &middot; <a
                         href="https://fortelabs.com/blog/commonplace-books-creative-note-taking-through-history/">Commonplace
