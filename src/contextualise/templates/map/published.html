@@ -15,8 +15,49 @@
 <div class="row">
     <div class="col">
         <h1>Published maps</h1>
-        <br />
     </div>
+</div>
+<div class="row row-cols-1 row-cols-lg-3">
+    {% for map in maps %}
+    <div class="col mb-4">
+        <div class="card h-100">
+            {% if map.image_path %}
+            <img alt="{{ map.name }}" class="card-img-top"
+                src="/static/resources/{{ map.identifier }}/{{ map.image_path }}">
+            {% else %}
+            <img alt="{{ map.name }}" class="card-img-top" src="{{ url_for('static', filename='blank-canvas.svg') }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ map.name }}
+                </h5>
+                <p class="card-text">{{ map.description }}</p>
+            </div>
+            <div class="card-footer">
+                <div class="dropdown my-2">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Options
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                                map</a></li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
+                                notes</a></li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View
+                                map details</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endif %}
 {% endblock %}
