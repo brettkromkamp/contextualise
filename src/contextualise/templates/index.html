@@ -91,7 +91,8 @@
                             <p class="card-text">{{ map.description }}</p>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="w-100 btn btn-outline-secondary btn-lg stretched-link">View map</a>
+                            <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}"
+                                class="w-100 btn btn-outline-secondary btn-lg">View map</a>
                         </div>
                     </div>
                 </div>

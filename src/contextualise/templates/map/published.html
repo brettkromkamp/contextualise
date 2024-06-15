@@ -34,15 +34,14 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
-                <div class="dropdown my-2">
+                <div class="btn-group float-end my-1">
+                    <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}"
+                        class="btn btn-outline-secondary">View map</a>
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Options
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item"
-                                href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}">View
-                                map</a></li>
                         <li><a class="dropdown-item"
                                 href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
                                 notes</a></li>
@@ -58,6 +57,19 @@
         </div>
     </div>
     {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col">
+        <p class="alert alert-info" role="alert">
+            Currently, nobody has published a topic map. Patience, my friend, patience!
+        </p>
+        <br />
+        <br />
+        <p class="text-center">
+            <img width="410" class="img-fluid" src="{{ url_for('static', filename='void.svg') }}">
+        </p>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
