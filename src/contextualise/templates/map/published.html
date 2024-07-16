@@ -5,11 +5,9 @@
 {% endblock %}
 
 {% block maps_menu %}
-{% if current_user.is_authenticated %}
 <li class="nav-item">
     <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
 </li>
-{% endif %}
 {% endblock %}
 
 {% block content %}

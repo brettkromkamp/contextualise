@@ -11,12 +11,10 @@
 {% endblock %}
 
 {% block maps_menu %}
-{% if current_user.is_authenticated %}
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}">Home</a>
 </li>
-{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -44,14 +42,17 @@
             <div class="card-footer">
                 <div class="btn-group my-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Options
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item"
                                     href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
                             </li>
                             <li>
                                 <a class="dropdown-item"
@@ -64,32 +65,15 @@
                                     to topic</a>
                             </li>
                             <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
                                 <a class="dropdown-item"
                                     href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <!--
-                <div class="btn-group">
-                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                        id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                        Options
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item"
-                            href="{{ url_for('note.edit', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Edit</a>
-                        <a class="dropdown-item"
-                            href="{{ url_for('note.attach', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Attach
-                            to topic</a>
-                        <a class="dropdown-item"
-                            href="{{ url_for('note.convert', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Convert
-                            to topic</a>
-                        <a class="dropdown-item"
-                            href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete</a>
-                    </div>
-                </div>
-                -->
             </div>
             {% endif %}
         </div>
@@ -110,7 +94,8 @@
         </p>
     </div>
 </div>
-{% endif %} {% if current_user.id == topic_map.user_identifier %}
+{% endif %}
+{% if current_user.id == topic_map.user_identifier %}
 <div class="row">
     <div class="col">
         <a class="btn btn-primary" href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
