@@ -1,11 +1,13 @@
-{% extends "layout_maps.html" %}
+{% extends "layout.html" %}
 
 {% block title %}
 <title>My maps &mdash; Contextualise</title>
 {% endblock %}
 
 {% block maps_menu %}
-<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+</li>
 {% endblock %}
 
 {% block content %}

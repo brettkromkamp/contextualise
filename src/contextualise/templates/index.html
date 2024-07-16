@@ -37,6 +37,9 @@
 
             <ul class="nav">
                 <li class="nav-item"><a href="/maps/published" class="nav-link">Published maps</a></li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item"><a href="/maps" class="nav-link">My maps</a></li>
+                {% endif %}
                 <li class="nav-item"><a href="https://brettkromkamp.com/tags/contextualise/" class="nav-link">Blog</a>
                 </li>
                 <li class="nav-item"><a
@@ -80,7 +83,7 @@
                 <p class="h5 text-muted text-uppercase">&mdash; SHOWCASE &mdash;</p>
                 {% endif %}
             </div>
-            <div class="row row-cols-1 row-cols-lg-{{ maps|length }} mb-3 text-center">
+            <div class="row row-cols-1 row-cols-lg-{{ maps|length }} mb-3">
                 {% for map in maps %}
                 <div class="col mb-4">
                     <div class="card rounded-3 h-100">
@@ -92,7 +95,7 @@
                         </div>
                         <div class="card-footer">
                             <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}"
-                                class="w-100 btn btn-outline-secondary btn-lg">View map</a>
+                                class="btn btn-primary my-1 stretched-link">View map</a>
                         </div>
                     </div>
                 </div>

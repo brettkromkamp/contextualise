@@ -1,4 +1,4 @@
-{% extends "layout_maps.html" %}
+{% extends "layout.html" %}
 
 {% block title %}
 <title>Published maps &mdash; Contextualise</title>
@@ -6,7 +6,9 @@
 
 {% block maps_menu %}
 {% if current_user.is_authenticated %}
-<a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('map.index') }}">My maps</a>
+</li>
 {% endif %}
 {% endblock %}
 
@@ -34,24 +36,26 @@
                 <p class="card-text">{{ map.description }}</p>
             </div>
             <div class="card-footer">
-                <div class="btn-group float-end my-1">
+                <div class="btn-group my-1">
                     <a href="{{ url_for('topic.view', map_identifier=map['identifier'], topic_identifier='home') }}"
-                        class="btn btn-outline-secondary">View map</a>
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Options
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item"
-                                href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
-                                notes</a></li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                        </li>
-                        <li><a class="dropdown-item"
-                                href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View
-                                map details</a></li>
-                    </ul>
+                        class="btn btn-primary">View map</a>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Options
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
+                                    notes</a></li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('map.view', map_identifier=map['identifier']) }}">View
+                                    map details</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

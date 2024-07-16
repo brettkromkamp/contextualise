@@ -1,15 +1,14 @@
 {% extends "layout_1_column.html" %}
 {% block title %}<title>Internal Server Error</title>{% endblock %}
 {% block body %}
-    <h1>Internal Server Error</h1>
-    <p class="alert alert-danger">Something has gone wrong. Get in touch with Support if the problem persists. Find your
-        way back <a
-                href="
-                        {% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.published') }}{% endif %}">home</a>.
-    </p>
-    <br/>
-    <br/>
-    <p class="text-center">
-        <img width="480" class="img-fluid" src="{{ url_for('static', filename='bug-fixing.svg') }}">
-    </p>
+<h1>Internal Server Error</h1>
+<p class="alert alert-danger">Something has gone wrong. Get in touch with Support if the problem persists. Find your
+    way back <a
+        href="{% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.published') }}{% endif %}">home</a>.
+</p>
+<br />
+<br />
+<p class="text-center">
+    <img width="480" class="img-fluid" src="{{ url_for('static', filename='bug-fixing.svg') }}">
+</p>
 {% endblock %}
