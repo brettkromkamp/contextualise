@@ -22,54 +22,57 @@
 </head>
 
 <body class="d-flex flex-column h-100">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Contextualise navigation bar">
-        <div class="container-xl">
-            <a class="navbar-brand" href="/">Contextualise</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars"
-                aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbars">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if current_user.is_authenticated %}
-                    {% block maps_menu %}{% endblock %}
-                    {% else %}
-                    {% block maps_menu_not_authenticated %}{% endblock %}
-                    {% endif %}
-                </ul>
-                <ul class="nav">
-                    {% if not current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
-                    </li>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">{{
-                            current_user.email }}</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Preferences</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Search</a></li>
-                            <li><a class="dropdown-item" href="#">Topics index</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item"><a href="{{ url_for('security.register') }}" class="btn btn-outline-primary"
-                            aria-current="page">Sign up</a>
-                    </li>
-                    {% endif %}
-                </ul>
+    <header>
+        <a name="page-top"></a>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Contextualise navigation bar">
+            <div class="container-xl">
+                <a class="navbar-brand" href="/">Contextualise</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars"
+                    aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbars">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if current_user.is_authenticated %}
+                        {% block maps_menu %}{% endblock %}
+                        {% else %}
+                        {% block maps_menu_not_authenticated %}{% endblock %}
+                        {% endif %}
+                    </ul>
+                    <ul class="nav">
+                        {% if not current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('security.login') }}">Log in</a>
+                        </li>
+                        {% endif %}
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">{{
+                                current_user.email }}</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Preferences</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Search</a></li>
+                                <li><a class="dropdown-item" href="#">Topics index</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ url_for('security.logout') }}">Log out</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item"><a href="{{ url_for('security.register') }}"
+                                class="btn btn-outline-primary" aria-current="page">Sign up</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
     <main class="d-flex flex-nowrap">
         <div class="container-xl mt-4">
             {% block body %}
