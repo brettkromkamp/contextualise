@@ -4,192 +4,260 @@
 <title>{{ topic.first_base_name.name }} &mdash; Associations | {{ topic_map.name }}</title>
 {% endblock %}
 
-{% block menu %}
-<ul class="nav nav-tabs">
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Topic</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                topic</a>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                topic</a>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
-                identifier</a>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
-                topic</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                names</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                note</a>
-            <a class="dropdown-item"
-                href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                tags</a>
-            {% if 'admin' in current_user.roles %}
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                attributes</a>
-            {% endif %}
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Resources</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                image</a>
-            <a class="dropdown-item"
-                href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                file</a>
-            <a class="dropdown-item"
-                href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                video</a>
-            <a class="dropdown-item"
-                href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-                link</a>
-            <a class="dropdown-item"
-                href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
-                3D scene</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle active" data-toggle="dropdown"
-            href="#" role="button">Associations</a>
-        <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-                association</a>
-            <a class="dropdown-item disabled" href="#">Create generic association</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Visualisations</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item"
-                href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                network graph</a>
-            <a class="dropdown-item"
-                href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                tags cloud</a>
-            <a class="dropdown-item" href="#">View timeline</a>
-            <a class="dropdown-item" href="#">View geographic map</a>
-        </div>
-    </li>
-</ul>
+{% block header_menu %}
+{% include "_header_menu.html" %}
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Associations</small>
-</h1>
-<p><em>{{ creation_date }}</em></p>
-<hr />
+<!-- Tabs -->
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Topic</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                            topic</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                            topic</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                            identifier</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Delete
+                            topic</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            names</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            note</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            tags</a>
+                    </li>
+                    {% if 'admin' in current_user.roles %}
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            attributes</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Resources</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            image</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            file</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            video</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            link</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            3D scene</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Associations</a>
+                <ul class="dropdown-menu">
+                    <li><a aria-disabled="true" class="dropdown-item disabled" href="#" tabindex="-1">View</a></li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                            association</a>
+                    </li>
+                    <li><a class="dropdown-item disabled" href="#">Create generic association</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Visualisations</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            network graph</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            tags cloud</a>
+                    </li>
+                    <li><a class="dropdown-item" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item" href="#">View geographic map</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Associations</small>
+        </h1>
+        <p><em>{{ creation_date }}</em></p>
+        <hr />
+    </div>
+</div>
 {% if associations %}
-<table class="table table-bordered">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Type</th>
-            <th scope="col">Scope</th>
-            <th scope="col">Members</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for association in associations %}
-        <tr>
-            <td class="align-middle">
-                <a
-                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
-                    association.instance_of|topic_name(topic_map.identifier) }}</a>
-            </td>
-            <td class="align-middle">
-                <a
-                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
-                    association.scope|topic_name(topic_map.identifier) }}</a>
-            </td>
-            <td>
-                <table class="table table-bordered table-sm">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Topic reference</th>
-                            <th scope="col">Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
-                                    association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a>
-                            </td>
-                            <td class="contextualise-cell-1 align-middle">
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
-                                    association.member.src_role_spec|topic_name(topic_map.identifier) }}</a><br />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
-                                    association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a>
-                            </td>
-                            <td class="contextualise-cell-1 align-middle">
-                                <a
-                                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
-                                    association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a><br />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td class="contextualise-cell-2 align-middle">
-                <a
-                    href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">View
-                    as association</a><br />
-                <a
-                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.identifier) }}">View
-                    as topic</a><br />
-                <a
-                    href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
-                {% if 'admin' in current_user.roles %}<br /><a
-                    href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=association.identifier, entity_type='association') }}">View
-                    attributes</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Scope</th>
+                    <th scope="col">Members</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for association in associations %}
+                <tr>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.instance_of) }}">{{
+                            association.instance_of|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.scope) }}">{{
+                            association.scope|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td>
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Topic reference</th>
+                                    <th scope="col">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
+                                            association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a>
+                                    </td>
+                                    <td class="contextualise-cell-1 align-middle">
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
+                                            association.member.src_role_spec|topic_name(topic_map.identifier)
+                                            }}</a><br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
+                                            association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a>
+                                    </td>
+                                    <td class="contextualise-cell-1 align-middle">
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
+                                            association.member.dest_role_spec|topic_name(topic_map.identifier)
+                                            }}</a><br />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="contextualise-cell-2 align-middle">
+                        <a
+                            href="{{ url_for('association.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">View
+                            as association</a><br />
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.identifier) }}">View
+                            as topic</a><br />
+                        <a
+                            href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>
+                        {% if 'admin' in current_user.roles %}<br /><a
+                            href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=association.identifier, entity_type='association') }}">View
+                            attributes</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% else %}
-<p class="alert alert-info" role="alert">
-    This topic does not play a role in any association. Click on the "Create association" button below to create
-    an
-    association.
-</p>
-{% endif %}
-<a class="btn btn-primary"
-    href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
-    association</a>
-<br />
-<br />
+<div class="row mt-4">
+    <div class="col-md-12">
+        <p class="alert alert-info" role="alert">
+            This topic does not play a role in any association. Click on the "Create association" button below to create
+            an
+            association.
+        </p>
+        {% endif %}
+        <a class="btn btn-primary"
+            href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+            association</a>
+        <br />
+        <br />
+    </div>
+</div>
 {% endblock %}
