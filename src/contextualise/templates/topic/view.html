@@ -172,38 +172,11 @@
 </script>
 {% endblock %}
 
-{% block maps_menu %}
-<li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
-<li class="nav-item">
-    {% if map_notes_count == 0 %}
-    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
-    {% else %}
-    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;<span
-            class="badge rounded-pill text-bg-danger">
-            {{ map_notes_count }}
-        </span>
-    </a>
-    {% endif %}
-</li>
-{% if topic.identifier != 'home' %}
-<li class="nav-item">
-    {% if session['current_scope'] == '*' %}
-    <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
-        role="button">Home</a>
-    {% else %}
-    <a class="nav-link"
-        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
-        role="button">Home</a>
-    {% endif %}
-</li>
-{% else %}
-<li class="nav-item">
-    <a class="nav-link disabled">Home</a>
-</li>
-{% endif %}
+{% block header_menu %}
+{% include "_header_menu.html" %}
 {% endblock %}
 
-{% block maps_menu_not_authenticated %}
+{% block header_menu_not_authenticated %}
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a></li>
 <li class="nav-item">
     {% if map_notes_count == 0 %}
@@ -235,48 +208,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- Flash messages -->
-<div class="row">
-    <div class="col-md-12">
-        {% include "_messages.html" %}
-    </div>
-</div>
-<!-- Breadcrumbs -->
-<div class="row">
-    <div class="col-md-12">
-        {% if topic_map %}
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
-            aria-label="breadcrumb">
-            <ol class="breadcrumb mb-4">
-                {% if session['breadcrumbs'] %}
-                {% for breadcrumb in session['breadcrumbs'] %}
-                {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">
-                    {% if session['current_scope'] == '*' %}<a
-                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
-                        breadcrumb|topic_name(topic_map.identifier) }}</a>
-                    {% if breadcrumb == 'home' %}<i style="color: gray" class="bi bi-house-fill"></i>
-                    {% endif %}
-                    {% else %}<a
-                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
-                        breadcrumb|topic_name(topic_map.identifier) }}</a>
-                    {% if breadcrumb == 'home' %}<i style="color: gray" class="bi bi-house-fill"></i>
-                    {% endif %}
-                    {% endif %}
-                    </li>
-                    {% else %}
-                    <li aria-current="page" class="breadcrumb-item active">
-                        {{ breadcrumb|topic_name(topic_map.identifier) }}
-                        {% if breadcrumb == 'home' %}
-                        <i style="color: gray" class="bi bi-house-fill"></i>{% endif %}
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}
-            </ol>
-        </nav>
-        {% endif %}
-    </div>
-</div>
 <!-- Tabs -->
 <div class="row">
     <div class="col-md-12">
@@ -518,6 +449,7 @@
         {% endif %}
         {% endif %}
         <!-- Topic notes -->
+        {% if occurrences['notes'] %}
         <hr />
         <h5>Notes</h5>
         {% for note in occurrences['notes'] %}
@@ -558,6 +490,7 @@
         <br />
         {% endfor %}
         <p><small><a href="#page-top">Back to top</a></small></p>
+        {% endif %}
     </div>
     <div class="col-md-4">
         <!-- Current context -->

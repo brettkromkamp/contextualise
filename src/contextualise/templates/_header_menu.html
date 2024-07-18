@@ -1,0 +1,28 @@
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
+<li class="nav-item">
+    {% if map_notes_count == 0 %}
+    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+    {% else %}
+    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;<span
+            class="badge rounded-pill text-bg-danger">
+            {{ map_notes_count }}
+        </span>
+    </a>
+    {% endif %}
+</li>
+{% if topic.identifier != 'home' %}
+<li class="nav-item">
+    {% if session['current_scope'] == '*' %}
+    <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
+        role="button">Home</a>
+    {% else %}
+    <a class="nav-link"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
+        role="button">Home</a>
+    {% endif %}
+</li>
+{% else %}
+<li class="nav-item">
+    <a class="nav-link disabled">Home</a>
+</li>
+{% endif %}

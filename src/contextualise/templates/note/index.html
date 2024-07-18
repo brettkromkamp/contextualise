@@ -10,7 +10,7 @@
     async></script>
 {% endblock %}
 
-{% block maps_menu %}
+{% block header_menu %}
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}">Home</a>

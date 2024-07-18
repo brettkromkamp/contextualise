@@ -35,9 +35,9 @@
                 <div class="collapse navbar-collapse" id="navbars">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if current_user.is_authenticated %}
-                        {% block maps_menu %}{% endblock %}
+                        {% block header_menu %}{% endblock %}
                         {% else %}
-                        {% block maps_menu_not_authenticated %}{% endblock %}
+                        {% block header_menu_not_authenticated %}{% endblock %}
                         {% endif %}
                     </ul>
                     <ul class="nav">
@@ -76,6 +76,10 @@
     </header>
     <main class="d-flex flex-nowrap">
         <div class="container-xl mt-4">
+            <!-- Flash messages -->
+            {% include "_messages.html" %}
+            <!-- Breadcrumbs -->
+            {% include "_breadcrumbs.html" %}
             {% block body %}
             {% block content %}{% endblock %}
             {% endblock %}
