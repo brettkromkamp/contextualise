@@ -5,7 +5,15 @@
 {% endblock %}
 
 {% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
 <link href="{{ url_for('static', filename='default.css', version='1.0') }}" rel="stylesheet">
+<style>
+    .fancybox-slide--iframe .fancybox-content {
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0;
+    }
+</style>
 {% endblock %}
 
 {% block javascript %}
@@ -142,7 +150,8 @@
 {% block header_menu %}
 {% include "_header_menu.html" %}
 <li class="nav-item d-flex justify-content-center">
-    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#gotoModal" type="reset">Go to topic
+    <button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#gotoModal" type="reset">Go to
+        topic
     </button>
 </li>
 {% endblock %}
