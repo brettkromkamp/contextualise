@@ -9,3 +9,8 @@ pre {
     font-family: 'JetBrains Mono', monospace;
     font-size: 92.5%;
 }
+
+#network-graph {
+    border: 1px solid lightgray;
+    background: white;
+}
