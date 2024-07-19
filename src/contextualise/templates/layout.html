@@ -80,7 +80,11 @@
     <main class="d-flex flex-nowrap">
         <div class="container-xl mt-4">
             <!-- Flash messages -->
-            {% include "_messages.html" %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% include "_messages.html" %}
+                </div>
+            </div>
             <!-- Breadcrumbs -->
             {% include "_breadcrumbs.html" %}
             {% block body %}
@@ -148,7 +152,7 @@
                         <div class="mb-3">
                             <label class="form-label" for="goto-topic-identifier">Provide an existing topic
                                 identifier</label>
-                            <input aria-label="Enter topic identifier" class="form-control typeahead"
+                            <input aria-label="Enter topic identifier" class="form-control goto-typeahead"
                                 id="goto-topic-identifier" placeholder="Enter identifier" type="text">
                         </div>
                     </form>
@@ -198,6 +202,22 @@
         });
 
         $(".typeahead").typeahead(
+            {
+                minLength: 3,
+                highlight: true,
+            },
+            {
+                name: "identifiers",
+                source: topicIdentifiers,
+                limit: 8
+            }
+        );
+
+        /*
+            Workaround to ensure that the create-topic modal is not triggered if an nonexistent 
+            topic identifier is provided in the go-to-topic modal.
+        */
+        $(".goto-typeahead").typeahead(
             {
                 minLength: 3,
                 highlight: true,
