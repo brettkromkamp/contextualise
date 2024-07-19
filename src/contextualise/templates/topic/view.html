@@ -9,13 +9,8 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='typeahead.bundle.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
 
 <script type="module">
     window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
@@ -55,41 +50,7 @@
         duration: 3000,
     });
 
-    var topicIdentifiers = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.whitespace,
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        sufficient: 3,
-        remote: {
-            url: getIdentifiersApiUrl,
-            wildcard: "%QUERY",
-        },
-    });
-
-    $(".typeahead").typeahead(
-        {
-            minLength: 3,
-            highlight: true,
-        },
-        {
-            name: "identifiers",
-            source: topicIdentifiers,
-            limit: 8
-        }
-    );
-
-    if (document.getElementById("goto-button") != null) {
-        document.getElementById("goto-button").addEventListener("click", (event) => {
-            var gotoTopicIdentifier = document
-                .getElementById("goto-topic-identifier")
-                .value.trim();
-            var gotoUrl = window.location.href.replace("#", "");
-            gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
-            if (gotoTopicIdentifier) {
-                window.location.href = gotoUrl;
-            }
-        });
-    }
-
+    // TODO: Verify!
     $(function () {
         $('[data-toggle="popover"]').popover()
     })
@@ -127,12 +88,14 @@
             });
         });
 
-    document
-        .getElementById("create-association-modal-button")
-        .addEventListener("click", function () {
-            $("#createAssociationModal").modal("hide");
-            createAssociation = true;
-        });
+    if (document.getElementById("create-association-modal-button") != null) {
+        document
+            .getElementById("create-association-modal-button")
+            .addEventListener("click", function () {
+                $("#createAssociationModal").modal("hide");
+                createAssociation = true;
+            });
+    }
 
     $("#createAssociationModal").on("hidden.bs.modal", function (e) {
         var modal = $(this);
@@ -178,6 +141,10 @@
 
 {% block header_menu %}
 {% include "_header_menu.html" %}
+<li class="nav-item d-flex justify-content-center">
+    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#gotoModal" type="reset">Go to topic
+    </button>
+</li>
 {% endblock %}
 
 {% block header_menu_not_authenticated %}
