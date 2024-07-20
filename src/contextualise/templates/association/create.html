@@ -70,7 +70,7 @@
             value="{{ association_dest_topic_ref or '' }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
-            A topic with this identifier doesn't exist. Please provide an identifier for an existing topic.
+            A topic with this identifier doesn't exist. Provide an identifier for an existing topic.
         </small>
         {% endif %}
     </div>
@@ -102,7 +102,7 @@
             placeholder="Enter type identifier" type="text" value="{{ association_instance_of or '' }}">
         {% if error|bitwise_and(8) == 8 %}
         <small class="text-danger">
-            A type with this identifier doesn't exist. Please provide an identifier for an existing type.
+            A type with this identifier doesn't exist. Provide an identifier for an existing type.
         </small>
         {% endif %}
     </div>
@@ -127,9 +127,8 @@
                             placeholder="Enter scope identifier" type="text" value="{{ association_scope or '' }}">
                         {% if error|bitwise_and(16) == 16 %}
                         <small class="text-danger">
-                            A scope with this identifier doesn't exist. Please provide an identifier for an
-                            existing
-                            scope.
+                            A scope with this identifier doesn't exist. Provide an identifier for an
+                            existing scope.
                         </small>
                         {% endif %}
                     </div>
@@ -160,10 +159,8 @@
                         </div>
                         {% if error|bitwise_and(32) == 32 %}
                         <small class="text-danger">
-                            An association or topic with this identifier already exists. Please provide a
-                            different
-                            association
-                            identifier.
+                            An association or topic with this identifier already exists. Provide a
+                            different association identifier.
                         </small>
                         {% endif %}
                     </div>

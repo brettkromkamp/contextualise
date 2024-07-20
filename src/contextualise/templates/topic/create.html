@@ -89,7 +89,7 @@
                 </div>
                 {% if error|bitwise_and(2) == 2 %}
                 <small class="text-danger">
-                    A topic with this identifier already exists. Please provide a different topic identifier.
+                    A topic with this identifier already exists. Provide a different topic identifier.
                 </small>
                 {% endif %}
             </div>
@@ -120,7 +120,7 @@
                                     value="{{ topic_instance_of or '' }}">
                                 {% if error|bitwise_and(8) == 8 %}
                                 <small class="text-danger">
-                                    A type with this identifier doesn't exist. Please provide an identifier for an
+                                    A type with this identifier doesn't exist. Provide an identifier for an
                                     existing type.
                                 </small>
                                 {% endif %}
@@ -136,7 +136,7 @@
                                     value="{{ topic_text_scope or '' }}">
                                 {% if error|bitwise_and(16) == 16 %}
                                 <small class="text-danger">
-                                    A scope with this identifier doesn't exist. Please provide an identifier for an
+                                    A scope with this identifier doesn't exist. Provide an identifier for an
                                     existing scope.
                                 </small>
                                 {% endif %}

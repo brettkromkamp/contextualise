@@ -38,8 +38,7 @@
                         required autofocus type="text" value="{{ attribute_name or '' }}">
                     {% if error|bitwise_and(8) == 8 %}
                     <small class="text-danger">
-                        An attribute with this name already exists for this topic, occurrence or association. Please
-                        provide a
+                        An attribute with this name already exists for this topic, occurrence or association. Provide a
                         different name.
                     </small>
                     {% endif %}
@@ -81,7 +80,7 @@
                                         value="{{ attribute_scope or '' }}">
                                     {% if error|bitwise_and(4) == 4 %}
                                     <small class="text-danger">
-                                        A scope with this identifier doesn't exist. Please provide an identifier for an
+                                        A scope with this identifier doesn't exist. Provide an identifier for an
                                         existing scope.
                                     </small>
                                     {% endif %}

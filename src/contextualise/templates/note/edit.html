@@ -46,7 +46,7 @@
                 <textarea class="form-control" id="note-text" name="note-text">{{ note_text }}</textarea>
                 {% if error|bitwise_and(2) == 2 %}
                 <small class="text-danger">
-                    Please provide a note text.
+                    Provide a note text.
                 </small>
                 {% endif %}
             </div>
@@ -72,7 +72,7 @@
                                     placeholder="Enter scope identifier" type="text" value="{{ note_scope }}">
                                 {% if error|bitwise_and(4) == 4 %}
                                 <small class="text-danger">
-                                    A scope with this identifier doesn't exist. Please provide an identifier for an
+                                    A scope with this identifier doesn't exist. Provide an identifier for an
                                     existing scope.
                                 </small>
                                 {% endif %}

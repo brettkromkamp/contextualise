@@ -58,9 +58,8 @@
                                     placeholder="Enter scope identifier" type="text" value="{{ link_scope or '' }}">
                                 {% if error|bitwise_and(4) == 4 %}
                                 <small class="text-danger">
-                                    A scope with this identifier doesn't exist. Please provide an identifier for an
-                                    existing
-                                    scope.
+                                    A scope with this identifier doesn't exist. Provide an identifier for an
+                                    existing scope.
                                 </small>
                                 {% endif %}
                             </div>

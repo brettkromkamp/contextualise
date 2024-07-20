@@ -32,7 +32,7 @@
                     required autofocus type="text" value="{{ topic_identifier or '' }}">
                 {% if error|bitwise_and(2) == 2 %}
                 <small class="text-danger">
-                    A topic with this identifier already exists. Please provide a different topic identifier.
+                    A topic with this identifier already exists. Provide a different topic identifier.
                 </small>
                 {% endif %}
             </div>

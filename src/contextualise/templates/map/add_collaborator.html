@@ -16,12 +16,12 @@
             placeholder="Email address of user" required autofocus type="text" value="{{ collaborator_email }}">
         {% if error|bitwise_and(1) == 1 %}
         <small class="text-danger">
-            A Contextualise user with this user name does not exist. Please provide a different user name.
+            A Contextualise user with this user name does not exist. Provide a different user name.
         </small>
         {% endif %}
         {% if error|bitwise_and(2) == 2 %}
         <small class="text-danger">
-            You cannot share a topic map for collaboration purposes with yourself. Please provide a different
+            You cannot share a topic map for collaboration purposes with yourself. Provide a different
             user name.
         </small>
         {% endif %}
