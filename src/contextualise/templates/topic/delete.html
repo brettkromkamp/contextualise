@@ -7,50 +7,54 @@
 {% block javascript %}{% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete topic</small>
-</h1>
-<hr />
-<div class="alert alert-danger alert-dismissible" role="alert">Deleting a topic also deletes all of its associations
-    and
-    resources. Once you delete a topic, there is no going back. Please be certain.
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<form action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-    method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="topic-name"><strong>Name</strong></label>
-        <input aria-readonly="true" class="form-control" id="topic-name" name="topic-name" readonly type="text"
-            value="{{ topic.first_base_name.name }}">
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete topic</small>
+        </h1>
+        <hr />
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">Deleting a topic also deletes all of
+            its
+            associations and resources. Once you delete a topic, there is no going back.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="topic-name" class="form-label">Name</label>
+                <input aria-readonly="true" disabled class="form-control" id="topic-name" name="topic-name" readonly
+                    type="text" value="{{ topic.first_base_name.name }}">
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="topic-instance-of"><strong>Type</strong></label>
-                        <input aria-readonly="true" class="form-control" id="topic-instance-of" name="topic-instance-of"
-                            readonly type="text" value="{{ topic.instance_of|topic_name(topic_map.identifier) }}">
+            <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Advanced options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        Advanced options
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="topic-instance-of" class="form-label">Type</label>
+                                <input aria-readonly="true" disabled class="form-control" id="topic-instance-of"
+                                    name="topic-instance-of" readonly type="text"
+                                    value="{{ topic.instance_of|topic_name(topic_map.identifier) }}">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <br />
             </div>
-        </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-danger" type="submit">Delete topic</button>
+        </form>
         <br />
     </div>
-
-    <a class="btn btn-secondary"
-        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-danger" type="submit">Delete topic</button>
-</form>
-<br />
+</div>
 {% endblock %}

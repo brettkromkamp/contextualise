@@ -7,55 +7,61 @@
 {% block javascript %}{% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Edit topic name</small>
-</h1>
-<hr />
-<form
-    action="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
-    autocomplete="off" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="topic-name"><strong>Name</strong></label>
-        <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required autofocus
-            type="text" value="{{ topic_name or '' }}">
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Edit topic name</small>
+        </h1>
+        <hr />
+        <form
+            action="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=name_identifier) }}"
+            autocomplete="off" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="topic-name" class="form-label">Name</label>
+                <input class="form-control" id="topic-name" name="topic-name" placeholder="Enter name" required
+                    autofocus type="text" value="{{ topic_name or '' }}">
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="link-scope">Scope
-                            <small class="text-info">&mdash; If no value is provided the default will be
-                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
-                                the current scope)
-                            </small>
-                        </label>
-                        <input class="form-control typeahead" id="topic-name-scope" name="topic-name-scope"
-                            placeholder="Enter scope identifier" type="text" value="{{ topic_name_scope or '' }}">
-                        {% if error|bitwise_and(2) == 2 %}
-                        <small class="text-danger">
-                            A scope with this identifier doesn't exist. Please provide an identifier for an
-                            existing
-                            scope.
-                        </small>
-                        {% endif %}
+            <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Advanced options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        Advanced options
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="link-scope" class="form-label">Scope
+                                    <small class="text-info">&mdash; If no value is provided the default will be
+                                        "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                        the current scope)
+                                    </small>
+                                </label>
+                                <input class="form-control typeahead" id="topic-name-scope" name="topic-name-scope"
+                                    placeholder="Enter scope identifier" type="text"
+                                    value="{{ topic_name_scope or '' }}">
+                                {% if error|bitwise_and(2) == 2 %}
+                                <small class="text-danger">
+                                    A scope with this identifier doesn't exist. Please provide an identifier for an
+                                    existing
+                                    scope.
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <br />
             </div>
-        </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-success" type="submit">Update name</button>
+        </form>
         <br />
     </div>
-    <a class="btn btn-secondary"
-        href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Update name</button>
-</form>
-<br />
+</div>
 {% endblock %}
