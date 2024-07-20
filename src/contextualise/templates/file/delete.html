@@ -4,46 +4,55 @@
 <title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
 {% endblock %}
 
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
 {% block javascript %}{% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete file</small>
-</h1>
-<hr />
-<form
-    action="{{ url_for('file.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file_identifier) }}"
-    method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="file-title"><strong>Title</strong></label>
-        <input aria-readonly="true" class="form-control" id="file-title" name="file-title" readonly type="text"
-            value="{{ file_title }}">
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete file</small>
+        </h1>
+        <hr />
+        <form
+            action="{{ url_for('file.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="file-title" class="form-label">Title</label>
+                <input aria-readonly="true" disabled class="form-control" id="file-title" name="file-title" readonly
+                    type="text" value="{{ file_title }}">
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="file-scope"><strong>Scope</strong></label>
-                        <input aria-readonly="true" class="form-control" id="file-scope" name="file-scope" readonly
-                            type="text" value="{{ file_scope }}">
+            <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Advanced options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        Advanced options
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="file-scope" class="form-label">Scope</label>
+                                <input aria-readonly="true" class="form-control" id="file-scope" name="file-scope"
+                                    readonly disabled type="text" value="{{ file_scope }}">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <br />
             </div>
-        </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-danger" type="submit">Delete file</button>
+        </form>
         <br />
     </div>
-    <a class="btn btn-secondary"
-        href="{{ url_for('file.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-danger" type="submit">Delete file</button>
-</form>
-<br />
+</div>
 {% endblock %}

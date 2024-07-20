@@ -4,14 +4,11 @@
 <title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
 {% endblock %}
 
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
 {% block javascript %}
-<script>
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-        var fileName = document.getElementById("image-file").files[0].name;
-        var nextSibling = e.target.nextElementSibling;
-        nextSibling.innerText = fileName;
-    })
-</script>
 {% if error %}
 <script>
     $('#advancedOptions').collapse('show');
@@ -20,77 +17,79 @@
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Upload image</small>
-</h1>
-<hr />
-<form action="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-    autocomplete="off" enctype="multipart/form-data" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="image-title"><strong>Title</strong></label>
-        <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required autofocus
-            type="text" value="{{ image_title or '' }}">
-    </div>
-    <div class="form-group">
-        <label for="image-file"><strong>File</strong></label>
-        <div class="custom-file">
-            <input type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input" id="image-file"
-                name="image-file">
-            <label class="custom-file-label" for="image-file">Choose file</label>
-        </div>
-        {% if error|bitwise_and(2) == 2 %}
-        <small class="text-danger">
-            No file part.
-        </small>
-        {% endif %}
-        {% if error|bitwise_and(4) == 4 %}
-        <small class="text-danger">
-            No file selected.
-        </small>
-        {% endif %}
-        {% if error|bitwise_and(8) == 8 %}
-        <small class="text-danger">
-            Unsupported file type; that is, not of type PNG, JPG or GIF.
-        </small>
-        {% endif %}
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Upload image</small>
+        </h1>
+        <hr />
+        <form
+            action="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="image-title" class="form-label">Title</label>
+                <input class="form-control" id="image-title" name="image-title" placeholder="Enter title" required
+                    autofocus type="text" value="{{ image_title or '' }}">
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="image-scope"><strong>Scope</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be
-                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
-                                the current scope)
-                            </small>
-                        </label>
-                        <input class="form-control typeahead" id="image-scope" name="image-scope"
-                            placeholder="Enter scope identifier" type="text" value="{{ image_scope or '' }}">
-                        {% if error|bitwise_and(16) == 16 %}
-                        <small class="text-danger">
-                            A scope with this identifier doesn't exist. Please provide an identifier for an
-                            existing
-                            scope.
-                        </small>
-                        {% endif %}
+            <div class="mb-3">
+                <label for="image-file" class="form-label">File</label>
+                <input type="file" accept=".jpg,.jpeg,.png,.gif" class="form-control" id="image-file" name="image-file">
+                {% if error|bitwise_and(2) == 2 %}
+                <small class="text-danger">
+                    No file part.
+                </small>
+                {% endif %}
+                {% if error|bitwise_and(4) == 4 %}
+                <small class="text-danger">
+                    No file selected.
+                </small>
+                {% endif %}
+                {% if error|bitwise_and(8) == 8 %}
+                <small class="text-danger">
+                    Unsupported file type; that is, not of type PNG, JPG or GIF.
+                </small>
+                {% endif %}
+            </div>
+            <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Advanced options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        Advanced options
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="image-scope" class="form-label">Scope
+                                    <small class="text-info">&mdash; If no value is provided the default will be
+                                        "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                        the current scope)
+                                    </small>
+                                </label>
+                                <input class="form-control typeahead" id="image-scope" name="image-scope"
+                                    placeholder="Enter scope identifier" type="text" value="{{ image_scope or '' }}">
+                                {% if error|bitwise_and(16) == 16 %}
+                                <small class="text-danger">
+                                    A scope with this identifier doesn't exist. Please provide an identifier for an
+                                    existing
+                                    scope.
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <br />
             </div>
-        </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-success" type="submit">Upload image</button>
+        </form>
         <br />
     </div>
-    <a class="btn btn-secondary"
-        href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Upload image</button>
-</form>
-<br />
+</div>
 {% endblock %}
