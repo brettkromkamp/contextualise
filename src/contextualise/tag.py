@@ -37,10 +37,7 @@ def add(map_identifier, topic_identifier):
         abort(404)
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
-    if (
-        not topic_map.owner
-        and topic_map.collaboration_mode is not CollaborationMode.EDIT
-    ):
+    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
         abort(403)
 
     topic = store.get_topic(
@@ -56,9 +53,7 @@ def add(map_identifier, topic_identifier):
 
     form_tags = None
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")[
-        "note"
-    ]
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
     if request.method == "POST":
@@ -70,7 +65,7 @@ def add(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:

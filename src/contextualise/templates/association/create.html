@@ -4,6 +4,10 @@
 <title>{{ topic_map.name }}</title>
 {% endblock %}
 
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
 {% block javascript %}
 <script>
     document
@@ -55,124 +59,133 @@
 {% endblock %}
 
 {% block content %}
-<h1>
-    {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Create association</small>
-</h1>
-<hr />
-<form
-    action="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-    autocomplete="off" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="association-dest-topic-ref"><strong>Destination topic</strong></label>
-        <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
-            placeholder="Enter destination topic identifier" required autofocus type="text"
-            value="{{ association_dest_topic_ref or '' }}">
-        {% if error|bitwise_and(1) == 1 %}
-        <small class="text-danger">
-            A topic with this identifier doesn't exist. Provide an identifier for an existing topic.
-        </small>
-        {% endif %}
-    </div>
-    <div class="form-group">
-        <label for="association-dest-role-spec"><strong>Destination role</strong>
-            <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
-        </label>
-        <input class="form-control typeahead" id="association-dest-role-spec" name="association-dest-role-spec"
-            placeholder="Enter destination role identifier" type="text" value="{{ association_dest_role_spec or '' }}">
-    </div>
-    <div class="form-group">
-        <label for="association-src-topic-ref"><strong>Source topic</strong></label>
-        <input class="form-control" id="association-src-topic-ref" name="association-src-topic-ref"
-            placeholder="Enter source topic identifier" readonly required type="text"
-            value="{{ association_src_topic_ref or '' }}">
-    </div>
-    <div class="form-group">
-        <label for="association-src-role-spec"><strong>Source role</strong>
-            <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
-        </label>
-        <input class="form-control typeahead" id="association-src-role-spec" name="association-src-role-spec"
-            placeholder="Enter source role identifier" type="text" value="{{ association_src_role_spec or '' }}">
-    </div>
-    <div class="form-group">
-        <label for="association-instance-of"><strong>Type</strong>
-            <small class="text-info">&mdash; If no value is provided the default will be "association"</small>
-        </label>
-        <input class="form-control typeahead" id="association-instance-of" name="association-instance-of"
-            placeholder="Enter type identifier" type="text" value="{{ association_instance_of or '' }}">
-        {% if error|bitwise_and(8) == 8 %}
-        <small class="text-danger">
-            A type with this identifier doesn't exist. Provide an identifier for an existing type.
-        </small>
-        {% endif %}
-    </div>
-    <p><i class="fas fa-info-circle"></i> <a aria-controls="advancedOptions" aria-expanded="false"
-            data-toggle="collapse" href="#advancedOptions"> Advanced options</a>
-    </p>
-    <div class="collapse" id="advancedOptions">
-        <div class="card">
-            <div class="card-header">
-                Advanced options
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Create association</small>
+        </h1>
+        <hr />
+        <form
+            action="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            autocomplete="off" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="association-dest-topic-ref" class="form-label">Destination topic</label>
+                <input class="form-control typeahead" id="association-dest-topic-ref" name="association-dest-topic-ref"
+                    placeholder="Enter destination topic identifier" required autofocus type="text"
+                    value="{{ association_dest_topic_ref or '' }}">
+                {% if error|bitwise_and(1) == 1 %}
+                <small class="text-danger">
+                    A topic with this identifier doesn't exist. Provide an identifier for an existing topic.
+                </small>
+                {% endif %}
             </div>
-            <div class="card-body">
-                <div class="card-text">
-                    <div class="form-group">
-                        <label for="association-scope"><strong>Scope</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be
-                                "<strong>{{ session["current_scope"] }}</strong>" (that is,
-                                the current scope)
-                            </small>
-                        </label>
-                        <input class="form-control typeahead" id="association-scope" name="association-scope"
-                            placeholder="Enter scope identifier" type="text" value="{{ association_scope or '' }}">
-                        {% if error|bitwise_and(16) == 16 %}
-                        <small class="text-danger">
-                            A scope with this identifier doesn't exist. Provide an identifier for an
-                            existing scope.
-                        </small>
-                        {% endif %}
+            <div class="mb-3">
+                <label for="association-dest-role-spec" class="form-label">Destination role
+                    <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
+                </label>
+                <input class="form-control typeahead" id="association-dest-role-spec" name="association-dest-role-spec"
+                    placeholder="Enter destination role identifier" type="text"
+                    value="{{ association_dest_role_spec or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="association-src-topic-ref" class="form-label">Source topic</label>
+                <input class="form-control" id="association-src-topic-ref" name="association-src-topic-ref"
+                    placeholder="Enter source topic identifier" readonly disabled required type="text"
+                    value="{{ association_src_topic_ref or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="association-src-role-spec" class="form-label">Source role
+                    <small class="text-info">&mdash; If no value is provided the default will be "related"</small>
+                </label>
+                <input class="form-control typeahead" id="association-src-role-spec" name="association-src-role-spec"
+                    placeholder="Enter source role identifier" type="text"
+                    value="{{ association_src_role_spec or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="association-instance-of" class="form-label">Type
+                    <small class="text-info">&mdash; If no value is provided the default will be "association"</small>
+                </label>
+                <input class="form-control typeahead" id="association-instance-of" name="association-instance-of"
+                    placeholder="Enter type identifier" type="text" value="{{ association_instance_of or '' }}">
+                {% if error|bitwise_and(8) == 8 %}
+                <small class="text-danger">
+                    A type with this identifier doesn't exist. Provide an identifier for an existing type.
+                </small>
+                {% endif %}
+            </div>
+            <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Advanced options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        Advanced options
                     </div>
-                    <div class="form-group">
-                        <label for="association-name"><strong>Name</strong>
-                            <small class="text-info">&mdash; If no value is provided the default will be "Undefined"
-                            </small>
-                        </label>
-                        <input class="form-control" id="association-name" name="association-name"
-                            placeholder="Enter name" type="text" value="{{ association_name or '' }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="association-identifier"><strong>Identifier</strong>
-                            <small class="text-info">&mdash; An identifier will be automatically generated if one is
-                                not
-                                provided
-                            </small>
-                        </label>
-                        <div class="input-group">
-                            <input class="form-control" id="association-identifier" name="association-identifier"
-                                placeholder="Enter identifier" readonly type="text"
-                                value="{{ association_identifier or '' }}">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" id="edit-identifier-button" type="button">
-                                    Edit
-                                </button>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="association-scope" class="form-label">Scope
+                                    <small class="text-info">&mdash; If no value is provided the default will be
+                                        "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                        the current scope)
+                                    </small>
+                                </label>
+                                <input class="form-control typeahead" id="association-scope" name="association-scope"
+                                    placeholder="Enter scope identifier" type="text"
+                                    value="{{ association_scope or '' }}">
+                                {% if error|bitwise_and(16) == 16 %}
+                                <small class="text-danger">
+                                    A scope with this identifier doesn't exist. Provide an identifier for an
+                                    existing scope.
+                                </small>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="association-name" class="form-label">Name
+                                    <small class="text-info">&mdash; If no value is provided the default will be
+                                        "Undefined"
+                                    </small>
+                                </label>
+                                <input class="form-control" id="association-name" name="association-name"
+                                    placeholder="Enter name" type="text" value="{{ association_name or '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="association-identifier" class="form-label">Identifier
+                                    <small class="text-info">&mdash; An identifier will be automatically generated if
+                                        one is not provided
+                                    </small>
+                                </label>
+                                <div class="input-group">
+                                    <input class="form-control" id="association-identifier"
+                                        name="association-identifier" placeholder="Enter identifier" readonly
+                                        type="text" value="{{ association_identifier or '' }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" id="edit-identifier-button"
+                                            type="button">
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+                                {% if error|bitwise_and(32) == 32 %}
+                                <small class="text-danger">
+                                    An association or topic with this identifier already exists. Provide a
+                                    different association identifier.
+                                </small>
+                                {% endif %}
                             </div>
                         </div>
-                        {% if error|bitwise_and(32) == 32 %}
-                        <small class="text-danger">
-                            An association or topic with this identifier already exists. Provide a
-                            different association identifier.
-                        </small>
-                        {% endif %}
                     </div>
                 </div>
+                <br />
             </div>
-        </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-success" type="submit">Create association</button>
+        </form>
         <br />
     </div>
-    <a class="btn btn-secondary"
-        href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Create association</button>
-</form>
-<br />
+</div>
 {% endblock %}

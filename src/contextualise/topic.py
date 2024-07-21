@@ -331,7 +331,7 @@ def create(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -458,7 +458,7 @@ def edit(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -656,7 +656,7 @@ def add_note(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -781,7 +781,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -996,7 +996,7 @@ def add_name(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -1083,7 +1083,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -1222,7 +1222,7 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
@@ -1291,7 +1291,7 @@ def edit_identifier(map_identifier, topic_identifier):
 
         if error != 0:
             flash(
-                "An error occurred when submitting the form. Please review the warnings and fix accordingly.",
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
                 "warning",
             )
         else:
