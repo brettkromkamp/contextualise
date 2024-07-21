@@ -5,7 +5,7 @@ February 13, 2022
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-DATABASE_FILE = "changeme.db"
+DATABASE_FILE = "changeme.sqlite3"
 
 EMAIL_USERNAME = "changeme@changeme.com"
 EMAIL_PASSWORD = "changeme"

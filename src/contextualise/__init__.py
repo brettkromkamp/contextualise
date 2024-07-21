@@ -49,7 +49,7 @@ UNIVERSAL_SCOPE = "*"
 def create_app(test_config=None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)
-    app.config['version'] = __version__
+    app.config["version"] = __version__
 
     # Configure app
     app.config.from_object("contextualise.settings")
@@ -57,12 +57,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         DEBUG=False,
         DATABASE_PATH=os.path.join(app.instance_path, app.config["DATABASE_FILE"]),
-        SECRET_KEY=os.environ.get(
-            "SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"
-        ),
-        SECURITY_PASSWORD_SALT=os.environ.get(
-            "SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"
-        ),
+        SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
+        SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
         SECURITY_URL_PREFIX="/auth",
@@ -97,16 +93,14 @@ def create_app(test_config=None):
     @app.route("/")
     def home():
         promoted_maps = get_topic_store().get_promoted_maps()
-        promoted_maps = [
-            promoted_map for promoted_map in promoted_maps if promoted_map.published
-        ]
+        promoted_maps = [promoted_map for promoted_map in promoted_maps if promoted_map.published]
 
         # Reset breadcrumbs and (current) scope
         session["breadcrumbs"] = []
         session["current_scope"] = UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
-        return render_template("index.html", maps=promoted_maps, version=app.config['version'])
+        return render_template("index.html", maps=promoted_maps, version=app.config["version"])
 
     @app.route("/health")
     def health():
@@ -131,9 +125,7 @@ def create_app(test_config=None):
 
     # Setup Flask-Security
     engine = create_engine(f"sqlite:///{app.config['DATABASE_PATH']}")
-    db_session = scoped_session(
-        sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    )
+    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
     Base = declarative_base()
     Base.query = db_session.query_property()
@@ -164,9 +156,7 @@ def create_app(test_config=None):
         active = Column(Boolean())
         fs_uniquifier = Column(String(255), unique=True, nullable=False)
         confirmed_at = Column(DateTime())
-        roles = relationship(
-            "Role", secondary="roles_users", backref=backref("users", lazy="dynamic")
-        )
+        roles = relationship("Role", secondary="roles_users", backref=backref("users", lazy="dynamic"))
 
     user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
     security = Security(app, user_datastore)
@@ -174,12 +164,8 @@ def create_app(test_config=None):
     with app.app_context():
         Base.metadata.create_all(bind=engine)
         # Create roles
-        admin_role = user_datastore.find_or_create_role(
-            name="admin", description="Administrator"
-        )
-        user_role = user_datastore.find_or_create_role(
-            name="user", description="End user"
-        )
+        admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
+        user_role = user_datastore.find_or_create_role(name="user", description="End user")
         db_session.commit()
 
         # Create users
@@ -191,9 +177,7 @@ def create_app(test_config=None):
             db_session.commit()
         user_user = user_datastore.find_user(email="user@contextualise.dev")
         if not user_user:
-            user_user = user_datastore.create_user(
-                email="user@contextualise.dev", password=hash_password("Passw0rd1")
-            )
+            user_user = user_datastore.create_user(email="user@contextualise.dev", password=hash_password("Passw0rd1"))
             db_session.commit()
 
         # Assign roles
@@ -212,9 +196,7 @@ def create_app(test_config=None):
 
     @user_authenticated.connect_via(app)
     def user_authenticated_handler(app, user, authn_via, **extra_args):
-        app.logger.info(
-            f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]"
-        )
+        app.logger.info(f"User logged in successfully: [{user.email}], authentication method: [{authn_via}]")
 
     @app.teardown_request
     def checkin_db(exc):
@@ -289,9 +271,7 @@ def create_app(test_config=None):
             backupCount=10,
         )
         file_handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-            )
+            logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
         )
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
