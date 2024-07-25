@@ -15,3 +15,11 @@ pre {
     background: white;
     border-radius: 5px;
 }
+
+.breadcrumb {
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
+    background-color: #f8f8f8;
+    border-radius: .25rem;
+}
