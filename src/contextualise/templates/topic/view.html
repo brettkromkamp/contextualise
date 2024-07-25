@@ -52,16 +52,10 @@
     var getIdentifiersApiUrl =
         "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
     var createAssociation = false;
-    var notyf = new Notyf({
-        position: { x: "right", y: "top" },
-        dismissible: true,
-        duration: 3000,
-    });
 
-    // TODO: Verify!
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
+    // Popovers
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
     // Associations component
     var associationsComponent = new Vue({
@@ -88,10 +82,12 @@
         }
     });
 
+    // Generic association creation dialog
     document
         .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
             element.addEventListener("click", function () {
-                $("#createAssociationModal").modal("show");
+                var createAssociationModal = new bootstrap.Modal('#createAssociationModal');
+                createAssociationModal.show();
                 createAssociation = false;
             });
         });
@@ -406,7 +402,74 @@
                     class="bi bi-house-fill"></i></small>{% endif %}
             {% endif %}
         </h1>
-        <p><em>{{ creation_date }}</em></p>
+        <!-- Advanced topic properties -->
+        <p><em>{{ creation_date }}</em>
+            &mdash; <small><a aria-controls="advancedProperties" aria-expanded="false" data-bs-toggle="collapse"
+                    href="#advancedProperties">Properties</a></small>
+        </p>
+        <div class="collapse" id="advancedProperties">
+            <div class="card">
+                <div class="card-header">
+                    Properties
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Identifier</th>
+                                    <td>
+                                        <span class="badge text-bg-info">{{ topic.identifier }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    {% if topic.base_names|length > 1 %}
+                                    <th scope="row">Names</th>
+                                    <td>
+                                        {% for base_name in topic.base_names %}
+                                        {{ base_name.name }}{% if loop.index < topic.base_names|length %}
+                                            &nbsp;&nbsp;&middot;&nbsp;{% endif %} {% endfor %} </td>
+                                            {% else %}
+                                    <th scope="row">Name</th>
+                                    <td>
+                                        {{ topic.first_base_name.name }}
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th scope="row">Type</th>
+                                    <td>
+                                        {% if session['current_scope'] == '*' %}
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                                            topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                        {% else %}
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of, scope=session['current_scope']) }}">{{
+                                            topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Creation timestamp</th>
+                                    <td>{{ creation_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Modification timestamp</th>
+                                    <td>{{ modification_date }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Topic text -->
         <hr />
         {% if occurrences['text'] %}
@@ -489,6 +552,25 @@
                         <span class="badge text-bg-warning">Private</span>
                         {% endif %}
                         {% endif %}
+                        <!-- Map popover -->
+                        &mdash; <small>
+                            <a tabindex="-1" data-trigger="focus" aria-controls="advancedProperties"
+                                data-placement="right" data-bs-html="true" aria-expanded="false"
+                                data-bs-toggle="popover" data-bs-title="{{ topic_map.name }}" {% if topic_map.image_path
+                                %}
+                                data-bs-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}"><hr /><p>{{ topic_map.description }}</p>'
+                                {% else %}
+                                data-bs-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid" src="{{ url_for('
+                                static', filename="blank-canvas.svg" ) }}">
+                                <hr />
+                                <p>{{ topic_map.description }}</p>'
+                                {% endif %}
+                                data-bs-content='<img width="240px" alt="{{ topic_map.name }}" class="img-fluid"
+                                    src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
+                                <hr />
+                                <p>{{ topic_map.description }}</p>'
+                                href="#mapInfo">Info
+                            </a></small>
                     </li>
                     <li>Topic: {{ topic.first_base_name.name }}</li>
                     {% if session['current_scope'] == '*' %}
@@ -704,6 +786,52 @@
                     </div>
                 </div>
             </template>
+        </div>
+    </div>
+</div>
+<!-- Create (generic) association modal dialog -->
+<div aria-hidden="true" aria-labelledby="createAssociationModal" class="modal fade" id="createAssociationModal"
+    role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAssociationModalLabel">Create generic association</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Provide a destination topic reference and click on the "Create association" button to create
+                    a <strong>generic</strong> association with the following characteristics:
+                <ul>
+                    <li>Type: <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='association') }}">Association</a>
+                    </li>
+                    <li>Source role: <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
+                    </li>
+                    <li>Destination role: <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='related') }}">Related</a>
+                    </li>
+                    <li>Scope: <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
+                            session['current_scope']|topic_name(topic_map.identifier) }}</a>
+                    </li>
+                </ul>
+                </p>
+                <form autocomplete="off">
+                    <div class="mb-3">
+                        <label for="association-dest-topic-ref" class="form-label">Destination topic</label>
+                        <input class="form-control typeahead" id="create-association-dest-topic-ref"
+                            name="create-association-dest-topic-ref" placeholder="Enter destination topic identifier"
+                            autocomplete="off" required type="text">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="create-association-modal-button">Create
+                    association
+                </button>
+            </div>
         </div>
     </div>
 </div>
