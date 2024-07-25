@@ -10,87 +10,120 @@
 
 {% block javascript %}{% endblock %}
 
-{% block menu %}
-<ul class="nav nav-tabs">
-    <li class="nav-item dropdown">
-        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-            role="button">Map</a>
-        <div class="dropdown-menu">
-            <a aria-disabled="true" class="dropdown-item"
-                href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}" tabindex="-1">View</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit
-                map</a>
-            <a class="dropdown-item" href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
-                map</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"
-                href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">View
-                map</a>
-            <a class="dropdown-item" href="{{ url_for('note.index', map_identifier=topic_map['identifier']) }}">View
-                notes</a>
-        </div>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Collaborators</a>
-    </li>
-</ul>
-{% endblock %}
-
 {% block content %}
-<h1>
-    {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Collaborators</small>
-</h1>
-<hr />
-{% if collaborators %}
+<!-- Tabs -->
 <div class="row">
-    <div class="col">
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">User name</th>
-                    <th scope="col">Collaboration mode</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for collaborator in collaborators %}
-                <tr>
-                    <th scope="row">{{ collaborator.user_name }}</th>
-                    <td class="align-middle">
-                        {% if collaborator.collaboration_mode.name == "VIEW" %}
-                        <span class="badge badge-info">Can View</span>
-                        {% elif collaborator.collaboration_mode.name == "COMMENT" %}
-                        <span class="badge badge-secondary">Can Comment</span>
-                        {% else %}
-                        <span class="badge badge-warning">Can Edit</span>
-                        {% endif %}
-                    </td>
-                    <td class="align-middle" style="min-width: 8em;">
-                        <a
-                            href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                        <a
-                            href="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="col-md-12">
+        {% if topic_map.owner %}
+        <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Map</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
+                            tabindex="-1">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}">Edit
+                            map</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}">Delete
+                            map</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}">View
+                            map</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('note.index', map_identifier=topic_map['identifier']) }}">View
+                            notes</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Collaborators</a>
+            </li>
+        </ul>
+        {% endif %}
     </div>
 </div>
-{% else %}
-<p class="alert alert-info" role="alert">
-    You are not collaborating with anyone on this topic map. Click on the "Add collaborator" button below to add
-    a
-    collaborator.
-</p>
-{% endif %}
-<div class="row">
-    <div class="col">
-        <a class="btn btn-secondary" href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
-            role="button">Return</a>
-        <a class="btn btn-primary" href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add
-            collaborator</a>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h1>
+            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Collaborators</small>
+        </h1>
+        <hr />
+        {% if collaborators %}
+        <div class="row">
+            <div class="col">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">User name</th>
+                            <th scope="col">Collaboration mode</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for collaborator in collaborators %}
+                        <tr>
+                            <th scope="row">{{ collaborator.user_name }}</th>
+                            <td class="align-middle">
+                                {% if collaborator.collaboration_mode.name == "VIEW" %}
+                                <span class="badge text-bg-info">Can View</span>
+                                {% elif collaborator.collaboration_mode.name == "COMMENT" %}
+                                <span class="badge text-bg-secondary">Can Comment</span>
+                                {% else %}
+                                <span class="badge text-bg-warning">Can Edit</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle" style="min-width: 8em;">
+                                <a
+                                    href="{{ url_for('map.edit_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                                <a
+                                    href="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator.user_identifier) }}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col">
+                <p class="alert alert-info" role="alert">
+                    You are not collaborating with anyone on this topic map. Click on the "Add collaborator" button
+                    below to add a collaborator.
+                </p>
+                <br />
+                <br />
+                <p class="text-center">
+                    <img width="410" class="img-fluid" src="{{ url_for('static', filename='void.svg') }}">
+                </p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-secondary" href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
+                    role="button">Return</a>
+                <a class="btn btn-primary"
+                    href="{{ url_for('map.add_collaborator', map_identifier=topic_map.identifier) }}">Add
+                    collaborator</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

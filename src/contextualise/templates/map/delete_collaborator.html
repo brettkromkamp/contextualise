@@ -4,34 +4,45 @@
 <title>Delete collaborator | Contextualise</title>
 {% endblock %}
 
+{% block header_menu %}
+<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+{% endblock %}
+
+{% block javascript %}{% endblock %}
+
 {% block content %}
-<h1>{{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete collaborator</small>
-</h1>
-<hr />
-<form
-    action="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator_identifier) }}"
-    autocomplete="off" enctype="multipart/form-data" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="collaborator-email"><strong>Email address</strong></label>
-        <input aria-readonly="true" class="form-control" id="collaborator-email" name="collaborator-email"
-            placeholder="Email address of user" readonly type="text" value="{{ collaborator.user_name }}">
-    </div>
-    <div class="form-group">
-        <label><strong>Collaboration mode</strong></label>
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Delete collaborator</small>
+        </h1>
+        <hr />
+        <form
+            action="{{ url_for('map.delete_collaborator', map_identifier=topic_map.identifier, collaborator_identifier=collaborator_identifier) }}"
+            autocomplete="off" enctype="multipart/form-data" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="collaborator-email" class="form-label">Email address</label>
+                <input aria-readonly="true" disabled class="form-control" id="collaborator-email"
+                    name="collaborator-email" placeholder="Email address of user" readonly type="text"
+                    value="{{ collaborator.user_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="collaboration-mode" class="form-label">Collaboration mode</label>
+                <br />
+                {% if collaborator.collaboration_mode.name == "VIEW" %}
+                <span class="badge text-bg-info">Can View</span>
+                {% elif collaborator.collaboration_mode.name == "COMMENT" %}
+                <span class="badge text-bg-secondary">Can Comment</span>
+                {% else %}
+                <span class="badge text-bg-warning">Can Edit</span>
+                {% endif %}
+            </div>
+            <br />
+            <a class="btn btn-secondary" href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-danger" type="submit">Delete collaborator</button>
+        </form>
         <br />
-        {% if collaborator.collaboration_mode.name == "VIEW" %}
-        <span class="badge badge-info">Can View</span>
-        {% elif collaborator.collaboration_mode.name == "COMMENT" %}
-        <span class="badge badge-secondary">Can Comment</span>
-        {% else %}
-        <span class="badge badge-warning">Can Edit</span>
-        {% endif %}
     </div>
-    <br />
-    <a class="btn btn-secondary" href="{{ url_for('map.collaborators', map_identifier=topic_map.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-danger" type="submit">Delete collaborator</button>
-</form>
-<br />
+</div>
 {% endblock %}
