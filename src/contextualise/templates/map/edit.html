@@ -4,93 +4,93 @@
 <title>Edit map | Contextualise</title>
 {% endblock %}
 
+{% block header_menu %}
+<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+{% endblock %}
+
 {% block javascript %}
-<script>
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-        var fileName = document.getElementById("map-image-file").files[0].name;
-        var nextSibling = e.target.nextElementSibling;
-        nextSibling.innerText = fileName;
-    })
-</script>
 {% endblock %}
 
 {% block content %}
-<h1>{{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Edit map</small></h1>
-<hr />
-<form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}" autocomplete="off"
-    enctype="multipart/form-data" method="post" role="form">
-    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <label for="map-name"><strong>Name</strong></label>
-        <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required autofocus
-            type="text" value="{{ map_name }}">
-    </div>
-    <div class="form-group">
-        <label for="map-description"><strong>Description</strong></label>
-        <textarea class="form-control" id="map-description" name="map-description"
-            rows="3">{{ map_description }}</textarea>
-    </div>
-    <div class="form-group">
-        <label for="map-image-file"><strong>Image</strong></label>
-        {% if topic_map.image_path %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Edit map</small></h1>
+        <hr />
+        <form action="{{ url_for('map.edit', map_identifier=topic_map.identifier) }}" autocomplete="off"
+            enctype="multipart/form-data" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="map-name" class="form-label">Name</label>
+                <input class="form-control" id="map-name" name="map-name" placeholder="Enter title" required autofocus
+                    type="text" value="{{ map_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="map-description" class="form-label">Description</label>
+                <textarea class="form-control" id="map-description" name="map-description"
+                    rows="3">{{ map_description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="map-image-file" class="form-label">Image</label>
+                {% if topic_map.image_path %}
+                <br />
+                <img width="640" alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
+                    src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
+                <br />
+                <br />
+                {% endif %}
+                <div class="custom-file">
+                    <input type="file" accept=".jpg,.jpeg,.png,.gif" class="form-control" id="map-image-file"
+                        name="map-image-file">
+                </div>
+                {% if error|bitwise_and(2) == 2 %}
+                <small class="text-danger">
+                    Filename not provided.
+                </small>
+                {% endif %}
+                {% if error|bitwise_and(4) == 4 %}
+                <small class="text-danger">
+                    Unsupported file type; that is, not of type PNG or JPG.
+                </small>
+                {% endif %}
+            </div>
+            {% if 'admin' in current_user.roles %}
+            <label class="form-label">Access?</label>
+            {% if map_shared %}
+            <div class="form-check">
+                <input class="form-check-input" id="published-radio-1" name="map-published" type="radio" value="0">
+                <label class="form-check-label" for="published-radio-1">
+                    Private
+                </label>
+            </div>
+            <div class="form-check">
+                <input checked class="form-check-input" id="published-radio-2" name="map-published" type="radio"
+                    value="1">
+                <label class="form-check-label" for="published-radio-2">
+                    Published
+                </label>
+            </div>
+            {% else %}
+            <div class="form-check">
+                <input checked class="form-check-input" id="published-radio-1" name="map-published" type="radio"
+                    value="0">
+                <label class="form-check-label" for="published-radio-1">
+                    Private
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
+                <label class="form-check-label" for="published-radio-2">
+                    Published
+                </label>
+            </div>
+            {% endif %}
+            {% endif %}
+            <hr />
+            <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-success" type="submit">Update map</button>
+        </form>
         <br />
-        <img alt="{{ map_name }}" class="map-image img-thumbnail" class="img-thumbnail"
-            src="/static/resources/{{ topic_map.identifier }}/{{ topic_map.image_path }}">
-        <br />
-        <br />
-        {% endif %}
-        <div class="custom-file">
-            <input type="file" accept=".jpg,.jpeg,.png" class="custom-file-input" id="map-image-file"
-                name="map-image-file">
-            <label class="custom-file-label" for="map-image-file">Choose file
-                <small class="text-info">&mdash; If no file is uploaded a default image will be used</small>
-            </label>
-        </div>
-        {% if error|bitwise_and(2) == 2 %}
-        <small class="text-danger">
-            Filename not provided.
-        </small>
-        {% endif %}
-        {% if error|bitwise_and(4) == 4 %}
-        <small class="text-danger">
-            Unsupported file type; that is, not of type PNG or JPG.
-        </small>
-        {% endif %}
     </div>
-    {% if 'admin' in current_user.roles %}
-    <strong>Access?</strong>
-    {% if map_shared %}
-    <div class="form-check">
-        <input class="form-check-input" id="published-radio-1" name="map-published" type="radio" value="0">
-        <label class="form-check-label" for="published-radio-1">
-            Private
-        </label>
-    </div>
-    <div class="form-check">
-        <input checked class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
-        <label class="form-check-label" for="published-radio-2">
-            Published
-        </label>
-    </div>
-    {% else %}
-    <div class="form-check">
-        <input checked class="form-check-input" id="published-radio-1" name="map-published" type="radio" value="0">
-        <label class="form-check-label" for="published-radio-1">
-            Private
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
-        <label class="form-check-label" for="published-radio-2">
-            Published
-        </label>
-    </div>
-    {% endif %}
-    {% endif %}
-    <hr />
-    <a class="btn btn-secondary" href="{{ url_for('map.view', map_identifier=topic_map.identifier) }}"
-        role="button">Cancel</a>
-    <button class="btn btn-success" type="submit">Update map</button>
-</form>
-<br />
+</div>
 {% endblock %}
