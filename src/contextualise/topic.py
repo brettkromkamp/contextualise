@@ -152,8 +152,8 @@ def view(map_identifier, topic_identifier):
         "notes": [],
     }
     for occurrence in topic_occurrences:
-        if occurrence.instance_of == "text" and occurrence.scope == session["current_scope"]:
-            if occurrence.resource_data:
+        match occurrence.instance_of:
+            case "text" if occurrence.scope == session["current_scope"] and occurrence.resource_data:
                 markdown = mistune.create_markdown(
                     renderer=HighlightRenderer(escape=False),
                     plugins=[
@@ -163,58 +163,61 @@ def view(map_identifier, topic_identifier):
                     ],
                 )
                 occurrences["text"] = markdown(occurrence.resource_data.decode())
-        elif occurrence.instance_of == "image":
-            occurrences["images"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
-            )
-        elif occurrence.instance_of == "3d-scene":
-            occurrences["3d-scenes"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
-            )
-        elif occurrence.instance_of == "file":
-            occurrences["files"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
-            )
-        elif occurrence.instance_of == "url":
-            occurrences["links"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
-            )
-        elif occurrence.instance_of == "video":
-            occurrences["videos"].append(
-                {
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "url": occurrence.resource_ref,
-                }
-            )
-        elif occurrence.instance_of == "note":
-            markdown = mistune.create_markdown(
-                renderer=HighlightRenderer(escape=False),
-                plugins=[
-                    "strikethrough",
-                    "footnotes",
-                    "table",
-                ],
-            )
-            occurrences["notes"].append(
-                {
-                    "identifier": occurrence.identifier,
-                    "title": occurrence.get_attribute_by_name("title").value,
-                    "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
-                    "text": markdown(occurrence.resource_data.decode()),
-                }
-            )
+            case "image":
+                occurrences["images"].append(
+                    {
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "url": occurrence.resource_ref,
+                    }
+                )
+            case "3d-scene":
+                occurrences["3d-scenes"].append(
+                    {
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "url": occurrence.resource_ref,
+                    }
+                )
+            case "file":
+                occurrences["files"].append(
+                    {
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "url": occurrence.resource_ref,
+                    }
+                )
+            case "url":
+                occurrences["links"].append(
+                    {
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "url": occurrence.resource_ref,
+                    }
+                )
+            case "video":
+                occurrences["videos"].append(
+                    {
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "url": occurrence.resource_ref,
+                    }
+                )
+            case "note" if occurrence.resource_data:
+                markdown = mistune.create_markdown(
+                    renderer=HighlightRenderer(escape=False),
+                    plugins=[
+                        "strikethrough",
+                        "footnotes",
+                        "table",
+                    ],
+                )
+                occurrences["notes"].append(
+                    {
+                        "identifier": occurrence.identifier,
+                        "title": occurrence.get_attribute_by_name("title").value,
+                        "timestamp": maya.parse(occurrence.get_attribute_by_name("modification-timestamp").value),
+                        "text": markdown(occurrence.resource_data.decode()),
+                    }
+                )
+            case _:
+                abort(500)
+
     if scope_filtered:
         associations = store.get_association_groups(map_identifier, topic_identifier, scope=session["current_scope"])
     else:

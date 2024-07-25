@@ -8,6 +8,7 @@
     <meta content="Personal Knowledge Management System" name="description" />
     <meta content="Brett Alistair Kromkamp" name="author" />
     <meta content="Contextualise" name="generator" />
+    {% block open_graph %}{% endblock %}
     {% block title %}{% endblock %}
     <link rel="canonical" href="https://contextualise.dev" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
