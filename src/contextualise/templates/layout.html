@@ -138,34 +138,6 @@
             </div>
         </div>
     </div>
-    <!-- Go to topic modal dialog -->
-    <div aria-hidden="true" aria-labelledby="gotoModalLabel" class="modal fade" id="gotoModal" role="dialog"
-        tabindex="-1">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="gotoTopicModalLabel">Go to topic</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form autocomplete="off">
-                        <div class="mb-3">
-                            <label class="form-label" for="goto-topic-identifier">Provide an existing topic
-                                identifier</label>
-                            <input aria-label="Enter topic identifier" class="form-control goto-typeahead"
-                                id="goto-topic-identifier" placeholder="Enter identifier" type="text">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" id="goto-button" type="button">Go to
-                        topic
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -203,22 +175,6 @@
         });
 
         $(".typeahead").typeahead(
-            {
-                minLength: 3,
-                highlight: true,
-            },
-            {
-                name: "identifiers",
-                source: topicIdentifiers,
-                limit: 8
-            }
-        );
-
-        /*
-            Workaround to ensure that the create-topic modal is not triggered if an nonexistent 
-            topic identifier is provided in the go-to-topic modal.
-        */
-        $(".goto-typeahead").typeahead(
             {
                 minLength: 3,
                 highlight: true,
@@ -304,19 +260,6 @@
                     });
             }
         });
-
-        if (document.getElementById("goto-button") != null) {
-            document.getElementById("goto-button").addEventListener("click", (event) => {
-                var gotoTopicIdentifier = document
-                    .getElementById("goto-topic-identifier")
-                    .value.trim();
-                var gotoUrl = window.location.href.replace("#", "");
-                gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
-                if (gotoTopicIdentifier) {
-                    window.location.href = gotoUrl;
-                }
-            });
-        }
     </script>
     {% block javascript %}{% endblock %}
 </body>

@@ -140,6 +140,35 @@
                 });
         }
     });
+
+    /*
+        Workaround to ensure that the create-topic modal is not triggered if an nonexistent 
+        topic identifier is provided in the go-to-topic modal.
+    */
+    $(".goto-typeahead").typeahead(
+        {
+            minLength: 3,
+            highlight: true,
+        },
+        {
+            name: "identifiers",
+            source: topicIdentifiers,
+            limit: 8
+        }
+    );
+
+    if (document.getElementById("goto-button") != null) {
+        document.getElementById("goto-button").addEventListener("click", (event) => {
+            var gotoTopicIdentifier = document
+                .getElementById("goto-topic-identifier")
+                .value.trim();
+            var gotoUrl = window.location.href.replace("#", "");
+            gotoUrl = gotoUrl.replace(/\/[^\/]*$/, "/" + gotoTopicIdentifier);
+            if (gotoTopicIdentifier) {
+                window.location.href = gotoUrl;
+            }
+        });
+    }
 </script>
 {% endblock %}
 
@@ -470,8 +499,27 @@
                 </div>
             </div>
         </div>
-        <!-- Topic text -->
+        <!-- Tags -->
+        {% if topic.instance_of == 'tag' %}
+        <strong>Tagged topics: </strong>
+        <ul>
+            {% for identifier in associations['categorization', 'member'] %}
+            <li><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+                    identifier|topic_name(topic_map.identifier) }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if ('categorization', 'category') in associations %}
+        <strong>Tags:</strong>&nbsp;
+        {% for identifier in associations['categorization', 'category'] %}
+        <a class="btn btn-outline-primary btn-sm"
+            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+            identifier }}</a>
+        {% endfor %}
+        {% endif %}
         <hr />
+        <!-- Topic text -->
         {% if occurrences['text'] %}
         {{ occurrences['text']|safe }}
         <p><small><a href="#page-top">Back to top</a></small></p>
@@ -533,6 +581,31 @@
         <br />
         {% endfor %}
         <p><small><a href="#page-top">Back to top</a></small></p>
+        {% endif %}
+        <!-- Knowledge paths -->
+        {% if is_knowledge_path_topic %}
+        <hr />
+        <div class="d-flex flex-row justify-content-center align-items-center" style="height: 36px;">
+            <div aria-label="Previous, next, up and down navigation" class="btn-group" role="group">
+                {% if ("navigation", "previous") in associations %}
+                <a class="btn btn-info" href="{{ associations['navigation', 'previous'][0] }}" role="button"><i
+                        class="bi bi-arrow-left"></i></i>&nbsp;&nbsp;&nbsp;Previous</a>
+                {% endif %}
+                {% if ("navigation", "up") in associations %}
+                <a class="btn btn-info" href="{{ associations['navigation', 'up'][0] }}" role="button"><i
+                        class="bi bi-arrow-up"></i></i>&nbsp;&nbsp;&nbsp;Up</a>
+                {% endif %}
+                {% if ("navigation", "down") in associations %}
+                <a class="btn btn-info" href="{{ associations['navigation', 'down'][0] }}"
+                    role="button">Down&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-down"></i></a>
+                {% endif %}
+                {% if ("navigation", "next") in associations %}
+                <a class="btn btn-info" href="{{ associations['navigation', 'next'][0] }}"
+                    role="button">Next&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        <br />
         {% endif %}
     </div>
     <div class="col-md-4">
@@ -789,6 +862,33 @@
         </div>
     </div>
 </div>
+<!-- Go to topic modal dialog -->
+<div aria-hidden="true" aria-labelledby="gotoModalLabel" class="modal fade" id="gotoModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="gotoTopicModalLabel">Go to topic</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off">
+                    <div class="mb-3">
+                        <label class="form-label" for="goto-topic-identifier">Provide an existing topic
+                            identifier</label>
+                        <input aria-label="Enter topic identifier" class="form-control goto-typeahead"
+                            id="goto-topic-identifier" placeholder="Enter identifier" type="text">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="goto-button" type="button">Go to
+                    topic
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Create (generic) association modal dialog -->
 <div aria-hidden="true" aria-labelledby="createAssociationModal" class="modal fade" id="createAssociationModal"
     role="dialog" tabindex="-1">
@@ -820,7 +920,7 @@
                 <form autocomplete="off">
                     <div class="mb-3">
                         <label for="association-dest-topic-ref" class="form-label">Destination topic</label>
-                        <input class="form-control typeahead" id="create-association-dest-topic-ref"
+                        <input class="form-control goto-typeahead" id="create-association-dest-topic-ref"
                             name="create-association-dest-topic-ref" placeholder="Enter destination topic identifier"
                             autocomplete="off" required type="text">
                     </div>
