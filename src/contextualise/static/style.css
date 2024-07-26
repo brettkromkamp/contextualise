@@ -13,7 +13,7 @@ pre {
 #network-graph {
     border: 1px solid lightgray;
     background: white;
-    border-radius: 5px;
+    border-radius: .25rem;
 }
 
 .breadcrumb {
