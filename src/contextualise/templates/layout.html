@@ -80,13 +80,10 @@
     <main class="d-flex flex-nowrap">
         <div class="container-xl mt-4">
             <!-- Flash messages -->
-            <div class="row">
-                <div class="col-md-12">
-                    {% include "_messages.html" %}
-                </div>
-            </div>
+            {% include "_messages.html" %}
             <!-- Breadcrumbs -->
             {% include "_breadcrumbs.html" %}
+            <!-- Content -->
             {% block body %}
             {% block content %}{% endblock %}
             {% endblock %}

@@ -153,16 +153,17 @@ def view(map_identifier, topic_identifier):
     }
     for occurrence in topic_occurrences:
         match occurrence.instance_of:
-            case "text" if occurrence.scope == session["current_scope"] and occurrence.resource_data:
-                markdown = mistune.create_markdown(
-                    renderer=HighlightRenderer(escape=False),
-                    plugins=[
-                        "strikethrough",
-                        "footnotes",
-                        "table",
-                    ],
-                )
-                occurrences["text"] = markdown(occurrence.resource_data.decode())
+            case "text":
+                if occurrence.scope == session["current_scope"] and occurrence.resource_data:
+                    markdown = mistune.create_markdown(
+                        renderer=HighlightRenderer(escape=False),
+                        plugins=[
+                            "strikethrough",
+                            "footnotes",
+                            "table",
+                        ],
+                    )
+                    occurrences["text"] = markdown(occurrence.resource_data.decode())
             case "image":
                 occurrences["images"].append(
                     {
@@ -215,7 +216,7 @@ def view(map_identifier, topic_identifier):
                         "text": markdown(occurrence.resource_data.decode()),
                     }
                 )
-            case _:
+            case _:  # Unknown occurrence type
                 abort(500)
 
     if scope_filtered:
