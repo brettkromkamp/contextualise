@@ -232,7 +232,7 @@
         </p>
         {% endif %}
         {% if current_user.id == topic_map.user_identifier %}
-        <a class="btn btn-primary"
+        <a class="btn btn-outline-primary"
             href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
             3D scene</a>
         <br />

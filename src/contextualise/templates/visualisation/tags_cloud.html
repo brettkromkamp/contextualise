@@ -24,10 +24,11 @@
                 <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Visualisations</a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item disabled" href="#">View network graph</a></li>
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            network graph</a></li>
                     <li>
-                        <a class="dropdown-item"
-                            href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                        <a class="dropdown-item disabled" href="#">View
                             tags cloud</a>
                     </li>
                     <li><a class="dropdown-item" href="#">View timeline</a></li>
