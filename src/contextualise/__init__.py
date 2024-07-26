@@ -72,6 +72,8 @@ def create_app(test_config=None):
         MAIL_USE_SSL=False,
         MAX_CONTENT_LENGTH=4 * 1024 * 1024,  # 4 megabytes
     )
+    app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
+    app.config["SESSION_COOKIE_SAMESITE"] = "strict"
 
     # Set up app
     mail = Mail(app)
