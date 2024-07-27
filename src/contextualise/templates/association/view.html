@@ -34,8 +34,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Topic reference</th>
-                    <th scope="col">Role</th>
+                    <th scope="col">Topic reference [Role]</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,24 +42,18 @@
                     <td>
                         <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
-                            association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a><br />
-                    </td>
-                    <td class="align-middle">
-                        <a
+                            association.member.src_topic_ref|topic_name(topic_map.identifier) }}</a>&nbsp[<a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
-                            association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>
+                            association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>]
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
-                            association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a><br />
-                    </td>
-                    <td class="align-middle">
-                        <a
+                            association.member.dest_topic_ref|topic_name(topic_map.identifier) }}</a>&nbsp;[<a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
-                            association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>
+                            association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>]
                     </td>
                 </tr>
             </tbody>
