@@ -501,10 +501,11 @@
         </div>
         <!-- Tags -->
         {% if topic.instance_of == 'tag' %}
-        <strong>Tagged topics: </strong>
-        <ul>
+        <h5 class="mt-3">Tagged topics</h5>
+        <ul class="list-group">
             {% for identifier in associations['categorization', 'member'] %}
-            <li><a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
+            <li class="list-group-item list-group-item-action"><a
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
                     identifier|topic_name(topic_map.identifier) }}</a>
             </li>
             {% endfor %}
