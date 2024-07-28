@@ -571,12 +571,13 @@ def delete(map_identifier, topic_identifier):
             # Clear the breadcrumbs (of which this topic was part of)
             session["breadcrumbs"] = []
 
+            # TODO: Review
             # Remove the topic's resources directory
-            topic_directory = os.path.join(
-                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
-            )
-            if os.path.isdir(topic_directory):
-                shutil.rmtree(topic_directory)
+            # topic_directory = os.path.join(
+            #     current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
+            # )
+            # if os.path.isdir(topic_directory):
+            #     shutil.rmtree(topic_directory)
         except TopicDbError:
             flash(
                 "Topic not deleted. Certain predefined topics cannot be deleted. Alternatively, you attempted to delete an association.",
