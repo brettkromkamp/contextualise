@@ -41,8 +41,7 @@ from .utilities import filters
 
 from .topic_store import get_topic_store
 from .version import __version__
-
-UNIVERSAL_SCOPE = "*"
+from . import constants
 
 
 # Application factory function
@@ -99,7 +98,7 @@ def create_app(test_config=None):
 
         # Reset breadcrumbs and (current) scope
         session["breadcrumbs"] = []
-        session["current_scope"] = UNIVERSAL_SCOPE
+        session["current_scope"] = constants.UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
         return render_template("index.html", maps=promoted_maps, version=app.config["version"])

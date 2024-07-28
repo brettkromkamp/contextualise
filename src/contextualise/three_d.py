@@ -29,11 +29,9 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("three_d", __name__)
-
-RESOURCES_DIRECTORY = "resources"
-EXTENSIONS_WHITELIST = {"gltf", "glb"}
 
 
 @bp.route("/3d/<map_identifier>/<topic_identifier>")
@@ -144,7 +142,9 @@ def upload(map_identifier, topic_identifier):
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
             # Create the file directory for this topic map if it doesn't already exist
-            file_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+            file_directory = os.path.join(
+                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+            )
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -327,7 +327,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         # Delete file from file system
         file_file_path = os.path.join(
             current_app.static_folder,
-            RESOURCES_DIRECTORY,
+            constants.RESOURCES_DIRECTORY,
             str(map_identifier),
             file_occurrence.resource_ref,
         )
@@ -410,4 +410,4 @@ def get_file_extension(file_name):
 
 
 def allowed_file(file_name):
-    return get_file_extension(file_name) in EXTENSIONS_WHITELIST
+    return get_file_extension(file_name) in constants.THREE_D_EXTENSIONS_WHITELIST

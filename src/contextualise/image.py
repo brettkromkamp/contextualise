@@ -29,11 +29,9 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("image", __name__)
-
-RESOURCES_DIRECTORY = "resources"
-EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg", "gif"}
 
 
 @bp.route("/images/<map_identifier>/<topic_identifier>")
@@ -145,7 +143,9 @@ def upload(map_identifier, topic_identifier):
             image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
 
             # Create the image directory for this topic map if it doesn't already exist
-            image_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+            image_directory = os.path.join(
+                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+            )
             if not os.path.isdir(image_directory):
                 os.makedirs(image_directory)
 
@@ -331,7 +331,7 @@ def delete(map_identifier, topic_identifier, image_identifier):
         # Delete image from file system
         image_file_path = os.path.join(
             current_app.static_folder,
-            RESOURCES_DIRECTORY,
+            constants.RESOURCES_DIRECTORY,
             str(map_identifier),
             image_occurrence.resource_ref,
         )
@@ -367,4 +367,4 @@ def get_file_extension(file_name):
 
 
 def allowed_file(file_name):
-    return get_file_extension(file_name) in EXTENSIONS_WHITELIST
+    return get_file_extension(file_name) in constants.IMAGE_EXTENSIONS_WHITELIST

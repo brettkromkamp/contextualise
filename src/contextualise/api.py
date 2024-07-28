@@ -18,11 +18,9 @@ from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("api", __name__)
-
-SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), "../settings.ini")
-UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/api/get-slug")
@@ -77,7 +75,7 @@ def create_topic(map_identifier):
             text_occurrence = Occurrence(
                 instance_of="text",
                 topic_identifier=topic.identifier,
-                scope=UNIVERSAL_SCOPE,  # TODO: Should it be session["current_scope"]?
+                scope=constants.UNIVERSAL_SCOPE,  # TODO: Should it be session["current_scope"]?
                 resource_data="Topic automatically created.",
             )
             timestamp = str(datetime.now())
@@ -308,7 +306,7 @@ def create_association(map_identifier):
         if not association_instance_of:
             association_instance_of = "association"
         if not association_scope:
-            association_scope = UNIVERSAL_SCOPE
+            association_scope = constants.UNIVERSAL_SCOPE
         if not association_name:
             association_name = "Undefined"
         if not association_identifier:

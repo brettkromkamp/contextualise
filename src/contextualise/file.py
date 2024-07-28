@@ -29,10 +29,9 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("file", __name__)
-
-RESOURCES_DIRECTORY = "resources"
 
 
 @bp.route("/files/<map_identifier>/<topic_identifier>")
@@ -144,7 +143,9 @@ def upload(map_identifier, topic_identifier):
             form_file_title = f"{form_file_title} (.{file_extension})"
 
             # Create the file directory for this topic map if it doesn't already exist
-            file_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+            file_directory = os.path.join(
+                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+            )
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
@@ -327,7 +328,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         # Delete file from file system
         file_file_path = os.path.join(
             current_app.static_folder,
-            RESOURCES_DIRECTORY,
+            constants.RESOURCES_DIRECTORY,
             str(map_identifier),
             file_occurrence.resource_ref,
         )

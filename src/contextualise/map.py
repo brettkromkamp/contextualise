@@ -24,12 +24,9 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("map", __name__)
-
-RESOURCES_DIRECTORY = "resources"
-EXTENSIONS_WHITELIST = {"png", "jpg", "jpeg"}
-UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/maps/")
@@ -44,7 +41,7 @@ def index():
 
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []
-    session["current_scope"] = UNIVERSAL_SCOPE
+    session["current_scope"] = constants.UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
     return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
@@ -58,7 +55,7 @@ def published():
 
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []
-    session["current_scope"] = UNIVERSAL_SCOPE
+    session["current_scope"] = constants.UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
     return render_template("map/published.html", maps=maps)
@@ -114,7 +111,9 @@ def create():
                 store.populate_map(map_identifier, current_user.id)
 
                 # Create the directory for this topic map
-                topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+                topic_map_directory = os.path.join(
+                    current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+                )
                 if not os.path.isdir(topic_map_directory):
                     os.makedirs(topic_map_directory)
 
@@ -156,7 +155,9 @@ def delete(map_identifier):
         store.delete_map(map_identifier, current_user.id)
 
         # Delete the map's directory
-        topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+        topic_map_directory = os.path.join(
+            current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+        )
         if os.path.isdir(topic_map_directory):
             shutil.rmtree(topic_map_directory)
 
@@ -207,7 +208,9 @@ def edit(map_identifier):
             if form_upload_file:
                 # Upload the image for the topic map to the map's directory
                 image_file_name = f"{str(uuid.uuid4())}.{get_file_extension(form_upload_file.filename)}"
-                topic_map_directory = os.path.join(current_app.static_folder, RESOURCES_DIRECTORY, str(map_identifier))
+                topic_map_directory = os.path.join(
+                    current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+                )
                 file_path = os.path.join(topic_map_directory, image_file_name)
                 form_upload_file.save(file_path)
 
@@ -436,4 +439,4 @@ def get_file_extension(file_name):
 
 
 def allowed_file(file_name):
-    return get_file_extension(file_name) in EXTENSIONS_WHITELIST
+    return get_file_extension(file_name) in constants.IMAGE_EXTENSIONS_WHITELIST

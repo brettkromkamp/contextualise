@@ -34,15 +34,10 @@ from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
+from . import constants
 from .utilities.highlight_renderer import HighlightRenderer
 
 bp = Blueprint("topic", __name__)
-
-RESOURCES_DIRECTORY = "static/resources/"
-BREADCRUMBS_COUNT = 5
-UNIVERSAL_SCOPE = "*"
-RESPONSE = 0
-STATUS_CODE = 1
 
 
 @bp.route("/topics/view/<map_identifier>/<topic_identifier>")
@@ -91,7 +86,7 @@ def view(map_identifier, topic_identifier):
         scope_filtered = session["scope_filter"]
     else:
         session["breadcrumbs"] = []
-        session["current_scope"] = UNIVERSAL_SCOPE
+        session["current_scope"] = constants.UNIVERSAL_SCOPE
         session["scope_filter"] = 1
 
     # If a scope has been specified in the URL, then use that to set the scope
@@ -244,7 +239,7 @@ def view(map_identifier, topic_identifier):
 
     if "breadcrumbs" not in session:
         session["breadcrumbs"] = []
-    breadcrumbs = deque(session["breadcrumbs"], BREADCRUMBS_COUNT)
+    breadcrumbs = deque(session["breadcrumbs"], constants.BREADCRUMBS_COUNT)
     if topic_identifier in breadcrumbs:
         breadcrumbs.remove(topic_identifier)
     breadcrumbs.append(topic_identifier)
@@ -256,7 +251,9 @@ def view(map_identifier, topic_identifier):
         map_identifier, topic_identifier, session["current_scope"], scope_filtered
     )
     associations_state = (
-        associations_state[RESPONSE].data.decode("utf-8") if associations_state[STATUS_CODE] == 200 else None
+        associations_state[constants.RESPONSE].data.decode("utf-8")
+        if associations_state[constants.STATUS_CODE] == 200
+        else None
     )
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
@@ -575,7 +572,9 @@ def delete(map_identifier, topic_identifier):
             session["breadcrumbs"] = []
 
             # Remove the topic's resources directory
-            topic_directory = os.path.join(bp.root_path, RESOURCES_DIRECTORY, str(map_identifier), topic_identifier)
+            topic_directory = os.path.join(
+                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
+            )
             if os.path.isdir(topic_directory):
                 shutil.rmtree(topic_directory)
         except TopicDbError:
@@ -1218,7 +1217,7 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
 
         # If no values have been provided set their default values
         if not form_scope:
-            form_scope = UNIVERSAL_SCOPE
+            form_scope = constants.UNIVERSAL_SCOPE
 
         # Validate form inputs
         if not store.topic_exists(topic_map.identifier, form_scope):

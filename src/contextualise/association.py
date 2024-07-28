@@ -14,10 +14,9 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
+from . import constants
 
 bp = Blueprint("association", __name__)
-
-UNIVERSAL_SCOPE = "*"
 
 
 @bp.route("/associations/<map_identifier>/<topic_identifier>")
@@ -128,7 +127,7 @@ def create(map_identifier, topic_identifier):
             topic_map.identifier, form_association_instance_of
         ):
             error = error | 8
-        if form_association_scope != UNIVERSAL_SCOPE and not store.topic_exists(
+        if form_association_scope != constants.UNIVERSAL_SCOPE and not store.topic_exists(
             topic_map.identifier, form_association_scope
         ):
             error = error | 16
