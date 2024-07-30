@@ -48,23 +48,10 @@
     </div>
 </div>
 <script>
-    function getUrlParams(url) {
-        var params = {};
-        (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
-            pair = (pair + '=').split('=').map(decodeURIComponent);
-            if (pair[0].length) {
-                params[pair[0]] = pair[1];
-            }
-        });
-        return params;
-    }
-
     var urlParts = window.location.pathname.split("/");
     var mapIdentifier = urlParts[3];
     var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
-    var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
-    var getIdentifiersApiUrl =
-        "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+    var getIdentifiersApiUrl = "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
     var createAssociation = false;
 
     // Generic association creation dialog    

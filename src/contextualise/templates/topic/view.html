@@ -701,7 +701,7 @@
         {% endif %}
         <!-- Topic associations -->
         <div id="associations-component"
-            hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/1"
+            hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/{{ scope_filtered }}"
             hx-swap="innerHTML" hx-trigger="newAssociations from:body">
         </div>
         <br />
