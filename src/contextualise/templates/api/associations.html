@@ -1,0 +1,120 @@
+{% if associations %}
+<div class="card bg-light">
+    <div class="card-header">
+        <strong>Related topics</strong>
+    </div>
+    <div class="card-body">
+        <ul>
+            {% for instance_of, roles in associations.dict.items() %}
+            <li>{{ instance_of|topic_name(topic_map.identifier) }}</li>
+            <ul>
+                {% for role, topic_refs in roles.items() %}
+                <li>{{ role|topic_name(topic_map.identifier) }}</li>
+                <ul>
+                    {% for topic_ref in topic_refs %}
+                    <li><a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic_ref) }}">{{
+                            topic_ref|topic_name(topic_map.identifier) }}</a></li>
+                    {% endfor%}
+                </ul>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Options
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item"
+                        href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic_identifier) }}">View
+                        network graph</a>
+                </li>
+                {% if is_authenticated and has_write_access %}
+                <li>
+                    <div class="dropdown-divider"></div>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-item create-association-link">Create generic
+                        association</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    function getUrlParams(url) {
+        var params = {};
+        (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
+            pair = (pair + '=').split('=').map(decodeURIComponent);
+            if (pair[0].length) {
+                params[pair[0]] = pair[1];
+            }
+        });
+        return params;
+    }
+
+    var urlParts = window.location.pathname.split("/");
+    var mapIdentifier = urlParts[3];
+    var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
+    var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
+    var getIdentifiersApiUrl =
+        "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
+    var createAssociation = false;
+
+    // Generic association creation dialog    
+    document
+        .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
+            element.addEventListener("click", function () {
+                var createAssociationModal = new bootstrap.Modal('#createAssociationModal');
+                createAssociationModal.show();
+                createAssociation = false;
+            });
+        });
+
+    if (document.getElementById("create-association-modal-button") != null) {
+        document
+            .getElementById("create-association-modal-button")
+            .addEventListener("click", function () {
+                $("#createAssociationModal").modal("hide");
+                createAssociation = true;
+            });
+    }
+
+    $("#createAssociationModal").on("hidden.bs.modal", function (e) {
+        var modal = $(this);
+        var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
+        modal.find(".modal-body #create-association-dest-topic-ref").val("");
+        if (createAssociation) {
+            var bodyFormData = new FormData();
+            bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
+            bodyFormData.set("association-dest-role-spec", "related");
+            bodyFormData.set("association-src-topic-ref", "{{ topic_identifier }}");
+            bodyFormData.set("association-src-role-spec", "related");
+            bodyFormData.set("association-instance-of", "association");
+            bodyFormData.set("association-scope", "{{ scope_identifier }}");
+            bodyFormData.set("association-name", "Undefined");
+            bodyFormData.set("association-identifier", "");
+
+            axios({
+                method: "post",
+                url: associationCreateApiUrl,
+                data: bodyFormData,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(function (response) {
+                    notyf.success("Association successfully created!");
+                    htmx.trigger("#associations-component", "newAssociations");
+                })
+                .catch(function (error) {
+                    notyf.error("Unable to create association!");
+                });
+        }
+    });
+</script>
+{% endif %}

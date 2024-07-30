@@ -17,128 +17,19 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://unpkg.com/htmx.org@2.0.1"
+    integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
+    crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
-<script type="module">
-    window.__ASSOCIATIONS_STATE__ = JSON.parse({{ associations_state | tojson }});
-    window.__SCOPE_IDENTIFIER__ = "{{ session['current_scope'] }}";
-    window.__TOPIC_IDENTIFIER__ = "{{ topic.identifier }}";
-    window.__MAP_IDENTIFIER__ = "{{ topic_map.identifier }}";
-
-    // TODO: Document!
-    window.__IS_AUTHENTICATED__ = JSON.parse({{ "true" if current_user.is_authenticated else "false" }});
-    window.__HAS_WRITE_ACCESS__ = JSON.parse({{ "true" if is_map_owner or collaboration_mode.name == 'EDIT' else "false" }});
-
-    function getUrlParams(url) {
-        var params = {};
-        (url + '?').replace('#', '').split('?')[1].split('&').forEach(function (pair) {
-            pair = (pair + '=').split('=').map(decodeURIComponent);
-            if (pair[0].length) {
-                params[pair[0]] = pair[1];
-            }
-        });
-        return params;
-    }
-
-    var urlParts = window.location.pathname.split("/");
-    var mapIdentifier = urlParts[3];
-    var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
-    var filter = getUrlParams(window.location)['filter'] === undefined ? 1 : getUrlParams(window.location)['filter'];
-    var associationsGetGroupsApiUrl = "/api/get-association-groups/" + mapIdentifier
-        + "/" + window.__TOPIC_IDENTIFIER__
-        + "/" + window.__SCOPE_IDENTIFIER__
-        + "/" + filter;
-    var getIdentifiersApiUrl =
-        "/api/get-identifiers/" + mapIdentifier + "?q=%QUERY";
-    var createAssociation = false;
-
+<script>
     // Popovers
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 
-    // Associations component
-    var associationsComponent = new Vue({
-        el: "#associations-component",
-        delimiters: ['${', '}'],
-        data: {
-            mapIdentifier: window.__MAP_IDENTIFIER__,
-            topicIdentifier: window.__TOPIC_IDENTIFIER__,
-            currentScope: window.__SCOPE_IDENTIFIER__,
-            isAuthenticated: window.__IS_AUTHENTICATED__,
-            hasWriteAccess: window.__HAS_WRITE_ACCESS__,
-            associations: window.__ASSOCIATIONS_STATE__
-        },
-        computed: {
-            visibleAssociations: function () {
-                if (this.associations != null) {
-                    return this.associations.filter(function (association) {
-                        return association.identifier !== 'navigation' && association.identifier !== 'categorization';
-                    })
-                } else {
-                    return {}
-                }
-            }
-        }
-    });
-
-    // Generic association creation dialog
-    document
-        .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
-            element.addEventListener("click", function () {
-                var createAssociationModal = new bootstrap.Modal('#createAssociationModal');
-                createAssociationModal.show();
-                createAssociation = false;
-            });
-        });
-
-    if (document.getElementById("create-association-modal-button") != null) {
-        document
-            .getElementById("create-association-modal-button")
-            .addEventListener("click", function () {
-                $("#createAssociationModal").modal("hide");
-                createAssociation = true;
-            });
-    }
-
-    $("#createAssociationModal").on("hidden.bs.modal", function (e) {
-        var modal = $(this);
-        var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
-        modal.find(".modal-body #create-association-dest-topic-ref").val("");
-        if (createAssociation) {
-            var bodyFormData = new FormData();
-            bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
-            bodyFormData.set("association-dest-role-spec", "related");
-            bodyFormData.set("association-src-topic-ref", window.__TOPIC_IDENTIFIER__);
-            bodyFormData.set("association-src-role-spec", "related");
-            bodyFormData.set("association-instance-of", "association");
-            bodyFormData.set("association-scope", window.__SCOPE_IDENTIFIER__);
-            bodyFormData.set("association-name", "Undefined");
-            bodyFormData.set("association-identifier", "");
-
-            axios({
-                method: "post",
-                url: associationCreateApiUrl,
-                data: bodyFormData,
-                headers: { "Content-Type": "multipart/form-data" },
-            })
-                .then(function (response) {
-                    notyf.success("Association successfully created!");
-                    axios({
-                        method: "get",
-                        url: associationsGetGroupsApiUrl
-                    })
-                        .then(function (response) {
-                            associationsComponent.associations = response.data;
-                        })
-                        .catch(function (error) {
-                            notyf.error("Unable to retrieve associations!");
-                        })
-                })
-                .catch(function (error) {
-                    notyf.error("Unable to create association!");
-                });
-        }
+    // Trigger to display the associations (Related topics) card
+    $(document).ready(function () {
+        htmx.trigger("#associations-component", "newAssociations");
     });
 
     /*
@@ -809,58 +700,11 @@
         <br />
         {% endif %}
         <!-- Topic associations -->
-        <div id="associations-component">
-            <template v-if="visibleAssociations.length > 0">
-                <div class="card bg-light">
-                    <div class="card-header">
-                        <strong>Related topics</strong>
-                    </div>
-                    <div class="card-body">
-                        <ul>
-                            <li v-for="association in visibleAssociations" :key="association.identifier">${
-                                association.name }
-                                <ul>
-                                    <li v-for="role in association.roles" :key="role.identifier">
-                                        ${ role.name }
-                                        <ul>
-                                            <li v-for="topicRef in role.topicRefs" :key="topicRef.identifier">
-                                                <a v-if="currentScope === '*'" :href="topicRef.identifier">${
-                                                    topicRef.name }</a>
-                                                <a v-else :href="topicRef.identifier + '?scope=' + currentScope">${
-                                                    topicRef.name }</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-footer">
-                        <div class="btn-group">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Options
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item"
-                                        :href="'/visualisations/network/' + mapIdentifier + '/' + topicIdentifier">View
-                                        network graph</a>
-                                </li>
-                                <li>
-                                    <div v-if="isAuthenticated && hasWriteAccess" class="dropdown-divider"></div>
-                                </li>
-                                <li>
-                                    <a v-if="isAuthenticated && hasWriteAccess" href="#"
-                                        class="dropdown-item create-association-link">Create generic
-                                        association</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </template>
+        <div id="associations-component"
+            hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/1"
+            hx-swap="innerHTML" hx-trigger="newAssociations from:body">
         </div>
+        <br />
     </div>
 </div>
 <!-- Go to topic modal dialog -->

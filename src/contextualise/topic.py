@@ -245,16 +245,16 @@ def view(map_identifier, topic_identifier):
     breadcrumbs.append(topic_identifier)
     session["breadcrumbs"] = list(breadcrumbs)
 
-    import contextualise.api
+    # import contextualise.api
 
-    associations_state = contextualise.api.get_association_groups(
-        map_identifier, topic_identifier, session["current_scope"], scope_filtered
-    )
-    associations_state = (
-        associations_state[constants.RESPONSE].data.decode("utf-8")
-        if associations_state[constants.STATUS_CODE] == 200
-        else None
-    )
+    # associations_state = contextualise.api.get_association_groups(
+    #     map_identifier, topic_identifier, session["current_scope"], scope_filtered
+    # )
+    # associations_state = (
+    #     associations_state[constants.RESPONSE].data.decode("utf-8")
+    #     if associations_state[constants.STATUS_CODE] == 200
+    #     else None
+    # )
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
@@ -264,7 +264,7 @@ def view(map_identifier, topic_identifier):
         topic=topic,
         occurrences=occurrences,
         associations=associations,
-        associations_state=associations_state,
+        # associations_state=associations_state,
         is_knowledge_path_topic=is_knowledge_path_topic,
         creation_date=creation_date,
         modification_date=modification_date,

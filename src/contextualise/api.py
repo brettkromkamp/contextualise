@@ -8,7 +8,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 import os
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, render_template, request
 from flask_security import current_user, login_required
 from slugify import slugify
 from topicdb.models.association import Association
@@ -215,9 +215,10 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-@bp.route("/api/get-association-groups/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
-def get_association_groups(map_identifier, topic_identifier, scope_identifier, scope_filtered):
+@bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
+def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     store = get_topic_store()
+    error = 0
 
     if current_user.is_authenticated:  # User is logged in
         is_map_owner = store.is_map_owner(map_identifier, current_user.id)
@@ -226,52 +227,33 @@ def get_association_groups(map_identifier, topic_identifier, scope_identifier, s
         else:
             topic_map = store.get_map(map_identifier)
         if topic_map is None:
-            return jsonify({"status": "error", "code": 404}), 404
+            error = error | 1
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
     else:  # User is not logged in
         topic_map = store.get_map(map_identifier)
         if topic_map is None:
-            return jsonify({"status": "error", "code": 404}), 404
+            error = error | 2
 
     if scope_filtered:
         associations = store.get_association_groups(map_identifier, topic_identifier, scope=scope_identifier)
     else:
         associations = store.get_association_groups(map_identifier, topic_identifier)
     if not associations:
-        return jsonify({"status": "error", "code": 404}), 404
+        error = error | 4
 
-    result = []
-    for instance_of, roles in associations.dict.items():
-        result_roles = []
-        for role, topic_refs in roles.items():
-            result_topic_refs = []
-            for topic_ref in topic_refs:
-                topic_ref_topic = store.get_topic(map_identifier, topic_ref)
-                result_topic_refs.append(
-                    {
-                        "identifier": topic_ref,
-                        "name": topic_ref_topic.first_base_name.name,
-                    }
-                )
-            else:
-                role_topic = store.get_topic(map_identifier, role)
-                result_roles.append(
-                    {
-                        "identifier": role,
-                        "name": role_topic.first_base_name.name,
-                        "topicRefs": result_topic_refs,
-                    }
-                )
-        else:
-            instance_of_topic = store.get_topic(map_identifier, instance_of)
-            result.append(
-                {
-                    "identifier": instance_of,
-                    "name": instance_of_topic.first_base_name.name,
-                    "roles": result_roles,
-                }
-            )
+    is_authenticated = current_user.is_authenticated
+    has_write_access = True if is_map_owner or collaboration_mode.name == "EDIT" else False
 
-    return jsonify(result), 200
+    return render_template(
+        "api/associations.html",
+        error=error,
+        topic_map=topic_map,
+        topic_identifier=topic_identifier,
+        scope_identifier=scope_identifier,
+        associations=associations,
+        is_authenticated=is_authenticated,
+        has_write_access=has_write_access,
+    )
 
 
 @bp.route("/api/create-association/<map_identifier>", methods=["POST"])
