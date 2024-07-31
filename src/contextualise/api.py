@@ -243,7 +243,7 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
     if not topic_associations:
         error = error | 4
 
-    # TODO: Filter-out associations of type 'navigation' and 'categorization'
+    # Filter-out associations of type 'navigation' and 'categorization'
     filtered_associations = [
         topic_association
         for topic_association in topic_associations
