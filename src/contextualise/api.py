@@ -215,6 +215,8 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
+# This endpoint returns an HTML partial.
+# Specifically used within the context of htmx (https://htmx.org/docs/)
 @bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     store = get_topic_store()
@@ -235,11 +237,19 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
             error = error | 2
 
     if scope_filtered:
-        associations = store.get_association_groups(map_identifier, topic_identifier, scope=scope_identifier)
+        topic_associations = store.get_topic_associations(map_identifier, topic_identifier, scope=scope_identifier)
     else:
-        associations = store.get_association_groups(map_identifier, topic_identifier)
-    if not associations:
+        topic_associations = store.get_topic_associations(map_identifier, topic_identifier)
+    if not topic_associations:
         error = error | 4
+
+    # TODO: Filter-out associations of type 'navigation' and 'categorization'
+    filtered_associations = [
+        topic_association
+        for topic_association in topic_associations
+        if topic_association.instance_of not in ("navigation", "categorization")
+    ]
+    associations = store.get_association_groups(map_identifier, topic_identifier, associations=filtered_associations)
 
     is_authenticated = current_user.is_authenticated
     has_write_access = True if is_map_owner or collaboration_mode.name == "EDIT" else False
