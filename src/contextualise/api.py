@@ -215,8 +215,7 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-# This endpoint returns an HTML partial.
-# Specifically used within the context of htmx (https://htmx.org/docs/)
+# An htmx-specific (https://htmx.org/docs/) endpoint that returns an HTML partial
 @bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     store = get_topic_store()
@@ -243,7 +242,7 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
     if not topic_associations:
         error = error | 4
 
-    # Filter-out associations of type 'navigation' and 'categorization'
+    # Filter-out associations of type 'navigation' (knowledge path) and 'categorization' (tags)
     filtered_associations = [
         topic_association
         for topic_association in topic_associations
