@@ -251,7 +251,12 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
         for topic_association in topic_associations
         if topic_association.instance_of not in ("navigation", "categorization")
     ]
-    associations = store.get_association_groups(map_identifier, topic_identifier, associations=filtered_associations)
+    if filtered_associations:
+        associations = store.get_association_groups(
+            map_identifier, topic_identifier, associations=filtered_associations
+        )
+    else:
+        associations = []
 
     is_authenticated = current_user.is_authenticated
     has_write_access = True if is_map_owner or (collaboration_mode and collaboration_mode.name == "EDIT") else False

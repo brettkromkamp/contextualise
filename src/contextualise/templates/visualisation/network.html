@@ -8,6 +8,13 @@
 {% include "_header_menu.html" %}
 {% endblock %}
 
+{% block header_menu_not_authenticated %}
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a></li>
+<li class="nav-item"><a class="nav-link"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+</li>
+{% endblock %}
+
 {% block javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/dist/vis-network.min.js"
     integrity="sha512-4/EGWWWj7LIr/e+CvsslZkRk0fHDpf04dydJHoHOH32Mpw8jYU28GNI6mruO7fh/1kq15kSvwhKJftMSlgm0FA=="

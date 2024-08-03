@@ -538,17 +538,15 @@
                             </a></small>
                     </li>
                     <li>Topic: {{ topic.first_base_name.name }}</li>
-                    {% if session['current_scope'] == '*' %}
                     <li>Scope: <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a>
+                        {% if scope_filtered %}
+                        <span class="badge text-bg-warning">Active</span>
+                        {% else %}
+                        <span class="badge text-bg-secondary">Not active</span>
+                        {% endif %}
                     </li>
-                    {% else %}
-                    <li>Scope: <a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope'], scope=session['current_scope']) }}">{{
-                            session['current_scope']|topic_name(topic_map.identifier) }}</a>
-                    </li>
-                    {% endif %}
                     {% if current_user.is_authenticated and not is_map_owner %}
                     <li>
                         Collaboration mode: {% if collaboration_mode.name == "VIEW" %}

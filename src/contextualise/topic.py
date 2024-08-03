@@ -83,9 +83,9 @@ def view(map_identifier, topic_identifier):
     #   - Not active (0)
     #   - Active (1)
 
-    # Determine if (active) scope filtering has been specified in the URL. If no active scope has
-    # been specified then set scope filtering to be not active (0)
-    scope_filtered = request.args.get("filter", default=0, type=int)
+    # Determine if (active) scope filtering has been specified in the URL. If scope
+    # filtering is undefined then set it to be active (1)
+    scope_filtered = request.args.get("filter", default=1, type=int)
 
     if "scope_filter" not in session:
         session["breadcrumbs"] = []
@@ -94,12 +94,9 @@ def view(map_identifier, topic_identifier):
     session["scope_filter"] = scope_filtered
 
     if scope_filtered:
-        # If a scope has been specified in the URL, then use that to set the active scope
-        scope_identifier = request.args.get("scope", default="*", type=str)
-        if store.topic_exists(map_identifier, scope_identifier):
-            session["current_scope"] = scope_identifier
-        else:
-            session["current_scope"] = "*"
+        scope_identifier = session.get("current_scope", default="*")
+        if not store.topic_exists(map_identifier, scope_identifier):
+            session["current_scope"] = constants.UNIVERSAL_SCOPE
 
         # Get topic
         topic = store.get_topic(
