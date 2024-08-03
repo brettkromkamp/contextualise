@@ -87,14 +87,8 @@
 </li>
 {% if topic.identifier != 'home' %}
 <li class="nav-item">
-    {% if session['current_scope'] == '*' %}
     <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"
         role="button">Home</a>
-    {% else %}
-    <a class="nav-link"
-        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home', scope=session['current_scope']) }}"
-        role="button">Home</a>
-    {% endif %}
 </li>
 {% else %}
 <li class="nav-item">
@@ -337,7 +331,7 @@
                         <table class="table table-bordered table-sm">
                             <thead>
                                 <tr>
-                                    <th scope="col">Name</th>
+                                    <th scope="col">Key</th>
                                     <th scope="col">Value</th>
                                 </tr>
                             </thead>
@@ -389,7 +383,7 @@
         </ul>
         {% endif %}
         {% if ('categorization', 'category') in associations %}
-        <strong>Tags:</strong>&nbsp;
+        <h5 class="mt-3">Tags</h5>
         {% for identifier in associations['categorization', 'category'] %}
         <a class="btn btn-outline-primary btn-sm"
             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=identifier) }}">{{
