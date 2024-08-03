@@ -219,10 +219,11 @@ def get_network(map_identifier, topic_identifier):
 @bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     store = get_topic_store()
+
     error = 0
+
     collaboration_mode = None
     is_map_owner = False
-
     if current_user.is_authenticated:  # User is logged in
         is_map_owner = store.is_map_owner(map_identifier, current_user.id)
         if is_map_owner:

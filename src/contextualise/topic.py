@@ -78,36 +78,67 @@ def view(map_identifier, topic_identifier):
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
-    # Determine if (active) scope filtering has been specified in the URL
-    scope_filtered = request.args.get("filter", type=int)
-    if scope_filtered is not None:
-        session["scope_filter"] = scope_filtered
-    if "scope_filter" in session:
-        scope_filtered = session["scope_filter"]
-    else:
+    # Scope filtering, initially, can be in one of three states:
+    #   - Unspecified (None)
+    #   - Not active (0)
+    #   - Active (1)
+
+    # Determine if (active) scope filtering has been specified in the URL. If no active scope has
+    # been specified then set scope filtering to be not active (0)
+    scope_filtered = request.args.get("filter", default=0, type=int)
+
+    if "scope_filter" not in session:
         session["breadcrumbs"] = []
         session["current_scope"] = constants.UNIVERSAL_SCOPE
-        session["scope_filter"] = 1
 
-    # If a scope has been specified in the URL, then use that to set the scope
-    scope_identifier = request.args.get("scope", type=str)
-    if scope_identifier and store.topic_exists(map_identifier, scope_identifier):
-        session["current_scope"] = scope_identifier
+    session["scope_filter"] = scope_filtered
 
-    # Get topic
     if scope_filtered:
+        # If a scope has been specified in the URL, then use that to set the active scope
+        scope_identifier = request.args.get("scope", default="*", type=str)
+        if store.topic_exists(map_identifier, scope_identifier):
+            session["current_scope"] = scope_identifier
+        else:
+            session["current_scope"] = "*"
+
+        # Get topic
         topic = store.get_topic(
             map_identifier,
             topic_identifier,
             scope=session["current_scope"],
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
+
+        # Get topic occurrences
+        topic_occurrences = store.get_topic_occurrences(
+            map_identifier,
+            topic_identifier,
+            scope=session["current_scope"],
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+
+        # Get topic associations
+        associations = store.get_association_groups(map_identifier, topic_identifier, scope=session["current_scope"])
     else:
+        # Get topic
         topic = store.get_topic(
             map_identifier,
             topic_identifier,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
+
+        # Get topic occurrences
+        topic_occurrences = store.get_topic_occurrences(
+            map_identifier,
+            topic_identifier,
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+
+        # Get topic associations
+        associations = store.get_association_groups(map_identifier, topic_identifier)
+
     if topic is None:
         if current_user.is_authenticated:  # User is logged in
             current_app.logger.warning(
@@ -122,21 +153,6 @@ def view(map_identifier, topic_identifier):
     else:
         session.pop("inexistent_topic_identifier", None)
 
-    if scope_filtered:
-        topic_occurrences = store.get_topic_occurrences(
-            map_identifier,
-            topic_identifier,
-            scope=session["current_scope"],
-            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
-            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-        )
-    else:
-        topic_occurrences = store.get_topic_occurrences(
-            map_identifier,
-            topic_identifier,
-            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
-            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-        )
     occurrences = {
         "text": None,
         "images": [],
@@ -213,11 +229,6 @@ def view(map_identifier, topic_identifier):
                 )
             case _:  # Unknown occurrence type
                 abort(500)
-
-    if scope_filtered:
-        associations = store.get_association_groups(map_identifier, topic_identifier, scope=session["current_scope"])
-    else:
-        associations = store.get_association_groups(map_identifier, topic_identifier)
 
     is_knowledge_path_topic = (
         ("navigation", "up") in associations
