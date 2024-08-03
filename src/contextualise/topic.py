@@ -83,9 +83,11 @@ def view(map_identifier, topic_identifier):
     #   - Not active (0)
     #   - Active (1)
 
-    # Determine if (active) scope filtering has been specified in the URL. If scope
-    # filtering is undefined then set it to be active (1)
-    scope_filtered = request.args.get("filter", default=1, type=int)
+    # Determine if (active) scope filtering has been specified in either the URL or, previously,
+    # in the session. If scope filtering is undefined then set it to be active (1).
+    scope_filtered = request.args.get("filter", type=int)
+    if scope_filtered is None:
+        scope_filtered = session.get("scope_filter", default=1)
 
     if "scope_filter" not in session:
         session["breadcrumbs"] = []

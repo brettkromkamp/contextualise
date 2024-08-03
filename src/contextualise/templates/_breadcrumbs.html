@@ -6,17 +6,12 @@
             <ol class="breadcrumb mb-4">
                 {% for breadcrumb in session['breadcrumbs'] %}
                 {% if loop.index < session['breadcrumbs']|length %} <li class="breadcrumb-item">
-                    {% if session['current_scope'] == '*' %}<a
+                    <a
                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
                         breadcrumb|topic_name(topic_map.identifier) }}</a>
                     {% if breadcrumb == 'home' %}<i style="color: gray" class="bi bi-house-fill"></i>
                     {% endif %}
-                    {% else %}<a
-                        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb, scope=session['current_scope']) }}">{{
-                        breadcrumb|topic_name(topic_map.identifier) }}</a>
-                    {% if breadcrumb == 'home' %}<i style="color: gray" class="bi bi-house-fill"></i>
-                    {% endif %}
-                    {% endif %}
+
                     </li>
                     {% else %}
                     <li aria-current="page" class="breadcrumb-item active">
