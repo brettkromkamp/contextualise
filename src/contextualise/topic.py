@@ -1181,10 +1181,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     )
 
 
-@bp.route(
-    "/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=["POST"])
 @login_required
 def change_scope(map_identifier, topic_identifier, scope_identifier):
     store = get_topic_store()
@@ -1208,44 +1205,31 @@ def change_scope(map_identifier, topic_identifier, scope_identifier):
         )
         abort(404)
 
-    form_scope = scope_identifier
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    form_scope = request.form["scope-identifier"].strip()
     error = 0
 
-    if request.method == "POST":
-        form_scope = request.form["new-scope"].strip()
+    # If no values have been provided set their default values
+    if not form_scope:
+        form_scope = constants.UNIVERSAL_SCOPE
 
-        # If no values have been provided set their default values
-        if not form_scope:
-            form_scope = constants.UNIVERSAL_SCOPE
+    # Validate form inputs
+    if not store.topic_exists(topic_map.identifier, form_scope):
+        error = error | 1
 
-        # Validate form inputs
-        if not store.topic_exists(topic_map.identifier, form_scope):
-            error = error | 1
-
-        if error != 0:
-            flash(
-                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
-                "warning",
-            )
-        else:
-            session["current_scope"] = form_scope
-            flash("Scope successfully changed.", "success")
-            return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic.identifier,
-                )
-            )
-
-    return render_template(
-        "topic/change_scope.html",
-        error=error,
-        topic_map=topic_map,
-        topic=topic,
-        scope_identifier=form_scope,
-        map_notes_count=map_notes_count,
+    if error != 0:
+        flash(
+            "You provided a scope identifier that does not exist. The active scope was left unchanged.",
+            "warning",
+        )
+    else:
+        session["current_scope"] = form_scope
+        flash("Scope successfully changed.", "success")
+    return redirect(
+        url_for(
+            "topic.view",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 

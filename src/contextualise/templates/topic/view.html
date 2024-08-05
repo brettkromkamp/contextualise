@@ -60,6 +60,15 @@
             }
         });
     }
+
+    // Change scope dialog    
+    document
+        .querySelectorAll(".change-scope-link").forEach(function (element, index, array) {
+            element.addEventListener("click", function () {
+                var changeScopeModal = new bootstrap.Modal('#changeScopeModal');
+                changeScopeModal.show();
+            });
+        });
 </script>
 {% endblock %}
 
@@ -552,9 +561,7 @@
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item"
-                                href="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}">Change
-                                scope</a>
+                            <a class="dropdown-item change-scope-link" href="#">Change scope</a>
                         </li>
                         <li>
                             <div class="dropdown-divider"></div>
@@ -755,6 +762,38 @@
                     association
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Change scope modal dialog -->
+<div aria-hidden="true" aria-labelledby="changeScopeModal" class="modal fade" id="changeScopeModal" role="dialog"
+    tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeScopeModalLabel">Change scope</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form
+                action="{{ url_for('topic.change_scope', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, scope_identifier=session['current_scope']) }}"
+                autocomplete="off" method="post" role="form">
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <p>Provide an existing topic identifer</p>
+
+                    <div class="mb-3">
+                        <label for="scope-identifier" class="form-label">New scope</label>
+                        <input class="form-control goto-typeahead" id="scope-identifier" name="scope-identifier"
+                            value="{{ session['current_scope'] }}" placeholder="Enter scope identifier"
+                            autocomplete="off" required type="text">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="change-scope-modal-button">Change scope</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
