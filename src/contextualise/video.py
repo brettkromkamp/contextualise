@@ -298,7 +298,7 @@ def delete(map_identifier, topic_identifier, video_identifier):
         # Delete video occurrence from topic store
         store.delete_occurrence(map_identifier, video_occurrence.identifier)
 
-        flash("Video link successfully deleted.", "warning")
+        flash("Video link successfully deleted.", "success")
         return redirect(
             url_for(
                 "video.index",

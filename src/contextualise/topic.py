@@ -257,6 +257,20 @@ def view(map_identifier, topic_identifier):
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
+    # Delete topic or note request
+    delete_topic_identifier = request.args.get("topicdelete")
+    delete_topic_name = None
+    delete_topic_instance_of = None
+    if delete_topic_identifier:
+        delete_topic_name = topic.first_base_name.name
+        delete_topic_instance_of = topic.instance_of
+
+    delete_note_identifier = request.args.get("entitydelete")
+    delete_note_title = None
+    delete_note_scope = None
+    if delete_note_identifier:
+        pass  # TODO
+
     return render_template(
         "topic/view.html",
         topic_map=topic_map,
@@ -271,6 +285,12 @@ def view(map_identifier, topic_identifier):
         collaboration_mode=collaboration_mode,
         is_map_owner=is_map_owner,
         map_notes_count=map_notes_count,
+        delete_topic_identifier=delete_topic_identifier,
+        delete_topic_name=delete_topic_name,
+        delete_topic_instance_of=delete_topic_instance_of,
+        delete_note_identifier=delete_note_identifier,
+        delete_note_title=delete_note_title,
+        delete_note_scope=delete_note_scope,
     )
 
 
@@ -890,7 +910,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 
     if request.method == "POST":
         store.delete_occurrence(map_identifier, note_occurrence.identifier)
-        flash("Note successfully deleted.", "warning")
+        flash("Note successfully deleted.", "success")
         return redirect(
             url_for(
                 "topic.view",
@@ -1161,7 +1181,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     if request.method == "POST":
         store.delete_base_name(map_identifier, name_identifier)
 
-        flash("Name successfully deleted.", "warning")
+        flash("Name successfully deleted.", "success")
         return redirect(
             url_for(
                 "topic.view_names",

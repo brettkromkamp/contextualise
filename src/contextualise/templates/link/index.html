@@ -203,7 +203,7 @@
                     <td>
                         <a
                             href="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, delete=link.identifier) }}">Delete</a>
+                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entitydelete=link.identifier) }}">Delete</a>
                         {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=link.identifier, entity_type='link') }}">View
                             attributes</a>
@@ -228,13 +228,12 @@
     </div>
 </div>
 {% if delete_link_identifier %}
-<!-- Delete link dialog -->
-<div aria-hidden="true" aria-labelledby="deleteEntityModal" class="modal fade" id="deleteEntityModal" role="dialog"
-    tabindex="-1">
+<!-- Delete link modal dialog -->
+<div aria-hidden="true" aria-labelledby="deleteModal" class="modal fade" id="deleteModal" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteEntityModalLabel">Delete link</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete link</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form
@@ -276,7 +275,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" id="delete-entity-modal-button">Delete link</button>
+                    <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete link</button>
                 </div>
             </form>
         </div>

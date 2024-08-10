@@ -494,7 +494,7 @@ def delete(map_identifier, note_identifier):
 
     if request.method == "POST":
         store.delete_occurrence(map_identifier, note_occurrence.identifier)
-        flash("Note successfully deleted.", "warning")
+        flash("Note successfully deleted.", "success")
         return redirect(
             url_for(
                 "note.index",

@@ -162,9 +162,9 @@
 
         // Deletion request
         var urlParams = new URLSearchParams(window.location.search);
-        var deletionId = urlParams.get('delete');
+        var deletionId = urlParams.get('entitydelete') || urlParams.get('topicdelete');
         if (deletionId) {
-            var deleteEntityModal = new bootstrap.Modal('#deleteEntityModal');
+            var deleteEntityModal = new bootstrap.Modal('#deleteModal');
             if (deleteEntityModal) {
                 deleteEntityModal.show();
             }

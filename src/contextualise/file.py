@@ -335,7 +335,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         if os.path.exists(file_file_path):
             os.remove(file_file_path)
 
-        flash("File successfully deleted.", "warning")
+        flash("File successfully deleted.", "success")
         return redirect(
             url_for(
                 "file.index",

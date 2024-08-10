@@ -227,7 +227,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
 
     if request.method == "POST":
         store.delete_association(map_identifier, association_identifier)
-        flash("Association successfully deleted.", "warning")
+        flash("Association successfully deleted.", "success")
         return redirect(
             url_for(
                 "association.index",

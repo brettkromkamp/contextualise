@@ -664,7 +664,7 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
         # Delete attribute from topic store
         store.delete_attribute(map_identifier, attribute.identifier)
 
-        flash("Attribute successfully deleted.", "warning")
+        flash("Attribute successfully deleted.", "success")
         return redirect(
             url_for(
                 "attribute.index",
@@ -755,7 +755,7 @@ def entity_delete(
         # Delete attribute from topic store
         store.delete_attribute(map_identifier, attribute.identifier)
 
-        flash("Attribute successfully deleted.", "warning")
+        flash("Attribute successfully deleted.", "success")
         return redirect(
             url_for(
                 "attribute.entity_index",
