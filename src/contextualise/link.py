@@ -280,7 +280,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
 
 @bp.route(
     "/links/delete/<map_identifier>/<topic_identifier>/<link_identifier>",
-    methods=("GET", "POST"),
+    methods=("POST",),
 )
 @login_required
 def delete(map_identifier, topic_identifier, link_identifier):
@@ -302,38 +302,31 @@ def delete(map_identifier, topic_identifier, link_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     link_occurrence = store.get_occurrence(
         map_identifier,
         link_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_link_title = link_occurrence.get_attribute_by_name("title").value
-    form_link_url = link_occurrence.resource_ref
-    form_link_scope = link_occurrence.scope
+    if not link_occurrence:
+        error = error | 1
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
-
-    if request.method == "POST":
+    if error != 0:
+        flash(
+            "An error occurred. The link was not deleted.",
+            "warning",
+        )
+    else:
         # Delete link occurrence from topic store
         store.delete_occurrence(map_identifier, link_occurrence.identifier)
-
         flash("Link successfully deleted.", "warning")
-        return redirect(
-            url_for(
-                "link.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
-        )
 
-    return render_template(
-        "link/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        link_identifier=link_occurrence.identifier,
-        link_title=form_link_title,
-        link_url=form_link_url,
-        link_scope=form_link_scope,
-        map_notes_count=map_notes_count,
+    return redirect(
+        url_for(
+            "link.index",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
