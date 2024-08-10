@@ -17,6 +17,7 @@ from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
@@ -80,7 +81,40 @@ def index(map_identifier):
             }
         )
 
-    return render_template("note/index.html", topic_map=topic_map, topic=topic, notes=notes)
+    # Delete note request
+    delete_note_identifier = request.args.get("entitydelete")
+    delete_note_title = None
+    delete_note_text = None
+    delete_note_scope = None
+    if delete_note_identifier:
+        note_occurrence = store.get_occurrence(
+            map_identifier,
+            delete_note_identifier,
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+        delete_note_title = note_occurrence.get_attribute_by_name("title").value
+        markdown = mistune.create_markdown(
+            renderer=HighlightRenderer(escape=False),
+            plugins=[
+                "strikethrough",
+                "footnotes",
+                "table",
+            ],
+        )
+        delete_note_text = markdown(note_occurrence.resource_data.decode())
+        delete_note_scope = note_occurrence.scope
+
+    return render_template(
+        "note/index.html",
+        topic_map=topic_map,
+        topic=topic,
+        notes=notes,
+        delete_note_identifier=delete_note_identifier,
+        delete_note_title=delete_note_title,
+        delete_note_text=delete_note_text,
+        delete_note_scope=delete_note_scope,
+    )
 
 
 @bp.route("/notes/add/<map_identifier>", methods=("GET", "POST"))
@@ -452,7 +486,7 @@ def edit(map_identifier, note_identifier):
     )
 
 
-@bp.route("/notes/delete/<map_identifier>/<note_identifier>", methods=("GET", "POST"))
+@bp.route("/notes/delete/<map_identifier>/<note_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, note_identifier):
     store = get_topic_store()
@@ -473,6 +507,8 @@ def delete(map_identifier, note_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     note_occurrence = store.get_occurrence(
         map_identifier,
         note_identifier,
@@ -480,35 +516,26 @@ def delete(map_identifier, note_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_note_title = note_occurrence.get_attribute_by_name("title").value
-    markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(escape=False),
-        plugins=[
-            "strikethrough",
-            "footnotes",
-            "table",
-        ],
-    )
-    form_note_text = markdown(note_occurrence.resource_data.decode())
-    form_note_scope = note_occurrence.scope
+    if not note_occurrence:
+        error = error | 1
 
-    if request.method == "POST":
-        store.delete_occurrence(map_identifier, note_occurrence.identifier)
-        flash("Note successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "note.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the note. The link was not deleted.",
+            "warning",
         )
-
-    return render_template(
-        "note/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        note_identifier=note_occurrence.identifier,
-        note_title=form_note_title,
-        note_text=form_note_text,
-        note_scope=form_note_scope,
+    else:
+        try:
+            store.delete_occurrence(map_identifier, note_occurrence.identifier)
+            flash("Note successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the note. The note was not deleted.",
+                "warning",
+            )
+    return redirect(
+        url_for(
+            "note.index",
+            map_identifier=topic_map.identifier,
+        )
     )

@@ -267,9 +267,26 @@ def view(map_identifier, topic_identifier):
 
     delete_note_identifier = request.args.get("entitydelete")
     delete_note_title = None
+    delete_note_text = None
     delete_note_scope = None
     if delete_note_identifier:
-        pass  # TODO
+        note_occurrence = store.get_occurrence(
+            map_identifier,
+            delete_note_identifier,
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+        )
+        delete_note_title = note_occurrence.get_attribute_by_name("title").value
+        markdown = mistune.create_markdown(
+            renderer=HighlightRenderer(escape=False),
+            plugins=[
+                "strikethrough",
+                "footnotes",
+                "table",
+            ],
+        )
+        delete_note_text = markdown(note_occurrence.resource_data.decode())
+        delete_note_scope = note_occurrence.scope
 
     return render_template(
         "topic/view.html",
@@ -290,6 +307,7 @@ def view(map_identifier, topic_identifier):
         delete_topic_instance_of=delete_topic_instance_of,
         delete_note_identifier=delete_note_identifier,
         delete_note_title=delete_note_title,
+        delete_note_text=delete_note_text,
         delete_note_scope=delete_note_scope,
     )
 
@@ -553,7 +571,7 @@ def edit(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/delete/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route("/topics/delete/<map_identifier>/<topic_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier):
     store = get_topic_store()
@@ -580,50 +598,40 @@ def delete(map_identifier, topic_identifier):
         )
         abort(404)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    try:
+        # Remove the topic from the topic store
+        store.delete_topic(map_identifier, topic_identifier)
 
-    if request.method == "POST":
-        try:
-            # Remove the topic from the topic store
-            store.delete_topic(map_identifier, topic_identifier)
+        # Clear the breadcrumbs (of which this topic was part of)
+        session["breadcrumbs"] = []
 
-            # Clear the breadcrumbs (of which this topic was part of)
-            session["breadcrumbs"] = []
-
-            # TODO: Review
-            # Remove the topic's resources directory
-            # topic_directory = os.path.join(
-            #     current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
-            # )
-            # if os.path.isdir(topic_directory):
-            #     shutil.rmtree(topic_directory)
-        except TopicDbError:
-            flash(
-                "Topic not deleted. Certain predefined topics cannot be deleted. Alternatively, you attempted to delete an association.",
-                "warning",
-            )
-            return redirect(
-                url_for(
-                    "topic.view",
-                    map_identifier=topic_map.identifier,
-                    topic_identifier=topic_identifier,
-                )
-            )
-
-        flash("Topic successfully deleted.", "success")
+        # TODO: Review
+        # Remove the topic's resources directory
+        # topic_directory = os.path.join(
+        #     current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier), topic_identifier
+        # )
+        # if os.path.isdir(topic_directory):
+        #     shutil.rmtree(topic_directory)
+    except TopicDbError:
+        flash(
+            "Topic not deleted. Certain predefined topics cannot be deleted. Alternatively, you attempted to delete an association.",
+            "warning",
+        )
         return redirect(
             url_for(
                 "topic.view",
                 map_identifier=topic_map.identifier,
-                topic_identifier="home",
+                topic_identifier=topic_identifier,
             )
         )
 
-    return render_template(
-        "topic/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        map_notes_count=map_notes_count,
+    flash("Topic successfully deleted.", "success")
+    return redirect(
+        url_for(
+            "topic.view",
+            map_identifier=topic_map.identifier,
+            topic_identifier="home",
+        )
     )
 
 
@@ -853,10 +861,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     )
 
 
-@bp.route(
-    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("POST",))
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     store = get_topic_store()
@@ -887,6 +892,8 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         )
         abort(404)
 
+    error = 0
+
     note_occurrence = store.get_occurrence(
         map_identifier,
         note_identifier,
@@ -894,40 +901,29 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_note_title = note_occurrence.get_attribute_by_name("title").value
-    markdown = mistune.create_markdown(
-        renderer=HighlightRenderer(escape=False),
-        plugins=[
-            "strikethrough",
-            "footnotes",
-            "table",
-        ],
-    )
-    form_note_text = markdown(note_occurrence.resource_data.decode())
-    form_note_scope = note_occurrence.scope
+    if not note_occurrence:
+        error = error | 1
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
-
-    if request.method == "POST":
-        store.delete_occurrence(map_identifier, note_occurrence.identifier)
-        flash("Note successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "topic.view",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the note. The link was not deleted.",
+            "warning",
         )
-
-    return render_template(
-        "topic/delete_note.html",
-        topic_map=topic_map,
-        topic=topic,
-        note_identifier=note_occurrence.identifier,
-        note_title=form_note_title,
-        note_text=form_note_text,
-        note_scope=form_note_scope,
-        map_notes_count=map_notes_count,
+    else:
+        try:
+            store.delete_occurrence(map_identifier, note_occurrence.identifier)
+            flash("Note successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the note. The note was not deleted.",
+                "warning",
+            )
+    return redirect(
+        url_for(
+            "topic.view",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 
@@ -1201,7 +1197,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     )
 
 
-@bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=["POST"])
+@bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("POST",))
 @login_required
 def change_scope(map_identifier, topic_identifier, scope_identifier):
     store = get_topic_store()

@@ -80,8 +80,13 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
+                                <!--
                                 <a class="dropdown-item"
                                     href="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=note.identifier) }}">Delete
+                                    note</a>
+                                -->
+                                <a class="dropdown-item"
+                                    href="{{ url_for('note.index', map_identifier=topic_map.identifier, entitydelete=note.identifier) }}">Delete
                                     note</a>
                             </li>
                         </ul>
@@ -114,6 +119,59 @@
         <a class="btn btn-primary" href="{{ url_for('note.add', map_identifier=topic_map.identifier) }}">Add note</a>
         <br />
         <br />
+    </div>
+</div>
+{% endif %}
+{% if delete_note_identifier %}
+<!-- Delete note modal dialog -->
+<div aria-hidden="true" aria-labelledby="deleteModal" class="modal fade" id="deleteModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete note</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form
+                action="{{ url_for('note.delete', map_identifier=topic_map.identifier, note_identifier=delete_note_identifier) }}"
+                method="post" role="form">
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="note-title" class="form-label">Title</label>
+                        <input aria-readonly="true" disabled class="form-control" id="note-title" name="note-title"
+                            readonly type="text" value="{{ delete_note_title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Text</label>
+                        <div class="text-secondary note-text">{{ delete_note_text|safe }}</div>
+                    </div>
+                    <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions"
+                            role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Advanced options</a>
+                    </p>
+                    <div class="collapse" id="advancedOptions">
+                        <div class="card">
+                            <div class="card-header">
+                                Advanced options
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <div class="mb-3">
+                                        <label for="note-scope" class="form-label">Scope</label>
+                                        <input aria-readonly="true" disabled class="form-control" id="note-scope"
+                                            name="note-scope" readonly type="text" value="{{ delete_note_scope }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete note</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endif %}

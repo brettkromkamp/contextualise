@@ -14,6 +14,7 @@ from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store

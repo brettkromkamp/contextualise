@@ -23,3 +23,11 @@ pre {
     background-color: #f8f8f8;
     border-radius: .25rem;
 }
+
+.note-text {
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
+    background-color: #e9ecef;
+    border-radius: .25rem;
+}
