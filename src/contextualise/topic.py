@@ -257,37 +257,6 @@ def view(map_identifier, topic_identifier):
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
-    # Delete topic or note request
-    delete_topic_identifier = request.args.get("topicdelete")
-    delete_topic_name = None
-    delete_topic_instance_of = None
-    if delete_topic_identifier:
-        delete_topic_name = topic.first_base_name.name
-        delete_topic_instance_of = topic.instance_of
-
-    delete_note_identifier = request.args.get("entitydelete")
-    delete_note_title = None
-    delete_note_text = None
-    delete_note_scope = None
-    if delete_note_identifier:
-        note_occurrence = store.get_occurrence(
-            map_identifier,
-            delete_note_identifier,
-            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
-            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-        )
-        delete_note_title = note_occurrence.get_attribute_by_name("title").value
-        markdown = mistune.create_markdown(
-            renderer=HighlightRenderer(escape=False),
-            plugins=[
-                "strikethrough",
-                "footnotes",
-                "table",
-            ],
-        )
-        delete_note_text = markdown(note_occurrence.resource_data.decode())
-        delete_note_scope = note_occurrence.scope
-
     return render_template(
         "topic/view.html",
         topic_map=topic_map,
@@ -302,13 +271,6 @@ def view(map_identifier, topic_identifier):
         collaboration_mode=collaboration_mode,
         is_map_owner=is_map_owner,
         map_notes_count=map_notes_count,
-        delete_topic_identifier=delete_topic_identifier,
-        delete_topic_name=delete_topic_name,
-        delete_topic_instance_of=delete_topic_instance_of,
-        delete_note_identifier=delete_note_identifier,
-        delete_note_title=delete_note_title,
-        delete_note_text=delete_note_text,
-        delete_note_scope=delete_note_scope,
     )
 
 

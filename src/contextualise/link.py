@@ -68,22 +68,6 @@ def index(map_identifier, topic_identifier):
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
 
-    # Delete link request
-    delete_link_title = None
-    delete_link_url = None
-    delete_link_scope = None
-    delete_link_identifier = request.args.get("entitydelete")
-    if delete_link_identifier:
-        delete_link_occurrence = store.get_occurrence(
-            map_identifier,
-            delete_link_identifier.strip().lower(),
-            resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-        )
-        if delete_link_occurrence:
-            delete_link_title = delete_link_occurrence.get_attribute_by_name("title").value
-            delete_link_url = delete_link_occurrence.resource_ref
-            delete_link_scope = delete_link_occurrence.scope
-
     return render_template(
         "link/index.html",
         topic_map=topic_map,
@@ -91,10 +75,6 @@ def index(map_identifier, topic_identifier):
         links=links,
         creation_date=creation_date,
         map_notes_count=map_notes_count,
-        delete_link_identifier=delete_link_identifier,
-        delete_link_title=delete_link_title,
-        delete_link_url=delete_link_url,
-        delete_link_scope=delete_link_scope,
     )
 
 

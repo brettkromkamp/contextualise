@@ -1,0 +1,48 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete topic</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('topic.delete', map_identifier=topic_map.identifier, topic_identifier=delete_topic_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <div class="alert alert-danger show" role="alert">Deleting a topic also
+                    deletes all of its associations and resources. Once you delete a topic, there is no going back.
+                </div>
+                <div class="mb-3">
+                    <label for="topic-name" class="form-label">Name</label>
+                    <input aria-readonly="true" disabled class="form-control" id="topic-name" name="topic-name" readonly
+                        type="text" value="{{ delete_topic_name }}">
+                </div>
+                <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                        aria-expanded="false" aria-controls="collapseExample">
+                        Advanced options</a>
+                </p>
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            Advanced options
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="topic-instance-of" class="form-label">Type</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="topic-instance-of"
+                                        name="topic-instance-of" readonly type="text"
+                                        value="{{ delete_topic_instance_of|topic_name(topic_map.identifier) }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete topic</button>
+            </div>
+        </form>
+    </div>
+</div>

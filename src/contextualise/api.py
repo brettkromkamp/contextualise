@@ -8,6 +8,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 import os
 from datetime import datetime
 
+import mistune
 from flask import Blueprint, jsonify, render_template, request
 from flask_security import current_user, login_required
 from slugify import slugify
@@ -16,13 +17,17 @@ from topicdb.models.attribute import Attribute
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
+from topicdb.models.collaborationmode import CollaborationMode
+from topicdb.store.retrievalmode import RetrievalMode
 
 from .topic_store import get_topic_store
 from . import constants
+from .utilities.highlight_renderer import HighlightRenderer
 
 bp = Blueprint("api", __name__)
 
 
+# region JSON API
 @bp.route("/api/get-slug")
 @login_required
 def get_slug():
@@ -215,64 +220,6 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-# An htmx-specific (https://htmx.org/docs/) endpoint that returns an HTML partial
-@bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
-def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
-    store = get_topic_store()
-
-    error = 0
-
-    collaboration_mode = None
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            error = error | 1
-        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            error = error | 2
-
-    if scope_filtered:
-        topic_associations = store.get_topic_associations(map_identifier, topic_identifier, scope=scope_identifier)
-    else:
-        topic_associations = store.get_topic_associations(map_identifier, topic_identifier)
-    if not topic_associations:
-        error = error | 4
-
-    # Filter-out associations of type 'navigation' (knowledge path) and 'categorization' (tags)
-    filtered_associations = [
-        topic_association
-        for topic_association in topic_associations
-        if topic_association.instance_of not in ("navigation", "categorization")
-    ]
-    if filtered_associations:
-        associations = store.get_association_groups(
-            map_identifier, topic_identifier, associations=filtered_associations
-        )
-    else:
-        associations = []
-
-    is_authenticated = current_user.is_authenticated
-    has_write_access = True if is_map_owner or (collaboration_mode and collaboration_mode.name == "EDIT") else False
-
-    return render_template(
-        "api/associations.html",
-        error=error,
-        topic_map=topic_map,
-        topic_identifier=topic_identifier,
-        scope_identifier=scope_identifier,
-        associations=associations,
-        is_authenticated=is_authenticated,
-        has_write_access=has_write_access,
-    )
-
-
 @bp.route("/api/create-association/<map_identifier>", methods=["POST"])
 @login_required
 def create_association(map_identifier):
@@ -326,3 +273,236 @@ def create_association(map_identifier):
         store.create_association(map_identifier, association)
 
     return jsonify({"status": "success", "code": 201}), 201
+
+
+# endregion
+
+
+# region HTML (HTMX) API
+# htmx-specific (https://htmx.org/docs/) endpoints that return HTML partials
+
+
+@bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
+def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
+    store = get_topic_store()
+
+    collaboration_mode = None
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    if scope_filtered:
+        topic_associations = store.get_topic_associations(map_identifier, topic_identifier, scope=scope_identifier)
+    else:
+        topic_associations = store.get_topic_associations(map_identifier, topic_identifier)
+
+    # Filter-out associations of type 'navigation' (knowledge path) and 'categorization' (tags)
+    filtered_associations = [
+        topic_association
+        for topic_association in topic_associations
+        if topic_association.instance_of not in ("navigation", "categorization")
+    ]
+    if filtered_associations:
+        associations = store.get_association_groups(
+            map_identifier, topic_identifier, associations=filtered_associations
+        )
+    else:
+        associations = []
+
+    is_authenticated = current_user.is_authenticated
+    has_write_access = True if is_map_owner or (collaboration_mode and collaboration_mode.name == "EDIT") else False
+
+    return render_template(
+        "api/association/associations.html",
+        topic_map=topic_map,
+        topic_identifier=topic_identifier,
+        scope_identifier=scope_identifier,
+        associations=associations,
+        is_authenticated=is_authenticated,
+        has_write_access=has_write_access,
+    )
+
+
+@bp.route("/api/delete-topic/<map_identifier>/<topic_identifier>")
+def delete_topic(map_identifier, topic_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    delete_topic_identifier = topic.identifier
+    delete_topic_name = topic.first_base_name.name
+    delete_topic_instance_of = topic.instance_of
+
+    return render_template(
+        "api/topic/delete.html",
+        topic_map=topic_map,
+        delete_topic_identifier=delete_topic_identifier,
+        delete_topic_name=delete_topic_name,
+        delete_topic_instance_of=delete_topic_instance_of,
+    )
+
+
+@bp.route("/api/delete-topic-note/<map_identifier>/<topic_identifier>/<note_identifier>")
+def delete_topic_note(map_identifier, topic_identifier, note_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    note_occurrence = store.get_occurrence(
+        map_identifier,
+        note_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    delete_note_identifier = note_identifier
+    delete_note_title = note_occurrence.get_attribute_by_name("title").value
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(escape=False),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
+    delete_note_text = markdown(note_occurrence.resource_data.decode())
+    delete_note_scope = note_occurrence.scope
+
+    return render_template(
+        "api/topic/delete_note.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_note_identifier=delete_note_identifier,
+        delete_note_title=delete_note_title,
+        delete_note_text=delete_note_text,
+        delete_note_scope=delete_note_scope,
+    )
+
+
+@bp.route("/api/delete-notes-note/<map_identifier>/<topic_identifier>/<note_identifier>")
+def delete_notes_note(map_identifier, topic_identifier, note_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    note_occurrence = store.get_occurrence(
+        map_identifier,
+        note_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    delete_note_identifier = note_identifier
+    delete_note_title = note_occurrence.get_attribute_by_name("title").value
+    markdown = mistune.create_markdown(
+        renderer=HighlightRenderer(escape=False),
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+        ],
+    )
+    delete_note_text = markdown(note_occurrence.resource_data.decode())
+    delete_note_scope = note_occurrence.scope
+
+    return render_template(
+        "api/note/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_note_identifier=delete_note_identifier,
+        delete_note_title=delete_note_title,
+        delete_note_text=delete_note_text,
+        delete_note_scope=delete_note_scope,
+    )
+
+
+@bp.route("/api/delete-link/<map_identifier>/<topic_identifier>/<link_identifier>")
+def delete_link(map_identifier, topic_identifier, link_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    link_occurrence = store.get_occurrence(
+        map_identifier,
+        link_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_link_identifier = link_identifier
+    delete_link_title = link_occurrence.get_attribute_by_name("title").value
+    delete_link_url = link_occurrence.resource_ref
+    delete_link_scope = link_occurrence.scope
+
+    return render_template(
+        "api/link/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_link_identifier=delete_link_identifier,
+        delete_link_title=delete_link_title,
+        delete_link_url=delete_link_url,
+        delete_link_scope=delete_link_scope,
+    )
+
+
+# endregion

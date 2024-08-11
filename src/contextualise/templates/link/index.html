@@ -45,9 +45,10 @@
                             identifier</a>
                     </li>
                     <li>
-                        <a class="dropdown-item"
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, topicdelete=topic.identifier) }}">Delete
-                            topic</a>
+                        <a class="dropdown-item" href="#"
+                            hx-get="/api/delete-topic/{{ topic_map.identifier }}/{{ topic.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete topic</a>
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>
@@ -203,7 +204,10 @@
                     <td>
                         <a
                             href="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entitydelete=link.identifier) }}">Delete</a>
+                            href="#"
+                            hx-get="/api/delete-link/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ link.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete</a>
                         {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=link.identifier, entity_type='link') }}">View
                             attributes</a>
@@ -227,59 +231,10 @@
         {% endif %}
     </div>
 </div>
-{% if delete_link_identifier %}
-<!-- Delete link modal dialog -->
-<div aria-hidden="true" aria-labelledby="deleteModal" class="modal fade" id="deleteModal" role="dialog" tabindex="-1">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete link</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form
-                action="{{ url_for('link.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=delete_link_identifier) }}"
-                method="post" role="form">
-                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="link-title" class="form-label">Title</label>
-                        <input aria-readonly="true" disabled class="form-control" id="link-title" name="link-title"
-                            readonly type="text" value="{{ delete_link_title }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="link-url" class="form-label">URL</label>
-                        <input aria-readonly="true" disabled class="form-control" id="link-url" name="link-url" readonly
-                            type="text" value="{{ delete_link_url }}">
-                    </div>
-                    <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions"
-                            role="button" aria-expanded="false" aria-controls="collapseExample">
-                            Advanced options</a>
-                    </p>
-                    <div class="collapse" id="advancedOptions">
-                        <div class="card">
-                            <div class="card-header">
-                                Advanced options
-                            </div>
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <div class="mb-3">
-                                        <label for="link-scope" class="form-label">Scope</label>
-                                        <input aria-readonly="true" disabled class="form-control" id="link-scope"
-                                            name="link-scope" readonly type="text" value="{{ delete_link_scope }}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete link</button>
-                </div>
-            </form>
-        </div>
+<!-- Modal dialogs -->
+<div id="modal-dialog-component" class="modal modal-blur fade" style="display: none" aria-hidden="false" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
     </div>
 </div>
-{% endif %}
 {% endblock %}

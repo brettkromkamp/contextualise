@@ -45,9 +45,10 @@
                             identifier</a>
                     </li>
                     <li>
-                        <a class="dropdown-item"
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, topicdelete=topic.identifier) }}">Delete
-                            topic</a>
+                        <a class="dropdown-item" href="#"
+                            hx-get="/api/delete-topic/{{ topic_map.identifier }}/{{ topic.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete topic</a>
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>

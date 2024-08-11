@@ -1,0 +1,50 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete link</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('link.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=delete_link_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="link-title" class="form-label">Title</label>
+                    <input aria-readonly="true" disabled class="form-control" id="link-title" name="link-title" readonly
+                        type="text" value="{{ delete_link_title }}">
+                </div>
+                <div class="mb-3">
+                    <label for="link-url" class="form-label">URL</label>
+                    <input aria-readonly="true" disabled class="form-control" id="link-url" name="link-url" readonly
+                        type="text" value="{{ delete_link_url }}">
+                </div>
+                <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                        aria-expanded="false" aria-controls="collapseExample">
+                        Advanced options</a>
+                </p>
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            Advanced options
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="link-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="link-scope"
+                                        name="link-scope" readonly type="text" value="{{ delete_link_scope }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete link</button>
+            </div>
+        </form>
+    </div>
+</div>

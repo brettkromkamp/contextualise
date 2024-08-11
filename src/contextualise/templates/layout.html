@@ -141,6 +141,10 @@
             </div>
         </div>
     </div>
+    <!-- Global JavaScript -->
+    <script src="https://unpkg.com/htmx.org@2.0.1"
+        integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
+        crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -159,16 +163,6 @@
         var normalisedTopicIdentifier = "";
         var normalisedTopicName = "";
         var createTopic = false;
-
-        // Deletion request
-        var urlParams = new URLSearchParams(window.location.search);
-        var deletionId = urlParams.get('entitydelete') || urlParams.get('topicdelete');
-        if (deletionId) {
-            var deleteEntityModal = new bootstrap.Modal('#deleteModal');
-            if (deleteEntityModal) {
-                deleteEntityModal.show();
-            }
-        }
 
         var notyf = new Notyf({
             position: { x: "right", y: "top" },
