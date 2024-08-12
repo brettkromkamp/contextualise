@@ -205,7 +205,10 @@
                     <td>
                         <a
                             href="{{ url_for('video.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="{{ url_for('video.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, video_identifier=video.identifier) }}">Delete</a>
+                            href="#"
+                            hx-get="/api/delete-video/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ video.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete</a>
                         {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=video.identifier, entity_type='video') }}">View
                             attributes</a>

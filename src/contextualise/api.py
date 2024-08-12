@@ -505,6 +505,47 @@ def delete_link(map_identifier, topic_identifier, link_identifier):
     )
 
 
+@bp.route("/api/delete-video/<map_identifier>/<topic_identifier>/<video_identifier>")
+def delete_video(map_identifier, topic_identifier, video_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    video_occurrence = store.get_occurrence(
+        map_identifier,
+        video_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_video_identifier = video_identifier
+    delete_video_title = video_occurrence.get_attribute_by_name("title").value
+    delete_video_url = video_occurrence.resource_ref
+    delete_video_scope = video_occurrence.scope
+
+    return render_template(
+        "api/video/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_video_identifier=delete_video_identifier,
+        delete_video_title=delete_video_title,
+        delete_video_url=delete_video_url,
+        delete_video_scope=delete_video_scope,
+    )
+
+
 @bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
 def change_scope(map_identifier, topic_identifier):
     store = get_topic_store()

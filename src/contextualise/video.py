@@ -14,6 +14,7 @@ from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
@@ -259,10 +260,7 @@ def edit(map_identifier, topic_identifier, video_identifier):
     )
 
 
-@bp.route(
-    "/videos/delete/<map_identifier>/<topic_identifier>/<video_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/videos/delete/<map_identifier>/<topic_identifier>/<video_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, video_identifier):
     store = get_topic_store()
@@ -283,36 +281,36 @@ def delete(map_identifier, topic_identifier, video_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     video_occurrence = store.get_occurrence(
         map_identifier,
         video_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_video_title = video_occurrence.get_attribute_by_name("title").value
-    form_video_scope = video_occurrence.scope
+    if not video_occurrence:
+        error = error | 1
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
-
-    if request.method == "POST":
-        # Delete video occurrence from topic store
-        store.delete_occurrence(map_identifier, video_occurrence.identifier)
-
-        flash("Video link successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "video.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the link. The link was not deleted.",
+            "warning",
         )
-
-    return render_template(
-        "video/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        video_identifier=video_occurrence.identifier,
-        video_title=form_video_title,
-        video_scope=form_video_scope,
-        map_notes_count=map_notes_count,
+    else:
+        try:
+            # Delete video occurrence from topic store
+            store.delete_occurrence(map_identifier, video_occurrence.identifier)
+            flash("Video link successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the video link. The link was not deleted.",
+                "warning",
+            )
+    return redirect(
+        url_for(
+            "video.index",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
