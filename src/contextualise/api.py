@@ -320,7 +320,7 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
     has_write_access = True if is_map_owner or (collaboration_mode and collaboration_mode.name == "EDIT") else False
 
     return render_template(
-        "api/association/associations.html",
+        "api/association/get_associations.html",
         topic_map=topic_map,
         topic_identifier=topic_identifier,
         scope_identifier=scope_identifier,
@@ -502,6 +502,33 @@ def delete_link(map_identifier, topic_identifier, link_identifier):
         delete_link_title=delete_link_title,
         delete_link_url=delete_link_url,
         delete_link_scope=delete_link_scope,
+    )
+
+
+@bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
+def change_scope(map_identifier, topic_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    return render_template(
+        "api/topic/change_scope.html",
+        topic_map=topic_map,
+        topic=topic,
     )
 
 

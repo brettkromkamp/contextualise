@@ -5,8 +5,6 @@ February 13, 2022
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-import os
-import shutil
 from collections import deque
 from datetime import datetime
 
@@ -1159,9 +1157,9 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
     )
 
 
-@bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>/<scope_identifier>", methods=("POST",))
+@bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>", methods=("POST",))
 @login_required
-def change_scope(map_identifier, topic_identifier, scope_identifier):
+def change_scope(map_identifier, topic_identifier):
     store = get_topic_store()
     topic_map = store.get_map(map_identifier, current_user.id)
 
