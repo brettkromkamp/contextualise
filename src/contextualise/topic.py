@@ -1181,7 +1181,7 @@ def change_scope(map_identifier, topic_identifier):
         )
         abort(404)
 
-    form_scope = request.form["scope-identifier"].strip()
+    form_scope = request.form["scope-identifier"].strip().lower()
     error = 0
 
     # If no values have been provided set their default values
