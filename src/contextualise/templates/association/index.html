@@ -227,8 +227,6 @@
                         <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.identifier) }}">View
                             as topic</a><br />
-                        <!--<a
-                            href="{{ url_for('association.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, association_identifier=association.identifier) }}">Delete</a>-->
                         <a href="#"
                             hx-get="/api/delete-association/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ association.identifier }}"
                             hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"

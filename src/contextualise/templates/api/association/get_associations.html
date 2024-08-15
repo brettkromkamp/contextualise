@@ -96,6 +96,8 @@
             })
                 .then(function (response) {
                     notyf.success("Association successfully created!");
+
+                    // Update the associations component
                     htmx.trigger("#associations-component", "newAssociations");
                 })
                 .catch(function (error) {
