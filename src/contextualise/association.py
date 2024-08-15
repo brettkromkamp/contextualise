@@ -11,6 +11,7 @@ from flask_security import current_user, login_required
 from topicdb.models.association import Association
 from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
@@ -221,27 +222,34 @@ def delete(map_identifier, topic_identifier, association_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     association = store.get_association(map_identifier, association_identifier)
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    if not association:
+        error = error | 1
 
-    if request.method == "POST":
-        store.delete_association(map_identifier, association_identifier)
-        flash("Association successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "association.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the association. The association was not deleted.",
+            "warning",
         )
+    else:
+        try:
+            store.delete_association(map_identifier, association_identifier)
+            flash("Association successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the association. The association was not deleted.",
+                "warning",
+            )
 
-    return render_template(
-        "association/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        association=association,
-        map_notes_count=map_notes_count,
+    return redirect(
+        url_for(
+            "association.index",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 

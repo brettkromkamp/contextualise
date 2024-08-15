@@ -14,6 +14,10 @@
 <title>{{ topic_map.name }} | Contextualise</title>
 {% endblock %}
 
+{% block links %}
+<link rel="canonical" href="{{ request.url }}" />
+{% endblock %}
+
 {% block header_menu %}
 <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
 {% endblock %}

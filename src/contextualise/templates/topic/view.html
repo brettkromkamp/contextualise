@@ -4,6 +4,10 @@
 <title>{{ topic.first_base_name.name }} | {{ topic_map.name }}</title>
 {% endblock %}
 
+{% block links %}
+<link rel="canonical" href="{{ request.url }}" />
+{% endblock %}
+
 {% block stylesheets %}
 <link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
 <link href="{{ url_for('static', filename='default.css', version='1.0') }}" rel="stylesheet">

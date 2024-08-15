@@ -573,4 +573,33 @@ def change_scope(map_identifier, topic_identifier):
     )
 
 
+@bp.route("/api/delete-association/<map_identifier>/<topic_identifier>/<association_identifier>")
+@login_required
+def delete_association(map_identifier, topic_identifier, association_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    association = store.get_association(map_identifier, association_identifier)
+
+    return render_template(
+        "api/association/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        association=association,
+    )
+
+
 # endregion
