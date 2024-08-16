@@ -101,6 +101,9 @@
                 };
 
                 var options = {
+                    autoResize: true,
+                    height: '100%',
+                    width: '100%',
                     nodes: {
                         shape: "dot",
                         size: 16,
@@ -375,13 +378,10 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div id="network-graph" style="height: 602px;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%);"
-                class="d-flex justify-content-center" id="network-graph-spinner">
-                <div class="spinner-border" role="status">
-                </div>
-            </div>
+        <div class="ratio ratio-16x9">
+            <div id="network-graph"></div>
         </div>
+        <br />
     </div>
 </div>
 {% endblock %}
