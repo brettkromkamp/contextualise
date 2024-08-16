@@ -24,6 +24,12 @@
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script>
+    // Setup
+    var urlParts = window.location.pathname.split("/");
+    var mapIdentifier = urlParts[3];
+    var associationCreateApiUrl = "/api/create-association/" + mapIdentifier;
+    var createAssociation = false;
+
     // Popovers
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
@@ -61,6 +67,58 @@
             }
         });
     }
+
+    // Generic association creation dialog
+    document
+        .querySelectorAll(".create-association-link").forEach(function (element, index, array) {
+            element.addEventListener("click", function () {
+                var createAssociationModal = new bootstrap.Modal('#createAssociationModal');
+                createAssociationModal.show();
+                createAssociation = false;
+            });
+        });
+
+    if (document.getElementById("create-association-modal-button") != null) {
+        document
+            .getElementById("create-association-modal-button")
+            .addEventListener("click", function () {
+                $("#createAssociationModal").modal("hide");
+                createAssociation = true;
+            });
+    }
+
+    $("#createAssociationModal").on("hidden.bs.modal", function (e) {
+        var modal = $(this);
+        var associationDestTopicRef = modal.find(".modal-body #create-association-dest-topic-ref").val();
+        modal.find(".modal-body #create-association-dest-topic-ref").val("");
+        if (createAssociation) {
+            var bodyFormData = new FormData();
+            bodyFormData.set("association-dest-topic-ref", associationDestTopicRef);
+            bodyFormData.set("association-dest-role-spec", "related");
+            bodyFormData.set("association-src-topic-ref", "{{ topic.identifier }}");
+            bodyFormData.set("association-src-role-spec", "related");
+            bodyFormData.set("association-instance-of", "association");
+            bodyFormData.set("association-scope", "{{ session['current_scope'] }}");
+            bodyFormData.set("association-name", "Undefined");
+            bodyFormData.set("association-identifier", "");
+
+            axios({
+                method: "post",
+                url: associationCreateApiUrl,
+                data: bodyFormData,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(function (response) {
+                    notyf.success("Association successfully created!");
+
+                    // Update the associations component
+                    htmx.trigger("#associations-component", "newAssociations");
+                })
+                .catch(function (error) {
+                    notyf.error("Unable to create association!");
+                });
+        }
+    });
 </script>
 {% endblock %}
 
@@ -755,7 +813,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="create-association-modal-button">Create
+                <button type="button" class="btn btn-success" id="create-association-modal-button">Create
                     association
                 </button>
             </div>

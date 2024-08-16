@@ -220,7 +220,7 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
-@bp.route("/api/create-association/<map_identifier>", methods=["POST"])
+@bp.route("/api/create-association/<map_identifier>", methods=("POST",))
 @login_required
 def create_association(map_identifier):
     store = get_topic_store()
@@ -229,48 +229,47 @@ def create_association(map_identifier):
     if topic_map is None:
         return jsonify({"status": "error", "code": 404}), 404
 
-    if request.method == "POST":
-        association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
-        association_dest_role_spec = request.form["association-dest-role-spec"].strip()
-        association_src_topic_ref = request.form["association-src-topic-ref"].strip()
-        association_src_role_spec = request.form["association-src-role-spec"].strip()
-        association_instance_of = request.form["association-instance-of"].strip()
-        association_scope = request.form["association-scope"].strip()
-        association_name = request.form["association-name"].strip()
-        association_identifier = request.form["association-identifier"].strip()
+    association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
+    association_dest_role_spec = request.form["association-dest-role-spec"].strip()
+    association_src_topic_ref = request.form["association-src-topic-ref"].strip()
+    association_src_role_spec = request.form["association-src-role-spec"].strip()
+    association_instance_of = request.form["association-instance-of"].strip()
+    association_scope = request.form["association-scope"].strip()
+    association_name = request.form["association-name"].strip()
+    association_identifier = request.form["association-identifier"].strip()
 
-        if not store.topic_exists(topic_map.identifier, association_dest_topic_ref):
-            return jsonify({"status": "error", "code": 409}), 409
-        if not store.topic_exists(topic_map.identifier, association_src_topic_ref):
-            return jsonify({"status": "error", "code": 409}), 409
+    if not store.topic_exists(topic_map.identifier, association_dest_topic_ref):
+        return jsonify({"status": "error", "code": 409}), 409
+    if not store.topic_exists(topic_map.identifier, association_src_topic_ref):
+        return jsonify({"status": "error", "code": 409}), 409
 
-        # If no values have been provided set their default values
-        if not association_dest_role_spec:
-            association_dest_role_spec = "related"
-        if not association_src_role_spec:
-            association_src_role_spec = "related"
-        if not association_instance_of:
-            association_instance_of = "association"
-        if not association_scope:
-            association_scope = constants.UNIVERSAL_SCOPE
-        if not association_name:
-            association_name = "Undefined"
-        if not association_identifier:
-            association_identifier = ""
+    # If no values have been provided set their default values
+    if not association_dest_role_spec:
+        association_dest_role_spec = "related"
+    if not association_src_role_spec:
+        association_src_role_spec = "related"
+    if not association_instance_of:
+        association_instance_of = "association"
+    if not association_scope:
+        association_scope = constants.UNIVERSAL_SCOPE
+    if not association_name:
+        association_name = "Undefined"
+    if not association_identifier:
+        association_identifier = ""
 
-        association = Association(
-            identifier=association_identifier,
-            instance_of=association_instance_of,
-            name=association_name,
-            scope=association_scope,
-            src_topic_ref=association_src_topic_ref,
-            dest_topic_ref=association_dest_topic_ref,
-            src_role_spec=association_src_role_spec,
-            dest_role_spec=association_dest_role_spec,
-        )
+    association = Association(
+        identifier=association_identifier,
+        instance_of=association_instance_of,
+        name=association_name,
+        scope=association_scope,
+        src_topic_ref=association_src_topic_ref,
+        dest_topic_ref=association_dest_topic_ref,
+        src_role_spec=association_src_role_spec,
+        dest_role_spec=association_dest_role_spec,
+    )
 
-        # Persist association object to the topic store
-        store.create_association(map_identifier, association)
+    # Persist association object to the topic store
+    store.create_association(map_identifier, association)
 
     return jsonify({"status": "success", "code": 201}), 201
 
@@ -331,6 +330,7 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
 
 
 @bp.route("/api/delete-topic/<map_identifier>/<topic_identifier>")
+@login_required
 def delete_topic(map_identifier, topic_identifier):
     store = get_topic_store()
 
@@ -363,6 +363,7 @@ def delete_topic(map_identifier, topic_identifier):
 
 
 @bp.route("/api/delete-topic-note/<map_identifier>/<topic_identifier>/<note_identifier>")
+@login_required
 def delete_topic_note(map_identifier, topic_identifier, note_identifier):
     store = get_topic_store()
 
@@ -414,6 +415,7 @@ def delete_topic_note(map_identifier, topic_identifier, note_identifier):
 
 
 @bp.route("/api/delete-notes-note/<map_identifier>/<topic_identifier>/<note_identifier>")
+@login_required
 def delete_notes_note(map_identifier, topic_identifier, note_identifier):
     store = get_topic_store()
 
@@ -465,6 +467,7 @@ def delete_notes_note(map_identifier, topic_identifier, note_identifier):
 
 
 @bp.route("/api/delete-link/<map_identifier>/<topic_identifier>/<link_identifier>")
+@login_required
 def delete_link(map_identifier, topic_identifier, link_identifier):
     store = get_topic_store()
 
@@ -506,6 +509,7 @@ def delete_link(map_identifier, topic_identifier, link_identifier):
 
 
 @bp.route("/api/delete-video/<map_identifier>/<topic_identifier>/<video_identifier>")
+@login_required
 def delete_video(map_identifier, topic_identifier, video_identifier):
     store = get_topic_store()
 
@@ -547,6 +551,7 @@ def delete_video(map_identifier, topic_identifier, video_identifier):
 
 
 @bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
+@login_required
 def change_scope(map_identifier, topic_identifier):
     store = get_topic_store()
 
