@@ -26,6 +26,7 @@ from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
@@ -286,10 +287,7 @@ def edit(map_identifier, topic_identifier, file_identifier):
     )
 
 
-@bp.route(
-    "/files/delete/<map_identifier>/<topic_identifier>/<file_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/files/delete/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, file_identifier):
     store = get_topic_store()
@@ -310,48 +308,50 @@ def delete(map_identifier, topic_identifier, file_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     file_occurrence = store.get_occurrence(
         map_identifier,
         file_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_file_title = file_occurrence.get_attribute_by_name("title").value
-    form_file_scope = file_occurrence.scope
+    if not file_occurrence:
+        error = error | 1
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
-
-    if request.method == "POST":
-        # Delete file occurrence from topic store
-        store.delete_occurrence(map_identifier, file_occurrence.identifier)
-
-        # Delete file from file system
-        file_file_path = os.path.join(
-            current_app.static_folder,
-            constants.RESOURCES_DIRECTORY,
-            str(map_identifier),
-            file_occurrence.resource_ref,
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the file. The file was not deleted.",
+            "warning",
         )
-        if os.path.exists(file_file_path):
-            os.remove(file_file_path)
+    else:
+        try:
+            # Delete file occurrence from topic store
+            store.delete_occurrence(map_identifier, file_occurrence.identifier)
 
-        flash("File successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "file.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
+            # Delete file from file system
+            file_file_path = os.path.join(
+                current_app.static_folder,
+                constants.RESOURCES_DIRECTORY,
+                str(map_identifier),
+                file_occurrence.resource_ref,
             )
-        )
+            if os.path.exists(file_file_path):
+                os.remove(file_file_path)
 
-    return render_template(
-        "file/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        file_identifier=file_occurrence.identifier,
-        file_title=form_file_title,
-        file_scope=form_file_scope,
-        map_notes_count=map_notes_count,
+            flash("File successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the file. The file was not deleted.",
+                "warning",
+            )
+
+    return redirect(
+        url_for(
+            "file.index",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 
