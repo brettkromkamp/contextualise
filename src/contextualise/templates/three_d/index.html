@@ -215,8 +215,7 @@
                     </td>
                     <td>
                         <a
-                            href="{{ url_for('three_d.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<!--<a
-                            href="{{ url_for('three_d.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Delete</a>--><a
+                            href="{{ url_for('three_d.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=file.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="#"
                             hx-get="/api/delete-scene/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ file.identifier }}"
                             hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
