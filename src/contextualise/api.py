@@ -641,11 +641,50 @@ def delete_file(map_identifier, topic_identifier, file_identifier):
     )
     delete_file_identifier = file_identifier
     delete_file_title = file_occurrence.get_attribute_by_name("title").value
-    delete_file_resource_ref = file_occurrence.resource_ref
     delete_file_scope = file_occurrence.scope
 
     return render_template(
         "api/file/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_file_identifier=delete_file_identifier,
+        delete_file_title=delete_file_title,
+        delete_file_scope=delete_file_scope,
+    )
+
+
+@bp.route("/api/delete-scene/<map_identifier>/<topic_identifier>/<file_identifier>")
+@login_required
+def delete_scene(map_identifier, topic_identifier, file_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    file_occurrence = store.get_occurrence(
+        map_identifier,
+        file_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_file_identifier = file_identifier
+    delete_file_title = file_occurrence.get_attribute_by_name("title").value
+    delete_file_scope = file_occurrence.scope
+
+    return render_template(
+        "api/three_d/delete.html",
         topic_map=topic_map,
         topic=topic,
         delete_file_identifier=delete_file_identifier,

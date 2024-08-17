@@ -1,0 +1,45 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete 3D scene</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('three_d.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_identifier=delete_file_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="file-title" class="form-label">Title</label>
+                    <input aria-readonly="true" disabled class="form-control" id="file-title" name="file-title" readonly
+                        type="text" value="{{ delete_file_title }}">
+                </div>
+                <p><i class="bi bi-info-circle"></i> <a data-bs-toggle="collapse" href="#advancedOptions" role="button"
+                        aria-expanded="false" aria-controls="collapseExample">
+                        Advanced options</a>
+                </p>
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            Advanced options
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="file-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="file-scope"
+                                        name="file-scope" readonly type="text" value="{{ delete_file_scope }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete 3D scene</button>
+            </div>
+        </form>
+    </div>
+</div>
