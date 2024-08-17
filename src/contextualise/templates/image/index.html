@@ -209,8 +209,12 @@
                     </td>
                     <td>
                         <a
-                            href="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>
+                            href="{{ url_for('image.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<!--<a
+                            href="{{ url_for('image.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, image_identifier=image.identifier) }}">Delete</a>--><a
+                            href="#"
+                            hx-get="/api/delete-image/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ image.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete</a>
                         {% if 'admin' in current_user.roles %} &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                         <a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=image.identifier, entity_type='image') }}">View

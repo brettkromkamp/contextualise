@@ -285,7 +285,6 @@ def create_association(map_identifier):
 def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
     store = get_topic_store()
 
-    collaboration_mode = None
     is_map_owner = False
     if current_user.is_authenticated:  # User is logged in
         is_map_owner = store.is_map_owner(map_identifier, current_user.id)
@@ -293,7 +292,6 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
             topic_map = store.get_map(map_identifier, current_user.id)
         else:
             topic_map = store.get_map(map_identifier)
-        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
     else:  # User is not logged in
         topic_map = store.get_map(map_identifier)
 
@@ -315,17 +313,40 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
     else:
         associations = []
 
-    is_authenticated = current_user.is_authenticated
-    has_write_access = True if is_map_owner or (collaboration_mode and collaboration_mode.name == "EDIT") else False
-
     return render_template(
         "api/association/get_associations.html",
         topic_map=topic_map,
         topic_identifier=topic_identifier,
         scope_identifier=scope_identifier,
         associations=associations,
-        is_authenticated=is_authenticated,
-        has_write_access=has_write_access,
+    )
+
+
+@bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
+@login_required
+def change_scope(map_identifier, topic_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    return render_template(
+        "api/topic/change_scope.html",
+        topic_map=topic_map,
+        topic=topic,
     )
 
 
@@ -550,9 +571,9 @@ def delete_video(map_identifier, topic_identifier, video_identifier):
     )
 
 
-@bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
+@bp.route("/api/delete-image/<map_identifier>/<topic_identifier>/<image_identifier>")
 @login_required
-def change_scope(map_identifier, topic_identifier):
+def delete_image(map_identifier, topic_identifier, image_identifier):
     store = get_topic_store()
 
     is_map_owner = False
@@ -571,10 +592,24 @@ def change_scope(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
+    image_occurrence = store.get_occurrence(
+        map_identifier,
+        image_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_image_identifier = image_identifier
+    delete_image_title = image_occurrence.get_attribute_by_name("title").value
+    delete_image_resource_ref = image_occurrence.resource_ref
+    delete_image_scope = image_occurrence.scope
+
     return render_template(
-        "api/topic/change_scope.html",
+        "api/image/delete.html",
         topic_map=topic_map,
         topic=topic,
+        delete_image_identifier=delete_image_identifier,
+        delete_image_title=delete_image_title,
+        delete_image_resource_ref=delete_image_resource_ref,
+        delete_image_scope=delete_image_scope,
     )
 
 

@@ -26,6 +26,7 @@ from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
 from .topic_store import get_topic_store
@@ -288,10 +289,7 @@ def edit(map_identifier, topic_identifier, image_identifier):
     )
 
 
-@bp.route(
-    "/images/delete/<map_identifier>/<topic_identifier>/<image_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/images/delete/<map_identifier>/<topic_identifier>/<image_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, image_identifier):
     store = get_topic_store()
@@ -312,50 +310,49 @@ def delete(map_identifier, topic_identifier, image_identifier):
     if topic is None:
         abort(404)
 
+    error = 0
+
     image_occurrence = store.get_occurrence(
         map_identifier,
         image_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    form_image_title = image_occurrence.get_attribute_by_name("title").value
-    form_image_resource_ref = image_occurrence.resource_ref
-    form_image_scope = image_occurrence.scope
+    if not image_occurrence:
+        error = error | 1
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
-
-    if request.method == "POST":
-        # Delete image occurrence from topic store
-        store.delete_occurrence(map_identifier, image_occurrence.identifier)
-
-        # Delete image from file system
-        image_file_path = os.path.join(
-            current_app.static_folder,
-            constants.RESOURCES_DIRECTORY,
-            str(map_identifier),
-            image_occurrence.resource_ref,
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the image. The image was not deleted.",
+            "warning",
         )
-        if os.path.exists(image_file_path):
-            os.remove(image_file_path)
+    else:
+        try:
+            # Delete image occurrence from topic store
+            store.delete_occurrence(map_identifier, image_occurrence.identifier)
 
-        flash("Image successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "image.index",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
+            # Delete image from file system
+            image_file_path = os.path.join(
+                current_app.static_folder,
+                constants.RESOURCES_DIRECTORY,
+                str(map_identifier),
+                image_occurrence.resource_ref,
             )
-        )
+            if os.path.exists(image_file_path):
+                os.remove(image_file_path)
+            flash("Image successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the link. The link was not deleted.",
+                "warning",
+            )
 
-    return render_template(
-        "image/delete.html",
-        topic_map=topic_map,
-        topic=topic,
-        image_identifier=image_occurrence.identifier,
-        image_title=form_image_title,
-        image_resource_ref=form_image_resource_ref,
-        image_scope=form_image_scope,
-        map_notes_count=map_notes_count,
+    return redirect(
+        url_for(
+            "image.index",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 
