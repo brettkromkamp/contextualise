@@ -9,7 +9,7 @@
                     <a
                         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=breadcrumb) }}">{{
                         breadcrumb|topic_name(topic_map.identifier) }}</a>
-                    {% if breadcrumb == 'home' %}<i style="color: gray" class="bi bi-house-fill"></i>
+                    {% if breadcrumb == 'home' %}<i class="bi bi-house-fill text-secondary"></i>
                     {% endif %}
 
                     </li>
@@ -17,7 +17,7 @@
                     <li aria-current="page" class="breadcrumb-item active">
                         {{ breadcrumb|topic_name(topic_map.identifier) }}
                         {% if breadcrumb == 'home' %}
-                        <i style="color: gray" class="bi bi-house-fill"></i>{% endif %}
+                        <i class="bi bi-house-fill text-secondary"></i>{% endif %}
                     </li>
                     {% endif %}
                     {% endfor %}

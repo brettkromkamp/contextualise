@@ -370,7 +370,7 @@
     <div class="col-md-8">
         <!-- Topic title -->
         <h1>{% if topic.instance_of == 'tag' %}{{ topic.identifier }} <small class="text-muted"
-                style="font-size: 60%;"><i style="color: gray" class="bi bi-tags-fill"></i></small>
+                style="font-size: 60%;"><i class="bi bi-tags-fill text-secondary"></i></small>
             {% else %}
             {{ topic.first_base_name.name }} {% if topic.identifier == 'home' %}<small><i style="color: gray"
                     class="bi bi-house-fill"></i></small>{% endif %}
@@ -384,7 +384,7 @@
         <div class="collapse" id="advancedProperties">
             <div class="card">
                 <div class="card-header">
-                    <p class="mb-0"><strong><i class="bi bi-gear"></i>&nbsp;Properties</strong></p>
+                    <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Properties</strong></p>
                 </div>
                 <div class="card-body">
                     <div class="card-text">
@@ -547,7 +547,7 @@
         <!-- Current location -->
         <div class="card contextualise-card">
             <div class="card-header">
-                <strong><i class="bi bi-geo-alt"></i>&nbsp;Current location</strong>
+                <strong><i class="bi bi-geo-alt text-secondary"></i>&nbsp;Current location</strong>
             </div>
             <div class="card-body">
                 <ul>
@@ -645,7 +645,7 @@
         occurrences['links'] or occurrences['videos'] %}
         <div class="card contextualise-card">
             <div class="card-header">
-                <strong><i class="bi bi-file-earmark-text"></i>&nbsp;Topic resources</strong>
+                <strong><i class="bi bi-files text-secondary"></i>&nbsp;Topic resources</strong>
             </div>
             <div class="card-body">
                 <ul>
