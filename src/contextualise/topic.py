@@ -1099,10 +1099,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     )
 
 
-@bp.route(
-    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("POST",))
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
     store = get_topic_store()
@@ -1129,31 +1126,33 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         )
         abort(404)
 
-    form_topic_name = topic.get_base_name(name_identifier).name
-    form_topic_name_scope = topic.get_base_name(name_identifier).scope
+    error = 0
 
-    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    topic_name = topic.get_base_name(name_identifier).name
 
-    if request.method == "POST":
-        store.delete_base_name(map_identifier, name_identifier)
+    if not topic_name:
+        error = error | 1
 
-        flash("Name successfully deleted.", "success")
-        return redirect(
-            url_for(
-                "topic.view_names",
-                map_identifier=topic_map.identifier,
-                topic_identifier=topic.identifier,
-            )
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the topic name. The name was not deleted.",
+            "warning",
         )
-
-    return render_template(
-        "topic/delete_name.html",
-        topic_map=topic_map,
-        topic=topic,
-        topic_name=form_topic_name,
-        topic_name_scope=form_topic_name_scope,
-        name_identifier=name_identifier,
-        map_notes_count=map_notes_count,
+    else:
+        try:
+            store.delete_base_name(map_identifier, name_identifier)
+            flash("Topic name successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the topic name. The name was not deleted.",
+                "warning",
+            )
+    return redirect(
+        url_for(
+            "topic.view_names",
+            map_identifier=topic_map.identifier,
+            topic_identifier=topic.identifier,
+        )
     )
 
 

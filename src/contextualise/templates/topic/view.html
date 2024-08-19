@@ -372,8 +372,8 @@
         <h1>{% if topic.instance_of == 'tag' %}{{ topic.identifier }} <small class="text-muted"
                 style="font-size: 60%;"><i class="bi bi-tags-fill text-secondary"></i></small>
             {% else %}
-            {{ topic.first_base_name.name }} {% if topic.identifier == 'home' %}<small><i style="color: gray"
-                    class="bi bi-house-fill"></i></small>{% endif %}
+            {{ topic.first_base_name.name }} {% if topic.identifier == 'home' %}<small><i
+                    class="bi bi-house-fill text-secondary"></i></small>{% endif %}
             {% endif %}
         </h1>
         <!-- Advanced topic properties -->

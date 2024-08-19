@@ -693,6 +693,41 @@ def delete_scene(map_identifier, topic_identifier, file_identifier):
     )
 
 
+@bp.route("/api/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>")
+@login_required
+def delete_name(map_identifier, topic_identifier, name_identifier):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    delete_name_identifier = name_identifier
+    delete_topic_name = topic.get_base_name(name_identifier).name
+    delete_topic_name_scope = topic.get_base_name(name_identifier).scope
+
+    return render_template(
+        "api/topic/delete_name.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_name_identifier=delete_name_identifier,
+        delete_topic_name=delete_topic_name,
+        delete_topic_name_scope=delete_topic_name_scope,
+    )
+
+
 @bp.route("/api/delete-association/<map_identifier>/<topic_identifier>/<association_identifier>")
 @login_required
 def delete_association(map_identifier, topic_identifier, association_identifier):
