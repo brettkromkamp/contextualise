@@ -16,8 +16,8 @@ from .topic_store import get_topic_store
 bp = Blueprint("visualisation", __name__)
 
 
-@bp.route("/visualisations/network/<map_identifier>/<topic_identifier>")
-def network(map_identifier, topic_identifier):
+# regions Functions
+def _initialize(map_identifier, topic_identifier, current_user):
     store = get_topic_store()
 
     collaboration_mode = None
@@ -49,6 +49,16 @@ def network(map_identifier, topic_identifier):
     )
     if topic is None:
         abort(404)
+
+    return store, topic_map, topic
+
+
+# endregion
+
+
+@bp.route("/visualisations/network/<map_identifier>/<topic_identifier>")
+def network(map_identifier, topic_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -60,44 +70,14 @@ def network(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         creation_date=creation_date,
-        collaboration_mode=collaboration_mode,
+        collaboration_mode=topic_map.collaboration_mode,
         map_notes_count=map_notes_count,
     )
 
 
 @bp.route("/visualisations/tags-cloud/<map_identifier>/<topic_identifier>")
 def tags_cloud(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    collaboration_mode = None
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to
-        # access it
-        if not topic_map.published and not is_map_owner:
-            if not collaboration_mode:  # The user is not collaborating on the map
-                abort(403)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        if not topic_map.published:  # User is not logged in and the map is not published
-            abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     associations = store.get_topic_associations(map_identifier, "tags", instance_ofs=["categorization"])
     tags = {}
@@ -129,37 +109,7 @@ def tags_cloud(map_identifier, topic_identifier):
 
 @bp.route("/visualisations/timeline/<map_identifier>/<topic_identifier>")
 def timeline(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    collaboration_mode = None
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to
-        # access it
-        if not topic_map.published and not is_map_owner:
-            if not collaboration_mode:  # The user is not collaborating on the map
-                abort(403)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        if not topic_map.published:  # User is not logged in and the map is not published
-            abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -178,37 +128,7 @@ def timeline(map_identifier, topic_identifier):
 
 @bp.route("/visualisations/map/<map_identifier>/<topic_identifier>")
 def geographic_map(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    collaboration_mode = None
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
-        # The map is private and doesn't belong to the user who is trying to
-        # access it
-        if not topic_map.published and not is_map_owner:
-            if not collaboration_mode:  # The user is not collaborating on the map
-                abort(403)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-        if topic_map is None:
-            abort(404)
-        if not topic_map.published:  # User is not logged in and the map is not published
-            abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"

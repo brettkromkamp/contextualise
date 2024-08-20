@@ -10,12 +10,13 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.models.attribute import Attribute
-from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
+
+from contextualise.utilities.topics import initialize
 
 from .topic_store import get_topic_store
 
@@ -25,23 +26,7 @@ bp = Blueprint("video", __name__)
 @bp.route("/videos/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     video_occurrences = store.get_topic_occurrences(
         map_identifier,
@@ -61,8 +46,6 @@ def index(map_identifier, topic_identifier):
             }
         )
 
-    # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
-
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
 
@@ -81,23 +64,7 @@ def index(map_identifier, topic_identifier):
 @bp.route("/videos/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
@@ -177,23 +144,7 @@ def add(map_identifier, topic_identifier):
 )
 @login_required
 def edit(map_identifier, topic_identifier, video_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     video_occurrence = store.get_occurrence(
         map_identifier,
@@ -263,23 +214,7 @@ def edit(map_identifier, topic_identifier, video_identifier):
 @bp.route("/videos/delete/<map_identifier>/<topic_identifier>/<video_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, video_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     error = 0
 

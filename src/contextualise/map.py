@@ -23,8 +23,8 @@ from topicdb.models.collaborationmode import CollaborationMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from .topic_store import get_topic_store
 from . import constants
+from .topic_store import get_topic_store
 
 bp = Blueprint("map", __name__)
 

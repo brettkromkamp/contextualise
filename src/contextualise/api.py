@@ -17,14 +17,39 @@ from topicdb.models.attribute import Attribute
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
-from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.store.retrievalmode import RetrievalMode
 
-from .topic_store import get_topic_store
 from . import constants
+from .topic_store import get_topic_store
 from .utilities.highlight_renderer import HighlightRenderer
 
 bp = Blueprint("api", __name__)
+
+
+# regions Functions
+def _initialize(map_identifier, topic_identifier, current_user):
+    store = get_topic_store()
+
+    is_map_owner = False
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    return store, topic_map, topic
+
+
+# endregion
 
 
 # region JSON API
@@ -283,17 +308,7 @@ def create_association(map_identifier):
 
 @bp.route("/api/get-associations/<map_identifier>/<topic_identifier>/<scope_identifier>/<int:scope_filtered>")
 def get_associations(map_identifier, topic_identifier, scope_identifier, scope_filtered):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
+    store, topic_map, _ = _initialize(map_identifier, topic_identifier, current_user)
 
     if scope_filtered:
         topic_associations = store.get_topic_associations(map_identifier, topic_identifier, scope=scope_identifier)
@@ -325,23 +340,7 @@ def get_associations(map_identifier, topic_identifier, scope_identifier, scope_f
 @bp.route("/api/change-scope/<map_identifier>/<topic_identifier>")
 @login_required
 def change_scope(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    _, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     return render_template(
         "api/topic/change_scope.html",
@@ -353,22 +352,7 @@ def change_scope(map_identifier, topic_identifier):
 @bp.route("/api/delete-topic/<map_identifier>/<topic_identifier>")
 @login_required
 def delete_topic(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    _, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     delete_topic_identifier = topic.identifier
     delete_topic_name = topic.first_base_name.name
@@ -386,23 +370,7 @@ def delete_topic(map_identifier, topic_identifier):
 @bp.route("/api/delete-topic-note/<map_identifier>/<topic_identifier>/<note_identifier>")
 @login_required
 def delete_topic_note(map_identifier, topic_identifier, note_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     note_occurrence = store.get_occurrence(
         map_identifier,
@@ -438,23 +406,7 @@ def delete_topic_note(map_identifier, topic_identifier, note_identifier):
 @bp.route("/api/delete-notes-note/<map_identifier>/<topic_identifier>/<note_identifier>")
 @login_required
 def delete_notes_note(map_identifier, topic_identifier, note_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     note_occurrence = store.get_occurrence(
         map_identifier,
@@ -490,23 +442,7 @@ def delete_notes_note(map_identifier, topic_identifier, note_identifier):
 @bp.route("/api/delete-link/<map_identifier>/<topic_identifier>/<link_identifier>")
 @login_required
 def delete_link(map_identifier, topic_identifier, link_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     link_occurrence = store.get_occurrence(
         map_identifier,
@@ -532,23 +468,7 @@ def delete_link(map_identifier, topic_identifier, link_identifier):
 @bp.route("/api/delete-video/<map_identifier>/<topic_identifier>/<video_identifier>")
 @login_required
 def delete_video(map_identifier, topic_identifier, video_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     video_occurrence = store.get_occurrence(
         map_identifier,
@@ -574,23 +494,7 @@ def delete_video(map_identifier, topic_identifier, video_identifier):
 @bp.route("/api/delete-image/<map_identifier>/<topic_identifier>/<image_identifier>")
 @login_required
 def delete_image(map_identifier, topic_identifier, image_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     image_occurrence = store.get_occurrence(
         map_identifier,
@@ -616,23 +520,7 @@ def delete_image(map_identifier, topic_identifier, image_identifier):
 @bp.route("/api/delete-file/<map_identifier>/<topic_identifier>/<file_identifier>")
 @login_required
 def delete_file(map_identifier, topic_identifier, file_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     file_occurrence = store.get_occurrence(
         map_identifier,
@@ -656,23 +544,7 @@ def delete_file(map_identifier, topic_identifier, file_identifier):
 @bp.route("/api/delete-scene/<map_identifier>/<topic_identifier>/<file_identifier>")
 @login_required
 def delete_scene(map_identifier, topic_identifier, file_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     file_occurrence = store.get_occurrence(
         map_identifier,
@@ -696,23 +568,7 @@ def delete_scene(map_identifier, topic_identifier, file_identifier):
 @bp.route("/api/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>")
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
-    store = get_topic_store()
-
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
+    _, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
     delete_name_identifier = name_identifier
     delete_topic_name = topic.get_base_name(name_identifier).name
@@ -731,22 +587,8 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 @bp.route("/api/delete-association/<map_identifier>/<topic_identifier>/<association_identifier>")
 @login_required
 def delete_association(map_identifier, topic_identifier, association_identifier):
-    store = get_topic_store()
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
-    is_map_owner = False
-    if current_user.is_authenticated:  # User is logged in
-        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
-        if is_map_owner:
-            topic_map = store.get_map(map_identifier, current_user.id)
-        else:
-            topic_map = store.get_map(map_identifier)
-    else:  # User is not logged in
-        topic_map = store.get_map(map_identifier)
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
     association = store.get_association(map_identifier, association_identifier)
 
     return render_template(

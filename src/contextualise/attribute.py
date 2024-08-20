@@ -10,11 +10,12 @@ from flask import Blueprint, flash, render_template, request, session, url_for
 from flask_login import current_user
 from flask_security import login_required
 from topicdb.models.attribute import Attribute
-from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
+
+from contextualise.utilities.topics import initialize
 
 from .topic_store import get_topic_store
 
@@ -24,25 +25,7 @@ bp = Blueprint("attribute", __name__)
 @bp.route("/attributes/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     attributes = []
     entity_attributes = store.get_attributes(map_identifier, topic_identifier)
@@ -81,25 +64,7 @@ def index(map_identifier, topic_identifier):
 @bp.route("/attributes/<map_identifier>/<topic_identifier>/<entity_identifier>/<entity_type>")
 @login_required
 def entity_index(map_identifier, topic_identifier, entity_identifier, entity_type):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     entity = store.get_association(
         map_identifier,
@@ -161,25 +126,7 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
 @bp.route("/attributes/add/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     entity_type = "topic"
     post_url = "attribute.add"
@@ -267,25 +214,7 @@ def add(map_identifier, topic_identifier):
 )
 @login_required
 def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     entity = store.get_occurrence(
         map_identifier,
@@ -384,25 +313,7 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
 )
 @login_required
 def edit(map_identifier, topic_identifier, attribute_identifier):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     attribute = topic.get_attribute(attribute_identifier)
     if attribute is None:
@@ -494,32 +405,8 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     methods=("GET", "POST"),
 )
 @login_required
-def entity_edit(
-    map_identifier,
-    topic_identifier,
-    entity_identifier,
-    attribute_identifier,
-    entity_type,
-):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     if entity_type == "association":
         entity = store.get_association(
@@ -629,25 +516,7 @@ def entity_edit(
 )
 @login_required
 def delete(map_identifier, topic_identifier, attribute_identifier):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     attribute = topic.get_attribute(attribute_identifier)
     if attribute is None:
@@ -698,32 +567,8 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     methods=("GET", "POST"),
 )
 @login_required
-def entity_delete(
-    map_identifier,
-    topic_identifier,
-    entity_identifier,
-    attribute_identifier,
-    entity_type,
-):
-    store = get_topic_store()
-
-    if "admin" not in current_user.roles:
-        abort(403)
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+def entity_delete(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     if entity_type == "association":
         entity = store.get_association(

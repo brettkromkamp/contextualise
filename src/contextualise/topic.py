@@ -23,7 +23,6 @@ from flask import (
 from flask_security import current_user, login_required
 from topicdb.models.attribute import Attribute
 from topicdb.models.basename import BaseName
-from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
@@ -31,8 +30,10 @@ from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
-from .topic_store import get_topic_store
+from contextualise.utilities.topics import initialize
+
 from . import constants
+from .topic_store import get_topic_store
 from .utilities.highlight_renderer import HighlightRenderer
 
 bp = Blueprint("topic", __name__)
@@ -275,29 +276,7 @@ def view(map_identifier, topic_identifier):
 @bp.route("/topics/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def create(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
@@ -390,30 +369,7 @@ def create(map_identifier, topic_identifier):
 @bp.route("/topics/edit/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        scope=session["current_scope"],
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     occurrences = store.get_topic_occurrences(
         map_identifier,
@@ -534,29 +490,7 @@ def edit(map_identifier, topic_identifier):
 @bp.route("/topics/delete/<map_identifier>/<topic_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, _ = initialize(map_identifier, topic_identifier, current_user)
 
     try:
         # Remove the topic from the topic store
@@ -598,32 +532,7 @@ def delete(map_identifier, topic_identifier):
 @bp.route("/topics/add-note/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add_note(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
-    ):
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
@@ -711,33 +620,7 @@ def add_note(map_identifier, topic_identifier):
 )
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
-    ):
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     note_occurrence = store.get_occurrence(
         map_identifier,
@@ -824,33 +707,7 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
 @bp.route("/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("POST",))
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and (
-        topic_map.collaboration_mode is not CollaborationMode.EDIT
-        and topic_map.collaboration_mode is not CollaborationMode.COMMENT
-    ):
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     error = 0
 
@@ -890,30 +747,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
 @bp.route("/topics/view-names/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def view_names(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -932,29 +766,7 @@ def view_names(map_identifier, topic_identifier):
 @bp.route("/topics/add-name/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def add_name(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
@@ -1016,29 +828,7 @@ def add_name(map_identifier, topic_identifier):
 )
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     form_topic_name = topic.get_base_name(name_identifier).name
     form_topic_name_scope = topic.get_base_name(name_identifier).scope
@@ -1102,29 +892,7 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
 @bp.route("/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("POST",))
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     error = 0
 
@@ -1159,26 +927,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 @bp.route("/topics/change-scope/<map_identifier>/<topic_identifier>", methods=("POST",))
 @login_required
 def change_scope(map_identifier, topic_identifier):
-    store = get_topic_store()
-    topic_map = store.get_map(map_identifier, current_user.id)
-
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     form_scope = request.form["scope-identifier"].strip().lower()
     error = 0
@@ -1214,29 +963,7 @@ def change_scope(map_identifier, topic_identifier):
 )
 @login_required
 def edit_identifier(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        current_app.logger.warning(
-            f"Topic map not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}]"
-        )
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        current_app.logger.warning(
-            f"Topic not found: user identifier: [{current_user.id}], topic map identifier: [{map_identifier}], topic identifier: [{topic_identifier}]"
-        )
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     form_topic_identifier = topic.identifier
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]

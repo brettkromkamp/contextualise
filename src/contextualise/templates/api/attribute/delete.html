@@ -1,0 +1,60 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete attribute</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        {% if entity_type == 'topic' %}
+        <form
+            action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, attribute_identifier=delete_attribute.identifier) }}"
+            method="post" role="form">
+            {% else %}
+            <form
+                action="{{ url_for(post_url, map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=entity.identifier, attribute_identifier=delete_attribute.identifier, entity_type=entity_type) }}"
+                method="post" role="form">
+                {% endif %}
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label for="attribute-name" class="form-label">Name</label>
+                    <input class="form-control" id="attribute-name" name="attribute-name" readonly disabled type="text"
+                        value="{{ delete_attribute_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="attribute-value" class="form-label">Value</label>
+                    <input class="form-control" id="attribute-value" name="attribute-value" readonly disabled
+                        type="text" value="{{ delete_attribute_value }}">
+                </div>
+                <div class="mb-3">
+                    <label for="attribute-type" class="form-label">Type</label>
+                    <input class="form-control" id="attribute-type" name="attribute-type" readonly disabled type="text"
+                        value="{{ delete_attribute_type }}">
+                </div>
+                <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        Toggle options</a>
+                </p>
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="attribute-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="attribute-scope"
+                                        name="attribute-scope" readonly type="text"
+                                        value="{{ delete_attribute_scope }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete attribute</button>
+                </div>
+            </form>
+    </div>
+</div>

@@ -9,13 +9,13 @@ import maya
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from flask_security import current_user, login_required
 from topicdb.models.association import Association
-from topicdb.models.collaborationmode import CollaborationMode
-from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
-from .topic_store import get_topic_store
+from contextualise.utilities.topics import initialize
+
 from . import constants
+from .topic_store import get_topic_store
 
 bp = Blueprint("association", __name__)
 
@@ -23,27 +23,9 @@ bp = Blueprint("association", __name__)
 @bp.route("/associations/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     associations = store.get_topic_associations(map_identifier, topic_identifier)
-
-    # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -63,23 +45,7 @@ def index(map_identifier, topic_identifier):
 @bp.route("/associations/create/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 @login_required
 def create(map_identifier, topic_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
@@ -201,23 +167,7 @@ def create(map_identifier, topic_identifier):
 @bp.route("/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     error = 0
 
@@ -253,23 +203,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
 @bp.route("/associations/view/<map_identifier>/<topic_identifier>/<association_identifier>")
 @login_required
 def view(map_identifier, topic_identifier, association_identifier):
-    store = get_topic_store()
-
-    topic_map = store.get_map(map_identifier, current_user.id)
-    if topic_map is None:
-        abort(404)
-    # If the map doesn't belong to the user and they don't have the right
-    # collaboration mode on the map, then abort
-    if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
-
-    topic = store.get_topic(
-        map_identifier,
-        topic_identifier,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    if topic is None:
-        abort(404)
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     association = store.get_association(map_identifier, association_identifier)
 

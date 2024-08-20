@@ -11,21 +11,11 @@ from logging.handlers import RotatingFileHandler
 
 from flask import Flask, render_template, session
 from flask_mail import Mail
-from flask_wtf.csrf import CSRFProtect
+from flask_security.core import RoleMixin, Security, UserMixin
 from flask_security.datastore import SQLAlchemySessionUserDatastore
-from flask_security.core import (
-    RoleMixin,
-    Security,
-    UserMixin,
-)
-from flask_security.signals import (
-    user_authenticated,
-    user_registered,
-)
-from flask_security.utils import (
-    hash_password,
-)
-
+from flask_security.signals import user_authenticated, user_registered
+from flask_security.utils import hash_password
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import (
     Boolean,
     Column,
@@ -37,11 +27,11 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, scoped_session, sessionmaker
-from .utilities import filters
 
-from .topic_store import get_topic_store
-from .version import __version__
 from . import constants
+from .topic_store import get_topic_store
+from .utilities import filters
+from .version import __version__
 
 
 # Application factory function
