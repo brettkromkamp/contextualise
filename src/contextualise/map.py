@@ -342,10 +342,7 @@ def add_collaborator(map_identifier):
     )
 
 
-@bp.route(
-    "/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/maps/delete-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"))
 @login_required
 def delete_collaborator(map_identifier, collaborator_identifier):
     store = get_topic_store()
@@ -381,10 +378,7 @@ def delete_collaborator(map_identifier, collaborator_identifier):
     )
 
 
-@bp.route(
-    "/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/maps/edit-collaborator/<map_identifier>/<collaborator_identifier>", methods=("GET", "POST"))
 @login_required
 def edit_collaborator(map_identifier, collaborator_identifier):
     store = get_topic_store()

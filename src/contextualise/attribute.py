@@ -17,8 +17,6 @@ from werkzeug.utils import redirect
 
 from contextualise.utilities.topics import initialize
 
-from .topic_store import get_topic_store
-
 bp = Blueprint("attribute", __name__)
 
 

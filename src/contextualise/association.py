@@ -15,7 +15,6 @@ from werkzeug.exceptions import abort
 from contextualise.utilities.topics import initialize
 
 from . import constants
-from .topic_store import get_topic_store
 
 bp = Blueprint("association", __name__)
 

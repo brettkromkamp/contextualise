@@ -18,8 +18,6 @@ from werkzeug.exceptions import abort
 
 from contextualise.utilities.topics import initialize
 
-from .topic_store import get_topic_store
-
 bp = Blueprint("link", __name__)
 
 
@@ -45,8 +43,6 @@ def index(map_identifier, topic_identifier):
                 "url": link_occurrence.resource_ref,
             }
         )
-
-    # occurrences_stats = store.get_topic_occurrences_statistics(map_identifier, topic_identifier)
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -140,10 +136,7 @@ def add(map_identifier, topic_identifier):
     )
 
 
-@bp.route(
-    "/links/edit/<map_identifier>/<topic_identifier>/<link_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/links/edit/<map_identifier>/<topic_identifier>/<link_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier, link_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -213,10 +206,7 @@ def edit(map_identifier, topic_identifier, link_identifier):
     )
 
 
-@bp.route(
-    "/links/delete/<map_identifier>/<topic_identifier>/<link_identifier>",
-    methods=("POST",),
-)
+@bp.route("/links/delete/<map_identifier>/<topic_identifier>/<link_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier, topic_identifier, link_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)

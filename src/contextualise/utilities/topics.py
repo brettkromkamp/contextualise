@@ -1,3 +1,10 @@
+"""
+topics.py file. Part of the Contextualise project.
+
+August 20, 2024
+Brett Alistair Kromkamp (brettkromkamp@gmail.com)
+"""
+
 from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
@@ -14,7 +21,7 @@ def initialize(map_identifier, topic_identifier, current_user):
     # If the map doesn't belong to the user and they don't have the right
     # collaboration mode on the map, then abort
     if not topic_map.owner and topic_map.collaboration_mode is not CollaborationMode.EDIT:
-        abort(403)
+        abort(403)  # TODO: Logging
 
     topic = store.get_topic(
         map_identifier,

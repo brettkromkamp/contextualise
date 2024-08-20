@@ -640,6 +640,12 @@
             {% endif %}
         </div>
         <br />
+        <!-- Topic associations -->
+        <div id="associations-component"
+            hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/{{ scope_filtered }}"
+            hx-swap="innerHTML" hx-trigger="newAssociations from:body">
+        </div>
+        <br />
         <!-- Topic resources -->
         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or
         occurrences['links'] or occurrences['videos'] %}
@@ -739,12 +745,6 @@
         </div>
         <br />
         {% endif %}
-        <!-- Topic associations -->
-        <div id="associations-component"
-            hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/{{ scope_filtered }}"
-            hx-swap="innerHTML" hx-trigger="newAssociations from:body">
-        </div>
-        <br />
     </div>
 </div>
 <!-- Go to topic modal dialog -->

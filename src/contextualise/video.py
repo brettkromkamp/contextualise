@@ -18,8 +18,6 @@ from werkzeug.exceptions import abort
 
 from contextualise.utilities.topics import initialize
 
-from .topic_store import get_topic_store
-
 bp = Blueprint("video", __name__)
 
 
@@ -138,10 +136,7 @@ def add(map_identifier, topic_identifier):
     )
 
 
-@bp.route(
-    "/videos/edit/<map_identifier>/<topic_identifier>/<video_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/videos/edit/<map_identifier>/<topic_identifier>/<video_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier, video_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)

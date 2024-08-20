@@ -31,7 +31,6 @@ from werkzeug.exceptions import abort
 from contextualise.utilities.topics import initialize
 
 from . import constants
-from .topic_store import get_topic_store
 
 bp = Blueprint("image", __name__)
 
@@ -167,10 +166,7 @@ def upload(map_identifier, topic_identifier):
     )
 
 
-@bp.route(
-    "/images/edit/<map_identifier>/<topic_identifier>/<image_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/images/edit/<map_identifier>/<topic_identifier>/<image_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier, image_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)

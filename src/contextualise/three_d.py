@@ -166,10 +166,7 @@ def upload(map_identifier, topic_identifier):
     )
 
 
-@bp.route(
-    "/3d/edit/<map_identifier>/<topic_identifier>/<file_identifier>",
-    methods=("GET", "POST"),
-)
+@bp.route("/3d/edit/<map_identifier>/<topic_identifier>/<file_identifier>", methods=("GET", "POST"))
 @login_required
 def edit(map_identifier, topic_identifier, file_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -291,10 +288,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
     )
 
 
-@bp.route(
-    "/3d/view/<map_identifier>/<topic_identifier>/<file_url>",
-    methods=("GET", "POST"),
-)
+@bp.route("/3d/view/<map_identifier>/<topic_identifier>/<file_url>", methods=("GET", "POST"))
 def view(map_identifier, topic_identifier, file_url):
     store = get_topic_store()
 
