@@ -10,7 +10,8 @@
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <div class="modal-body">
                 <div class="alert alert-danger show" role="alert"><strong>Beware!</strong> Deleting a topic also
-                    deletes all of its associations and resources. Once you delete a topic, there is no going back.
+                    deletes all of its associations and attached resources. Consider carefully what you are doing before
+                    proceeding.
                 </div>
                 <div class="mb-3">
                     <label for="topic-name" class="form-label">Name</label>
