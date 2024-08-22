@@ -719,10 +719,7 @@ def delete_note(map_identifier, topic_identifier, note_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the note. The link was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the note.", "warning")
     else:
         try:
             store.delete_occurrence(map_identifier, note_occurrence.identifier)
@@ -896,10 +893,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the topic name. The name was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the topic name.", "warning")
     else:
         try:
             store.delete_base_name(map_identifier, name_identifier)

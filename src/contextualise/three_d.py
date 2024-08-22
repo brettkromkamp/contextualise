@@ -253,10 +253,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the 3D scene. The file was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the 3D scene.", "warning")
     else:
         try:
             # Delete (3D scene) file occurrence from topic store

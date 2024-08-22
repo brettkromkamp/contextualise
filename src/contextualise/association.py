@@ -176,10 +176,7 @@ def delete(map_identifier, topic_identifier, association_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the association. The association was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the association.", "warning")
     else:
         try:
             store.delete_association(map_identifier, association_identifier)

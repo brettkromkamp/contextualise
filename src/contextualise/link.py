@@ -223,10 +223,7 @@ def delete(map_identifier, topic_identifier, link_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the link. The link was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the link.", "warning")
     else:
         try:
             # Delete link occurrence from topic store

@@ -255,10 +255,7 @@ def delete(map_identifier, topic_identifier, image_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the image. The image was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the image.", "warning")
     else:
         try:
             # Delete image occurrence from topic store

@@ -253,10 +253,7 @@ def delete(map_identifier, topic_identifier, file_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the file. The file was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the file.", "warning")
     else:
         try:
             # Delete file occurrence from topic store

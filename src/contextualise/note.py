@@ -486,10 +486,7 @@ def delete(map_identifier, note_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the note. The link was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the note.", "warning")
     else:
         try:
             store.delete_occurrence(map_identifier, note_occurrence.identifier)

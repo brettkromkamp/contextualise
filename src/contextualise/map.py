@@ -152,10 +152,7 @@ def delete(map_identifier):
         error = error | 1
 
     if error != 0:
-        flash(
-            "An error occurred while trying to delete the map. The map was not deleted.",
-            "warning",
-        )
+        flash("An error occurred while trying to delete the map.", "warning")
     else:
         try:
             # Remove map from the topic store
