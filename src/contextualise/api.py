@@ -9,7 +9,7 @@ import os
 from datetime import datetime
 
 import mistune
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, abort, jsonify, render_template, request
 from flask_security import current_user, login_required
 from slugify import slugify
 from topicdb.models.association import Association
@@ -347,6 +347,18 @@ def change_scope(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
     )
+
+
+@bp.route("/api/delete-map/<map_identifier>")
+@login_required
+def delete_map(map_identifier):
+    store = get_topic_store()
+
+    topic_map = store.get_map(map_identifier, current_user.id)
+    if topic_map is None:
+        abort(404)
+
+    return render_template("api/map/delete.html", topic_map=topic_map)
 
 
 @bp.route("/api/delete-topic/<map_identifier>/<topic_identifier>")

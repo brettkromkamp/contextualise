@@ -20,6 +20,7 @@ from flask import (
 )
 from flask_security import current_user, login_required
 from topicdb.models.collaborationmode import CollaborationMode
+from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -139,32 +140,42 @@ def create():
     )
 
 
-@bp.route("/maps/delete/<map_identifier>", methods=("GET", "POST"))
+@bp.route("/maps/delete/<map_identifier>", methods=("POST",))
 @login_required
 def delete(map_identifier):
     store = get_topic_store()
 
+    error = 0
+
     topic_map = store.get_map(map_identifier, current_user.id)
     if topic_map is None:
-        abort(404)
-    if not topic_map.owner:
-        abort(403)
+        error = error | 1
 
-    if request.method == "POST":
-        # Remove map from topic store
-        store.delete_map(map_identifier, current_user.id)
-
-        # Delete the map's directory
-        topic_map_directory = os.path.join(
-            current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+    if error != 0:
+        flash(
+            "An error occurred while trying to delete the map. The map was not deleted.",
+            "warning",
         )
-        if os.path.isdir(topic_map_directory):
-            shutil.rmtree(topic_map_directory)
+    else:
+        try:
+            # Remove map from the topic store
+            store.delete_map(map_identifier, current_user.id)
 
-        flash("Map successfully deleted.", "success")
-        return redirect(url_for("map.index"))
+            # Delete the map's directory
+            topic_map_directory = os.path.join(
+                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
+            )
+            if os.path.isdir(topic_map_directory):
+                shutil.rmtree(topic_map_directory)
 
-    return render_template("map/delete.html", topic_map=topic_map)
+            flash("Map successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the map. The map was not deleted.",
+                "warning",
+            )
+
+    return redirect(url_for("map.index"))
 
 
 @bp.route("/maps/edit/<map_identifier>", methods=("GET", "POST"))

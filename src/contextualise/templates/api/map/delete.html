@@ -1,0 +1,39 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete map</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{{ url_for('map.delete', map_identifier=topic_map.identifier) }}" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <div class="alert alert-danger show" role="alert"><strong>Beware!</strong> Deleting a topic map also
+                    deletes all of its resources. A deleted topic map cannot be recovered. Consider carefully what you
+                    are doing before proceeding!
+                </div>
+                <div class="mb-3">
+                    <label for="map-name" class="form-label">Name</label>
+                    <input aria-readonly="true" disabled class="form-control" id="map-name" name="map-name" readonly
+                        type="text" value="{{ topic_map.name }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label><br />
+                    <div class="text-secondary note-text">{{ topic_map.description|safe }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Access?</label>
+                    <br />
+                    {% if topic_map.published %}
+                    <span class="badge text-bg-success">Published</span>
+                    {% else %}
+                    <span class="badge text-bg-warning">Private</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete map</button>
+            </div>
+        </form>
+    </div>
+</div>

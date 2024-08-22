@@ -15,7 +15,7 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from contextualise.utilities.topics import initialize
+from contextualise.utilities.topicstore import initialize
 
 bp = Blueprint("attribute", __name__)
 

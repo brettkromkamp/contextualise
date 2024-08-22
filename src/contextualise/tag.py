@@ -17,7 +17,7 @@ from flask import (
 from flask_security import current_user, login_required
 from werkzeug.exceptions import abort
 
-from contextualise.utilities.topics import initialize
+from contextualise.utilities.topicstore import initialize
 
 from .topic_store import get_topic_store
 

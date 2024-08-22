@@ -28,7 +28,7 @@ from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
 
-from contextualise.utilities.topics import initialize
+from contextualise.utilities.topicstore import initialize
 
 from . import constants
 
