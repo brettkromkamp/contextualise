@@ -13,7 +13,7 @@ pre {
 #network-graph {
     border: 1px solid lightgray;
     background: white;
-    border-radius: .25rem;
+    border-radius: .30rem;
 }
 
 .breadcrumb {
@@ -21,7 +21,7 @@ pre {
     margin-bottom: 1rem;
     list-style: none;
     background-color: #f8f8f8;
-    border-radius: .25rem;
+    border-radius: .30rem;
 }
 
 .note-text {
@@ -29,5 +29,5 @@ pre {
     margin-bottom: 1rem;
     list-style: none;
     background-color: #e9ecef;
-    border-radius: .25rem;
+    border-radius: .30rem;
 }
