@@ -25,7 +25,7 @@ from .utilities.highlight_renderer import HighlightRenderer
 bp = Blueprint("api", __name__)
 
 
-# regions Functions
+# region Functions
 def _initialize(map_identifier, topic_identifier, current_user):
     store = get_topic_store()
 
