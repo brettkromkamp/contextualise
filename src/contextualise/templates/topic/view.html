@@ -34,11 +34,6 @@
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 
-    // Trigger to display the associations (Related topics) card
-    $(document).ready(function () {
-        htmx.trigger("#associations-component", "newAssociations");
-    });
-
     /*
         Workaround to ensure that the create-topic modal is not triggered if an nonexistent
         topic identifier is provided in the go-to-topic and create-generic-association modals.
@@ -733,10 +728,12 @@
             </div>
         </div>
         <br />
+        {% endif %}
         <!-- Topic associations -->
+        {% if associations %}
         <div id="associations-component"
             hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/{{ scope_filtered }}"
-            hx-swap="innerHTML" hx-trigger="newAssociations from:body">
+            hx-swap="innerHTML" hx-trigger="load">
         </div>
         <br />
         {% endif %}
