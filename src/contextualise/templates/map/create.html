@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header_menu %}
-<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+<a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a>
 {% endblock %}
 
 {% block javascript %}
@@ -58,7 +58,7 @@
             <div class="form-check">
                 <input class="form-check-input" id="published-radio-2" name="map-published" type="radio" value="1">
                 <label class="form-check-label" for="published-radio-2">
-                    Published
+                    Public
                 </label>
             </div>
             {% endif %}

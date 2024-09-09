@@ -6,7 +6,7 @@
 
 {% block header_menu %}
 <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+    <a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a>
 </li>
 {% endblock %}
 
@@ -53,7 +53,7 @@
                         </a>
                         <div class="card-header">
                             {% if map.published %}
-                            <span class="badge text-bg-warning">Published</span>
+                            <span class="badge text-bg-warning">Public</span>
                             {% else %}
                             <span class="badge text-bg-info">Private</span>
                             {% endif %}

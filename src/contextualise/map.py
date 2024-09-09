@@ -48,8 +48,8 @@ def index():
     return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
 
 
-@bp.route("/maps/published/")
-def published():
+@bp.route("/maps/public/")
+def public():
     store = get_topic_store()
 
     maps = store.get_published_maps()
@@ -59,7 +59,7 @@ def published():
     session["current_scope"] = constants.UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/published.html", maps=maps)
+    return render_template("map/public.html", maps=maps)
 
 
 @bp.route("/maps/create/", methods=("GET", "POST"))

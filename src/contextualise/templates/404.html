@@ -3,7 +3,7 @@
 {% block body %}
 <h1>Page Not Found</h1>
 <p class="alert alert-warning">What you were looking for is just not there. Find your way back <a
-        href="{% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.published') }}{% endif %}">home</a>.
+        href="{% if current_user.is_authenticated %}{{ url_for('map.index') }}{% else %}{{ url_for('map.public') }}{% endif %}">home</a>.
 </p>
 <br />
 <br />

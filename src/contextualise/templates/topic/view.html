@@ -127,7 +127,7 @@
 {% endblock %}
 
 {% block header_menu_not_authenticated %}
-<li class="nav-item"><a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
 <li class="nav-item">
     {% if map_notes_count == 0 %}
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
@@ -550,7 +550,7 @@
                             topic_map.name }}</a>
                         {% if current_user.is_authenticated %}
                         {% if topic_map.published %}
-                        <span class="badge text-bg-warning">Published</span>
+                        <span class="badge text-bg-warning">Public</span>
                         {% else %}
                         <span class="badge text-bg-info">Private</span>
                         {% endif %}

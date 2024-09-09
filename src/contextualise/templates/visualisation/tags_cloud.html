@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block header_menu_not_authenticated %}
-<li class="nav-item"><a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
 </li>
