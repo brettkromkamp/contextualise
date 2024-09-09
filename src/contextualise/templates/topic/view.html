@@ -550,9 +550,9 @@
                             topic_map.name }}</a>
                         {% if current_user.is_authenticated %}
                         {% if topic_map.published %}
-                        <span class="badge text-bg-success">Published</span>
+                        <span class="badge text-bg-warning">Published</span>
                         {% else %}
-                        <span class="badge text-bg-warning">Private</span>
+                        <span class="badge text-bg-info">Private</span>
                         {% endif %}
                         {% endif %}
                         <!-- Map popover -->
@@ -575,7 +575,7 @@
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a>
                         {% if scope_filtered %}
-                        <span class="badge text-bg-warning">Active</span>
+                        <span class="badge text-bg-success">Active</span>
                         {% else %}
                         <span class="badge text-bg-secondary">Not active</span>
                         {% endif %}
