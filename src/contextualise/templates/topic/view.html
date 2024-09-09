@@ -730,13 +730,11 @@
         <br />
         {% endif %}
         <!-- Topic associations -->
-        {% if associations %}
         <div id="associations-component"
             hx-get="/api/get-associations/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ session['current_scope'] }}/{{ scope_filtered }}"
-            hx-swap="innerHTML" hx-trigger="load">
+            hx-swap="innerHTML" hx-trigger="load, newAssociations from:body">
         </div>
         <br />
-        {% endif %}
     </div>
 </div>
 <!-- Go to topic modal dialog -->
