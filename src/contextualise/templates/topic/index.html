@@ -49,7 +49,9 @@
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto"><a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">{{
-                            topic.first_base_name.name }}</a>
+                            topic.first_base_name.name }}</a>&nbsp;&middot;&nbsp;<span
+                            class="text-secondary font-monospace"><small>{{
+                                topic.identifier }}</small></span>
                     </div>
                     {% if topic.instance_of != 'base-topic' %}
                     <span class="badge text-bg-info rounded-pill">User-defined</span>
