@@ -67,12 +67,24 @@ def public():
 
     maps = store.get_published_maps()
 
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    start_index = (page - 1) * constants.MAP_ITEMS_PER_PAGE
+    end_index = start_index + constants.MAP_ITEMS_PER_PAGE
+    paginated_maps = maps[start_index:end_index]
+    total_pages = (len(maps) + constants.MAP_ITEMS_PER_PAGE - 1) // constants.MAP_ITEMS_PER_PAGE
+
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []
     session["current_scope"] = constants.UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/public.html", maps=maps)
+    return render_template(
+        "map/public.html",
+        maps=paginated_maps,
+        page=page,
+        total_pages=total_pages,
+    )
 
 
 @bp.route("/maps/create/", methods=("GET", "POST"))

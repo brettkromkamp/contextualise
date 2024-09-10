@@ -119,6 +119,9 @@
                         {% if page > 1 %}
                         <li class="page-item"><a class="page-link" aria-label="Previous"
                                 href="{{ url_for('map.index', page=page-1) }}"><i class="bi bi-arrow-left"></i></a></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link disabled" aria-label="Previous" href="#"><i
+                                    class="bi bi-arrow-left"></i></a></li>
                         {% endif %}
                         {% for p in range(1, total_pages + 1) %}
                         {% if p == page %}
@@ -131,7 +134,10 @@
                         {% if page < total_pages %} <li class="page-item"><a class="page-link" aria-label="Next"
                                 href="{{ url_for('map.index', page=page+1) }}"><i class="bi bi-arrow-right"></i></a>
                             </li>
-                            {% endif %}
+                            {% else %}
+                            <li class="page-item"><a class="page-link disabled" aria-label="Next" href="#"><i
+                                        class="bi bi-arrow-right"></i></a>
+                                {% endif %}
                     </ul>
                 </nav>
             </div>
