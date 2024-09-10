@@ -1002,3 +1002,26 @@ def edit_identifier(map_identifier, topic_identifier):
         topic_identifier=form_topic_identifier,
         map_notes_count=map_notes_count,
     )
+
+
+@bp.route("/topics/index/<map_identifier>/<topic_identifier>")
+def index(map_identifier, topic_identifier):
+    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
+
+    topics = store.get_topics(map_identifier)
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    start_index = (page - 1) * constants.TOPIC_ITEMS_PER_PAGE
+    end_index = start_index + constants.TOPIC_ITEMS_PER_PAGE
+    paginated_topics = topics[start_index:end_index]
+    total_pages = (len(topics) + constants.TOPIC_ITEMS_PER_PAGE - 1) // constants.TOPIC_ITEMS_PER_PAGE
+
+    return render_template(
+        "topic/index.html",
+        topic_map=topic_map,
+        topic=topic,
+        topics=paginated_topics,
+        page=page,
+        total_pages=total_pages,
+    )

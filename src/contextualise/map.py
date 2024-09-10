@@ -40,12 +40,25 @@ def index():
     own_maps = [own_map for own_map in topic_maps if own_map.owner]
     collaboration_maps = [collaboration_map for collaboration_map in topic_maps if not collaboration_map.owner]
 
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    start_index = (page - 1) * constants.MAP_ITEMS_PER_PAGE
+    end_index = start_index + constants.MAP_ITEMS_PER_PAGE
+    paginated_maps = own_maps[start_index:end_index]
+    total_pages = (len(own_maps) + constants.MAP_ITEMS_PER_PAGE - 1) // constants.MAP_ITEMS_PER_PAGE
+
     # Reset breadcrumbs and (current) scope
     session["breadcrumbs"] = []
     session["current_scope"] = constants.UNIVERSAL_SCOPE
     session["scope_filter"] = 1
 
-    return render_template("map/index.html", own_maps=own_maps, collaboration_maps=collaboration_maps)
+    return render_template(
+        "map/index.html",
+        own_maps=paginated_maps,
+        collaboration_maps=collaboration_maps,
+        page=page,
+        total_pages=total_pages,
+    )
 
 
 @bp.route("/maps/published/")
