@@ -1,4 +1,4 @@
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="deleteModalLabel">Delete association</h5>
@@ -25,7 +25,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">Topic reference&nbsp;&middot;&nbsp;Role</th>
+                            <th scope="col" width="60%">Topic reference</th>
+                            <th scope="col" width="40%">Role</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +35,10 @@
                                 <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_topic_ref) }}">{{
                                     association.member.src_topic_ref|topic_name(topic_map.identifier)
-                                    }}</a>&nbsp;&middot;&nbsp;<a
+                                    }}</a>
+                            </td>
+                            <td>
+                                <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.src_role_spec) }}">{{
                                     association.member.src_role_spec|topic_name(topic_map.identifier) }}</a>
                             </td>
@@ -44,7 +48,10 @@
                                 <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_topic_ref) }}">{{
                                     association.member.dest_topic_ref|topic_name(topic_map.identifier)
-                                    }}</a>&nbsp;&middot;&nbsp;<a
+                                    }}</a>
+                            </td>
+                            <td>
+                                <a
                                     href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=association.member.dest_role_spec) }}">{{
                                     association.member.dest_role_spec|topic_name(topic_map.identifier) }}</a>
                             </td>

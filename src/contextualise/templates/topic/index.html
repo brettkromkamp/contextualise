@@ -34,6 +34,7 @@
 </div>
 <div class="row row-cols-1">
     <div class="col mb-4">
+        <!--
         <div class="list-group">
             <ol class="list-group">
                 {% for topic in topics %}
@@ -51,6 +52,31 @@
                 {% endfor %}
             </ol>
         </div>
+        -->
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" width="40%">Name</th>
+                    <th scope="col" width="20%">Type</th>
+                    <th scope="col" width="40%">Identifier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for topic in topics %}
+                <tr>
+                    <th scope="row"><a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">{{
+                            topic.first_base_name.name }}</a></th>
+                    <td>
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
+                            topic.instance_of|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td>{{ topic.identifier }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     <!-- Pagination -->
     {% if total_pages > 1 %}
