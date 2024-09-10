@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block header_menu %}
-<a class="nav-link" href="{{ url_for('map.published') }}">Published maps</a>
+<a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a>
 {% endblock %}
 
 {% block javascript %}{% endblock %}
@@ -102,7 +102,7 @@
                     <label class="form-label">Access</label>
                     <br />
                     {% if topic_map.published %}
-                    <span class="badge text-bg-warning">Published</span>
+                    <span class="badge text-bg-warning">Public</span>
                     {% else %}
                     <span class="badge text-bg-info">Private</span>
                     {% endif %}
@@ -113,7 +113,7 @@
         <a class="btn btn-secondary" href="{{ url_for('map.index', map_identifier=topic_map.identifier) }}"
             role="button">Return</a>
         {% else %}
-        <a class="btn btn-secondary" href="{{ url_for('map.published') }}" role="button">Return</a>
+        <a class="btn btn-secondary" href="{{ url_for('map.public') }}" role="button">Return</a>
         {% endif %}
         <a class="btn btn-primary"
             href="{{ url_for('topic.view', map_identifier=topic_map['identifier'], topic_identifier='home') }}"
