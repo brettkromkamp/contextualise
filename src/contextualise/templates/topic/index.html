@@ -35,15 +35,6 @@
 <div class="row row-cols-1">
     <div class="col mb-4">
         <div class="list-group">
-            <!--
-            {% for topic in topics %}
-            <a href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
-                class="list-group-item list-group-item-action">{{ topic.first_base_name.name }}&nbsp;{% if
-                topic.instance_of != 'base-topic' %}
-                <span class="badge text-bg-info">User-defined</span>
-                {% endif %}</a>
-            {% endfor %}
-            -->
             <ol class="list-group">
                 {% for topic in topics %}
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
@@ -54,7 +45,7 @@
                                 topic.identifier }}</small></span>
                     </div>
                     {% if topic.instance_of != 'base-topic' %}
-                    <span class="badge text-bg-info rounded-pill">User-defined</span>
+                    <span class="badge text-bg-info">User-defined</span>
                     {% endif %}
                 </li>
                 {% endfor %}
