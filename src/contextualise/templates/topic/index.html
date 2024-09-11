@@ -72,7 +72,11 @@
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
                             topic.instance_of|topic_name(topic_map.identifier) }}</a>
                     </td>
+                    {% if topic.instance_of != 'base-topic' %}
+                    <td><strong>{{ topic.identifier }}</strong></td>
+                    {% else %}
                     <td>{{ topic.identifier }}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
