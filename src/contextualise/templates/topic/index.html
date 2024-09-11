@@ -57,8 +57,8 @@
             <thead>
                 <tr>
                     <th scope="col" width="40%">Name</th>
-                    <th scope="col" width="20%">Type</th>
                     <th scope="col" width="40%">Identifier</th>
+                    <th scope="col" width="20%">Type</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,16 +67,16 @@
                     <th scope="row"><a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">{{
                             topic.first_base_name.name }}</a></th>
+                    {% if topic.instance_of != 'base-topic' %}
+                    <td class="text-danger">{{ topic.identifier }}</td>
+                    {% else %}
+                    <td>{{ topic.identifier }}</td>
+                    {% endif %}
                     <td>
                         <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.instance_of) }}">{{
                             topic.instance_of|topic_name(topic_map.identifier) }}</a>
                     </td>
-                    {% if topic.instance_of != 'base-topic' %}
-                    <td><strong>{{ topic.identifier }}</strong></td>
-                    {% else %}
-                    <td>{{ topic.identifier }}</td>
-                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
