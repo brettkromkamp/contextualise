@@ -1012,8 +1012,9 @@ def index(map_identifier, topic_identifier):
     topics_count = store.get_topics_count(map_identifier)
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.TOPIC_ITEMS_PER_PAGE
-    topics = store.get_topics(map_identifier, offset=offset, limit=constants.TOPIC_ITEMS_PER_PAGE)
     total_pages = (topics_count + constants.TOPIC_ITEMS_PER_PAGE - 1) // constants.TOPIC_ITEMS_PER_PAGE
+
+    topics = store.get_topics(map_identifier, offset=offset, limit=constants.TOPIC_ITEMS_PER_PAGE)
 
     return render_template(
         "topic/index.html",
