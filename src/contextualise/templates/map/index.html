@@ -81,6 +81,11 @@
                                             href="{{ url_for('note.index', map_identifier=map['identifier']) }}">View
                                             notes</a>
                                     </li>
+                                    <li></li>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('topic.index', map_identifier=map['identifier'], topic_identifier='home') }}">View
+                                        index</a>
+                                    </li>
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>

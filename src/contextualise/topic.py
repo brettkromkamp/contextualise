@@ -1006,7 +1006,37 @@ def edit_identifier(map_identifier, topic_identifier):
 
 @bp.route("/topics/index/<map_identifier>/<topic_identifier>")
 def index(map_identifier, topic_identifier):
-    store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
+    store = get_topic_store()
+
+    collaboration_mode = None
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        collaboration_mode = store.get_collaboration_mode(map_identifier, current_user.id)
+        # The map is private and doesn't belong to the user who is trying to
+        # access it
+        if not topic_map.published and not is_map_owner:
+            if not collaboration_mode:  # The user is not collaborating on the map
+                abort(403)
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            abort(404)
+        if not topic_map.published:  # User is not logged in and the map is not published
+            abort(403)
+
+    topic = store.get_topic(
+        map_identifier,
+        topic_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    if topic is None:
+        abort(404)
 
     # Pagination
     topics_count = store.get_topics_count(map_identifier)

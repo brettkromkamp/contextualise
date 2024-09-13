@@ -139,6 +139,12 @@
     </a>
     {% endif %}
 </li>
+{% if topic_map %}
+<li class="nav-item">
+    <a class="nav-link"
+        href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Index</a>
+</li>
+{% endif %}
 {% if topic.identifier != 'home' %}
 <li class="nav-item">
     <a class="nav-link" href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}"

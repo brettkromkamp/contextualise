@@ -16,6 +16,12 @@
 
 {% block header_menu %}
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
+{% if topic_map %}
+<li class="nav-item">
+    <a class="nav-link"
+        href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Index</a>
+</li>
+{% endif %}
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
 </li>
@@ -23,6 +29,12 @@
 
 {% block header_menu_not_authenticated %}
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
+{% if topic_map %}
+<li class="nav-item">
+    <a class="nav-link"
+        href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Index</a>
+</li>
+{% endif %}
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
 </li>
