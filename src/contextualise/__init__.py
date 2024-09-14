@@ -46,8 +46,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         DEBUG=False,
         DATABASE_PATH=os.path.join(app.instance_path, app.config["DATABASE_FILE"]),
-        SECRET_KEY=os.environ.get("SECRET_KEY", "ppBcUQ5AL7gEmvb0blMDyEOpiBEQUupGmk_a3DMaF34"),
-        SECURITY_PASSWORD_SALT=os.environ.get("SECURITY_PASSWORD_SALT", "139687009245803364536588051620840970665"),
+        SECRET_KEY=app.config["SECRET_KEY"],
+        SECURITY_PASSWORD_SALT=app.config["SECURITY_PASSWORD_SALT"],
         SECURITY_REGISTERABLE=True,
         SECURITY_RECOVERABLE=True,
         SECURITY_URL_PREFIX="/auth",
