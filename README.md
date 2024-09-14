@@ -30,7 +30,7 @@ Contextualise's main dependency is [TopicDB](https://github.com/brettkromkamp/to
 
 ## Why?
 
-I built and published my first (topic maps-based) knowledge documentation tool in 2006 which I was still using until quite recently, almost unmodified, fourteen years later. If I remember correctly, it was built with PHP version 5.2.5! Fourteen years is an eternity in software terms. Nowadays, my preferred choice for web development is [Python](https://www.python.org/) together with the [Flask](https://flask.palletsprojects.com/en/2.0.x/) web development framework. 
+I built and published my first (topic maps-based) knowledge documentation tool in 2006 which I was still using until quite recently, almost unmodified, fourteen years later. If I remember correctly, it was built with PHP version 5.2.5! Fourteen years is an eternity in software terms. Nowadays, my preferred choice for web development is [Python](https://www.python.org/) together with the [Flask](https://flask.palletsprojects.com/en/2.0.x/) web development framework.
 
 After fourteen years of using my own and other knowledge management tools, I have several improvements in mind for the next version (many of which are simplifications, for that matter). And perhaps one of the most important reasons for building a new tool like this is that I want it to be open source: both Contextualise (the web application) and TopicDB (the actual topic maps engine on top of which Contextualise is built &mdash; also developed by me) are licensed with the permissive open source [MIT license](https://github.com/brettkromkamp/contextualise/blob/master/LICENSE).
 
@@ -74,15 +74,17 @@ Contextualise can be installed using ``pip``:
 
     $ pip install --upgrade contextualise
 
-Contextualise requires Python 3.7 or higher. 
+Contextualise requires Python **3.10** or higher.
 
 ## Basic Usage
-    
+
 Create a file with the following content:
 
     DATABASE_FILE = "contextualise.db"
+    SECRET_KEY = "your-secret-key"
+    SECURITY_PASSWORD_SALT = "your-security-password-salt"
 
-Save the file in, for example, your **home** directory with the file name ``settings.cfg``. Once you have saved the file, open a terminal and export the following environment variable:
+Save the file in, for example, your **home** directory with the file name ``settings.cfg``. The ``SECRET_KEY`` and ``SECURITY_PASSWORD_SALT`` values are placeholders that you must replace with your own secure tokens. I recommend that you take a look at Python's [secrets](https://docs.python.org/3/library/secrets.html) module for this. Once you have saved the file, open a terminal and export the following environment variable:
 
     $ export CONTEXTUALISE_SETTINGS=$HOME/settings.cfg
 
@@ -155,7 +157,7 @@ Work in progress (February 2022).
 
 ## Tools
 
-[JetBrains](https://www.jetbrains.com/) has kindly provided a license for their full suite of developer tools for Contextualise's 
+[JetBrains](https://www.jetbrains.com/) has kindly provided a license for their full suite of developer tools for Contextualise's
 development as part of their [Licenses for Open Source Development](https://www.jetbrains.com/community/opensource/#support) program.
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains logo" width="128px">
