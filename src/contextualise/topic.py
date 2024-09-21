@@ -1004,7 +1004,7 @@ def edit_identifier(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/index/<map_identifier>/<topic_identifier>")
+@bp.route("/topics/index/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
 def index(map_identifier, topic_identifier):
     store = get_topic_store()
 
@@ -1038,13 +1038,40 @@ def index(map_identifier, topic_identifier):
     if topic is None:
         abort(404)
 
+    if request.method == "POST":
+        topics_filtered = request.form.get("topic-filtered") == "on"
+    else:
+        # Base-topics filtering, initially, can be in one of three states:
+        #   - Unspecified (None)
+        #   - Not on (off)
+        #   - On
+
+        # Determine if (active) filtering has been specified in either the URL or, previously,
+        # in the session. If filtering is undefined then set it to be on.
+        topics_filtered = request.args.get("filter", type=int)
+        if topics_filtered is None:
+            topics_filtered = session.get("topics_filtered", default="on")
+
+    session["topics_filtered"] = topics_filtered
+
     # Pagination
-    topics_count = store.get_topics_count(map_identifier)
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.TOPIC_ITEMS_PER_PAGE
-    total_pages = (topics_count + constants.TOPIC_ITEMS_PER_PAGE - 1) // constants.TOPIC_ITEMS_PER_PAGE
 
-    topics = store.get_topics(map_identifier, offset=offset, limit=constants.TOPIC_ITEMS_PER_PAGE)
+    if topics_filtered:
+        topics_count = store.get_topics_count(map_identifier, RetrievalMode.FILTER_BASE_TOPICS)
+        topics = store.get_topics(
+            map_identifier,
+            offset=offset,
+            limit=constants.TOPIC_ITEMS_PER_PAGE,
+            filter_base_topics=RetrievalMode.FILTER_BASE_TOPICS,
+        )
+    else:
+        topics_count = store.get_topics_count(map_identifier)
+        topics = store.get_topics(map_identifier, offset=offset, limit=constants.TOPIC_ITEMS_PER_PAGE)
+
+    # Pagination
+    total_pages = (topics_count + constants.TOPIC_ITEMS_PER_PAGE - 1) // constants.TOPIC_ITEMS_PER_PAGE
 
     return render_template(
         "topic/index.html",
@@ -1053,4 +1080,5 @@ def index(map_identifier, topic_identifier):
         topics=topics,
         page=page,
         total_pages=total_pages,
+        topics_filtered=topics_filtered,
     )
