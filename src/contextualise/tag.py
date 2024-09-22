@@ -35,7 +35,7 @@ def add(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_tags = request.form.get("topic-tags").strip()
+        form_tags = request.form.get("topic-tags", "").strip()
 
         # Validate form inputs
         if not form_tags:

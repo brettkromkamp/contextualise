@@ -68,9 +68,9 @@ def add(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_link_title = request.form.get("link-title").strip()
-        form_link_url = request.form.get("link-url").strip()
-        form_link_scope = request.form.get("link-scope").strip()
+        form_link_title = request.form.get("link-title", "").strip()
+        form_link_url = request.form.get("link-url", "").strip()
+        form_link_scope = request.form.get("link-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_link_scope:
@@ -154,8 +154,8 @@ def edit(map_identifier, topic_identifier, link_identifier):
     error = 0
 
     if request.method == "POST":
-        form_link_title = request.form.get("link-title").strip()
-        form_link_scope = request.form.get("link-scope").strip()
+        form_link_title = request.form.get("link-title", "").strip()
+        form_link_scope = request.form.get("link-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_link_scope:

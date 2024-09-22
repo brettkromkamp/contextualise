@@ -282,11 +282,11 @@ def create(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_identifier = request.form.get("topic-identifier").strip()
-        form_topic_name = request.form.get("topic-name").strip()
-        form_topic_text = request.form.get("topic-text").strip()
-        form_topic_instance_of = request.form.get("topic-instance-of").strip()
-        form_topic_text_scope = request.form.get("topic-text-scope").strip()
+        form_topic_identifier = request.form.get("topic-identifier", "").strip()
+        form_topic_name = request.form.get("topic-name", "").strip()
+        form_topic_text = request.form.get("topic-text", "").strip()
+        form_topic_instance_of = request.form.get("topic-instance-of", "").strip()
+        form_topic_text_scope = request.form.get("topic-text-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -393,10 +393,10 @@ def edit(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_name = request.form.get("topic-name").strip()
-        form_topic_text = request.form.get("topic-text").strip()
-        form_topic_instance_of = request.form.get("topic-instance-of").strip()
-        form_topic_text_scope = request.form.get("topic-text-scope").strip()
+        form_topic_name = request.form.get("topic-name", "").strip()
+        form_topic_text = request.form.get("topic-text", "").strip()
+        form_topic_instance_of = request.form.get("topic-instance-of", "").strip()
+        form_topic_text_scope = request.form.get("topic-text-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -538,9 +538,9 @@ def add_note(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_note_title = request.form.get("note-title").strip()
-        form_note_text = request.form.get("note-text").strip()
-        form_note_scope = request.form.get("note-scope").strip()
+        form_note_title = request.form.get("note-title", "").strip()
+        form_note_text = request.form.get("note-text", "").strip()
+        form_note_scope = request.form.get("note-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_note_scope:
@@ -634,9 +634,9 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     error = 0
 
     if request.method == "POST":
-        form_note_title = request.form.get("note-title").strip()
-        form_note_text = request.form.get("note-text").strip()
-        form_note_scope = request.form.get("note-scope").strip()
+        form_note_title = request.form.get("note-title", "").strip()
+        form_note_text = request.form.get("note-text", "").strip()
+        form_note_scope = request.form.get("note-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_note_scope:
@@ -766,8 +766,8 @@ def add_name(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_name = request.form.get("topic-name").strip()
-        form_topic_name_scope = request.form.get("topic-name-scope").strip()
+        form_topic_name = request.form.get("topic-name", "").strip()
+        form_topic_name_scope = request.form.get("topic-name-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_topic_name_scope:
@@ -828,8 +828,8 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_name = request.form.get("topic-name").strip()
-        form_topic_name_scope = request.form.get("topic-name-scope").strip()
+        form_topic_name = request.form.get("topic-name", "").strip()
+        form_topic_name_scope = request.form.get("topic-name-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_topic_name_scope:
@@ -917,7 +917,7 @@ def delete_name(map_identifier, topic_identifier, name_identifier):
 def change_scope(map_identifier, topic_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
-    form_scope = request.form.get("scope-identifier").strip().lower()
+    form_scope = request.form.get("scope-identifier", "").strip().lower()
     error = 0
 
     # If no values have been provided set their default values
@@ -955,7 +955,7 @@ def edit_identifier(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_identifier = request.form.get("topic-identifier").strip()
+        form_topic_identifier = request.form.get("topic-identifier", "").strip()
 
         # Validate form inputs
         if not form_topic_identifier:

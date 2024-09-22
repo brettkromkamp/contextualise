@@ -134,10 +134,10 @@ def add(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_attribute_name = request.form.get("attribute-name").strip()
-        form_attribute_value = request.form.get("attribute-value").strip()
+        form_attribute_name = request.form.get("attribute-name", "").strip()
+        form_attribute_value = request.form.get("attribute-value", "").strip()
         form_attribute_type = request.form.get("attribute-type")
-        form_attribute_scope = request.form.get("attribute-scope").strip()
+        form_attribute_scope = request.form.get("attribute-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
@@ -229,10 +229,10 @@ def entity_add(map_identifier, topic_identifier, entity_identifier, entity_type)
     error = 0
 
     if request.method == "POST":
-        form_attribute_name = request.form.get("attribute-name").strip()
-        form_attribute_value = request.form.get("attribute-value").strip()
+        form_attribute_name = request.form.get("attribute-name", "").strip()
+        form_attribute_value = request.form.get("attribute-value", "").strip()
         form_attribute_type = request.form.get("attribute-type")
-        form_attribute_scope = request.form.get("attribute-scope").strip()
+        form_attribute_scope = request.form.get("attribute-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
@@ -326,10 +326,10 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     error = 0
 
     if request.method == "POST":
-        form_attribute_name = request.form.get("attribute-name").strip()
-        form_attribute_value = request.form.get("attribute-value").strip()
+        form_attribute_name = request.form.get("attribute-name", "").strip()
+        form_attribute_value = request.form.get("attribute-value", "").strip()
         form_attribute_type = request.form.get("attribute-type")
-        form_attribute_scope = request.form.get("attribute-scope").strip()
+        form_attribute_scope = request.form.get("attribute-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
@@ -434,10 +434,10 @@ def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_i
     error = 0
 
     if request.method == "POST":
-        form_attribute_name = request.form.get("attribute-name").strip()
-        form_attribute_value = request.form.get("attribute-value").strip()
+        form_attribute_name = request.form.get("attribute-name", "").strip()
+        form_attribute_value = request.form.get("attribute-value", "").strip()
         form_attribute_type = request.form.get("attribute-type")
-        form_attribute_scope = request.form.get("attribute-scope").strip()
+        form_attribute_scope = request.form.get("attribute-scope", "").strip()
 
         # If no values have been provided set their default values
         if not form_attribute_scope:
