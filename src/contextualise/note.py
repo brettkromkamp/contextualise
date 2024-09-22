@@ -127,9 +127,9 @@ def add(map_identifier):
     error = 0
 
     if request.method == "POST":
-        form_note_title = request.form["note-title"].strip()
-        form_note_text = request.form["note-text"].strip()
-        form_note_scope = request.form["note-scope"].strip()
+        form_note_title = request.form.get("note-title").strip()
+        form_note_text = request.form.get("note-text").strip()
+        form_note_scope = request.form.get("note-scope").strip()
 
         # If no values have been provided set their default values
         if not form_note_scope:
@@ -217,7 +217,7 @@ def attach(map_identifier, note_identifier):
     error = 0
 
     if request.method == "POST":
-        form_note_topic_identifier = request.form["note-topic-identifier"].strip()
+        form_note_topic_identifier = request.form.get("note-topic-identifier").strip()
 
         # Validate form inputs
         if not store.topic_exists(topic_map.identifier, form_note_topic_identifier):
@@ -271,10 +271,10 @@ def convert(map_identifier, note_identifier):
     error = 0
 
     if request.method == "POST":
-        form_topic_identifier = request.form["topic-identifier"].strip()
-        form_topic_name = request.form["topic-name"].strip()
-        form_topic_text = request.form["topic-text"]
-        form_topic_instance_of = request.form["topic-instance-of"].strip()
+        form_topic_identifier = request.form.get("topic-identifier").strip()
+        form_topic_name = request.form.get("topic-name").strip()
+        form_topic_text = request.form.get("topic-text").strip()
+        form_topic_instance_of = request.form.get("topic-instance-of").strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -386,9 +386,9 @@ def edit(map_identifier, note_identifier):
     error = 0
 
     if request.method == "POST":
-        form_note_title = request.form["note-title"].strip()
-        form_note_text = request.form["note-text"].strip()
-        form_note_scope = request.form["note-scope"].strip()
+        form_note_title = request.form.get("note-title").strip()
+        form_note_text = request.form.get("note-text").strip()
+        form_note_scope = request.form.get("note-scope").strip()
 
         # If no values have been provided set their default values
         if not form_note_scope:

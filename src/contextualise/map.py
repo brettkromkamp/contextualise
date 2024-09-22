@@ -99,8 +99,8 @@ def create():
     error = 0
 
     if request.method == "POST":
-        form_map_name = request.form["map-name"].strip()
-        form_map_description = request.form["map-description"].strip()
+        form_map_name = request.form.get("map-name").strip()
+        form_map_description = request.form.get("map-description").strip()
         form_map_published = True if request.form.get("map-published") == "1" else False
         form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
@@ -215,8 +215,8 @@ def edit(map_identifier):
     error = 0
 
     if request.method == "POST":
-        form_map_name = request.form["map-name"].strip()
-        form_map_description = request.form["map-description"].strip()
+        form_map_name = request.form.get("map-name").strip()
+        form_map_description = request.form.get("map-description").strip()
         form_map_published = True if request.form.get("map-published") == "1" else False
         form_upload_file = request.files["map-image-file"] if "map-image-file" in request.files else None
 
@@ -333,8 +333,8 @@ def add_collaborator(map_identifier):
     error = 0
 
     if request.method == "POST":
-        form_collaborator_email = request.form["collaborator-email"].strip()
-        form_collaboration_mode = request.form["collaboration-mode"]
+        form_collaborator_email = request.form.get("collaborator-email").strip()
+        form_collaboration_mode = request.form.get("collaboration-mode")
 
         collaborator = current_app.extensions["security"].datastore.find_user(email=form_collaborator_email)
         if not collaborator:
@@ -428,8 +428,8 @@ def edit_collaborator(map_identifier, collaborator_identifier):
     error = 0
 
     if request.method == "POST":
-        form_collaboration_mode = request.form["collaboration-mode"]
-        form_collaborator_email = request.form["collaborator-email"]
+        form_collaboration_mode = request.form.get("collaboration-mode")
+        form_collaborator_email = request.form.get("collaborator-email").strip
 
         if error != 0:
             flash(

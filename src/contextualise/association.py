@@ -55,14 +55,14 @@ def create(map_identifier, topic_identifier):
     )
 
     if request.method == "POST":
-        form_association_dest_topic_ref = request.form["association-dest-topic-ref"].strip()
-        form_association_dest_role_spec = request.form["association-dest-role-spec"].strip()
+        form_association_dest_topic_ref = request.form.get("association-dest-topic-ref").strip()
+        form_association_dest_role_spec = request.get("association-dest-role-spec").strip()
         form_association_src_topic_ref = topic_identifier
-        form_association_src_role_spec = request.form["association-src-role-spec"].strip()
-        form_association_instance_of = request.form["association-instance-of"].strip()
-        form_association_scope = request.form["association-scope"].strip()
-        form_association_name = request.form["association-name"].strip()
-        form_association_identifier = request.form["association-identifier"].strip()
+        form_association_src_role_spec = request.get("association-src-role-spec").strip()
+        form_association_instance_of = request.form.get("association-instance-of").strip()
+        form_association_scope = request.form.get("association-scope").strip()
+        form_association_name = request.form.get("association-name").strip()
+        form_association_identifier = request.form.get("association-identifier").strip()
 
         # If no values have been provided set their default values
         if not form_association_dest_role_spec:

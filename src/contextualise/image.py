@@ -82,8 +82,8 @@ def upload(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_image_title = request.form["image-title"].strip()
-        form_image_scope = request.form["image-scope"].strip()
+        form_image_title = request.form.get("image-title").strip()
+        form_image_scope = request.form.get("image-scope").strip()
         form_upload_file = request.files["image-file"] if "image-file" in request.files else None
 
         # If no values have been provided set their default values
@@ -185,8 +185,8 @@ def edit(map_identifier, topic_identifier, image_identifier):
     error = 0
 
     if request.method == "POST":
-        form_image_title = request.form["image-title"].strip()
-        form_image_scope = request.form["image-scope"].strip()
+        form_image_title = request.form.get("image-title").strip()
+        form_image_scope = request.form.get("image-scope").strip()
 
         # If no values have been provided set their default values
         if not form_image_scope:

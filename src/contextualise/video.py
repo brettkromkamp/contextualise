@@ -68,9 +68,9 @@ def add(map_identifier, topic_identifier):
     error = 0
 
     if request.method == "POST":
-        form_video_title = request.form["video-title"].strip()
-        form_video_url = request.form["video-url"].strip()
-        form_video_scope = request.form["video-scope"].strip()
+        form_video_title = request.form.get("video-title").strip()
+        form_video_url = request.form.get("video-url").strip()
+        form_video_scope = request.form.get("video-scope").strip()
 
         # If no values have been provided set their default values
         if not form_video_scope:
@@ -154,8 +154,8 @@ def edit(map_identifier, topic_identifier, video_identifier):
     error = 0
 
     if request.method == "POST":
-        form_video_title = request.form["video-title"].strip()
-        form_video_scope = request.form["video-scope"].strip()
+        form_video_title = request.form.get("video-title").strip()
+        form_video_scope = request.form.get("video-scope").strip()
 
         # If no values have been provided set their default values
         if not form_video_scope:
