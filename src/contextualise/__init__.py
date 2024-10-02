@@ -41,8 +41,9 @@ def create_app(test_config=None):
     app.config["version"] = __version__
 
     # Configure app
-    app.config.from_object("contextualise.settings")
-    app.config.from_envvar("CONTEXTUALISE_SETTINGS")
+    # app.config.from_object("contextualise.settings")
+    # app.config.from_envvar("CONTEXTUALISE_SETTINGS")
+    app.config.from_prefixed_env()
     app.config.from_mapping(
         DEBUG=False,
         DATABASE_PATH=os.path.join(app.instance_path, app.config["DATABASE_FILE"]),

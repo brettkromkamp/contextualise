@@ -1,0 +1,15 @@
+argon2_cffi==23.1.0
+bcrypt==4.2.0
+Flask==3.0.3
+Flask-Mail==0.10.0
+Flask-Security-Too==5.5.2
+Flask-SQLAlchemy==3.1.1
+Flask-WTF==1.2.1
+gunicorn==23.0.0
+maya==0.6.1
+mistune==3.0.2
+Pygments==2.18.0
+python-slugify==8.0.4
+SQLAlchemy==2.0.34
+git+https://github.com/brettkromkamp/topic-db.git@develop#egg=topic_db
+Werkzeug==3.0.4
