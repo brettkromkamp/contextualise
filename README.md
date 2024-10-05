@@ -1,4 +1,3 @@
-[![PyPI](https://img.shields.io/pypi/v/contextualise.svg)](https://pypi.org/project/contextualise/)
 [![GitHub open issues](https://img.shields.io/github/issues/brettkromkamp/contextualise)](https://github.com/brettkromkamp/contextualise/issues?q=is%3Aopen+is%3Aissue)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/brettkromkamp/contextualise)](https://github.com/brettkromkamp/contextualise/issues?q=is%3Aissue+is%3Aclosed)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/brettkromkamp/contextualise/blob/master/LICENSE)
