@@ -143,5 +143,5 @@ settings.ini
 # Application log files
 logs/
 
-# Application
-settings.cfg
+# Environment variables
+.env
