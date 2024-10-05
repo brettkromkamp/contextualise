@@ -4,7 +4,7 @@
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
     {% else %}
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;<span
-            class="badge rounded-pill text-bg-danger">
+            class="badge rounded-pill text-bg-primary">
             {{ map_notes_count }}
         </span>
     </a>
