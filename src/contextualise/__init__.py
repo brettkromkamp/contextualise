@@ -41,7 +41,7 @@ def create_app(test_config=None):
     app.config["version"] = __version__
 
     # Configure app
-    app.config.from_object("contextualise.config.Config")
+    app.config.from_object("contextualise.config")
     app.config.from_mapping(
         DATABASE_PATH=os.path.join(app.instance_path, app.config["DATABASE_FILE"]),
         SECRET_KEY=app.config["SECRET_KEY"],
