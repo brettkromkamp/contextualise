@@ -190,6 +190,7 @@ def get_network(map_identifier, topic_identifier):
         instance_of = tree[inner_identifier].payload["topic"].instance_of
         level = tree[inner_identifier].payload["level"]
         children = tree[inner_identifier].children
+        edges_count = store.get_topic_associations_count(map_identifier, inner_identifier)
 
         # group = instance_of
         color = f"#{level * 3}{level * 3}{level * 3}"
@@ -203,6 +204,7 @@ def get_network(map_identifier, topic_identifier):
             # "label": base_name + "\n[" + instance_of + "]",
             "label": base_name,
             "instanceOf": instance_of,
+            "value": edges_count,
             "color": color,
         }
 
@@ -214,7 +216,7 @@ def get_network(map_identifier, topic_identifier):
                 "from": inner_identifier,
                 "to": child.pointer,
                 "label": child.type,
-                "font": {"align": "horizontal"},
+                "font": {"align": "middle"},
                 # "arrows": "to, from",
                 "color": {"color": "#666", "opacity": 0.5},
             }

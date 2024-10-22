@@ -101,6 +101,7 @@
                 };
 
                 var options = {
+                    interaction: { hover: true },
                     autoResize: true,
                     height: '100%',
                     width: '100%',
@@ -138,6 +139,9 @@
                 });
                 network.on("resize", function (params) {
                     network.fit();
+                });
+                network.on("hoverNode", function (params) {
+                    console.log("Hover node");
                 });
             })
             .catch(function (error) {
