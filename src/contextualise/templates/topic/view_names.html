@@ -37,8 +37,7 @@
                     </td>
                     <td>
                         <a
-                            href="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<!--<a
-                            href="{{ url_for('topic.delete_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Delete</a>--><a
+                            href="{{ url_for('topic.edit_name', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, name_identifier=base_name.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="#"
                             hx-get="/api/delete-name/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ base_name.identifier }}"
                             hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
