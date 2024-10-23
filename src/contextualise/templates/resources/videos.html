@@ -66,10 +66,13 @@
         <nav class="nav nav-pills flex-column">
             <a class="nav-link"
                 href="{{ url_for('resources.images', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
-            <a class="nav-link" href="#">Files</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.files', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
             <a class="nav-link active btn-light" href="#">Videos</a>
-            <a class="nav-link" href="#">Links</a>
-            <a class="nav-link" href="#">3D
+            <a class="nav-link"
+                href="{{ url_for('resources.links', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.scenes', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
                 scenes</a>
         </nav>
     </div>
@@ -79,7 +82,7 @@
             <thead>
                 <tr>
                     <th scope="col" width="20">Topic</th>
-                    <th scope="col" width="80%">Images</th>
+                    <th scope="col" width="80%">Videos</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,7 +130,7 @@
                 <ul class="pagination">
                     {% if page > 1 %}
                     <li class="page-item"><a class="page-link" aria-label="Previous"
-                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
+                            href="{{ url_for('resources.videos', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
                                 class="bi bi-arrow-left"></i></a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link disabled" aria-label="Previous" href="#"><i
@@ -138,13 +141,13 @@
                     <li class="page-item"><a class="page-link disabled" href="#">{{ p }}</a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link"
-                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
+                            href="{{ url_for('resources.videos', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
                             p }}</a>
                     </li>
                     {% endif %}
                     {% endfor %}
                     {% if page < total_pages %} <li class="page-item"><a class="page-link" aria-label="Next"
-                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
+                            href="{{ url_for('resources.videos', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
                                 class="bi bi-arrow-right"></i></a>
                         </li>
                         {% else %}
@@ -157,7 +160,7 @@
         {% endif %}
         {% else %}
         <p class="alert alert-info" role="alert">
-            This map does not have any videos.
+            This map does not have any user-provided videos.
         </p>
         <br />
         <br />

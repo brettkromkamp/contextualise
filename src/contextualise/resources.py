@@ -105,6 +105,43 @@ def images(map_identifier, topic_identifier):
 def files(map_identifier, topic_identifier):
     store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+    files_count = store.get_occurrences_count(map_identifier, "file")
+    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    file_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="file",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    files = []
+    for file_occurrence in file_occurrences:
+        files.append(
+            {
+                "topic_identifier": file_occurrence.topic_identifier,
+                "identifier": file_occurrence.identifier,
+                "title": file_occurrence.get_attribute_by_name("title").value,
+                "scope": file_occurrence.scope,
+                "url": file_occurrence.resource_ref,
+            }
+        )
+    # Sort and group files by topic identifier
+    sorted_files = sorted(files, key=lambda x: x["topic_identifier"])
+    grouped_files = {k: list(v) for k, v in groupby(sorted_files, key=lambda x: x["topic_identifier"])}
+
+    return render_template(
+        "resources/files.html",
+        topic_map=topic_map,
+        topic=topic,
+        files=grouped_files,
+        page=page,
+        total_pages=total_pages,
+    )
+
 
 @bp.route("/resources/videos/<map_identifier>/<topic_identifier>")
 def videos(map_identifier, topic_identifier):
@@ -152,7 +189,81 @@ def videos(map_identifier, topic_identifier):
 def links(map_identifier, topic_identifier):
     store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+    links_count = store.get_occurrences_count(map_identifier, "url")
+    total_pages = (links_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    link_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="url",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    links = []
+    for link_occurrence in link_occurrences:
+        links.append(
+            {
+                "topic_identifier": link_occurrence.topic_identifier,
+                "identifier": link_occurrence.identifier,
+                "title": link_occurrence.get_attribute_by_name("title").value,
+                "scope": link_occurrence.scope,
+                "url": link_occurrence.resource_ref,
+            }
+        )
+    # Sort and group links by topic identifier
+    sorted_links = sorted(links, key=lambda x: x["topic_identifier"])
+    grouped_links = {k: list(v) for k, v in groupby(sorted_links, key=lambda x: x["topic_identifier"])}
+
+    return render_template(
+        "resources/links.html",
+        topic_map=topic_map,
+        topic=topic,
+        links=grouped_links,
+        page=page,
+        total_pages=total_pages,
+    )
+
 
 @bp.route("/resources/scenes/<map_identifier>/<topic_identifier>")
 def scenes(map_identifier, topic_identifier):
     store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+    files_count = store.get_occurrences_count(map_identifier, "3d-scene")
+    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    file_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="3d-scene",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    files = []
+    for file_occurrence in file_occurrences:
+        files.append(
+            {
+                "topic_identifier": file_occurrence.topic_identifier,
+                "identifier": file_occurrence.identifier,
+                "title": file_occurrence.get_attribute_by_name("title").value,
+                "scope": file_occurrence.scope,
+                "url": file_occurrence.resource_ref,
+            }
+        )
+    # Sort and group (3D) scene files by topic identifier
+    sorted_files = sorted(files, key=lambda x: x["topic_identifier"])
+    grouped_files = {k: list(v) for k, v in groupby(sorted_files, key=lambda x: x["topic_identifier"])}
+
+    return render_template(
+        "resources/scenes.html",
+        topic_map=topic_map,
+        topic=topic,
+        files=grouped_files,
+        page=page,
+        total_pages=total_pages,
+    )

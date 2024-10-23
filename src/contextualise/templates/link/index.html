@@ -196,7 +196,7 @@
                 {% for link in links %}
                 <tr>
                     <td><a href="{{ link.url }}" target="_blank">{{ link.title }}</a> <i
-                            class="text-black-50 fas fa-external-link-square-alt"></i></td>
+                            class="bi bi-box-arrow-up-right"></i></td>
                     <td><a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
                             link.scope|topic_name(topic_map.identifier) }}</a>
