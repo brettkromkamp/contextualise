@@ -23,7 +23,9 @@
         <li><a class="dropdown-item"
                 href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Topics</a>
         </li>
-        <li><a class="dropdown-item" href="#">Resources</a></li>
+        <li><a class="dropdown-item"
+                href="{{ url_for('resources.images', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Resources</a>
+        </li>
     </ul>
 </li>
 {% endif %}
@@ -41,7 +43,9 @@
         <li><a class="dropdown-item"
                 href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Topics</a>
         </li>
-        <li><a class="dropdown-item" href="#">Resources</a></li>
+        <li><a class="dropdown-item"
+                href="{{ url_for('resources.images', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Resources</a>
+        </li>
     </ul>
 </li>
 {% endif %}
