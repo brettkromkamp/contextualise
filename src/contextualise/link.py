@@ -14,7 +14,6 @@ from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
-from werkzeug.exceptions import abort
 
 from contextualise.utilities.topicstore import initialize
 

@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Images index | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+{% endblock %}
+
+{% block header_menu %}
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.index') }}">My maps</a></li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Indexes</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+                href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Topics</a>
+        </li>
+        <li><a class="dropdown-item disabled" href="#">Resources</a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item"><a class="nav-link"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block header_menu_not_authenticated %}
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Indexes</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+                href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Topics</a>
+        </li>
+        <li><a class="dropdown-item disabled" href="#">Resources</a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item"><a class="nav-link"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Images index</small>
+        </h1>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <nav class="nav nav-pills flex-column">
+            <a class="nav-link active btn-light" href="#">Images</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.files', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.videos', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.links', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.scenes', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
+                scenes</a>
+        </nav>
+    </div>
+    <div class="col-md-10">
+        {% if images %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" width="20">Topic</th>
+                    <th scope="col" width="80%">Images</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in images.items() %}
+                <tr>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=key) }}">{{
+                            key|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td class="align-middle">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="80%">Title</th>
+                                    <th scope="col" width="20%">Scope</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for image in value %}
+                                <tr>
+                                    <td>
+                                        <a data-caption="{{ image.title }}" data-fancybox="images"
+                                            href="/static/resources/{{ topic_map.identifier }}/{{ image.url }}">{{
+                                            image.title }}</a>
+                                    </td>
+                                    <td>
+                                        <a
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{
+                                            image.scope|topic_name(topic_map.identifier) }}</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <div class="mx-auto p-2" style="width: 200px;">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page > 1 %}
+                    <li class="page-item"><a class="page-link" aria-label="Previous"
+                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
+                                class="bi bi-arrow-left"></i></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link disabled" aria-label="Previous" href="#"><i
+                                class="bi bi-arrow-left"></i></a></li>
+                    {% endif %}
+                    {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                    <li class="page-item"><a class="page-link disabled" href="#">{{ p }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link"
+                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
+                            p }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page < total_pages %} <li class="page-item"><a class="page-link" aria-label="Next"
+                            href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
+                                class="bi bi-arrow-right"></i></a>
+                        </li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link disabled" aria-label="Next" href="#"><i
+                                    class="bi bi-arrow-right"></i></a>
+                            {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        {% else %}
+        <p class="alert alert-info" role="alert">
+            This map does not have any user-uploaded images.
+        </p>
+        <br />
+        <br />
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

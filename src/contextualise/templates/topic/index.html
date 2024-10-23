@@ -15,6 +15,16 @@
 <li class="nav-item">
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
 </li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Indexes</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item disabled" href="#">Topics</a>
+        </li>
+        <li><a class="dropdown-item"
+                href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Resources</a>
+        </li>
+    </ul>
+</li>
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
 </li>
@@ -24,6 +34,16 @@
 <li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
 <li class="nav-item">
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Indexes</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item disabled" href="#">Topics</a>
+        </li>
+        <li><a class="dropdown-item"
+                href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Resources</a>
+        </li>
+    </ul>
 </li>
 <li class="nav-item"><a class="nav-link"
         href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
@@ -70,9 +90,11 @@
             <tbody>
                 {% for topic in topics %}
                 <tr>
-                    <th scope="row"><a
+                    <td>
+                        <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">{{
-                            topic.first_base_name.name }}</a></th>
+                            topic.first_base_name.name }}</a>
+                    </td>
                     {% if topic.instance_of != 'base-topic' %}
                     <td class="text-danger">{{ topic.identifier }}</td>
                     {% else %}

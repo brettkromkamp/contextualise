@@ -10,7 +10,6 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from flask_security import current_user, login_required
 from topicdb.models.association import Association
 from topicdb.topicdberror import TopicDbError
-from werkzeug.exceptions import abort
 
 from contextualise.utilities.topicstore import initialize
 
