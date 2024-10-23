@@ -110,6 +110,43 @@ def files(map_identifier, topic_identifier):
 def videos(map_identifier, topic_identifier):
     store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+    videos_count = store.get_occurrences_count(map_identifier, "video")
+    total_pages = (videos_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    video_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="video",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    videos = []
+    for video_occurrence in video_occurrences:
+        videos.append(
+            {
+                "topic_identifier": video_occurrence.topic_identifier,
+                "identifier": video_occurrence.identifier,
+                "title": video_occurrence.get_attribute_by_name("title").value,
+                "scope": video_occurrence.scope,
+                "url": video_occurrence.resource_ref,
+            }
+        )
+    # Sort and group videos by topic identifier
+    sorted_videos = sorted(videos, key=lambda x: x["topic_identifier"])
+    grouped_videos = {k: list(v) for k, v in groupby(sorted_videos, key=lambda x: x["topic_identifier"])}
+
+    return render_template(
+        "resources/videos.html",
+        topic_map=topic_map,
+        topic=topic,
+        videos=grouped_videos,
+        page=page,
+        total_pages=total_pages,
+    )
+
 
 @bp.route("/resources/links/<map_identifier>/<topic_identifier>")
 def links(map_identifier, topic_identifier):

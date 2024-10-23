@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title>Images index | {{ topic_map.name }}</title>
+<title>Videos index | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block stylesheets %}
@@ -56,7 +56,7 @@
 <div class="row">
     <div class="col-md-12">
         <h1>
-            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Images index</small>
+            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Videos index</small>
         </h1>
         <hr />
     </div>
@@ -64,17 +64,17 @@
 <div class="row">
     <div class="col-md-2">
         <nav class="nav nav-pills flex-column">
-            <a class="nav-link active btn-light" href="#">Images</a>
-            <a class="nav-link" href="#">Files</a>
             <a class="nav-link"
-                href="{{ url_for('resources.videos', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
+                href="{{ url_for('resources.images', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Images</a>
+            <a class="nav-link" href="#">Files</a>
+            <a class="nav-link active btn-light" href="#">Videos</a>
             <a class="nav-link" href="#">Links</a>
             <a class="nav-link" href="#">3D
                 scenes</a>
         </nav>
     </div>
     <div class="col-md-10">
-        {% if images %}
+        {% if videos %}
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -83,11 +83,11 @@
                 </tr>
             </thead>
             <tbody>
-                {% for key, value in images.items() %}
+                {% for key, value in videos.items() %}
                 <tr>
                     <td class="align-middle">
                         <a
-                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=key) }}">{{
+                            href="{{ url_for('video.index', map_identifier=topic_map.identifier, topic_identifier=key) }}">{{
                             key|topic_name(topic_map.identifier) }}</a>
                     </td>
                     <td class="align-middle">
@@ -99,17 +99,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for image in value %}
+                                {% for video in value %}
                                 <tr>
                                     <td>
-                                        <a data-caption="{{ image.title }}" data-fancybox="images"
-                                            href="/static/resources/{{ topic_map.identifier }}/{{ image.url }}">{{
-                                            image.title }}</a>
+                                        <a data-caption="{{ video.title }}" data-fancybox="gallery"
+                                            href="{{ video.url }}">{{
+                                            video.title }}</a>
                                     </td>
                                     <td>
                                         <a
-                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=image.scope) }}">{{
-                                            image.scope|topic_name(topic_map.identifier) }}</a>
+                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=video.scope) }}">{{
+                                            video.scope|topic_name(topic_map.identifier) }}</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -157,7 +157,7 @@
         {% endif %}
         {% else %}
         <p class="alert alert-info" role="alert">
-            This map does not have any images.
+            This map does not have any videos.
         </p>
         <br />
         <br />
