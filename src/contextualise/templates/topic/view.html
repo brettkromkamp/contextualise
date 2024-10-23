@@ -140,9 +140,22 @@
     {% endif %}
 </li>
 {% if topic_map %}
+<!--
 <li class="nav-item">
     <a class="nav-link"
         href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Index</a>
+</li>
+-->
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Indexes</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+                href="{{ url_for('topic.index', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Topics</a>
+        </li>
+        <li><a class="dropdown-item"
+                href="{{ url_for('resources.images', map_identifier=topic_map['identifier'], topic_identifier='home') }}">Resources</a>
+        </li>
+    </ul>
 </li>
 {% endif %}
 {% if topic.identifier != 'home' %}
