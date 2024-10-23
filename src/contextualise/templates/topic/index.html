@@ -90,9 +90,11 @@
             <tbody>
                 {% for topic in topics %}
                 <tr>
-                    <th scope="row"><a
+                    <td>
+                        <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">{{
-                            topic.first_base_name.name }}</a></th>
+                            topic.first_base_name.name }}</a>
+                    </td>
                     {% if topic.instance_of != 'base-topic' %}
                     <td class="text-danger">{{ topic.identifier }}</td>
                     {% else %}
