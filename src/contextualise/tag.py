@@ -7,7 +7,6 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 from flask import (
     Blueprint,
-    current_app,
     flash,
     redirect,
     render_template,
@@ -15,11 +14,9 @@ from flask import (
     url_for,
 )
 from flask_security import current_user, login_required
-from werkzeug.exceptions import abort
 
 from contextualise.utilities.topicstore import initialize
 
-from .topic_store import get_topic_store
 
 bp = Blueprint("tag", __name__)
 
