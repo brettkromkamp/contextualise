@@ -297,6 +297,11 @@ def view(map_identifier):
         if not topic_map.published:  # User is not logged in and the map is not published
             abort(403)
 
+    # Reset breadcrumbs and (current) scope
+    session["breadcrumbs"] = []
+    session["current_scope"] = constants.UNIVERSAL_SCOPE
+    session["scope_filter"] = 1
+
     return render_template("map/view.html", topic_map=topic_map)
 
 
