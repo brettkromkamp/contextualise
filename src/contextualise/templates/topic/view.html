@@ -484,7 +484,7 @@
         <hr />
         <h5>Notes</h5>
         {% for note in occurrences['notes'] %}
-        <a name="note-{{ note.identifier }}"></a>
+        <a id="note-{{ note.identifier }}"></a>
         <div class="card border-warning">
             <div class="card-header">
                 <small class="text-muted">{{ note.timestamp }}</small>

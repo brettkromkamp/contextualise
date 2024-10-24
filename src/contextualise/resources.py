@@ -267,3 +267,45 @@ def scenes(map_identifier, topic_identifier):
         page=page,
         total_pages=total_pages,
     )
+
+
+@bp.route("/resources/notes/<map_identifier>/<topic_identifier>")
+def notes(map_identifier, topic_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+    notes_count = store.get_occurrences_count(map_identifier, "note")
+    total_pages = (notes_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    note_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="note",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    notes = []
+    for note_occurrence in note_occurrences:
+        notes.append(
+            {
+                "topic_identifier": note_occurrence.topic_identifier,
+                "identifier": note_occurrence.identifier,
+                "title": note_occurrence.get_attribute_by_name("title").value,
+                "scope": note_occurrence.scope,
+                "url": note_occurrence.resource_ref,
+            }
+        )
+    # Sort and group images by topic identifier
+    sorted_notes = sorted(notes, key=lambda x: x["topic_identifier"])
+    grouped_notes = {k: list(v) for k, v in groupby(sorted_notes, key=lambda x: x["topic_identifier"]) if k != "notes"}
+
+    return render_template(
+        "resources/notes.html",
+        topic_map=topic_map,
+        topic=topic,
+        notes=grouped_notes,
+        page=page,
+        total_pages=total_pages,
+    )
