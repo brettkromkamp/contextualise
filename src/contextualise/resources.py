@@ -297,7 +297,7 @@ def notes(map_identifier, topic_identifier):
                 "url": note_occurrence.resource_ref,
             }
         )
-    # Sort and group images by topic identifier
+    # Sort and group notes by topic identifier
     sorted_notes = sorted(notes, key=lambda x: x["topic_identifier"])
     grouped_notes = {k: list(v) for k, v in groupby(sorted_notes, key=lambda x: x["topic_identifier"]) if k != "notes"}
 
