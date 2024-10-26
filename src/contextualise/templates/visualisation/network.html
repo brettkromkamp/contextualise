@@ -22,6 +22,10 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
 
 <script>
+    function getMapHeight() {
+        return (window.innerHeight - 200);
+    }
+
     function domainFromUrl(url) {
         var result;
         var match;
@@ -103,24 +107,21 @@
                 var options = {
                     interaction: { hover: true },
                     autoResize: true,
-                    height: '100%',
+                    height: getMapHeight() + "px",
                     width: '100%',
                     nodes: {
                         shape: "dot",
                         size: 16,
                     },
-                    physics: {
-                        forceAtlas2Based: {
-                            gravitationalConstant: -26,
-                            centralGravity: 0.005,
-                            springLength: 230,
-                            springConstant: 0.18,
-                        },
-                        maxVelocity: 146,
-                        solver: "forceAtlas2Based",
-                        timestep: 0.35,
-                        stabilization: { iterations: 150 },
+                    edges: {
+                        smooth: {
+                            forceDirection: "horizontal"
+                        }
                     },
+                    physics: {
+                        minVelocity: 0.75,
+                        solver: "repulsion"
+                    }
                 };
 
                 var network = new vis.Network(container, data, options);
@@ -139,9 +140,6 @@
                 });
                 network.on("resize", function (params) {
                     network.fit();
-                });
-                network.on("hoverNode", function (params) {
-                    console.log("Hover node");
                 });
             })
             .catch(function (error) {
@@ -382,9 +380,7 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div class="ratio ratio-16x9">
-            <div id="network-graph"></div>
-        </div>
+        <div id="network-graph"></div>
         <br />
     </div>
 </div>
