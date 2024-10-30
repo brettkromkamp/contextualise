@@ -614,7 +614,10 @@ def add_note(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("GET", "POST"))
+@bp.route(
+    "/topics/edit-note/<map_identifier>/<topic_identifier>/<note_identifier>",
+    methods=("GET", "POST"),
+)
 @login_required
 def edit_note(map_identifier, topic_identifier, note_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -701,7 +704,10 @@ def edit_note(map_identifier, topic_identifier, note_identifier):
     )
 
 
-@bp.route("/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>", methods=("POST",))
+@bp.route(
+    "/topics/delete-note/<map_identifier>/<topic_identifier>/<note_identifier>",
+    methods=("POST",),
+)
 @login_required
 def delete_note(map_identifier, topic_identifier, note_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -816,7 +822,10 @@ def add_name(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("GET", "POST"))
+@bp.route(
+    "/topics/edit-name/<map_identifier>/<topic_identifier>/<name_identifier>",
+    methods=("GET", "POST"),
+)
 @login_required
 def edit_name(map_identifier, topic_identifier, name_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -880,7 +889,10 @@ def edit_name(map_identifier, topic_identifier, name_identifier):
     )
 
 
-@bp.route("/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>", methods=("POST",))
+@bp.route(
+    "/topics/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>",
+    methods=("POST",),
+)
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
@@ -945,7 +957,10 @@ def change_scope(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/topics/edit-identifier/<map_identifier>/<topic_identifier>", methods=("GET", "POST"))
+@bp.route(
+    "/topics/edit-identifier/<map_identifier>/<topic_identifier>",
+    methods=("GET", "POST"),
+)
 @login_required
 def edit_identifier(map_identifier, topic_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)

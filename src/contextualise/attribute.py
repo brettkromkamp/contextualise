@@ -403,7 +403,13 @@ def edit(map_identifier, topic_identifier, attribute_identifier):
     methods=("GET", "POST"),
 )
 @login_required
-def entity_edit(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+def entity_edit(
+    map_identifier,
+    topic_identifier,
+    entity_identifier,
+    attribute_identifier,
+    entity_type,
+):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     if entity_type == "association":
@@ -565,7 +571,13 @@ def delete(map_identifier, topic_identifier, attribute_identifier):
     methods=("GET", "POST"),
 )
 @login_required
-def entity_delete(map_identifier, topic_identifier, entity_identifier, attribute_identifier, entity_type):
+def entity_delete(
+    map_identifier,
+    topic_identifier,
+    entity_identifier,
+    attribute_identifier,
+    entity_type,
+):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
     if entity_type == "association":

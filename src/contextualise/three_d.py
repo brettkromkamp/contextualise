@@ -112,9 +112,7 @@ def upload(map_identifier, topic_identifier):
             file_file_name = f"{str(uuid.uuid4())}.{file_extension}"
 
             # Create the file directory for this topic map if it doesn't already exist
-            file_directory = os.path.join(
-                current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier)
-            )
+            file_directory = os.path.join(current_app.static_folder, constants.RESOURCES_DIRECTORY, str(map_identifier))
             if not os.path.isdir(file_directory):
                 os.makedirs(file_directory)
 
