@@ -162,7 +162,10 @@ def create(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>", methods=("POST",))
+@bp.route(
+    "/associations/delete/<map_identifier>/<topic_identifier>/<association_identifier>",
+    methods=("POST",),
+)
 @login_required
 def delete(map_identifier, topic_identifier, association_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
