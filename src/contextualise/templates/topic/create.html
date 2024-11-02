@@ -56,13 +56,31 @@
         });
 
     // Timeline controls
+    let startDate = null;
+    let endDate = null;
     $("#timeline-start-date").datepicker({
         uiLibrary: "bootstrap5",
         format: "yyyy-mm-dd"
+    }).on("change", function (e) {
+        const [year, month, day] = $(this).val().split("-").map(Number);
+        startDate = new Date(year, month - 1, day);
+
+        if (startDate && endDate && startDate >= endDate) {
+            $(this).val("");
+            alert("The start date must be before the end date.");
+        }
     });
     $("#timeline-end-date").datepicker({
         uiLibrary: "bootstrap5",
         format: "yyyy-mm-dd"
+    }).on("change", function (e) {
+        const [year, month, day] = $(this).val().split("-").map(Number);
+        endDate = new Date(year, month - 1, day);
+
+        if (startDate && endDate && startDate >= endDate) {
+            $(this).val("");
+            alert("The start date must be before the end date.");
+        }
     });
 
     $("input[type=radio][name='timeline-type']").change(function () {
@@ -86,6 +104,13 @@
                 // Display the timeline controls
                 $("#timeline-controls").show();
 
+                if (endDate) {
+                    endDate = null;
+                }
+
+                $("#timeline-start-date").prop("required", true);
+                $("#timeline-end-date").prop("required", false);
+
                 // Clear the end-date field
                 $("#timeline-end-date").val("");
 
@@ -99,6 +124,9 @@
                 // Display the timeline controls
                 $("#timeline-controls").show();
 
+                $("#timeline-start-date").prop("required", true);
+                $("#timeline-end-date").prop("required", true);
+
                 // Set the disabled state of the fields
                 $("#timeline-text").prop("disabled", false);
                 $("#timeline-media-url").prop("disabled", false);
@@ -107,9 +135,6 @@
                 break;
         }
     });
-
-    // TODO: If timeline-era is selected, the end date should be greater than the start date. What's more,
-    // both the start and end dates should be in the format "yyyy-mm-dd" and both should be required.
 </script>
 
 {% if error %}
@@ -207,7 +232,8 @@
                     <div class="col">
                         <div class="mb-3">
                             <label for="timeline-end-date" class="form-label">End date
-                                <small class="text-info">&mdash; Date format is "yyyy-mm-dd"</small>
+                                <small class="text-info">&mdash; Date format is "yyyy-mm-dd". The end date must be after
+                                    the start date.</small>
                             </label>
                             <input class="form-control" id="timeline-end-date" name="timeline-end-date"
                                 placeholder="Enter end date" type="text" disabled>
