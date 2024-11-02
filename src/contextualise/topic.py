@@ -26,6 +26,7 @@ from topicdb.models.basename import BaseName
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
+from topicdb.store.ontologymode import OntologyMode
 from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort
@@ -288,6 +289,13 @@ def create(map_identifier, topic_identifier):
         form_topic_instance_of = request.form.get("topic-instance-of", "").strip()
         form_topic_text_scope = request.form.get("topic-text-scope", "").strip()
 
+        # Timeline-specific form data
+        form_timeline_type = request.form.get("timeline-type")
+        form_timeline_description = request.form.get("timeline-description", "").strip()
+        form_timeline_media_url = request.form.get("timeline-media-url", "").strip()
+        form_timeline_start = request.form.get("timeline-start-date", "").strip()
+        form_timeline_end = request.form.get("timeline-end-date", "").strip()
+
         # If no values have been provided set their default values
         if not form_topic_instance_of:
             form_topic_instance_of = "topic"
@@ -305,6 +313,18 @@ def create(map_identifier, topic_identifier):
             error = error | 8
         if not store.topic_exists(topic_map.identifier, form_topic_text_scope):
             error = error | 16
+        if form_timeline_type == "event":
+            if not form_timeline_description:
+                error = error | 32
+            if not form_timeline_start:
+                error = error | 64
+        elif form_timeline_type == "era":
+            if not form_timeline_description:
+                error = error | 32
+            if not form_timeline_start:
+                error = error | 64
+            if not form_timeline_end:
+                error = error | 128
 
         if error != 0:
             flash(
@@ -334,6 +354,59 @@ def create(map_identifier, topic_identifier):
             store.create_topic(topic_map.identifier, new_topic)
             store.create_occurrence(topic_map.identifier, text_occurrence)
             store.create_attribute(topic_map.identifier, modification_attribute)
+
+            # Persist timeline-related objects to the topic store
+            if form_timeline_type == "event":
+                event_occurrence = Occurrence(
+                    instance_of="temporal-event",
+                    topic_identifier=new_topic.identifier,
+                    scope=session["current_scope"],
+                    resource_data=form_timeline_description,
+                )
+                start_date_attribute = Attribute(
+                    "timeline-start-date",
+                    form_timeline_start,
+                    event_occurrence.identifier,
+                    data_type=DataType.TIMESTAMP,
+                )
+                media_url_attribute = Attribute(
+                    "timeline-media-url",
+                    form_timeline_media_url,
+                    event_occurrence.identifier,
+                    data_type=DataType.STRING,
+                )
+                store.create_occurrence(topic_map.identifier, event_occurrence, ontology_mode=OntologyMode.LENIENT)
+                store.create_attribute(topic_map.identifier, start_date_attribute)
+                store.create_attribute(topic_map.identifier, media_url_attribute)
+            elif form_timeline_type == "era":
+                era_occurrence = Occurrence(
+                    instance_of="temporal-era",
+                    topic_identifier=new_topic.identifier,
+                    scope=session["current_scope"],
+                    resource_data=form_timeline_description,
+                )
+                start_date_attribute = Attribute(
+                    "timeline-start-date",
+                    form_timeline_start,
+                    era_occurrence.identifier,
+                    data_type=DataType.TIMESTAMP,
+                )
+                end_date_attribute = Attribute(
+                    "timeline-end-date",
+                    form_timeline_end,
+                    era_occurrence.identifier,
+                    data_type=DataType.TIMESTAMP,
+                )
+                media_url_attribute = Attribute(
+                    "timeline-era-media-url",
+                    form_timeline_media_url,
+                    era_occurrence.identifier,
+                    data_type=DataType.STRING,
+                )
+                store.create_occurrence(topic_map.identifier, era_occurrence, ontology_mode=OntologyMode.LENIENT)
+                store.create_attribute(topic_map.identifier, start_date_attribute)
+                store.create_attribute(topic_map.identifier, end_date_attribute)
+                store.create_attribute(topic_map.identifier, media_url_attribute)
 
             flash("Topic successfully created.", "success")
             return redirect(

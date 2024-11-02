@@ -55,31 +55,36 @@
             }
         });
 
-    // Timeline controls
+    // Timeline controls and validation logic
     let startDate = null;
     let endDate = null;
+    const currentDate = new Date();
     $("#timeline-start-date").datepicker({
+        value: currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate(),
         uiLibrary: "bootstrap5",
         format: "yyyy-mm-dd"
     }).on("change", function (e) {
         const [year, month, day] = $(this).val().split("-").map(Number);
         startDate = new Date(year, month - 1, day);
 
-        if (startDate && endDate && startDate >= endDate) {
+        if ((startDate && endDate) && startDate >= endDate) {
             $(this).val("");
-            alert("The start date must be before the end date.");
+            const dateErrorModal = new bootstrap.Modal('#dateErrorModal');
+            dateErrorModal.show();
         }
     });
     $("#timeline-end-date").datepicker({
+        value: currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + (currentDate.getDate() + 1),
         uiLibrary: "bootstrap5",
         format: "yyyy-mm-dd"
     }).on("change", function (e) {
         const [year, month, day] = $(this).val().split("-").map(Number);
         endDate = new Date(year, month - 1, day);
 
-        if (startDate && endDate && startDate >= endDate) {
+        if ((startDate && endDate) && startDate >= endDate) {
             $(this).val("");
-            alert("The start date must be before the end date.");
+            const dateErrorModal = new bootstrap.Modal('#dateErrorModal');
+            dateErrorModal.show();
         }
     });
 
@@ -90,12 +95,12 @@
                 $("#timeline-controls").hide();
 
                 // Clear the fields
-                $("#timeline-text").val("");
+                $("#timeline-description").val("");
                 $("#timeline-media-url").val("");
                 $("#timeline-start-date").val("");
                 $("#timeline-end-date").val("");
 
-                $("#timeline-text").prop("disabled", true);
+                $("#timeline-description").prop("disabled", true);
                 $("#timeline-media-url").prop("disabled", true);
                 $("#timeline-start-date").prop("disabled", true);
                 $("#timeline-end-date").prop("disabled", true);
@@ -109,13 +114,14 @@
                 }
 
                 $("#timeline-start-date").prop("required", true);
+                $("#timeline-description").prop("required", true);
                 $("#timeline-end-date").prop("required", false);
 
                 // Clear the end-date field
                 $("#timeline-end-date").val("");
 
                 // Set the disabled state of the fields
-                $("#timeline-text").prop("disabled", false);
+                $("#timeline-description").prop("disabled", false);
                 $("#timeline-media-url").prop("disabled", false);
                 $("#timeline-start-date").prop("disabled", false);
                 $("#timeline-end-date").prop("disabled", true);
@@ -125,10 +131,11 @@
                 $("#timeline-controls").show();
 
                 $("#timeline-start-date").prop("required", true);
+                $("#timeline-description").prop("required", true);
                 $("#timeline-end-date").prop("required", true);
 
                 // Set the disabled state of the fields
-                $("#timeline-text").prop("disabled", false);
+                $("#timeline-description").prop("disabled", false);
                 $("#timeline-media-url").prop("disabled", false);
                 $("#timeline-start-date").prop("disabled", false);
                 $("#timeline-end-date").prop("disabled", false);
@@ -175,6 +182,11 @@
                     A topic with this identifier already exists. Provide a different topic identifier.
                 </small>
                 {% endif %}
+                {% if error|bitwise_and(4) == 4 %}
+                <small class="text-danger">
+                    A topic identifier needs to be provided to create a topic. Provide a topic identifier.
+                </small>
+                {% endif %}
             </div>
             <div class="mb-3">
                 <label for="topic-text" class="form-label">Text</label>
@@ -182,19 +194,20 @@
                     rows="8">{{ topic_text or '' }}</textarea>
             </div>
             <div class="mb-3">
-                <label for="topic-text" class="form-label">Timeline?</label>
+                <label for="topic-text" class="form-label">Temporal event or era?</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-none" checked>
+                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-none" value="none"
+                        checked>
                     <label class="form-check-label" for="timeline-none">None</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-event">
+                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-event" value="event">
                     <label class="form-check-label" for="timeline-event">
                         Event
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-era">
+                    <input class="form-check-input" type="radio" name="timeline-type" id="timeline-era" value="era">
                     <label class="form-check-label" for="timeline-era">
                         Era
                     </label>
@@ -204,9 +217,15 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="timeline-text" class="form-label">Text</label>
-                            <textarea class="form-control" id="timeline-text" name="timeline-text" rows="2"
-                                disabled></textarea>
+                            <label for="timeline-description" class="form-label">Text</label>
+                            <textarea class="form-control" id="timeline-description" name="timeline-description"
+                                rows="2" disabled>
+                            </textarea>
+                            {% if error|bitwise_and(32) == 32 %}
+                            <small class="text-danger">
+                                A timeline event or era needs to have a description. Provide a description.
+                            </small>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -227,6 +246,11 @@
                             </label>
                             <input class="form-control" id="timeline-start-date" name="timeline-start-date"
                                 placeholder="Enter start date" type="text" disabled>
+                            {% if error|bitwise_and(64) == 64 %}
+                            <small class="text-danger">
+                                A temporal event (or era) needs to have a start date. Provide a start date.
+                            </small>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col">
@@ -237,6 +261,11 @@
                             </label>
                             <input class="form-control" id="timeline-end-date" name="timeline-end-date"
                                 placeholder="Enter end date" type="text" disabled>
+                            {% if error|bitwise_and(128) == 128 %}
+                            <small class="text-danger">
+                                A temporal era needs to have a end date. Provide an end date.
+                            </small>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -295,6 +324,23 @@
             <button class="btn btn-success" type="submit">Create topic</button>
         </form>
         <br />
+    </div>
+</div>
+<div class="modal" id="dateErrorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Date error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>There is a problem with the dates that you have selected. Make sure that the era's end date is after
+                    its start date.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
