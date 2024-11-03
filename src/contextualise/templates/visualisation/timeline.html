@@ -24,6 +24,10 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
 
 <script type="text/javascript">
+    function getHeight() {
+        return window.innerHeight;
+    }
+
     const options = {
         hash_bookmark: true,
         start_at_end: false,
@@ -264,7 +268,7 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div id="timeline" style="width: 100%; height: 600px"></div>
+        <div id="timeline"></div>
         <br />
     </div>
 </div>

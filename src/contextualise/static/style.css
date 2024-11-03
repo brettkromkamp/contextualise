@@ -10,10 +10,18 @@ pre {
     font-size: 92.5%;
 }
 
-#visualisation {
+#network {
     border: 1px solid lightgray;
     background: white;
     border-radius: .30rem;
+}
+
+#timeline {
+    border: 1px solid lightgray;
+    background: white;
+    border-radius: .30rem;
+    width: 100%;
+    height: 580px;
 }
 
 .breadcrumb {

@@ -22,7 +22,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
 
 <script>
-    function getMapHeight() {
+    function getHeight() {
         return (window.innerHeight - 200);
     }
 
@@ -98,7 +98,7 @@
                 });
 
                 // Instantiate network object
-                var container = document.getElementById("visualisation");
+                var container = document.getElementById("network");
                 var data = {
                     nodes: nodes,
                     edges: edges,
@@ -107,7 +107,7 @@
                 var options = {
                     interaction: { hover: true },
                     autoResize: true,
-                    height: getMapHeight() + "px",
+                    height: getHeight() + "px",
                     width: '100%',
                     nodes: {
                         shape: "dot",
@@ -383,7 +383,7 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div id="visualisation"></div>
+        <div id="network"></div>
         <br />
     </div>
 </div>
