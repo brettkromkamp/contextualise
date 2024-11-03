@@ -246,6 +246,91 @@ def get_network(map_identifier, topic_identifier):
         )
 
 
+@bp.route("/api/get-timeline/<map_identifier>")
+def get_timeline(map_identifier):
+    store = get_topic_store()
+
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
+        if not topic_map.published:  # User is not logged in and the map is not published
+            return jsonify({"status": "error", "code": 403}), 403
+
+    scope_identifier = request.args.get("scope", type=str)
+    scope_filtered = request.args.get("filter", type=int)
+    if not scope_filtered:
+        scope_identifier = None
+
+    events = store.get_occurrences(
+        map_identifier=map_identifier,
+        instance_of="temporal-event",
+        scope=scope_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    eras = store.get_occurrences(
+        map_identifier=map_identifier,
+        instance_of="temporal-era",
+        scope=scope_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    timeline_events = []
+    for event in events:
+        text = event.resource_data.decode() if event.resource_data else "No description provided"
+        start_year, start_month, start_day = event.get_attribute_by_name("timeline-start-date").value.split("-")
+        timeline_events.append(
+            {
+                "start_date": {
+                    "year": start_year,
+                    "month": start_month,
+                    "day": start_day,
+                },
+                "text": text,
+            }
+        )
+    timeline_eras = []
+    for era in eras:
+        text = era.resource_data.decode() if era.resource_data else "No description provided"
+        start_year, start_month, start_day = era.get_attribute_by_name("timeline-start-date").value.split("-")
+        end_year, end_month, end_day = era.get_attribute_by_name("timeline-end-date").value.split("-")
+        timeline_eras.append(
+            {
+                "start_date": {
+                    "year": start_year,
+                    "month": start_month,
+                    "day": start_day,
+                },
+                "end_date": {
+                    "year": end_year,
+                    "month": end_month,
+                    "day": end_day,
+                },
+                "text": text,
+            }
+        )
+
+    if (len(timeline_events) + len(timeline_eras)) == 0:
+        return jsonify({"status": "error", "code": 404, "message": "No timeline data"}), 404,
+
+    result = {
+        "scale": "human",
+        "events": timeline_events,
+        "eras": timeline_eras,
+    }
+    return jsonify(result), 200
+
+
 @bp.route("/api/create-association/<map_identifier>", methods=("POST",))
 @login_required
 def create_association(map_identifier):
