@@ -1,0 +1,271 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic.first_base_name.name }} &mdash; Network | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
+{% block header_menu_not_authenticated %}
+<li class="nav-item"><a class="nav-link" href="{{ url_for('map.public') }}">Public maps</a></li>
+<li class="nav-item"><a class="nav-link"
+        href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier='home') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block stylesheets %}
+<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+{% endblock %}
+
+{% block javascript %}
+<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
+
+<script type="text/javascript">
+    const options = {
+        hash_bookmark: true,
+        start_at_end: false,
+    };
+    const timeline = new TL.Timeline("timeline", "/api/get-timeline/{{ topic_map.identifier }}", options);
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Tabs -->
+{% if not current_user.is_authenticated or not collaboration_mode or collaboration_mode.name == "VIEW" %}
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link"
+                    href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Topic</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Visualisations</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            network graph</a></li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            tags cloud</a>
+                    </li>
+                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if current_user.is_authenticated and collaboration_mode.name == "COMMENT" %}
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Topic</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                            tabindex="-1">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            note</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Visualisations</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            network</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            tags cloud</a>
+                    </li>
+                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if current_user.is_authenticated and collaboration_mode.name == "EDIT" %}
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Topic</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                            topic</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                            topic</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.edit_identifier', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Edit
+                            identifier</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#"
+                            hx-get="/api/delete-topic/{{ topic_map.identifier }}/{{ topic.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete topic</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.view_names', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            names</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('topic.add_note', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            note</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('tag.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            tags</a>
+                    </li>
+                    {% if 'admin' in current_user.roles %}
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('attribute.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            attributes</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Resources</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('image.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('image.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            image</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('file.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            file</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('video.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            video</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            link</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
+                            3D scene</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Associations</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('association.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View</a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('association.create', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Create
+                            association</a>
+                    </li>
+                    <li><a class="dropdown-item disabled" href="#">Create generic association</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Visualisations</a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" data-scope-filtered="{{ session['scope_filter'] }}"
+                            data-scope-identifier="{{ session['current_scope'] }}"
+                            href="{{ url_for('visualisation.network', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                            id="view-graph-link">View
+                            network graph</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            tags cloud</a>
+                    </li>
+                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Network graph</small>
+        </h1>
+        <p><em>{{ creation_date }}</em></p>
+        <hr />
+        <div id="timeline" style="width: 100%; height: 600px"></div>
+        <br />
+    </div>
+</div>
+{% endblock %}

@@ -296,7 +296,11 @@ def get_timeline(map_identifier):
                     "month": start_month,
                     "day": start_day,
                 },
-                "text": text,
+                "text": {
+                    "headline": "",
+                    "text": text,
+                },
+                "unique_id": event.topic_identifier,
             }
         )
     timeline_eras = []
@@ -316,11 +320,14 @@ def get_timeline(map_identifier):
                     "month": end_month,
                     "day": end_day,
                 },
-                "text": text,
+                "text": {
+                    "headline": "",
+                    "text": text,
+                }
             }
         )
 
-    if (len(timeline_events) + len(timeline_eras)) == 0:
+    if len(timeline_events) == 0:
         return jsonify({"status": "error", "code": 404, "message": "No timeline data"}), 404,
 
     result = {
