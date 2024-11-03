@@ -160,6 +160,8 @@ def view(map_identifier, topic_identifier):
         "links": [],
         "videos": [],
         "notes": [],
+        "temporal-events": [],
+        "temporal-eras": [],
     }
     for occurrence in topic_occurrences:
         match occurrence.instance_of:
@@ -226,6 +228,10 @@ def view(map_identifier, topic_identifier):
                         "text": markdown(occurrence.resource_data.decode()),
                     }
                 )
+            case "temporal-event":
+                pass
+            case "temporal-era":
+                pass
             case _:  # Unknown occurrence type
                 abort(500)
 
