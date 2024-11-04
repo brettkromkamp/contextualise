@@ -38,7 +38,9 @@
                         <a class="dropdown-item disabled" href="#">View
                             tags cloud</a>
                     </li>
-                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            timeline</a></li>
                     <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
                 </ul>
             </li>
@@ -82,7 +84,9 @@
                             href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                             tags cloud</a>
                     </li>
-                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            timeline</a></li>
                     <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
                 </ul>
             </li>
@@ -229,7 +233,9 @@
                     <li>
                         <a class="dropdown-item disabled" href="#">View tags cloud</a>
                     </li>
-                    <li><a class="dropdown-item disabled" href="#">View timeline</a></li>
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            timeline</a></li>
                     <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
                 </ul>
             </li>

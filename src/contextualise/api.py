@@ -287,8 +287,14 @@ def get_timeline(map_identifier):
 
     timeline_events = []
     for event in events:
-        text = event.resource_data.decode() if event.resource_data else "No description provided"
+        text = event.resource_data.decode() if event.resource_data else "No description provided."
         start_year, start_month, start_day = event.get_attribute_by_name("timeline-start-date").value.split("-")
+        media_url = (
+            event.get_attribute_by_name("timeline-media-url").value
+            if event.get_attribute_by_name("timeline-media-url")
+            else "/static/no-data.svg"
+        )
+        event_topic = store.get_topic(map_identifier, event.topic_identifier, scope=scope_identifier)
         timeline_events.append(
             {
                 "start_date": {
@@ -297,17 +303,21 @@ def get_timeline(map_identifier):
                     "day": start_day,
                 },
                 "text": {
-                    "headline": "",
+                    "headline": f'<a target="_self" href="/topics/view/{map_identifier}/{event_topic.identifier}">{event_topic.first_base_name.name}</a>',
                     "text": text,
                 },
                 "unique_id": event.topic_identifier,
+                "media": {
+                    "url": media_url,
+                },
             }
         )
     timeline_eras = []
     for era in eras:
-        text = era.resource_data.decode() if era.resource_data else "No description provided"
+        text = era.resource_data.decode() if era.resource_data else "No description provided."
         start_year, start_month, start_day = era.get_attribute_by_name("timeline-start-date").value.split("-")
         end_year, end_month, end_day = era.get_attribute_by_name("timeline-end-date").value.split("-")
+        era_topic = store.get_topic(map_identifier, era.topic_identifier, scope=scope_identifier)
         timeline_eras.append(
             {
                 "start_date": {
@@ -321,14 +331,17 @@ def get_timeline(map_identifier):
                     "day": end_day,
                 },
                 "text": {
-                    "headline": "",
+                    "headline": era_topic.first_base_name.name,
                     "text": text,
-                }
+                },
             }
         )
 
     if len(timeline_events) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "No timeline data"}), 404,
+        return (
+            jsonify({"status": "error", "code": 404, "message": "No timeline data"}),
+            404,
+        )
 
     result = {
         "scale": "human",
