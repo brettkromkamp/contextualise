@@ -26,22 +26,6 @@
         return (window.innerHeight - 200);
     }
 
-    function domainFromUrl(url) {
-        var result;
-        var match;
-        if (
-            (match = url.match(
-                /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im
-            ))
-        ) {
-            result = match[1];
-            if ((match = result.match(/^[^\.]+\.(.+\..+)$/))) {
-                result = match[1];
-            }
-        }
-        return result;
-    }
-
     function searchArray(value, prop, arr) {
         for (var i = 0; i < arr.length; i++) {
             if (arr[i][prop] === value) {
@@ -53,35 +37,24 @@
     var nodes = null;
     var edges = null;
 
-    var urlParts = window.location.pathname.split("/");
-    var mapIdentifier = urlParts[3];
-    var topicIdentifier = urlParts[4];
-
-    var viewGraphLink = document.getElementById("view-graph-link");
-    if (viewGraphLink) {
-        var scopeIdentifier =
-            typeof viewGraphLink.dataset.scopeIdentifier !== "undefined"
-                ? viewGraphLink.dataset.scopeIdentifier
-                : "*";
-        var scopeFiltered =
-            typeof viewGraphLink.dataset.scopeFiltered !== "undefined"
-                ? viewGraphLink.dataset.scopeFiltered
-                : 0;
+    var mapIdentifier = "{{ topic_map.identifier }}";
+    var topicIdentifier = "{{ topic.identifier }}";
+    var scopeIdentifier = "{{ session['current_scope'] }}";
+    if (scopeIdentifier === "") {
+        scopeIdentifier = "*";
+    }
+    var scopeFiltered = "{{ session['scope_filter'] }}";
+    if (scopeFiltered === "") {
+        scopeFiltered = 0;
     }
 
     if (topicIdentifier !== "") {
-        var getNetworkApiUrl =
-            "/api/get-network/" +
-            mapIdentifier +
-            "/" +
-            topicIdentifier +
-            "?scope=" +
-            scopeIdentifier +
-            "&filter=" +
-            scopeFiltered;
+        var container = document.getElementById("network");
+        var container404 = document.getElementById("network-404");
+        var networkApiUrl = `/api/get-network/${mapIdentifier}/${topicIdentifier}?scope=${scopeIdentifier}&filter=${scopeFiltered}`;
 
         axios
-            .get(getNetworkApiUrl)
+            .get(networkApiUrl)
             .then(function (response) {
                 // Handle success
                 nodes = response.data[0];
@@ -98,7 +71,6 @@
                 });
 
                 // Instantiate network object
-                var container = document.getElementById("network");
                 var data = {
                     nodes: nodes,
                     edges: edges,
@@ -132,9 +104,7 @@
                     if (params.nodes[0] !== undefined) {
                         var selectedNode = searchArray(params.nodes[0], "id", nodes);
                         if (selectedNode.id !== topicIdentifier) {
-                            mapIdentifier = urlParts[3];
-                            var networkGotoUrl =
-                                "/topics/view/" + mapIdentifier + "/" + selectedNode.id;
+                            var networkGotoUrl = `/topics/view/${mapIdentifier}/${selectedNode.id}`;
                             if (networkGotoUrl) {
                                 window.location.href = networkGotoUrl;
                             }
@@ -148,6 +118,9 @@
             .catch(function (error) {
                 // Handle error
                 console.log(error);
+
+                container.classList.add("hidden");
+                container404.classList.remove("hidden");
             })
             .then(function () {
                 // Always executed
@@ -363,9 +336,7 @@
                     aria-expanded="false">Visualisations</a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item disabled" data-scope-filtered="{{ session['scope_filter'] }}"
-                            data-scope-identifier="{{ session['current_scope'] }}" href="#" id="view-graph-link">View
-                            network graph</a>
+                        <a class="dropdown-item disabled">View network graph</a>
                     </li>
                     <li>
                         <a class="dropdown-item"
@@ -389,7 +360,17 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div id="network"></div>
+        <div class="visualisation" id="network"></div>
+        <div class="visualization hidden" id="network-404">
+            <p class="alert alert-info" role="alert">
+                Currently, this topic has no related topics.
+            </p>
+            <br />
+            <br />
+            <p class="text-center">
+                <img width="520" class="img-fluid" src="{{ url_for('static', filename='blank-canvas.svg') }}">
+            </p>
+        </div>
         <br />
     </div>
 </div>

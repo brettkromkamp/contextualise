@@ -28,11 +28,44 @@
         return window.innerHeight;
     }
 
-    const options = {
-        hash_bookmark: true,
-        start_at_end: false,
-    };
-    const timeline = new TL.Timeline("timeline", "/api/get-timeline/{{ topic_map.identifier }}", options);
+    var mapIdentifier = "{{ topic_map.identifier }}";
+    var scopeIdentifier = "{{ session['current_scope'] }}";
+    if (scopeIdentifier === "") {
+        scopeIdentifier = "*";
+    }
+    var scopeFiltered = "{{ session['scope_filter'] }}";
+    if (scopeFiltered === "") {
+        scopeFiltered = 0;
+    }
+
+    if (mapIdentifier !== "") {
+        var container = document.getElementById("timeline");
+        var container404 = document.getElementById("timeline-404");
+
+        var timelineApiUrl = `/api/get-timeline/${mapIdentifier}?scope=${scopeIdentifier}&filter=${scopeFiltered}`;
+
+        const timelineOptions = {
+            hash_bookmark: true,
+            start_at_end: false,
+        };
+
+        axios
+            .get(timelineApiUrl)
+            .then(function (response) {
+                // Handle success
+                const timeline = new TL.Timeline("timeline", response.data, timelineOptions);
+            })
+            .catch(function (error) {
+                // Handle error
+                console.log(error);
+
+                container.classList.add("hidden");
+                container404.classList.remove("hidden");
+            })
+            .then(function () {
+                // Always executed
+            });
+    }
 </script>
 {% endblock %}
 
@@ -273,7 +306,17 @@
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
-        <div id="timeline"></div>
+        <div class="visualisation" id="timeline"></div>
+        <div class="visualization hidden" id="timeline-404">
+            <p class="alert alert-info" role="alert">
+                Currently, this map has no timeline-related data.
+            </p>
+            <br />
+            <br />
+            <p class="text-center">
+                <img width="520" class="img-fluid" src="{{ url_for('static', filename='blank-canvas.svg') }}">
+            </p>
+        </div>
         <br />
     </div>
 </div>
