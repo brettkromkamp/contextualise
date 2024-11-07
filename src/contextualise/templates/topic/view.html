@@ -651,7 +651,7 @@
         <br />
         <!-- Topic resources -->
         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or
-        occurrences['links'] or occurrences['videos'] %}
+        occurrences['links'] or occurrences['videos'] or occurrences['temporal-events'] %}
         <div class="card contextualise-card">
             <div class="card-header">
                 <strong><i class="bi bi-files text-secondary"></i>&nbsp;Topic resources</strong>
@@ -738,6 +738,23 @@
                             <li><a data-fancybox
                                     data-src="{{ url_for('three_d.view', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, file_url=scene.url) }}"
                                     data-type="iframe" href="javascript:">{{ scene.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% if occurrences['temporal-events'] %}
+                    <li>{% if is_map_owner %}
+                        <a href="#">Temporals</a>
+                        {% else %}
+                        Temporals
+                        {% endif %}
+                        <ul>
+                            {% for event in occurrences['temporal-events'] %}
+                            <li>
+                                <a
+                                    href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, _anchor='event-' + topic.identifier) }}">{{
+                                    event.start_date }}</a>
                             </li>
                             {% endfor %}
                         </ul>

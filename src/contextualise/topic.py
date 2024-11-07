@@ -229,9 +229,24 @@ def view(map_identifier, topic_identifier):
                     }
                 )
             case "temporal-event":
-                pass
+                occurrences["temporal-events"].append(
+                    {
+                        "identifier": occurrence.identifier,
+                        "title": "Temporal Event",
+                        "start_date": maya.parse(occurrence.get_attribute_by_name("timeline-start-date").value).date.strftime("%a, %d %b %Y"),
+                        "text": occurrence.resource_data.decode(),
+                    }
+                )
             case "temporal-era":
-                pass
+                occurrences["temporal-eras"].append(
+                    {
+                        "identifier": occurrence.identifier,
+                        "title": "Temporal Era",
+                        "start_date": maya.parse(occurrence.get_attribute_by_name("timeline-start-date").value).date.strftime("%a, %d %b %Y"),
+                        "end_date": maya.parse(occurrence.get_attribute_by_name("timeline-end-date").value).date.strftime("%a, %d %b %Y"),
+                        "text": occurrence.resource_data.decode(),
+                    }
+                )
             case _:  # Unknown occurrence type
                 abort(500)
 
