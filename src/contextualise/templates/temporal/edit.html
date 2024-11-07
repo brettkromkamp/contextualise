@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
+{% block javascript %}
+{% if error %}
+<script>
+    $('#advancedOptions').collapse('show');
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Edit temporal</small>
+        </h1>
+        <hr />
+        <br />
+    </div>
+</div>
+{% endblock %}

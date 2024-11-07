@@ -255,6 +255,10 @@ def create_app(test_config=None):
 
     app.register_blueprint(contextualise.resources.bp)
 
+    import contextualise.temporal
+
+    app.register_blueprint(contextualise.temporal.bp)
+
     # Set up logging
     if not app.debug:
         logs_directory = os.path.join(app.instance_path, "logs")
