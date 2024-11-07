@@ -133,10 +133,11 @@
 
                 $("#timeline-start-date").prop("required", true);
                 $("#timeline-description").prop("required", true);
+                $("#timeline-media-url").prop("required", false);
                 $("#timeline-end-date").prop("required", true);
 
                 $("#timeline-description").prop("disabled", false);
-                $("#timeline-media-url").prop("disabled", false);
+                $("#timeline-media-url").prop("disabled", true);
                 $("#timeline-start-date").prop("disabled", false);
                 $("#timeline-end-date").prop("disabled", false);
                 break;
@@ -217,10 +218,9 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="timeline-description" class="form-label">Text</label>
+                            <label for="timeline-description" class="form-label">Description</label>
                             <textarea class="form-control" id="timeline-description" name="timeline-description"
-                                rows="2" disabled>
-                            </textarea>
+                                rows="2" disabled></textarea>
                             {% if error|bitwise_and(32) == 32 %}
                             <small class="text-danger">
                                 A timeline event or era needs to have a description. Provide a description.

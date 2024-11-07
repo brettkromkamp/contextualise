@@ -325,8 +325,6 @@ def create(map_identifier, topic_identifier):
             if not form_timeline_start:
                 error = error | 64
         elif form_timeline_type == "era":
-            if not form_timeline_description:
-                error = error | 32
             if not form_timeline_start:
                 error = error | 64
             if not form_timeline_end:
@@ -403,16 +401,9 @@ def create(map_identifier, topic_identifier):
                     era_occurrence.identifier,
                     data_type=DataType.TIMESTAMP,
                 )
-                media_url_attribute = Attribute(
-                    "timeline-era-media-url",
-                    form_timeline_media_url,
-                    era_occurrence.identifier,
-                    data_type=DataType.STRING,
-                )
                 store.create_occurrence(topic_map.identifier, era_occurrence, ontology_mode=OntologyMode.LENIENT)
                 store.create_attribute(topic_map.identifier, start_date_attribute)
                 store.create_attribute(topic_map.identifier, end_date_attribute)
-                store.create_attribute(topic_map.identifier, media_url_attribute)
 
             flash("Topic successfully created.", "success")
             return redirect(
