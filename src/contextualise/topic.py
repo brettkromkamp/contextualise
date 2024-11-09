@@ -448,7 +448,7 @@ def create(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         map_notes_count=map_notes_count,
-        temporals_enabled=constants.TEMPORALS_ENABLED,  # Feature flag
+        temporals_feature=constants.TEMPORALS_FEATURE,  # Toggle feature on or off
     )
 
 
