@@ -194,6 +194,7 @@
                 <textarea class="form-control" id="topic-text" name="topic-text"
                     rows="8">{{ topic_text or '' }}</textarea>
             </div>
+            {% if temporals_enabled %}
             <div class="mb-3">
                 <label for="topic-text" class="form-label">Temporal event or era?</label>
                 <div class="form-check">
@@ -214,6 +215,7 @@
                     </label>
                 </div>
             </div>
+            {% endif %}
             <div id="timeline-controls" style="display: none;">
                 <div class="row">
                     <div class="col">

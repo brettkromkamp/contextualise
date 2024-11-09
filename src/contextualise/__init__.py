@@ -15,7 +15,7 @@ from flask_security.core import RoleMixin, Security, UserMixin
 from flask_security.datastore import SQLAlchemySessionUserDatastore
 from flask_security.signals import user_authenticated, user_registered
 from flask_security.utils import hash_password
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect  # type: ignore
 from sqlalchemy import (
     Boolean,
     Column,
