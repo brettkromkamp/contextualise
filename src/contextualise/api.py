@@ -285,17 +285,17 @@ def get_timeline(map_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    timeline_events = []
+    temporal_events = []
     for event in events:
         text = event.resource_data.decode() if event.resource_data else "No description provided."
-        start_year, start_month, start_day = event.get_attribute_by_name("timeline-start-date").value.split("-")
+        start_year, start_month, start_day = event.get_attribute_by_name("temporal-start-date").value.split("-")
         media_url = (
-            event.get_attribute_by_name("timeline-media-url").value
-            if event.get_attribute_by_name("timeline-media-url")
+            event.get_attribute_by_name("temporal-media-url").value
+            if event.get_attribute_by_name("temporal-media-url")
             else "/static/no-data.svg"
         )
         event_topic = store.get_topic(map_identifier, event.topic_identifier, scope=scope_identifier)
-        timeline_events.append(
+        temporal_events.append(
             {
                 "start_date": {
                     "year": start_year,
@@ -312,13 +312,13 @@ def get_timeline(map_identifier):
                 },
             }
         )
-    timeline_eras = []
+    temporal_eras = []
     for era in eras:
         text = era.resource_data.decode() if era.resource_data else "No description provided."
-        start_year, start_month, start_day = era.get_attribute_by_name("timeline-start-date").value.split("-")
-        end_year, end_month, end_day = era.get_attribute_by_name("timeline-end-date").value.split("-")
+        start_year, start_month, start_day = era.get_attribute_by_name("temporal-start-date").value.split("-")
+        end_year, end_month, end_day = era.get_attribute_by_name("temporal-end-date").value.split("-")
         era_topic = store.get_topic(map_identifier, era.topic_identifier, scope=scope_identifier)
-        timeline_eras.append(
+        temporal_eras.append(
             {
                 "start_date": {
                     "year": start_year,
@@ -337,16 +337,16 @@ def get_timeline(map_identifier):
             }
         )
 
-    if len(timeline_events) == 0:
+    if len(temporal_events) == 0:
         return (
-            jsonify({"status": "error", "code": 404, "message": "No timeline data"}),
+            jsonify({"status": "error", "code": 404, "message": "No temporal data"}),
             404,
         )
 
     result = {
         "scale": "human",
-        "events": timeline_events,
-        "eras": timeline_eras,
+        "events": temporal_events,
+        "eras": temporal_eras,
     }
     return jsonify(result), 200
 

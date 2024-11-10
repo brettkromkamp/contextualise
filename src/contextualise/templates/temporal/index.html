@@ -9,8 +9,6 @@
 {% endblock %}
 
 {% block javascript %}
-<link href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -163,8 +161,7 @@
 <div class="row mt-4">
     <div class="col-md-12">
         <h1>
-            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Temporal events or
-                eras</small>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Temporals</small>
         </h1>
         <p><em>{{ creation_date }}</em></p>
         <hr />
@@ -184,39 +181,46 @@
             <a class="nav-link"
                 href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
                 scenes</a>
-            <a class="nav-link  active btn-light" href="#">Temporals</a>
+            <a class="nav-link  active btn-light" href="#">Temporal</a>
         </nav>
     </div>
     <div class="col-md-10">
-        {% if links %}
+        {% if temporals %}
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Title</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Temporal</th>
                     <th scope="col">Scope</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for link in links %}
+                {% for temporal in temporals %}
                 <tr>
-                    <td><a href="{{ link.url }}" target="_blank">{{ link.title }}</a> <i
-                            class="bi bi-box-arrow-up-right"></i></td>
-                    <td><a
-                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
-                            link.scope|topic_name(topic_map.identifier) }}</a>
+                    <td>
+                        {% if temporal.type == 'event' %}
+                        Event
+                        {% elif temporal.type == 'era' %}
+                        Era
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if temporal.type == 'event' %}
+                        <a
+                            href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier, _anchor='event-' + temporal.topic_identifier) }}">{{
+                            temporal.start_date }}</a>
+                        {% elif temporal.type == 'era' %}
+                        {{ temporal.start_date }} &mdash; {{ temporal.end_date }}
+                        {% endif %}
                     </td>
                     <td>
                         <a
-                            href="{{ url_for('link.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, link_identifier=link.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="#"
-                            hx-get="/api/delete-link/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ link.identifier }}"
-                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
-                            data-bs-target="#modal-dialog-component">Delete</a>
-                        {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
-                            href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=link.identifier, entity_type='link') }}">View
-                            attributes</a>
-                        {% endif %}
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=temporal.scope) }}">{{
+                            temporal.scope|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td>
+                        <a href="#">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -224,16 +228,11 @@
         </table>
         {% elif current_user.id == topic_map.user_identifier %}
         <p class="alert alert-info" role="alert">
-            This topic has no associated links. Click on the "Add link" button below to add a link.
+            This topic has not been defined as a temporal event or era.
         </p>
         {% endif %}
-        {% if current_user.id == topic_map.user_identifier %}
-        <a class="btn btn-outline-primary"
-            href="{{ url_for('link.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
-            link</a>
         <br />
         <br />
-        {% endif %}
     </div>
 </div>
 {% endblock %}

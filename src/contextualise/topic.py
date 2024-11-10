@@ -233,7 +233,7 @@ def view(map_identifier, topic_identifier):
                     {
                         "identifier": occurrence.identifier,
                         "title": "Temporal Event",
-                        "start_date": maya.parse(occurrence.get_attribute_by_name("timeline-start-date").value).date.strftime("%a, %d %b %Y"),
+                        "start_date": maya.parse(occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
                         "text": occurrence.resource_data.decode(),
                     }
                 )
@@ -242,8 +242,8 @@ def view(map_identifier, topic_identifier):
                     {
                         "identifier": occurrence.identifier,
                         "title": "Temporal Era",
-                        "start_date": maya.parse(occurrence.get_attribute_by_name("timeline-start-date").value).date.strftime("%a, %d %b %Y"),
-                        "end_date": maya.parse(occurrence.get_attribute_by_name("timeline-end-date").value).date.strftime("%a, %d %b %Y"),
+                        "start_date": maya.parse(occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
+                        "end_date": maya.parse(occurrence.get_attribute_by_name("temporal-end-date").value).date.strftime("%a, %d %b %Y"),
                         "text": occurrence.resource_data.decode(),
                     }
                 )
@@ -310,12 +310,12 @@ def create(map_identifier, topic_identifier):
         form_topic_instance_of = request.form.get("topic-instance-of", "").strip()
         form_topic_text_scope = request.form.get("topic-text-scope", "").strip()
 
-        # Timeline-specific form data
-        form_timeline_type = request.form.get("timeline-type")
-        form_timeline_description = request.form.get("timeline-description", "").strip()
-        form_timeline_media_url = request.form.get("timeline-media-url", "").strip()
-        form_timeline_start = request.form.get("timeline-start-date", "").strip()
-        form_timeline_end = request.form.get("timeline-end-date", "").strip()
+        # Temporal-specific form data
+        form_temporal_type = request.form.get("temporal-type")
+        form_temporal_description = request.form.get("temporal-description", "").strip()
+        form_temporal_media_url = request.form.get("temporal-media-url", "").strip()
+        form_temporal_start = request.form.get("temporal-start-date", "").strip()
+        form_temporal_end = request.form.get("temporal-end-date", "").strip()
 
         # If no values have been provided set their default values
         if not form_topic_instance_of:
@@ -334,15 +334,15 @@ def create(map_identifier, topic_identifier):
             error = error | 8
         if not store.topic_exists(topic_map.identifier, form_topic_text_scope):
             error = error | 16
-        if form_timeline_type == "event":
-            if not form_timeline_description:
+        if form_temporal_type == "event":
+            if not form_temporal_description:
                 error = error | 32
-            if not form_timeline_start:
+            if not form_temporal_start:
                 error = error | 64
-        elif form_timeline_type == "era":
-            if not form_timeline_start:
+        elif form_temporal_type == "era":
+            if not form_temporal_start:
                 error = error | 64
-            if not form_timeline_end:
+            if not form_temporal_end:
                 error = error | 128
 
         if error != 0:
@@ -374,45 +374,45 @@ def create(map_identifier, topic_identifier):
             store.create_occurrence(topic_map.identifier, text_occurrence)
             store.create_attribute(topic_map.identifier, modification_attribute)
 
-            # Persist timeline-related objects to the topic store
-            if form_timeline_type == "event":
+            # Persist temporal-related objects to the topic store
+            if form_temporal_type == "event":
                 event_occurrence = Occurrence(
                     instance_of="temporal-event",
                     topic_identifier=new_topic.identifier,
                     scope=session["current_scope"],
-                    resource_data=form_timeline_description,
+                    resource_data=form_temporal_description,
                 )
                 start_date_attribute = Attribute(
-                    "timeline-start-date",
-                    form_timeline_start,
+                    "temporal-start-date",
+                    form_temporal_start,
                     event_occurrence.identifier,
                     data_type=DataType.TIMESTAMP,
                 )
                 media_url_attribute = Attribute(
-                    "timeline-media-url",
-                    form_timeline_media_url,
+                    "temporal-media-url",
+                    form_temporal_media_url,
                     event_occurrence.identifier,
                     data_type=DataType.STRING,
                 )
                 store.create_occurrence(topic_map.identifier, event_occurrence, ontology_mode=OntologyMode.LENIENT)
                 store.create_attribute(topic_map.identifier, start_date_attribute)
                 store.create_attribute(topic_map.identifier, media_url_attribute)
-            elif form_timeline_type == "era":
+            elif form_temporal_type == "era":
                 era_occurrence = Occurrence(
                     instance_of="temporal-era",
                     topic_identifier=new_topic.identifier,
                     scope=session["current_scope"],
-                    resource_data=form_timeline_description,
+                    resource_data=form_temporal_description,
                 )
                 start_date_attribute = Attribute(
-                    "timeline-start-date",
-                    form_timeline_start,
+                    "temporal-start-date",
+                    form_temporal_start,
                     era_occurrence.identifier,
                     data_type=DataType.TIMESTAMP,
                 )
                 end_date_attribute = Attribute(
-                    "timeline-end-date",
-                    form_timeline_end,
+                    "temporal-end-date",
+                    form_temporal_end,
                     era_occurrence.identifier,
                     data_type=DataType.TIMESTAMP,
                 )
@@ -448,7 +448,6 @@ def create(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         map_notes_count=map_notes_count,
-        temporals_feature=constants.TEMPORALS_FEATURE,  # Toggle feature on or off
     )
 
 
