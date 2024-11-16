@@ -75,19 +75,16 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
     if entity is None:
         abort(404)
 
-    return_url = None
-    if entity_type == "association":
-        return_url = "association.index"
-    elif entity_type == "image":
-        return_url = "image.index"
-    elif entity_type == "3d-scene":
-        return_url = "three_d.index"
-    elif entity_type == "file":
-        return_url = "file.index"
-    elif entity_type == "link":
-        return_url = "link.index"
-    elif entity_type == "video":
-        return_url = "video.index"
+    return_urls = {
+        "association": "association.index",
+        "image": "image.index",
+        "3d-scene": "three_d.index",
+        "file": "file.index",
+        "link": "link.index",
+        "video": "video.index",
+        "temporal": "temporal.index",
+    }
+    return_url = return_urls.get(entity_type, "topic.view")  # Default to topic.view. Is this correct in this context?
 
     attributes = []
     entity_attributes = store.get_attributes(map_identifier, entity_identifier)

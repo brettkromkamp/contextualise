@@ -27,8 +27,10 @@
             <small class="text-muted">Link attributes</small>
             {% elif entity_type == 'video' %}
             <small class="text-muted">Video attributes</small>
-            {% else %}
+            {% elif entity_type == 'association' %}
             <small class="text-muted">Association attributes</small>
+            {% else %}
+            <small class="text-muted">Temporal attributes</small>
             {% endif %}
         </h1>
         <p><em>{{ creation_date }}</em></p>
