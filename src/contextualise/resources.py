@@ -66,8 +66,6 @@ def images(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    images_count = store.get_occurrences_count(map_identifier, "image")
-    total_pages = (images_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     image_occurrences = store.get_occurrences(
         map_identifier,
@@ -76,6 +74,10 @@ def images(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    images_count = len(image_occurrences)
+    total_pages = (images_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     images = []
     for image_occurrence in image_occurrences:
         images.append(
@@ -108,8 +110,6 @@ def files(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    files_count = store.get_occurrences_count(map_identifier, "file")
-    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     file_occurrences = store.get_occurrences(
         map_identifier,
@@ -118,6 +118,10 @@ def files(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    files_count = len(file_occurrences)
+    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     files = []
     for file_occurrence in file_occurrences:
         files.append(
@@ -150,8 +154,6 @@ def videos(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    videos_count = store.get_occurrences_count(map_identifier, "video")
-    total_pages = (videos_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     video_occurrences = store.get_occurrences(
         map_identifier,
@@ -160,6 +162,10 @@ def videos(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    videos_count = len(video_occurrences)
+    total_pages = (videos_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     videos = []
     for video_occurrence in video_occurrences:
         videos.append(
@@ -192,8 +198,6 @@ def links(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    links_count = store.get_occurrences_count(map_identifier, "url")
-    total_pages = (links_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     link_occurrences = store.get_occurrences(
         map_identifier,
@@ -202,6 +206,10 @@ def links(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    links_count = len(link_occurrences)
+    total_pages = (links_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     links = []
     for link_occurrence in link_occurrences:
         links.append(
@@ -234,8 +242,6 @@ def scenes(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    files_count = store.get_occurrences_count(map_identifier, "3d-scene")
-    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     file_occurrences = store.get_occurrences(
         map_identifier,
@@ -244,6 +250,10 @@ def scenes(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    files_count = len(file_occurrences)
+    total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     files = []
     for file_occurrence in file_occurrences:
         files.append(
@@ -276,8 +286,6 @@ def notes(map_identifier, topic_identifier):
     # Pagination
     page = request.args.get("page", 1, type=int)
     offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
-    notes_count = store.get_occurrences_count(map_identifier, "note")
-    total_pages = (notes_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     note_occurrences = store.get_occurrences(
         map_identifier,
@@ -286,6 +294,10 @@ def notes(map_identifier, topic_identifier):
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+
+    notes_count = len(note_occurrences)
+    total_pages = (notes_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
     notes = []
     for note_occurrence in note_occurrences:
         notes.append(
@@ -306,6 +318,53 @@ def notes(map_identifier, topic_identifier):
         topic_map=topic_map,
         topic=topic,
         notes=grouped_notes,
+        page=page,
+        total_pages=total_pages,
+    )
+
+
+@bp.route("/resources/temporals/<map_identifier>/<topic_identifier>")
+def temporals(map_identifier, topic_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+
+    temporal_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="temporal-event",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    ) + store.get_occurrences(
+        map_identifier,
+        instance_of="temporal-era",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    temporals_count = len(temporal_occurrences)
+    total_pages = (temporals_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    temporals = []
+    for temporal_occurrence in temporal_occurrences:
+        temporals.append(
+            {
+                "topic_identifier": temporal_occurrence.topic_identifier,
+                "identifier": temporal_occurrence.identifier,
+            }
+        )
+    # Sort and group temporals by topic identifier
+    sorted_temporals = sorted(temporals, key=lambda x: x["topic_identifier"])
+    grouped_temporals = {k: list(v) for k, v in groupby(sorted_temporals, key=lambda x: x["topic_identifier"])}
+
+    return render_template(
+        "resources/temporals.html",
+        topic_map=topic_map,
+        topic=topic,
+        temporals=grouped_temporals,
         page=page,
         total_pages=total_pages,
     )

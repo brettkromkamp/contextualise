@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title>Links index | {{ topic_map.name }}</title>
+<title>Temporals index | {{ topic_map.name }}</title>
 {% endblock %}
 
 {% block header_menu %}
@@ -48,7 +48,7 @@
 <div class="row">
     <div class="col-md-12">
         <h1>
-            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Links index</small>
+            {{ topic_map.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Temporals index</small>
         </h1>
         <hr />
     </div>
@@ -62,58 +62,33 @@
                 href="{{ url_for('resources.files', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Files</a>
             <a class="nav-link"
                 href="{{ url_for('resources.videos', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Videos</a>
-            <a class="nav-link active btn-light" href="#">Links</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.links', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Links</a>
             <a class="nav-link"
                 href="{{ url_for('resources.scenes', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
                 scenes</a>
             <a class="nav-link"
                 href="{{ url_for('resources.notes', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Notes</a>
-            <a class="nav-link"
-                href="{{ url_for('resources.temporals', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Temporals</a>
+            <a class="nav-link active btn-light" href="#">Temporals</a>
         </nav>
     </div>
     <div class="col-md-10">
-        {% if links %}
+        {% if temporals %}
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col" width="20">Topic</th>
-                    <th scope="col" width="80%">Links</th>
                 </tr>
             </thead>
             <tbody>
-                {% for key, value in links.items() %}
+                {% for key, value in temporals.items() %}
                 <tr>
                     <td class="align-middle">
                         <a
-                            href="{{ url_for('link.index', map_identifier=topic_map.identifier, topic_identifier=key) }}">{{
+                            href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=key) }}">{{
                             key|topic_name(topic_map.identifier) }}</a>
                     </td>
-                    <td class="align-middle">
-                        <table class="table table-bordered table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="80%">Title</th>
-                                    <th scope="col" width="20%">Scope</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for link in value %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
-                                        <i class="bi bi-box-arrow-up-right"></i>
-                                    </td>
-                                    <td>
-                                        <a
-                                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=link.scope) }}">{{
-                                            link.scope|topic_name(topic_map.identifier) }}</a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
+                    <!-- TODO -->
                 </tr>
                 {% endfor %}
             </tbody>
@@ -125,7 +100,7 @@
                 <ul class="pagination">
                     {% if page > 1 %}
                     <li class="page-item"><a class="page-link" aria-label="Previous"
-                            href="{{ url_for('resources.links', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
+                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
                                 class="bi bi-arrow-left"></i></a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link disabled" aria-label="Previous" href="#"><i
@@ -136,13 +111,13 @@
                     <li class="page-item"><a class="page-link disabled" href="#">{{ p }}</a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link"
-                            href="{{ url_for('resources.links', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
+                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
                             p }}</a>
                     </li>
                     {% endif %}
                     {% endfor %}
                     {% if page < total_pages %} <li class="page-item"><a class="page-link" aria-label="Next"
-                            href="{{ url_for('resources.links', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
+                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
                                 class="bi bi-arrow-right"></i></a>
                         </li>
                         {% else %}
@@ -155,7 +130,7 @@
         {% endif %}
         {% else %}
         <p class="alert alert-info" role="alert">
-            This map does not have any user-provided links.
+            This map does not have any topics defined as temporal events or eras.
         </p>
         <br />
         <br />

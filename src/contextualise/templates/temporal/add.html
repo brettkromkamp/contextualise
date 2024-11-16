@@ -15,6 +15,8 @@
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+
+{% if not temporal_occurrence %}
 <script>
     // Timeline controls and validation logic
     let startDate = null;
@@ -69,6 +71,7 @@
 
             $("#temporal-start-date").prop("required", true);
             $("#temporal-description").prop("required", true);
+            $("#temporal-media-url").prop("required", true);
             $("#temporal-end-date").prop("required", false);
 
             $("#temporal-description").prop("disabled", false);
@@ -78,6 +81,7 @@
         }
     })
 </script>
+{% endif %}
 
 {% if error %}
 <script>
@@ -93,6 +97,7 @@
             {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Add temporal</small>
         </h1>
         <hr />
+        {% if not temporal_occurrence %}
         <form
             action="{{ url_for('temporal.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
             autocomplete="off" method="post" role="form">
@@ -203,6 +208,11 @@
                 role="button">Cancel</a>
             <button class="btn btn-success" type="submit">Add temporal</button>
         </form>
+        {% else %}
+        <p class="alert alert-info" role="alert">
+            This topic has already been defined as a temporal event or era.
+        </p>
+        {% endif %}
         <br />
     </div>
 </div>

@@ -310,6 +310,11 @@
                             href="{{ url_for('three_d.upload', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Upload
                             3D scene</a>
                     </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('temporal.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+                            temporal</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item dropdown">

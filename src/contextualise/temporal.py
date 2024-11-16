@@ -22,6 +22,7 @@ from contextualise.utilities.topicstore import initialize
 
 bp = Blueprint("temporal", __name__)
 
+
 class TemporalType(Enum):
     EVENT = 1
     ERA = 2
@@ -89,6 +90,20 @@ def add(map_identifier, topic_identifier):
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
+
+    temporal_occurrences = store.get_topic_occurrences(
+        map_identifier=map_identifier,
+        identifier=topic_identifier,
+        instance_of="temporal-event",
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    ) + store.get_topic_occurrences(
+        map_identifier=map_identifier,
+        identifier=topic_identifier,
+        instance_of="temporal-era",
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
 
     if request.method == "POST":
         form_temporal_type = request.form.get("temporal-type")
@@ -197,6 +212,7 @@ def add(map_identifier, topic_identifier):
         error=error,
         topic_map=topic_map,
         topic=topic,
+        temporal_occurrence=temporal_occurrences[0] if temporal_occurrences else None,
         map_notes_count=map_notes_count,
     )
 
