@@ -97,7 +97,7 @@
             {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Add temporal</small>
         </h1>
         <hr />
-        {% if not temporal_occurrence %}
+        {% if not temporal_type %}
         <form
             action="{{ url_for('temporal.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
             autocomplete="off" method="post" role="form">
@@ -209,9 +209,51 @@
             <button class="btn btn-success" type="submit">Add temporal</button>
         </form>
         {% else %}
-        <p class="alert alert-info" role="alert">
-            This topic has already been defined as a temporal event or era.
+        <div class="mb-3">
+            <label for="temporal-type" class="form-label">Type</label>
+            <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type" readonly
+                type="text" value="{{ temporal_type|capitalize }}">
+        </div>
+        <div class="mb-3">
+            <label for="temporal" class="form-label">Temporal</label>
+            <p>
+                {% if temporal_type == 'event' %}
+                <a
+                    href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal_topic_identifier, _anchor='event-' + temporal_topic_identifier) }}">{{
+                    temporal_start_date }}</a>
+                {% elif temporal_type == 'era' %}
+                {{ temporal_start_date }} &rarr; {{ temporal_end_date }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label><br />
+            <div class="text-secondary note-text">{{ temporal_description|safe }}</div>
+        </div>
+        <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                Toggle options</a>
         </p>
+        <div class="collapse" id="advancedOptions">
+            <div class="card">
+                <div class="card-header">
+                    <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="mb-3">
+                            <label for="link-scope" class="form-label">Scope</label>
+                            <input aria-readonly="true" disabled class="form-control" id="link-scope" name="link-scope"
+                                readonly type="text" value="{{ temporal_scope }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <a class="btn btn-secondary"
+            href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            role="button">Return</a>
         {% endif %}
         <br />
     </div>

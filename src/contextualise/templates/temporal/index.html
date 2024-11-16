@@ -204,11 +204,7 @@
                 {% for temporal in temporals %}
                 <tr>
                     <td>
-                        {% if temporal.type == 'event' %}
-                        Event
-                        {% elif temporal.type == 'era' %}
-                        Era
-                        {% endif %}
+                        {{ temporal.type|capitalize }}
                     </td>
                     <td>
                         {% if temporal.type == 'event' %}

@@ -36,7 +36,7 @@ class TemporalType(Enum):
 def index(map_identifier, topic_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
-    temporal_type = "event"
+    temporal_type = TemporalType.EVENT
     temporal_occurrences = store.get_topic_occurrences(
         map_identifier,
         topic_identifier,
@@ -45,7 +45,7 @@ def index(map_identifier, topic_identifier):
     )
 
     if not temporal_occurrences:
-        temporal_type = "era"
+        temporal_type = TemporalType.ERA
         temporal_occurrences = store.get_topic_occurrences(
             map_identifier,
             topic_identifier,
@@ -59,10 +59,10 @@ def index(map_identifier, topic_identifier):
             {
                 "identifier": temporal_occurrence.identifier,
                 "topic_identifier": temporal_occurrence.topic_identifier,
-                "type": temporal_type,
+                "type": temporal_type.name.lower(),
                 "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
                 "end_date": temporal_occurrence.get_attribute_by_name("temporal-end-date").value
-                if temporal_type == "era"
+                if temporal_type is TemporalType.ERA
                 else None,
                 "scope": temporal_occurrence.scope,
             }
@@ -91,7 +91,7 @@ def add(map_identifier, topic_identifier):
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
-    temporal_occurrences = store.get_topic_occurrences(
+    temporals = store.get_topic_occurrences(
         map_identifier=map_identifier,
         identifier=topic_identifier,
         instance_of="temporal-event",
@@ -207,12 +207,26 @@ def add(map_identifier, topic_identifier):
             map_notes_count=map_notes_count,
         )
 
+    temporal = temporals[0] if len(temporals) > 0 else None
+    if temporal:
+        temporal_type = TemporalType.ERA if temporal.instance_of == "temporal-era" else TemporalType.EVENT
+        temporal_description = temporal.resource_data.decode("utf-8")
+        temporal_media_url = temporal.get_attribute_by_name("temporal-media-url").value if temporal_type is TemporalType.EVENT else None
+        temporal_start_date = temporal.get_attribute_by_name("temporal-start-date").value
+        temporal_end_date = temporal.get_attribute_by_name("temporal-end-date").value if temporal_type is TemporalType.ERA else None
+        flash("This topic has already been defined as a temporal event or era.", "warning")
     return render_template(
         "temporal/add.html",
         error=error,
         topic_map=topic_map,
         topic=topic,
-        temporal_occurrence=temporal_occurrences[0] if temporal_occurrences else None,
+        temporal_topic_identifier=temporal.topic_identifier if temporal else None,
+        temporal_type=temporal_type.name.lower() if temporal else None,
+        temporal_description=temporal_description if temporal else None,
+        temporal_media_url=temporal_media_url if temporal else None,
+        temporal_start_date=temporal_start_date if temporal else None,
+        temporal_end_date=temporal_end_date if temporal else None,
+        temporal_scope=temporal.scope if temporal else None,
         map_notes_count=map_notes_count,
     )
 
