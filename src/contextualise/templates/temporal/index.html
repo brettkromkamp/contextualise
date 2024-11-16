@@ -181,7 +181,7 @@
             <a class="nav-link"
                 href="{{ url_for('three_d.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">3D
                 scenes</a>
-            <a class="nav-link  active btn-light" href="#">Temporal</a>
+            <a class="nav-link  active btn-light" href="#">Temporals</a>
         </nav>
     </div>
     <div class="col-md-10">
@@ -211,7 +211,7 @@
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier, _anchor='event-' + temporal.topic_identifier) }}">{{
                             temporal.start_date }}</a>
                         {% elif temporal.type == 'era' %}
-                        {{ temporal.start_date }} &mdash; {{ temporal.end_date }}
+                        {{ temporal.start_date }} &rarr; {{ temporal.end_date }}
                         {% endif %}
                     </td>
                     <td>
@@ -220,7 +220,16 @@
                             temporal.scope|topic_name(topic_map.identifier) }}</a>
                     </td>
                     <td>
-                        <a href="#">Delete</a>
+                        <a
+                            href="{{ url_for('temporal.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, temporal_identifier=temporal.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="#"
+                            hx-get="/api/delete-temporal/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ temporal.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete</a>
+                        {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=temporal.identifier, entity_type='temporal') }}">View
+                            attributes</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -228,11 +237,17 @@
         </table>
         {% elif current_user.id == topic_map.user_identifier %}
         <p class="alert alert-info" role="alert">
-            This topic has not been defined as a temporal event or era.
+            This topic has not been defined as a temporal event or era. Click on the "Add temporal" button below to
+            define this topic as a temporal.
         </p>
         {% endif %}
+        {% if temporals|length == 0 and current_user.id == topic_map.user_identifier %}
+        <a class="btn btn-outline-primary"
+            href="{{ url_for('temporal.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Add
+            temporal</a>
         <br />
         <br />
+        {% endif %}
     </div>
 </div>
 {% endblock %}

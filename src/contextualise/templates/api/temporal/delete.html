@@ -1,0 +1,57 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete temporal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('temporal.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, temporal_identifier=delete_temporal_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <!--
+                <div class="mb-3">
+                    <label for="link-title" class="form-label">Type</label>
+                    <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type"
+                        readonly type="text" value="{{ delete_temporal_type }}">
+                </div>
+                <div class="mb-3">
+                    <label for="temporal-description" class="form-label">Description</label>
+                    <input aria-readonly="true" disabled class="form-control" id="temporal-description"
+                        name="temporal-description" readonly type="text" value="{{ delete_temporal_description }}">
+                </div>
+                <div class="mb-3">
+                    <label for="temporal-start-date" class="form-label">Start date</label>
+                    <input aria-readonly="true" disabled class="form-control" id="temporal-start-date"
+                        name="temporal-start-date" readonly type="text" value="{{ delete_temporal_start_date }}">
+                </div>
+                -->
+                <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        Toggle options</a>
+                </p>
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="link-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="link-scope"
+                                        name="link-scope" readonly type="text" value="{{ delete_temporal_scope }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete temporal</button>
+            </div>
+        </form>
+    </div>
+</div>

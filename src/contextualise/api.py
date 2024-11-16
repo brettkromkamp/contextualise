@@ -682,6 +682,27 @@ def delete_scene(map_identifier, topic_identifier, file_identifier):
         delete_file_scope=delete_file_scope,
     )
 
+@bp.route("/api/delete-temporal/<map_identifier>/<topic_identifier>/<temporal_identifier>")
+@login_required
+def delete_temporal(map_identifier, topic_identifier, temporal_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    temporal_occurrence = store.get_occurrence(
+        map_identifier,
+        temporal_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_temporal_identifier = temporal_identifier
+    delete_temporal_scope = temporal_occurrence.scope
+
+    return render_template(
+        "api/temporal/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_temporal_identifier=delete_temporal_identifier,
+        delete_temporal_scope=delete_temporal_scope,
+    )
+
 
 @bp.route("/api/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>")
 @login_required
