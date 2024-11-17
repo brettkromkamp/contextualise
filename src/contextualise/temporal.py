@@ -25,7 +25,8 @@ from contextualise.utilities.topicstore import initialize
 bp = Blueprint("temporal", __name__)
 
 
-def _validate_date(date_string):
+# region Functions
+def _validate_date(date_string: str) -> bool:
     """
     Validate a date string using regex for format and datetime for strict validation.
     :param date_string: The input date string in 'yyyy-mm-dd' format.
@@ -44,6 +45,9 @@ def _validate_date(date_string):
         return True
     except ValueError:
         return False
+
+
+# endregion
 
 
 @bp.route("/temporals/<map_identifier>/<topic_identifier>")
@@ -81,7 +85,9 @@ def index(map_identifier, topic_identifier):
                 "end_date": temporal_occurrence.get_attribute_by_name("temporal-end-date").value
                 if temporal_type is TemporalType.ERA
                 else None,
-                "description": temporal_occurrence.resource_data.decode("utf-8") if temporal_occurrence.has_data else None,
+                "description": temporal_occurrence.resource_data.decode("utf-8")
+                if temporal_occurrence.has_data
+                else None,
                 "scope": temporal_occurrence.scope,
             }
         )
@@ -122,13 +128,14 @@ def add(map_identifier, topic_identifier):
         inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
+    temporal = temporals[0] if len(temporals) > 0 else None
 
     if request.method == "POST":
         form_temporal_event = request.form.get("temporal-type")
         form_temporal_description = request.form.get("temporal-description", "").strip()
         form_temporal_media_url = request.form.get("temporal-media-url", "").strip()
-        form_temporal_start = request.form.get("temporal-start-date", "").strip()
-        form_temporal_end = request.form.get("temporal-end-date", "").strip()
+        form_temporal_start_date = request.form.get("temporal-start-date", "").strip()
+        form_temporal_end_date = request.form.get("temporal-end-date", "").strip()
         form_temporal_scope = request.form.get("temporal-scope", "").strip()
 
         # If no values have been provided set their default values
@@ -140,14 +147,18 @@ def add(map_identifier, topic_identifier):
         # Validate form inputs
         if not form_temporal_description:
             error = error | 1
-        if not form_temporal_start:
+        if not form_temporal_start_date:
             error = error | 2
+        if not _validate_date(form_temporal_start_date):
+            error = error | 4
         if temporal_type == TemporalType.EVENT:
             if not form_temporal_media_url:
-                error = error | 4
-        else:
-            if not form_temporal_end:
                 error = error | 8
+        else:  # Temporal era
+            if not form_temporal_end_date:
+                error = error | 16
+            if not _validate_date(form_temporal_end_date):
+                error = error | 32
 
         if error != 0:
             flash(
@@ -166,7 +177,7 @@ def add(map_identifier, topic_identifier):
                     )
                     start_date_attribute = Attribute(
                         "temporal-start-date",
-                        form_temporal_start,
+                        form_temporal_start_date,
                         event_occurrence.identifier,
                         data_type=DataType.TIMESTAMP,
                     )
@@ -188,13 +199,13 @@ def add(map_identifier, topic_identifier):
                     )
                     start_date_attribute = Attribute(
                         "temporal-start-date",
-                        form_temporal_start,
+                        form_temporal_start_date,
                         era_occurrence.identifier,
                         data_type=DataType.TIMESTAMP,
                     )
                     end_date_attribute = Attribute(
                         "temporal-end-date",
-                        form_temporal_end,
+                        form_temporal_end_date,
                         era_occurrence.identifier,
                         data_type=DataType.TIMESTAMP,
                     )
@@ -216,16 +227,17 @@ def add(map_identifier, topic_identifier):
             error=error,
             topic_map=topic_map,
             topic=topic,
+            temporal=temporal,
+            temporal_topic_identifier=topic_identifier,
             temporal_type=form_temporal_event,
             temporal_description=form_temporal_description,
             temporal_media_url=form_temporal_media_url,
-            temporal_start=form_temporal_start,
-            temporal_end=form_temporal_end,
+            temporal_start_date=form_temporal_start_date,
+            temporal_end_date=form_temporal_end_date,
             temporal_scope=form_temporal_scope,
             map_notes_count=map_notes_count,
         )
 
-    temporal = temporals[0] if len(temporals) > 0 else None
     if temporal:
         temporal_type = TemporalType.ERA if temporal.instance_of == "temporal-era" else TemporalType.EVENT
         temporal_description = temporal.resource_data.decode("utf-8") if temporal.has_data else None
@@ -242,6 +254,7 @@ def add(map_identifier, topic_identifier):
         error=error,
         topic_map=topic_map,
         topic=topic,
+        temporal=temporal,
         temporal_topic_identifier=temporal.topic_identifier if temporal else None,
         temporal_type=temporal_type.name.lower() if temporal else None,
         temporal_description=temporal_description if temporal else None,

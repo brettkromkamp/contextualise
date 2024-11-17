@@ -98,7 +98,7 @@
             {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Add temporal</small>
         </h1>
         <hr />
-        {% if not temporal_type %}
+        {% if not temporal %}
         <form
             action="{{ url_for('temporal.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
             autocomplete="off" method="post" role="form">
@@ -125,7 +125,7 @@
                         <div class="mb-3">
                             <label for="temporal-description" class="form-label">Description</label>
                             <textarea class="form-control" id="temporal-description" name="temporal-description"
-                                rows="2"></textarea>
+                                rows="2">{{ temporal_description or '' }}</textarea>
                             {% if error|bitwise_and(1) == 1 %}
                             <small class="text-danger">
                                 A temporal event or era needs to have a description. Provide a description.
@@ -139,10 +139,10 @@
                         <div class="mb-3">
                             <label for="temporal-media-url" class="form-label">Media URL</label>
                             <input class="form-control" id="temporal-media-url" name="temporal-media-url"
-                                placeholder="Enter URL" type="text">
-                            {% if error|bitwise_and(2) == 2 %}
+                                placeholder="Enter URL" type="text" value="{{ temporal_media_url or '' }}">
+                            {% if error|bitwise_and(8) == 8 %}
                             <small class="text-danger">
-                                A temporal event needs to have a media URL. Provide a URL.
+                                A temporal event needs to have a media URL. Provide a valid URL.
                             </small>
                             {% endif %}
                         </div>
@@ -155,10 +155,16 @@
                                 <small class="text-info">&mdash; Date format is "yyyy-mm-dd"</small>
                             </label>
                             <input class="form-control" id="temporal-start-date" name="temporal-start-date"
-                                placeholder="Enter start date" type="text">
-                            {% if error|bitwise_and(4) == 4 %}
+                                placeholder="Enter start date" type="text" value="{{ temporal_start_date or '' }}">
+                            {% if error|bitwise_and(2) == 2 %}
                             <small class="text-danger">
                                 A temporal event (or era) needs to have a start date. Provide a start date.
+                            </small>
+                            {% endif %}
+                            {% if error|bitwise_and(4) == 4 %}
+                            <small class="text-danger">
+                                The date needs to be provided in the correct format: yyyy-mm-dd. Provide a date in the
+                                correct format.
                             </small>
                             {% endif %}
                         </div>
@@ -170,10 +176,16 @@
                                     the start date.</small>
                             </label>
                             <input class="form-control" id="temporal-end-date" name="temporal-end-date"
-                                placeholder="Enter end date" type="text" disabled>
-                            {% if error|bitwise_and(8) == 8 %}
+                                placeholder="Enter end date" type="text" value="{{ temporal_end_date or '' }}" disabled>
+                            {% if error|bitwise_and(16) == 16 %}
                             <small class="text-danger">
                                 A temporal era needs to have a end date. Provide an end date.
+                            </small>
+                            {% endif %}
+                            {% if error|bitwise_and(32) == 32 %}
+                            <small class="text-danger">
+                                The date needs to be provided in the correct format: yyyy-mm-dd. Provide a date in the
+                                correct format.
                             </small>
                             {% endif %}
                         </div>
