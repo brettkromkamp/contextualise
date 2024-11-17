@@ -750,7 +750,8 @@
                     {% endif %}
                     {% if occurrences['temporal-events'] %}
                     <li>{% if is_map_owner %}
-                        <a href="#">Temporals</a>
+                        <a
+                            href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Temporals</a>
                         {% else %}
                         Temporals
                         {% endif %}

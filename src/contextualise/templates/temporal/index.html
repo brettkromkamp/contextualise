@@ -194,19 +194,17 @@
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Type</th>
-                    <th scope="col">Temporal</th>
-                    <th scope="col">Scope</th>
-                    <th scope="col">Action</th>
+                    <th scope="col" width="20">Temporal</th>
+                    <th scope="col" width="10">Type</th>
+                    <th scope="col" width="40">Description</th>
+                    <th scope="col" width="10">Scope</th>
+                    <th scope="col" width="20">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for temporal in temporals %}
                 <tr>
-                    <td>
-                        {{ temporal.type|capitalize }}
-                    </td>
-                    <td>
+                    <td class="align-middle">
                         {% if temporal.type == 'event' %}
                         <a
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier, _anchor='event-' + temporal.topic_identifier) }}">{{
@@ -215,12 +213,16 @@
                         {{ temporal.start_date }} &rarr; {{ temporal.end_date }}
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="align-middle">
+                        {{ temporal.type|capitalize }}
+                    </td>
+                    <td class="align-middle">{{ temporal.description|safe|truncate_words(10) }}</td>
+                    <td class="align-middle">
                         <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=temporal.scope) }}">{{
                             temporal.scope|topic_name(topic_map.identifier) }}</a>
                     </td>
-                    <td>
+                    <td class="align-middle">
                         <a
                             href="{{ url_for('temporal.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, temporal_identifier=temporal.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="#"

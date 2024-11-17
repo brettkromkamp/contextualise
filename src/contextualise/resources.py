@@ -13,6 +13,7 @@ from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
 from contextualise import constants
+from contextualise.temporaltype import TemporalType
 
 from .topic_store import get_topic_store
 
@@ -336,12 +337,14 @@ def temporals(map_identifier, topic_identifier):
         instance_of="temporal-event",
         offset=offset,
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     ) + store.get_occurrences(
         map_identifier,
         instance_of="temporal-era",
         offset=offset,
         limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
@@ -350,15 +353,22 @@ def temporals(map_identifier, topic_identifier):
 
     temporals = []
     for temporal_occurrence in temporal_occurrences:
+        temporal_type = TemporalType.ERA if temporal_occurrence.instance_of == "temporal-era" else TemporalType.EVENT
+        temporal_end_date = temporal_occurrence.get_attribute_by_name("temporal-end-date").value if temporal_type is TemporalType.ERA else None
         temporals.append(
             {
                 "topic_identifier": temporal_occurrence.topic_identifier,
                 "identifier": temporal_occurrence.identifier,
+                "type": temporal_type.name.lower(),
+                "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
+                "end_date": temporal_end_date,
+                "description": temporal_occurrence.resource_data.decode("utf-8") if temporal_occurrence.has_data else None,
+                "scope": temporal_occurrence.scope,
             }
         )
     # Sort and group temporals by topic identifier
-    sorted_temporals = sorted(temporals, key=lambda x: x["topic_identifier"])
-    grouped_temporals = {k: list(v) for k, v in groupby(sorted_temporals, key=lambda x: x["topic_identifier"])}
+    sorted_temporals = sorted(temporals, key=lambda x: x["start_date"])
+    grouped_temporals = {k: list(v) for k, v in groupby(sorted_temporals, key=lambda x: x["start_date"])}
 
     return render_template(
         "resources/temporals.html",

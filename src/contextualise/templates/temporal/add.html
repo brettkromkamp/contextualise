@@ -53,20 +53,9 @@
             dateErrorModal.show();
         }
     });
-    $("input[type=checkbox][name='temporal-type'").change(function () {
-        if (this.checked) { // Era
-            $("#temporal-end-date").val(`${currentDate.getFullYear()}-${month}-${tomorrow}`);
 
-            $("#temporal-start-date").prop("required", true);
-            $("#temporal-description").prop("required", true);
-            $("#temporal-media-url").prop("required", false);
-            $("#temporal-end-date").prop("required", true);
-
-            $("#temporal-description").prop("disabled", false);
-            $("#temporal-media-url").prop("disabled", true);
-            $("#temporal-start-date").prop("disabled", false);
-            $("#temporal-end-date").prop("disabled", false);
-        } else { // Event
+    $('input[name="temporal-type"]').change(function () {
+        if ($('#temporal-event').is(':checked')) {
             $("#temporal-end-date").val("");
 
             $("#temporal-start-date").prop("required", true);
@@ -78,8 +67,20 @@
             $("#temporal-media-url").prop("disabled", false);
             $("#temporal-start-date").prop("disabled", false);
             $("#temporal-end-date").prop("disabled", true);
+        } else if ($('#temporal-era').is(':checked')) {
+            $("#temporal-end-date").val(`${currentDate.getFullYear()}-${month}-${tomorrow}`);
+
+            $("#temporal-start-date").prop("required", true);
+            $("#temporal-description").prop("required", true);
+            $("#temporal-media-url").prop("required", false);
+            $("#temporal-end-date").prop("required", true);
+
+            $("#temporal-description").prop("disabled", false);
+            $("#temporal-media-url").prop("disabled", true);
+            $("#temporal-start-date").prop("disabled", false);
+            $("#temporal-end-date").prop("disabled", false);
         }
-    })
+    });
 </script>
 {% endif %}
 
@@ -103,11 +104,19 @@
             autocomplete="off" method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <div class="mb-3">
-                <label for="topic-text" class="form-label">Temporal event or era?</label>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" name="temporal-type"
-                        id="temporal-type">
-                    <label class="form-check-label" for="temporal-type">Era</label>
+                <label for="topic-text" class="form-label">Type</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="temporal-type" id="temporal-event" value="event"
+                        checked>
+                    <label class="form-check-label" for="temporal-event">
+                        Event
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="temporal-type" id="temporal-era" value="era">
+                    <label class="form-check-label" for="temporal-era">
+                        Era
+                    </label>
                 </div>
             </div>
             <div id="temporal-controls">
@@ -209,6 +218,7 @@
             <button class="btn btn-success" type="submit">Add temporal</button>
         </form>
         {% else %}
+        <!-- Topic already defined as a temporal -->
         <div class="mb-3">
             <label for="temporal-type" class="form-label">Type</label>
             <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type" readonly

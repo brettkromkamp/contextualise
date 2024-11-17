@@ -5,7 +5,8 @@ November 7, 2024
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-from enum import Enum
+import re
+from datetime import datetime
 
 import maya
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
@@ -18,17 +19,31 @@ from topicdb.store.ontologymode import OntologyMode
 from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 
+from contextualise.temporaltype import TemporalType
 from contextualise.utilities.topicstore import initialize
 
 bp = Blueprint("temporal", __name__)
 
 
-class TemporalType(Enum):
-    EVENT = 1
-    ERA = 2
+def _validate_date(date_string):
+    """
+    Validate a date string using regex for format and datetime for strict validation.
+    :param date_string: The input date string in 'yyyy-mm-dd' format.
+    :return: True if valid, False otherwise.
+    """
+    # Regex pattern for yyyy-mm-dd
+    date_regex = r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
 
-    def __str__(self):
-        return self.name.lower()
+    # Step 1: Check the format using regex
+    if not re.match(date_regex, date_string):
+        return False
+
+    # Step 2: Strict validation using datetime
+    try:
+        datetime.strptime(date_string, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
 
 
 @bp.route("/temporals/<map_identifier>/<topic_identifier>")
@@ -41,6 +56,7 @@ def index(map_identifier, topic_identifier):
         map_identifier,
         topic_identifier,
         "temporal-event",
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
@@ -50,6 +66,7 @@ def index(map_identifier, topic_identifier):
             map_identifier,
             topic_identifier,
             "temporal-era",
+            inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
             resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
         )
 
@@ -64,6 +81,7 @@ def index(map_identifier, topic_identifier):
                 "end_date": temporal_occurrence.get_attribute_by_name("temporal-end-date").value
                 if temporal_type is TemporalType.ERA
                 else None,
+                "description": temporal_occurrence.resource_data.decode("utf-8") if temporal_occurrence.has_data else None,
                 "scope": temporal_occurrence.scope,
             }
         )
@@ -106,7 +124,7 @@ def add(map_identifier, topic_identifier):
     )
 
     if request.method == "POST":
-        form_temporal_type = request.form.get("temporal-type")
+        form_temporal_event = request.form.get("temporal-type")
         form_temporal_description = request.form.get("temporal-description", "").strip()
         form_temporal_media_url = request.form.get("temporal-media-url", "").strip()
         form_temporal_start = request.form.get("temporal-start-date", "").strip()
@@ -117,7 +135,7 @@ def add(map_identifier, topic_identifier):
         if not form_temporal_scope:
             form_temporal_scope = session["current_scope"]
 
-        temporal_type = TemporalType.ERA if form_temporal_type == "on" else TemporalType.EVENT
+        temporal_type = TemporalType.EVENT if form_temporal_event == "event" else TemporalType.ERA
 
         # Validate form inputs
         if not form_temporal_description:
@@ -143,7 +161,7 @@ def add(map_identifier, topic_identifier):
                     event_occurrence = Occurrence(
                         instance_of="temporal-event",
                         topic_identifier=topic_identifier,
-                        scope=session["current_scope"],
+                        scope=form_temporal_scope,
                         resource_data=form_temporal_description,
                     )
                     start_date_attribute = Attribute(
@@ -165,7 +183,7 @@ def add(map_identifier, topic_identifier):
                     era_occurrence = Occurrence(
                         instance_of="temporal-era",
                         topic_identifier=topic_identifier,
-                        scope=session["current_scope"],
+                        scope=form_temporal_scope,
                         resource_data=form_temporal_description,
                     )
                     start_date_attribute = Attribute(
@@ -198,7 +216,7 @@ def add(map_identifier, topic_identifier):
             error=error,
             topic_map=topic_map,
             topic=topic,
-            temporal_type=form_temporal_type,
+            temporal_type=form_temporal_event,
             temporal_description=form_temporal_description,
             temporal_media_url=form_temporal_media_url,
             temporal_start=form_temporal_start,
@@ -210,10 +228,14 @@ def add(map_identifier, topic_identifier):
     temporal = temporals[0] if len(temporals) > 0 else None
     if temporal:
         temporal_type = TemporalType.ERA if temporal.instance_of == "temporal-era" else TemporalType.EVENT
-        temporal_description = temporal.resource_data.decode("utf-8")
-        temporal_media_url = temporal.get_attribute_by_name("temporal-media-url").value if temporal_type is TemporalType.EVENT else None
+        temporal_description = temporal.resource_data.decode("utf-8") if temporal.has_data else None
+        temporal_media_url = (
+            temporal.get_attribute_by_name("temporal-media-url").value if temporal_type is TemporalType.EVENT else None
+        )
         temporal_start_date = temporal.get_attribute_by_name("temporal-start-date").value
-        temporal_end_date = temporal.get_attribute_by_name("temporal-end-date").value if temporal_type is TemporalType.ERA else None
+        temporal_end_date = (
+            temporal.get_attribute_by_name("temporal-end-date").value if temporal_type is TemporalType.ERA else None
+        )
         flash("This topic has already been defined as a temporal event or era.", "warning")
     return render_template(
         "temporal/add.html",

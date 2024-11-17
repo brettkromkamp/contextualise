@@ -21,6 +21,21 @@ def bitwise_and(value1, value2):
     return value1 & value2
 
 
+def truncate_words(text: str, max_words: int) -> str:
+    """
+    Truncate a string to a specified number of words, followed by '...'.
+    :param text: The input string to truncate.
+    :param num_words: The number of words to keep before truncating.
+    :return: Truncated string with ellipsis if longer than num_words.
+    """
+
+    words = text.split()
+    if len(words) > max_words:
+        return " ".join(words[:max_words]) + "..."
+    return text
+
+
 def register_filters(app):
     app.jinja_env.filters["topic_name"] = topic_name
     app.jinja_env.filters["bitwise_and"] = bitwise_and
+    app.jinja_env.filters["truncate_words"] = truncate_words
