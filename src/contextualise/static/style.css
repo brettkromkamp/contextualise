@@ -25,6 +25,10 @@ pre {
     height: 580px;
 }
 
+#geographic-map {
+    height: 580px;
+}
+
 .breadcrumb {
     padding: .75rem 1rem;
     margin-bottom: 1rem;

@@ -149,10 +149,16 @@
                             href="{{ url_for('visualisation.tags_cloud', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                             tags cloud</a>
                     </li>
-                    <li><a class="dropdown-item"
+                    <li>
+                        <a class="dropdown-item"
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
-                            timeline</a></li>
-                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                            timeline</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            geographic map</a>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -198,7 +204,11 @@
                     <li><a class="dropdown-item"
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                             timeline</a></li>
-                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            geographic map</a>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -351,7 +361,11 @@
                     <li><a class="dropdown-item"
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
                             timeline</a></li>
-                    <li><a class="dropdown-item disabled" href="#">View geographic map</a></li>
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">View
+                            geographic map</a>
+                    </li>
                 </ul>
             </li>
         </ul>

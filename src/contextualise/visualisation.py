@@ -126,7 +126,7 @@ def timeline(map_identifier, topic_identifier):
     )
 
 
-@bp.route("/visualisations/map/<map_identifier>/<topic_identifier>")
+@bp.route("/visualisations/geographic-map/<map_identifier>/<topic_identifier>")
 def geographic_map(map_identifier, topic_identifier):
     store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
 

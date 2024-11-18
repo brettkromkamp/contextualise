@@ -297,11 +297,11 @@ def get_timeline(map_identifier):
             else "/static/no-data.svg"
         )
         event_topic = store.get_topic(map_identifier, event.topic_identifier, scope=scope_identifier)
-        text += f'''
+        text += f"""
         <br />
         <br />
-        <a target="_self" href="/temporals/{map_identifier}/{event_topic.identifier}"><small>View temporal</small></a>
-        '''.strip()
+        <a target="_self" href="/temporals/{map_identifier}/{event_topic.identifier}"><small>Go to temporal</small></a>
+        """.strip()
         temporal_events.append(
             {
                 "start_date": {
@@ -354,6 +354,48 @@ def get_timeline(map_identifier):
         "scale": "human",
         "events": temporal_events,
         "eras": temporal_eras,
+    }
+    return jsonify(result), 200
+
+
+@bp.route("/api/get-geographic-map/<map_identifier>")
+def get_geographic_map(map_identifier):
+    store = get_topic_store()
+
+    if current_user.is_authenticated:  # User is logged in
+        is_map_owner = store.is_map_owner(map_identifier, current_user.id)
+        if is_map_owner:
+            topic_map = store.get_map(map_identifier, current_user.id)
+        else:
+            topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
+    else:  # User is not logged in
+        topic_map = store.get_map(map_identifier)
+        if topic_map is None:
+            return jsonify({"status": "error", "code": 404}), 404
+        if not topic_map.published:  # User is not logged in and the map is not published
+            return jsonify({"status": "error", "code": 403}), 403
+
+    scope_identifier = request.args.get("scope", type=str)
+    scope_filtered = request.args.get("filter", type=int)
+    if not scope_filtered:
+        scope_identifier = None
+
+    coordinates = store.get_occurrences(
+        map_identifier=map_identifier,
+        instance_of="geographic-coordinates",
+        scope=scope_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    if len(coordinates) == 0:
+        return (
+            jsonify({"status": "error", "code": 404, "message": "No geographic data"}),
+            404,
+        )
+
+    result = {
     }
     return jsonify(result), 200
 
