@@ -140,11 +140,6 @@
                             <label for="temporal-media-url" class="form-label">Media URL</label>
                             <input class="form-control" id="temporal-media-url" name="temporal-media-url"
                                 placeholder="Enter URL" type="text" value="{{ temporal_media_url or '' }}">
-                            {% if error|bitwise_and(8) == 8 %}
-                            <small class="text-danger">
-                                A temporal event needs to have a media URL. Provide a valid URL.
-                            </small>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -177,12 +172,12 @@
                             </label>
                             <input class="form-control" id="temporal-end-date" name="temporal-end-date"
                                 placeholder="Enter end date" type="text" value="{{ temporal_end_date or '' }}" disabled>
-                            {% if error|bitwise_and(16) == 16 %}
+                            {% if error|bitwise_and(8) == 8 %}
                             <small class="text-danger">
                                 A temporal era needs to have a end date. Provide an end date.
                             </small>
                             {% endif %}
-                            {% if error|bitwise_and(32) == 32 %}
+                            {% if error|bitwise_and(16) == 16 %}
                             <small class="text-danger">
                                 The date needs to be provided in the correct format: yyyy-mm-dd. Provide a date in the
                                 correct format.

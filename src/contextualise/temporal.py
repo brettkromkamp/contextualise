@@ -151,14 +151,11 @@ def add(map_identifier, topic_identifier):
             error = error | 2
         if not _validate_date(form_temporal_start_date):
             error = error | 4
-        if temporal_type == TemporalType.EVENT:
-            if not form_temporal_media_url:
-                error = error | 8
-        else:  # Temporal era
+        if temporal_type == TemporalType.ERA:
             if not form_temporal_end_date:
-                error = error | 16
+                error = error | 8
             if not _validate_date(form_temporal_end_date):
-                error = error | 32
+                error = error | 16
 
         if error != 0:
             flash(
@@ -181,15 +178,17 @@ def add(map_identifier, topic_identifier):
                         event_occurrence.identifier,
                         data_type=DataType.TIMESTAMP,
                     )
-                    media_url_attribute = Attribute(
-                        "temporal-media-url",
-                        form_temporal_media_url,
-                        event_occurrence.identifier,
-                        data_type=DataType.STRING,
-                    )
                     store.create_occurrence(topic_map.identifier, event_occurrence, ontology_mode=OntologyMode.LENIENT)
                     store.create_attribute(topic_map.identifier, start_date_attribute)
-                    store.create_attribute(topic_map.identifier, media_url_attribute)
+
+                    if form_temporal_media_url:
+                        media_url_attribute = Attribute(
+                            "temporal-media-url",
+                            form_temporal_media_url,
+                            event_occurrence.identifier,
+                            data_type=DataType.STRING,
+                        )
+                        store.create_attribute(topic_map.identifier, media_url_attribute)
                 case TemporalType.ERA:
                     era_occurrence = Occurrence(
                         instance_of="temporal-era",
