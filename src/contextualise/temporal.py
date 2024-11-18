@@ -271,10 +271,20 @@ def add(map_identifier, topic_identifier):
 def edit(map_identifier, topic_identifier, temporal_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
+    map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
+    error = 0
+
     if request.method == "POST":
         pass
 
-    pass
+    return render_template(
+        "temporal/edit.html",
+        error=error,
+        topic_map=topic_map,
+        topic=topic,
+        temporal_identifier=temporal_identifier,
+        map_notes_count=map_notes_count,
+    )
 
 
 @bp.route("/temporals/delete/<map_identifier>/<topic_identifier>/<temporal_identifier>", methods=("POST",))
