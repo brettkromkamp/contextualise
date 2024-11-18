@@ -297,6 +297,11 @@ def get_timeline(map_identifier):
             else "/static/no-data.svg"
         )
         event_topic = store.get_topic(map_identifier, event.topic_identifier, scope=scope_identifier)
+        text += f'''
+        <br />
+        <br />
+        <a target="_self" href="/temporals/{map_identifier}/{event_topic.identifier}"><small>View temporal</small></a>
+        '''.strip()
         temporal_events.append(
             {
                 "start_date": {
