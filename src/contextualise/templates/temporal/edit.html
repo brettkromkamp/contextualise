@@ -28,10 +28,17 @@
             autocomplete="off" method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <!-- TODO -->
+            <p class="alert alert-warning">This feature is still under active development.</p>
+            <br />
+            <br />
+            <p class="text-center">
+                <img width="560" class="img-fluid" src="{{ url_for('static', filename='co-working.svg') }}">
+            </p>
+            <!-- TODO -->
             <a class="btn btn-secondary"
                 href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
                 role="button">Cancel</a>
-            <button class="btn btn-success" type="submit">Update temporal</button>
+            <button class="btn btn-success" type="submit" disabled>Update temporal</button>
         </form>
         <br />
     </div>
