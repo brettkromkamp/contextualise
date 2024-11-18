@@ -9,23 +9,27 @@
             method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <div class="modal-body">
-                <!--
                 <div class="mb-3">
-                    <label for="link-title" class="form-label">Type</label>
+                    <label for="temporal-type" class="form-label">Type</label>
                     <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type"
-                        readonly type="text" value="{{ delete_temporal_type }}">
+                        readonly type="text" value="{{ delete_temporal_type|capitalize }}">
                 </div>
                 <div class="mb-3">
-                    <label for="temporal-description" class="form-label">Description</label>
-                    <input aria-readonly="true" disabled class="form-control" id="temporal-description"
-                        name="temporal-description" readonly type="text" value="{{ delete_temporal_description }}">
+                    <label for="temporal" class="form-label">Temporal</label>
+                    <p>
+                        {% if delete_temporal_type == 'event' %}
+                        <a
+                            href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, _anchor='event-' + topic.identifier) }}">{{
+                            delete_temporal_start_date }}</a>
+                        {% elif delete_temporal_type == 'era' %}
+                        {{ delete_temporal_start_date }} &rarr; {{ delete_temporal_end_date }}
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="mb-3">
-                    <label for="temporal-start-date" class="form-label">Start date</label>
-                    <input aria-readonly="true" disabled class="form-control" id="temporal-start-date"
-                        name="temporal-start-date" readonly type="text" value="{{ delete_temporal_start_date }}">
+                    <label class="form-label">Description</label><br />
+                    <div class="text-secondary note-text">{{ delete_temporal_description|safe }}</div>
                 </div>
-                -->
                 <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
                         Toggle options</a>

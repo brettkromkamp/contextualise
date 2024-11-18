@@ -18,6 +18,8 @@ from topicdb.models.occurrence import Occurrence
 from topicdb.models.topic import Topic
 from topicdb.store.retrievalmode import RetrievalMode
 
+from contextualise.temporaltype import TemporalType
+
 from . import constants
 from .topic_store import get_topic_store
 from .utilities.highlight_renderer import HighlightRenderer
@@ -682,6 +684,7 @@ def delete_scene(map_identifier, topic_identifier, file_identifier):
         delete_file_scope=delete_file_scope,
     )
 
+
 @bp.route("/api/delete-temporal/<map_identifier>/<topic_identifier>/<temporal_identifier>")
 @login_required
 def delete_temporal(map_identifier, topic_identifier, temporal_identifier):
@@ -690,9 +693,22 @@ def delete_temporal(map_identifier, topic_identifier, temporal_identifier):
     temporal_occurrence = store.get_occurrence(
         map_identifier,
         temporal_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     delete_temporal_identifier = temporal_identifier
+    delete_temporal_type = (
+        TemporalType.EVENT if temporal_occurrence.instance_of == "temporal-event" else TemporalType.ERA
+    )
+    delete_temporal_description = (
+        temporal_occurrence.resource_data.decode("utf-8") if temporal_occurrence.has_data else None
+    )
+    delete_temporal_start_date = temporal_occurrence.get_attribute_by_name("temporal-start-date").value
+    delete_temporal_end_date = (
+        temporal_occurrence.get_attribute_by_name("temporal-end-date").value
+        if delete_temporal_type is TemporalType.ERA
+        else None
+    )
     delete_temporal_scope = temporal_occurrence.scope
 
     return render_template(
@@ -700,6 +716,10 @@ def delete_temporal(map_identifier, topic_identifier, temporal_identifier):
         topic_map=topic_map,
         topic=topic,
         delete_temporal_identifier=delete_temporal_identifier,
+        delete_temporal_type=delete_temporal_type.name.lower(),
+        delete_temporal_description=delete_temporal_description,
+        delete_temporal_start_date=delete_temporal_start_date,
+        delete_temporal_end_date=delete_temporal_end_date,
         delete_temporal_scope=delete_temporal_scope,
     )
 
