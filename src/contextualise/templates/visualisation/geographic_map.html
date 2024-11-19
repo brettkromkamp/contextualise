@@ -26,30 +26,55 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
 
 <script>
-    // Initialize the map
-    const map = L.map('geographic-map').setView([20.0, 0.0], 2); // World view
+    var mapIdentifier = "{{ topic_map.identifier }}";
+    var scopeIdentifier = "{{ session['current_scope'] }}";
+    if (scopeIdentifier === "") {
+        scopeIdentifier = "*";
+    }
+    var scopeFiltered = "{{ session['scope_filter'] }}";
+    if (scopeFiltered === "") {
+        scopeFiltered = 0;
+    }
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    if (mapIdentifier !== "") {
+        var container = document.getElementById("geographic-map");
+        var container404 = document.getElementById("geographic-map-404");
 
-    // List of coordinates
-    const coordinates = [
-        { lat: 40.7128, lng: -74.0060, label: "New York City" },
-        { lat: -34.0, lng: 150.0, label: "Sydney" },
-        { lat: 48.8566, lng: 2.3522, label: "Paris" },
-        { lat: 35.6895, lng: 139.6917, label: "Tokyo" }
-    ];
+        var locationsApiUrl = `/api/get-geographic-map/${mapIdentifier}?scope=${scopeIdentifier}&filter=${scopeFiltered}`;
 
-    // Loop through coordinates and add markers
-    coordinates.forEach(coord => {
-        L.marker([coord.lat, coord.lng])
-            .addTo(map)
-            .bindPopup(`<b>${coord.label}</b><br>Lat: ${coord.lat}, Lng: ${coord.lng}`) // Add a popup
-            .openPopup();
-    });
+        axios
+            .get(locationsApiUrl)
+            .then(function (response) {
+                // Handle success
+
+                // Initialize the map
+                const map = L.map('geographic-map').setView([20.0, 0.0], 2); // World view
+
+                // Add OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Loop through coordinates and add markers
+                response.data.locations.forEach(location => {
+                    L.marker([location.lat, location.lng])
+                        .addTo(map)
+                        .bindPopup(`<b><a href="/topics/view/${location.map_identifier}/${location.topic_identifier}">${location.label}</a></b><br />Latitude: ${location.lat}<br /> Longitude: ${location.lng}`) // Add a popup
+                        .openPopup();
+                });
+            })
+            .catch(function (error) {
+                // Handle error
+                console.log(error);
+
+                container.classList.add("hidden");
+                container404.classList.remove("hidden");
+            })
+            .then(function () {
+                // Always executed
+            });
+    }
 </script>
 {% endblock %}
 

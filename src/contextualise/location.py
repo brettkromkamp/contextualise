@@ -25,6 +25,26 @@ from contextualise.utilities.topicstore import initialize
 bp = Blueprint("location", __name__)
 
 
+# region Functions
+def _validate_coordinates(coordinates_string: str) -> bool:
+    """
+    Validate a string with (latitude/longitude) coordinates using regex.
+    :param coordinates_string: The input date string in 'latitude, longitude' format.
+    :return: True if valid, False otherwise.
+    """
+    # Regex pattern
+    coordinates_regex = r"^\s*([-+]?(?:90(?:\.0+)?|(?:[1-8]?\d(?:\.\d+)?)))\s*,\s*([-+]?(?:180(?:\.0+)?|(?:1[0-7]\d(?:\.\d+)?|(?:[1-9]?\d(?:\.\d+)?))))\s*$"
+
+    # Step 1: Check the format using regex
+    if not re.match(coordinates_regex, coordinates_string):
+        return False
+
+    return True
+
+
+# endregion
+
+
 @bp.route("/locations/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
@@ -45,7 +65,9 @@ def index(map_identifier, topic_identifier):
                 "identifier": location_occurrence.identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
                 "name": location_occurrence.get_attribute_by_name("location-name").value,
-                "description": location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data else None,
+                "description": location_occurrence.resource_data.decode("utf-8")
+                if location_occurrence.has_data
+                else None,
                 "coordinates": location_occurrence.get_attribute_by_name("geographic-coordinates").value,
                 "scope": location_occurrence.scope,
             }

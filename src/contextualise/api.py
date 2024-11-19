@@ -382,20 +382,34 @@ def get_geographic_map(map_identifier):
     if not scope_filtered:
         scope_identifier = None
 
-    coordinates = store.get_occurrences(
+    location_occurrences = store.get_occurrences(
         map_identifier=map_identifier,
-        instance_of="geographic-coordinates",
+        instance_of="location",
         scope=scope_identifier,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    if len(coordinates) == 0:
+    if len(location_occurrences) == 0:
         return (
             jsonify({"status": "error", "code": 404, "message": "No geographic data"}),
             404,
         )
 
+    locations = []
+    for location_occurrence in location_occurrences:
+        latitude, longitude = location_occurrence.get_attribute_by_name("geographic-coordinates").value.split(",")
+        locations.append(
+            {
+                "map_identifier": map_identifier,
+                "topic_identifier": location_occurrence.topic_identifier,
+                "lat": latitude,
+                "lng": longitude,
+                "label": location_occurrence.get_attribute_by_name("location-name").value,
+            }
+        )
+
     result = {
+        "locations": locations,
     }
     return jsonify(result), 200
 
