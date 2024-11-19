@@ -398,10 +398,12 @@ def get_geographic_map(map_identifier):
     locations = []
     for location_occurrence in location_occurrences:
         latitude, longitude = location_occurrence.get_attribute_by_name("geographic-coordinates").value.split(",")
+        location_topic = store.get_topic(map_identifier, location_occurrence.topic_identifier, scope=scope_identifier)
         locations.append(
             {
                 "map_identifier": map_identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
+                "base_name": location_topic.first_base_name.name,
                 "lat": latitude,
                 "lng": longitude,
                 "label": location_occurrence.get_attribute_by_name("location-name").value,

@@ -776,9 +776,9 @@
                     {% if occurrences['locations'] %}
                     <li>{% if is_map_owner %}
                         <a
-                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Locations</a>
+                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Location</a>
                         {% else %}
-                        Locations
+                        Location
                         {% endif %}
                         <ul>
                             {% for location in occurrences['locations'] %}
