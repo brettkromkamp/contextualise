@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>{{ topic.identifier|topic_name(topic_map.identifier) }} | {{ topic_map.name }}</title>
+{% endblock %}
+
+{% block header_menu %}
+{% include "_header_menu.html" %}
+{% endblock %}
+
+{% block stylesheets %}
+<link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+
+{% if error %}
+<script>
+    $('#advancedOptions').collapse('show');
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            {{ topic.first_base_name.name }}&nbsp;&middot;&nbsp;<small class="text-muted">Add location</small>
+        </h1>
+        <hr />
+        {% if not location %}
+        <form
+            action="{{ url_for('location.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            autocomplete="off" method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <!-- TODO -->
+            <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                    aria-controls="collapseExample">
+                    Toggle options</a>
+            </p>
+            <div class="collapse" id="advancedOptions">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3">
+                                <label for="location-scope" class="form-label">Scope
+                                    <small class="text-info">&mdash; If no value is provided the default will be
+                                        "<strong>{{ session["current_scope"] }}</strong>" (that is,
+                                        the current scope)
+                                    </small>
+                                </label>
+                                <input class="form-control typeahead" id="location-scope" name="location-scope"
+                                    placeholder="Enter scope identifier" type="text" value="{{ location_scope or '' }}">
+                                {% if error|bitwise_and(4) == 4 %}
+                                <small class="text-danger">
+                                    A scope with this identifier doesn't exist. Provide an identifier for an
+                                    existing scope.
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <a class="btn btn-secondary"
+                href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                role="button">Cancel</a>
+            <button class="btn btn-success" type="submit">Add location</button>
+        </form>
+        {% else %}
+        <!-- Topic already defined as a location -->
+        <p>Topic already defined as a location</p>
+        <div class="collapse" id="advancedOptions">
+            <div class="card">
+                <div class="card-header">
+                    <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="mb-3">
+                            <label for="location-scope" class="form-label">Scope</label>
+                            <input aria-readonly="true" disabled class="form-control" id="location-scope"
+                                name="location-scope" readonly type="text" value="{{ location_scope }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <a class="btn btn-secondary"
+            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+            role="button">Return</a>
+        {% endif %}
+        <br />
+    </div>
+</div>
+{% endblock %}

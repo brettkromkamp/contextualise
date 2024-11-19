@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 
 {% if not temporal_occurrence %}
@@ -199,7 +199,7 @@
                     <div class="card-body">
                         <div class="card-text">
                             <div class="mb-3">
-                                <label for="link-scope" class="form-label">Scope
+                                <label for="temporal-scope" class="form-label">Scope
                                     <small class="text-info">&mdash; If no value is provided the default will be
                                         "<strong>{{ session["current_scope"] }}</strong>" (that is,
                                         the current scope)
@@ -259,9 +259,9 @@
                 <div class="card-body">
                     <div class="card-text">
                         <div class="mb-3">
-                            <label for="link-scope" class="form-label">Scope</label>
-                            <input aria-readonly="true" disabled class="form-control" id="link-scope" name="link-scope"
-                                readonly type="text" value="{{ temporal_scope }}">
+                            <label for="temporal-scope" class="form-label">Scope</label>
+                            <input aria-readonly="true" disabled class="form-control" id="temporal-scope"
+                                name="temporal-scope" readonly type="text" value="{{ temporal_scope }}">
                         </div>
                     </div>
                 </div>

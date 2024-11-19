@@ -1,0 +1,37 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete location</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form
+            action="{{ url_for('location.delete', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, location_identifier=delete_location_identifier) }}"
+            method="post" role="form">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <div class="modal-body">
+                <!-- TODO -->
+                <div class="collapse" id="advancedOptions">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="mb-0"><strong><i class="bi bi-gear text-secondary"></i>&nbsp;Options</strong></p>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="mb-3">
+                                    <label for="link-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="link-scope"
+                                        name="link-scope" readonly type="text" value="{{ delete_temporal_scope }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger" id="delete-modal-button">Delete location</button>
+            </div>
+        </form>
+    </div>
+</div>

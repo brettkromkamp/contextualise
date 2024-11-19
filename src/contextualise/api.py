@@ -771,6 +771,33 @@ def delete_temporal(map_identifier, topic_identifier, temporal_identifier):
     )
 
 
+@bp.route("/api/delete-location/<map_identifier>/<topic_identifier>/<location_identifier>")
+@login_required
+def delete_location(map_identifier, topic_identifier, location_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    location_occurrence = store.get_occurrence(
+        map_identifier,
+        location_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    delete_location_identifier = location_identifier
+    delete_location_description = (
+        location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data else None
+    )
+    delete_location_scope = location_occurrence.scope
+
+    return render_template(
+        "api/location/delete.html",
+        topic_map=topic_map,
+        topic=topic,
+        delete_location_identifier=delete_location_identifier,
+        delete_location_description=delete_location_description,
+        delete_location_scope=delete_location_scope,
+    )
+
+
 @bp.route("/api/delete-name/<map_identifier>/<topic_identifier>/<name_identifier>")
 @login_required
 def delete_name(map_identifier, topic_identifier, name_identifier):

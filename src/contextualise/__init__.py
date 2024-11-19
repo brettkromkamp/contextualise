@@ -259,6 +259,10 @@ def create_app(test_config=None):
 
     app.register_blueprint(contextualise.temporal.bp)
 
+    import contextualise.location
+
+    app.register_blueprint(contextualise.location.bp)
+
     # Set up logging
     if not app.debug:
         logs_directory = os.path.join(app.instance_path, "logs")
