@@ -89,7 +89,9 @@
                 {% for location in locations %}
                 <tr>
                     <td class="align-middle">
-                        {{ location.name }}
+                        <a
+                            href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=location.topic_identifier) }}">{{
+                            location.name }}</a>
                     </td>
                     <td class="align-middle">
                         <a

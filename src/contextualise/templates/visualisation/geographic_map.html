@@ -26,6 +26,11 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
 
 <script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param); // Returns the value of the parameter, or null if not found
+    }
+
     var mapIdentifier = "{{ topic_map.identifier }}";
     var scopeIdentifier = "{{ session['current_scope'] }}";
     if (scopeIdentifier === "") {
@@ -35,6 +40,8 @@
     if (scopeFiltered === "") {
         scopeFiltered = 0;
     }
+    var targetIdentifier = getQueryParam("target");
+    console.log("Target identifier: " + targetIdentifier);
 
     if (mapIdentifier !== "") {
         var container = document.getElementById("geographic-map");
@@ -56,13 +63,24 @@
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
 
-                // Loop through coordinates and add markers
-                response.data.locations.forEach(location => {
-                    L.marker([location.lat, location.lng])
+                const markerObjects = response.data.locations.map(location => {
+                    return L.marker([location.lat, location.lng])
                         .addTo(map)
                         .bindPopup(`<b><a href="/topics/view/${location.map_identifier}/${location.topic_identifier}">${location.label}</a></b><br />Latitude: ${location.lat}<br /> Longitude: ${location.lng}`) // Add a popup
-                        .openPopup();
                 });
+
+                if (targetIdentifier) {
+                    const targetLocation = response.data.locations.find(location => location.topic_identifier === targetIdentifier);
+                    if (targetLocation) {
+                        map.setView([targetLocation.lat, targetLocation.lng], 10);
+                        const targetLocationIndex = response.data.locations.findIndex(location => location.topic_identifier === targetIdentifier);
+                        if (targetLocationIndex !== -1) {
+                            const targetMarker = markerObjects[targetLocationIndex];
+                            targetMarker.openPopup();
+                        }
+                    }
+                }
+
             })
             .catch(function (error) {
                 // Handle error

@@ -783,7 +783,9 @@
                         <ul>
                             {% for location in occurrences['locations'] %}
                             <li>
-                                <a href="#">{{ location.title }}</a>
+                                <a
+                                    href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=location.topic_identifier) }}">{{
+                                    location.title }}</a>
                             </li>
                             {% endfor %}
                         </ul>

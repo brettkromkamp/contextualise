@@ -252,6 +252,7 @@ def view(map_identifier, topic_identifier):
                 occurrences["locations"].append(
                     {
                         "identifier": occurrence.identifier,
+                        "topic_identifier": occurrence.topic_identifier,
                         "title": occurrence.get_attribute_by_name("location-name").value,
                         "text": occurrence.resource_data.decode(),
                     }
