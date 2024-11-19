@@ -225,8 +225,8 @@
                             href="#"
                             hx-get="/api/delete-link/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ link.identifier }}"
                             hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
-                            data-bs-target="#modal-dialog-component">Delete</a>
-                        {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            data-bs-target="#modal-dialog-component">Delete</a>{% if 'admin' in current_user.roles
+                        %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=link.identifier, entity_type='link') }}">View
                             attributes</a>
                         {% endif %}

@@ -60,7 +60,7 @@
                 // Add OpenStreetMap tiles
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
-                    attribution: '© OpenStreetMap contributors'
+                    attribution: '&copy; OpenStreetMap contributors'
                 }).addTo(map);
 
                 const markerObjects = response.data.locations.map(location => {

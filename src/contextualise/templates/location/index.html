@@ -203,7 +203,7 @@
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" width="20">Name</th>
+                    <th scope="col" width="20">Location</th>
                     <th scope="col" width="40">Description</th>
                     <th scope="col" width="10">Scope</th>
                     <th scope="col" width="20">Action</th>
@@ -229,8 +229,8 @@
                             href="#"
                             hx-get="/api/delete-location/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ location.identifier }}"
                             hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
-                            data-bs-target="#modal-dialog-component">Delete</a>
-                        {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            data-bs-target="#modal-dialog-component">Delete</a>{% if 'admin' in current_user.roles
+                        %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
                             href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=location.identifier, entity_type='location') }}">View
                             attributes</a>
                         {% endif %}

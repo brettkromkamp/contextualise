@@ -6,7 +6,6 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
 import re
-from datetime import datetime
 
 import maya
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
@@ -19,7 +18,6 @@ from topicdb.store.ontologymode import OntologyMode
 from topicdb.store.retrievalmode import RetrievalMode
 from topicdb.topicdberror import TopicDbError
 
-from contextualise.temporaltype import TemporalType
 from contextualise.utilities.topicstore import initialize
 
 bp = Blueprint("location", __name__)
@@ -214,9 +212,33 @@ def edit(map_identifier, topic_identifier, location_identifier):
 def delete(map_identifier, topic_identifier, location_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
 
+    error = 0
+
+    location_occurrence = store.get_occurrence(
+        map_identifier,
+        location_identifier,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    if not location_occurrence:
+        error = error | 1
+
+    if error != 0:
+        flash("An error occurred while trying to delete the location.", "warning")
+    else:
+        try:
+            # Delete location occurrence from topic store
+            store.delete_occurrence(map_identifier, location_occurrence.identifier)
+            flash("Location successfully deleted.", "success")
+        except TopicDbError:
+            flash(
+                "An error occurred while trying to delete the location. The location was not deleted.",
+                "warning",
+            )
+
     return redirect(
         url_for(
-            "locations.index",
+            "location.index",
             map_identifier=topic_map.identifier,
             topic_identifier=topic.identifier,
         )

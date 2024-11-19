@@ -9,7 +9,22 @@
             method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <div class="modal-body">
-                <!-- TODO -->
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <p>
+                        <a
+                            href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=delete_topic_identifier) }}">{{
+                            delete_location_name }}</a>
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label><br />
+                    <div class="text-secondary note-text">{{ delete_location_description|safe }}</div>
+                </div>
+                <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        Toggle options</a>
+                </p>
                 <div class="collapse" id="advancedOptions">
                     <div class="card">
                         <div class="card-header">
@@ -18,9 +33,9 @@
                         <div class="card-body">
                             <div class="card-text">
                                 <div class="mb-3">
-                                    <label for="link-scope" class="form-label">Scope</label>
-                                    <input aria-readonly="true" disabled class="form-control" id="link-scope"
-                                        name="link-scope" readonly type="text" value="{{ delete_temporal_scope }}">
+                                    <label for="location-scope" class="form-label">Scope</label>
+                                    <input aria-readonly="true" disabled class="form-control" id="location-scope"
+                                        name="location-scope" readonly type="text" value="{{ delete_location_scope }}">
                                 </div>
                             </div>
                         </div>

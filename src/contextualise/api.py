@@ -799,6 +799,8 @@ def delete_location(map_identifier, topic_identifier, location_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
     delete_location_identifier = location_identifier
+    delete_topic_identifier = location_occurrence.topic_identifier
+    delete_location_name = location_occurrence.get_attribute_by_name("location-name").value
     delete_location_description = (
         location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data else None
     )
@@ -809,6 +811,8 @@ def delete_location(map_identifier, topic_identifier, location_identifier):
         topic_map=topic_map,
         topic=topic,
         delete_location_identifier=delete_location_identifier,
+        delete_topic_identifier=delete_topic_identifier,
+        delete_location_name=delete_location_name,
         delete_location_description=delete_location_description,
         delete_location_scope=delete_location_scope,
     )
