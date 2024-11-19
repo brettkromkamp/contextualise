@@ -354,7 +354,11 @@ def temporals(map_identifier, topic_identifier):
     temporals = []
     for temporal_occurrence in temporal_occurrences:
         temporal_type = TemporalType.ERA if temporal_occurrence.instance_of == "temporal-era" else TemporalType.EVENT
-        temporal_end_date = temporal_occurrence.get_attribute_by_name("temporal-end-date").value if temporal_type is TemporalType.ERA else None
+        temporal_end_date = (
+            temporal_occurrence.get_attribute_by_name("temporal-end-date").value
+            if temporal_type is TemporalType.ERA
+            else None
+        )
         temporals.append(
             {
                 "topic_identifier": temporal_occurrence.topic_identifier,
@@ -362,19 +366,67 @@ def temporals(map_identifier, topic_identifier):
                 "type": temporal_type.name.lower(),
                 "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
                 "end_date": temporal_end_date,
-                "description": temporal_occurrence.resource_data.decode("utf-8") if temporal_occurrence.has_data else None,
+                "description": temporal_occurrence.resource_data.decode("utf-8")
+                if temporal_occurrence.has_data
+                else None,
                 "scope": temporal_occurrence.scope,
             }
         )
-    # Sort and group temporals by topic identifier
+    # Sort temporals chronologically (by start date)
     sorted_temporals = sorted(temporals, key=lambda x: x["start_date"])
-    grouped_temporals = {k: list(v) for k, v in groupby(sorted_temporals, key=lambda x: x["start_date"])}
 
     return render_template(
         "resources/temporals.html",
         topic_map=topic_map,
         topic=topic,
-        temporals=grouped_temporals,
+        # temporals=grouped_temporals,
+        temporals=sorted_temporals,
+        page=page,
+        total_pages=total_pages,
+    )
+
+
+@bp.route("/resources/locations/<map_identifier>/<topic_identifier>")
+def locations(map_identifier, topic_identifier):
+    store, topic_map, topic = _initialize(map_identifier, topic_identifier, current_user)
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    offset = (page - 1) * constants.RESOURCE_ITEMS_PER_PAGE
+
+    location_occurrences = store.get_occurrences(
+        map_identifier,
+        instance_of="location",
+        offset=offset,
+        limit=constants.RESOURCE_ITEMS_PER_PAGE,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    locations_count = len(location_occurrences)
+    total_pages = (locations_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
+
+    locations = []
+    for location_occurrence in location_occurrences:
+        locations.append(
+            {
+                "topic_identifier": location_occurrence.topic_identifier,
+                "identifier": location_occurrence.identifier,
+                "name": location_occurrence.get_attribute_by_name("location-name").value,
+                "description": location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data
+                else None,
+                "coordinates": location_occurrence.get_attribute_by_name("geographic-coordinates").value,
+                "scope": location_occurrence.scope,
+            }
+        )
+    # Sort locations by topic identifier
+    sorted_locations = sorted(locations, key=lambda x: x["topic_identifier"])
+
+    return render_template(
+        "resources/locations.html",
+        topic_map=topic_map,
+        topic=topic,
+        locations=sorted_locations,
         page=page,
         total_pages=total_pages,
     )

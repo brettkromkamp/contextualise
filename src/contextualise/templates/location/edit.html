@@ -24,7 +24,7 @@
         </h1>
         <hr />
         <form
-            action="{{ url_for('temporal.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, location_identifier=location_identifier) }}"
+            action="{{ url_for('location.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, location_identifier=location_identifier) }}"
             autocomplete="off" method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
             <!-- TODO -->
@@ -36,7 +36,7 @@
             </p>
             <!-- TODO -->
             <a class="btn btn-secondary"
-                href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
+                href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
                 role="button">Cancel</a>
             <button class="btn btn-success" type="submit" disabled>Update location</button>
         </form>

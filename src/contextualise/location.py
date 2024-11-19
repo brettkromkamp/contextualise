@@ -24,10 +24,32 @@ from contextualise.utilities.topicstore import initialize
 
 bp = Blueprint("location", __name__)
 
+
 @bp.route("/locations/<map_identifier>/<topic_identifier>")
 @login_required
 def index(map_identifier, topic_identifier):
     store, topic_map, topic = initialize(map_identifier, topic_identifier, current_user)
+
+    location_occurrences = store.get_topic_occurrences(
+        map_identifier,
+        topic_identifier,
+        "location",
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+
+    locations = []
+    for location_occurrence in location_occurrences:
+        locations.append(
+            {
+                "identifier": location_occurrence.identifier,
+                "topic_identifier": location_occurrence.topic_identifier,
+                "name": location_occurrence.get_attribute_by_name("location-name").value,
+                "description": location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data else None,
+                "coordinates": location_occurrence.get_attribute_by_name("geographic-coordinates").value,
+                "scope": location_occurrence.scope,
+            }
+        )
 
     creation_date_attribute = topic.get_attribute_by_name("creation-timestamp")
     creation_date = maya.parse(creation_date_attribute.value) if creation_date_attribute else "Undefined"
@@ -38,6 +60,7 @@ def index(map_identifier, topic_identifier):
         "location/index.html",
         topic_map=topic_map,
         topic=topic,
+        locations=locations,
         creation_date=creation_date,
         map_notes_count=map_notes_count,
     )
@@ -51,11 +74,97 @@ def add(map_identifier, topic_identifier):
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
 
+    locations = store.get_topic_occurrences(
+        map_identifier=map_identifier,
+        identifier=topic_identifier,
+        instance_of="location",
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
+        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
+    )
+    location = locations[0] if locations else None
+
+    if request.method == "POST":
+        form_location_name = request.form.get("location-name")
+        form_location_description = request.form.get("location-description")
+        form_location_coordinates = request.form.get("location-coordinates")
+        form_location_scope = request.form.get("location-scope")
+
+        # If no values have been provided set their default values
+        if not form_location_scope:
+            form_location_scope = session["current_scope"]
+
+        # Validate form inputs
+        if not form_location_name:
+            error = error | 1
+        if not form_location_description:
+            error = error | 2
+        if not form_location_coordinates:
+            error = error | 4
+
+        if error != 0:
+            flash(
+                "An error occurred when submitting the form. Review the warnings and fix accordingly.",
+                "warning",
+            )
+        else:
+            location_occurrence = Occurrence(
+                instance_of="location",
+                topic_identifier=topic_identifier,
+                scope=form_location_scope,
+                resource_data=form_location_description,
+            )
+            name_attribute = Attribute(
+                "location-name",
+                form_location_name,
+                location_occurrence.identifier,
+                data_type=DataType.STRING,
+            )
+            coordinates_attribute = Attribute(
+                "geographic-coordinates",
+                form_location_coordinates,
+                location_occurrence.identifier,
+                data_type=DataType.STRING,
+            )
+            store.create_occurrence(topic_map.identifier, location_occurrence, ontology_mode=OntologyMode.LENIENT)
+            store.create_attribute(topic_map.identifier, name_attribute, ontology_mode=OntologyMode.LENIENT)
+            store.create_attribute(topic_map.identifier, coordinates_attribute, ontology_mode=OntologyMode.LENIENT)
+
+            flash("Location successfully added.", "success")
+            return redirect(
+                url_for(
+                    "location.index",
+                    map_identifier=topic_map.identifier,
+                    topic_identifier=topic.identifier,
+                )
+            )
+        return render_template(
+            "location/add.html",
+            error=error,
+            topic_map=topic_map,
+            topic=topic,
+            location=location,
+            location_topic_identifier=topic_identifier,
+            location_description=form_location_description,
+            location_coordinates=form_location_coordinates,
+            location_scope=form_location_scope,
+            map_notes_count=map_notes_count,
+        )
+
+    if location:
+        location_description = location.resource_data.decode("utf-8") if location.has_data else None
+        location_coordinates = location.get_attribute_by_name("geographic-coordinates").value
+        location_scope = location.scope
+        flash("This topic has already been defined as a location.", "warning")
     return render_template(
         "location/add.html",
         error=error,
         topic_map=topic_map,
         topic=topic,
+        location=location,
+        location_topic_identifier=location.topic_identifier if location else None,
+        location_description=location_description if location else None,
+        location_coordinates=location_coordinates if location else None,
+        location_scope=location_scope if location else None,
         map_notes_count=map_notes_count,
     )
 

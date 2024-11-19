@@ -76,7 +76,37 @@
     </div>
     <div class="col-md-10">
         {% if locations %}
-        <!-- TODO -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" width="20">Name</th>
+                    <th scope="col" width="15">Topic</th>
+                    <th scope="col" width="40">Description</th>
+                    <th scope="col" width="15">Scope</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for location in locations %}
+                <tr>
+                    <td class="align-middle">
+                        {{ location.name }}
+                    </td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=location.topic_identifier) }}">{{
+                            location.topic_identifier|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td class="align-middle">{{ location.description|safe|truncate_words(10) }}</td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=location.scope) }}">{{
+                            location.scope|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
         <!-- Pagination -->
         {% if total_pages > 1 %}
         <div class="mx-auto p-2" style="width: 200px;">
@@ -84,7 +114,7 @@
                 <ul class="pagination">
                     {% if page > 1 %}
                     <li class="page-item"><a class="page-link" aria-label="Previous"
-                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
+                            href="{{ url_for('resources.locations', map_identifier=topic_map['identifier'], topic_identifier='home', page=page-1) }}"><i
                                 class="bi bi-arrow-left"></i></a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link disabled" aria-label="Previous" href="#"><i
@@ -95,13 +125,13 @@
                     <li class="page-item"><a class="page-link disabled" href="#">{{ p }}</a></li>
                     {% else %}
                     <li class="page-item"><a class="page-link"
-                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
+                            href="{{ url_for('resources.locations', map_identifier=topic_map['identifier'], topic_identifier='home', page=p) }}">{{
                             p }}</a>
                     </li>
                     {% endif %}
                     {% endfor %}
                     {% if page < total_pages %} <li class="page-item"><a class="page-link" aria-label="Next"
-                            href="{{ url_for('resources.temporals', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
+                            href="{{ url_for('resources.locations', map_identifier=topic_map['identifier'], topic_identifier='home', page=page+1) }}"><i
                                 class="bi bi-arrow-right"></i></a>
                         </li>
                         {% else %}

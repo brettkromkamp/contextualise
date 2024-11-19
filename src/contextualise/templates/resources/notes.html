@@ -71,6 +71,8 @@
             <a class="nav-link active btn-light" href="#">Notes</a>
             <a class="nav-link"
                 href="{{ url_for('resources.temporals', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Temporals</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.locations', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Locations</a>
         </nav>
     </div>
     <div class="col-md-10">

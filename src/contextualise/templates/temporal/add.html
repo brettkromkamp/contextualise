@@ -107,7 +107,7 @@
                 <label for="topic-text" class="form-label">Type</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="temporal-type" id="temporal-event" value="event"
-                        checked>
+                        checked autofocus>
                     <label class="form-check-label" for="temporal-event">
                         Event
                     </label>
@@ -120,28 +120,20 @@
                 </div>
             </div>
             <div id="temporal-controls">
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="temporal-description" class="form-label">Description</label>
-                            <textarea class="form-control" id="temporal-description" name="temporal-description"
-                                rows="2">{{ temporal_description or '' }}</textarea>
-                            {% if error|bitwise_and(1) == 1 %}
-                            <small class="text-danger">
-                                A temporal event or era needs to have a description. Provide a description.
-                            </small>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label for="temporal-description" class="form-label">Description</label>
+                    <textarea class="form-control" id="temporal-description" name="temporal-description" rows="2"
+                        required>{{ temporal_description or '' }}</textarea>
+                    {% if error|bitwise_and(1) == 1 %}
+                    <small class="text-danger">
+                        A temporal event or era needs to have a description. Provide a description.
+                    </small>
+                    {% endif %}
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="temporal-media-url" class="form-label">Media URL</label>
-                            <input class="form-control" id="temporal-media-url" name="temporal-media-url"
-                                placeholder="Enter URL" type="text" value="{{ temporal_media_url or '' }}">
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label for="temporal-media-url" class="form-label">Media URL</label>
+                    <input class="form-control" id="temporal-media-url" name="temporal-media-url"
+                        placeholder="Enter URL" type="text" value="{{ temporal_media_url or '' }}">
                 </div>
                 <div class="row">
                     <div class="col">

@@ -162,6 +162,7 @@ def view(map_identifier, topic_identifier):
         "notes": [],
         "temporal-events": [],
         "temporal-eras": [],
+        "locations": [],
     }
     for occurrence in topic_occurrences:
         match occurrence.instance_of:
@@ -244,6 +245,14 @@ def view(map_identifier, topic_identifier):
                         "title": "Temporal Era",
                         "start_date": maya.parse(occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
                         "end_date": maya.parse(occurrence.get_attribute_by_name("temporal-end-date").value).date.strftime("%a, %d %b %Y"),
+                        "text": occurrence.resource_data.decode(),
+                    }
+                )
+            case "location":
+                occurrences["locations"].append(
+                    {
+                        "identifier": occurrence.identifier,
+                        "title": occurrence.get_attribute_by_name("location-name").value,
                         "text": occurrence.resource_data.decode(),
                     }
                 )

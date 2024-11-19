@@ -9,11 +9,59 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
 
 {% block javascript %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+
+<script>
+    var coordinatesInput = document.getElementById("location-coordinates");
+
+    // Initialize the map
+    const map = L.map('geographic-map').setView([20.0, 0.0], 2); // World view
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker; // Variable to hold the marker
+
+    // Add click event to the map
+    map.on('click', function (e) {
+        const { lat, lng } = e.latlng; // Get latitude and longitude of the click
+
+        // If marker exists, remove it
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Place a new marker on the map
+        marker = L.marker([lat, lng]).addTo(map);
+
+        // Display coordinates in the input field
+        coordinatesInput.value = `${lat}, ${lng}`;
+    });
+
+    document
+        .getElementById("edit-coordinates-button")
+        .addEventListener("click", (event) => {
+            if (coordinatesInput.readOnly) {
+                coordinatesInput.readOnly = false;
+                coordinatesInput.focus();
+                document.getElementById("edit-coordinates-button").innerHTML = "Ok";
+            } else {
+                coordinatesInput.readOnly = true;
+                document.getElementById("edit-coordinates-button").focus();
+                document.getElementById("edit-coordinates-button").innerHTML = "Edit";
+            }
+        });
+</script>
 
 {% if error %}
 <script>
@@ -34,7 +82,47 @@
             action="{{ url_for('location.add', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}"
             autocomplete="off" method="post" role="form">
             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-            <!-- TODO -->
+            <div class="mb-3">
+                <label for="location-name" class="form-label">Name</label>
+                <input class="form-control" id="location-name" name="location-name" placeholder="Enter a name"
+                    type="text" value="{{ location_name or '' }}" autofocus required>
+                {% if error|bitwise_and(1) == 1 %}
+                <small class="text-danger">
+                    A location needs to have a name. Provide a name.
+                </small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="location-description" class="form-label">Description</label>
+                <textarea class="form-control" id="location-description" name="location-description" rows="2"
+                    required>{{ location_description or '' }}</textarea>
+                {% if error|bitwise_and(2) == 2 %}
+                <small class="text-danger">
+                    A location needs to have a description. Provide a description.
+                </small>
+                {% endif %}
+            </div>
+            <p>
+            <div class="visualisation" id="geographic-map"></div>
+            </p>
+            <div class="mb-3">
+                <label for="location-coordinates" class="form-label">Coordinates</label>
+                <div class="input-group">
+                    <input class="form-control" id="location-coordinates" name="location-coordinates"
+                        placeholder="Enter geographic coordinates" readonly required type="text"
+                        value="{{ location_coordinates or '' }}" required>
+                    <span class="input-group-text">
+                        <button class="btn btn-light btn-sm" id="edit-coordinates-button" type="button">
+                            Edit
+                        </button>
+                    </span>
+                </div>
+                {% if error|bitwise_and(4) == 4 %}
+                <small class="text-danger">
+                    A location needs to have its geographic coordinates specified. Provide the geographic coordinates.
+                </small>
+                {% endif %}
+            </div>
             <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
                     aria-controls="collapseExample">
                     Toggle options</a>

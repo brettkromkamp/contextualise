@@ -83,8 +83,9 @@ def entity_index(map_identifier, topic_identifier, entity_identifier, entity_typ
         "link": "link.index",
         "video": "video.index",
         "temporal": "temporal.index",
+        "location": "location.index",
     }
-    return_url = return_urls.get(entity_type, "image.view")  # Default to image.view. Should it be like this?
+    return_url = return_urls.get(entity_type, "image.index")  # Default to `image.index`. Should it be like this?
 
     attributes = []
     entity_attributes = store.get_attributes(map_identifier, entity_identifier)

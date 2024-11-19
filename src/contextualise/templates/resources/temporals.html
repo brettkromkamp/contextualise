@@ -70,6 +70,8 @@
             <a class="nav-link"
                 href="{{ url_for('resources.notes', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Notes</a>
             <a class="nav-link active btn-light" href="#">Temporals</a>
+            <a class="nav-link"
+                href="{{ url_for('resources.locations', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Locations</a>
         </nav>
     </div>
     <div class="col-md-10">
@@ -85,9 +87,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% for key, value in temporals.items() %}
+                {% for temporal in temporals %}
                 <tr>
-                    {% for temporal in value %}
                     <td class="align-middle">
                         {% if temporal.type == 'event' %}
                         <a
@@ -107,9 +108,9 @@
                     <td class="align-middle"><a
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.scope) }}">{{
                             temporal.scope|topic_name(topic_map.identifier) }}</a></td>
-                    {% endfor %}
                 </tr>
                 {% endfor %}
+                </tr>
             </tbody>
         </table>
         <!-- Pagination -->

@@ -200,7 +200,43 @@
     </div>
     <div class="col-md-10">
         {% if locations %}
-        <!-- TODO -->
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" width="20">Name</th>
+                    <th scope="col" width="40">Description</th>
+                    <th scope="col" width="10">Scope</th>
+                    <th scope="col" width="20">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for location in locations %}
+                <tr>
+                    <td class="align-middle">
+                        {{ location.name }}
+                    </td>
+                    <td class="align-middle">{{ location.description|safe|truncate_words(10) }}</td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=location.scope) }}">{{
+                            location.scope|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td class="align-middle">
+                        <a
+                            href="{{ url_for('location.edit', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, location_identifier=location.identifier) }}">Edit</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="#"
+                            hx-get="/api/delete-location/{{ topic_map.identifier }}/{{ topic.identifier }}/{{ location.identifier }}"
+                            hx-target="#modal-dialog-component" hx-trigger="click" data-bs-toggle="modal"
+                            data-bs-target="#modal-dialog-component">Delete</a>
+                        {% if 'admin' in current_user.roles %}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a
+                            href="{{ url_for('attribute.entity_index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, entity_identifier=location.identifier, entity_type='location') }}">View
+                            attributes</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% elif current_user.id == topic_map.user_identifier %}
         <p class="alert alert-info" role="alert">
             This topic has not been defined as a location. Click on the "Add location" button below to

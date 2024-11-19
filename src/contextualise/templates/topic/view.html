@@ -773,6 +773,22 @@
                         </ul>
                     </li>
                     {% endif %}
+                    {% if occurrences['locations'] %}
+                    <li>{% if is_map_owner %}
+                        <a
+                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Locations</a>
+                        {% else %}
+                        Locations
+                        {% endif %}
+                        <ul>
+                            {% for location in occurrences['locations'] %}
+                            <li>
+                                <a href="#">{{ location.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
