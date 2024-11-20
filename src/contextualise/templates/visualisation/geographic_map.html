@@ -31,6 +31,14 @@
         return urlParams.get(param); // Returns the value of the parameter, or null if not found
     }
 
+    function truncateWords(text, numWords) {
+        const words = text.split(' ');
+        if (words.length > numWords) {
+            return words.slice(0, numWords).join(' ') + '...';
+        }
+        return text;
+    }
+
     var mapIdentifier = "{{ topic_map.identifier }}";
     var scopeIdentifier = "{{ session['current_scope'] }}";
     if (scopeIdentifier === "") {
@@ -64,9 +72,13 @@
                 }).addTo(map);
 
                 const markerObjects = response.data.locations.map(location => {
+                    let description = `Latitude: ${location.lat}<br /> Longitude: ${location.lng}`
+                    if (location.description !== "") {
+                        description += `<br /><br />${truncateWords(location.description, 20)}`;
+                    }
                     return L.marker([location.lat, location.lng])
                         .addTo(map)
-                        .bindPopup(`<b>${location.label}</b> &mdash; <a href="/topics/view/${location.map_identifier}/${location.topic_identifier}">${location.base_name}</a><br /><br />Latitude: ${location.lat}<br /> Longitude: ${location.lng}`) // Add a popup
+                        .bindPopup(`<b>${location.label}</b> &mdash; <a href="/topics/view/${location.map_identifier}/${location.topic_identifier}">${location.base_name}</a><br /><br />${description}`) // Add a popup
                 });
 
                 if (targetIdentifier) {
