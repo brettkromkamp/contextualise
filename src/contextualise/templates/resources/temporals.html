@@ -93,9 +93,9 @@
                         {% if temporal.type == 'event' %}
                         <a
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier, _anchor='event-' + temporal.topic_identifier) }}">{{
-                            temporal.start_date }}</a>
+                            temporal.start_date_view }}</a>
                         {% elif temporal.type == 'era' %}
-                        {{ temporal.start_date }} &rarr; {{ temporal.end_date }}
+                        {{ temporal.start_date_view }} &rarr; {{ temporal.end_date_view }}
                         {% endif %}
                     </td>
                     <td class="align-middle">{{ temporal.type|capitalize }}</td>

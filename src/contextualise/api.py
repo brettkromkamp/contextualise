@@ -386,6 +386,7 @@ def get_geographic_map(map_identifier):
         map_identifier=map_identifier,
         instance_of="location",
         scope=scope_identifier,
+        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
@@ -398,12 +399,14 @@ def get_geographic_map(map_identifier):
     locations = []
     for location_occurrence in location_occurrences:
         latitude, longitude = location_occurrence.get_attribute_by_name("geographic-coordinates").value.split(",")
+        description = location_occurrence.resource_data.decode() if location_occurrence.resource_data else ""
         location_topic = store.get_topic(map_identifier, location_occurrence.topic_identifier, scope=scope_identifier)
         locations.append(
             {
                 "map_identifier": map_identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
                 "base_name": location_topic.first_base_name.name,
+                "description": description,
                 "lat": latitude,
                 "lng": longitude,
                 "label": location_occurrence.get_attribute_by_name("location-name").value,

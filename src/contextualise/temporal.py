@@ -76,15 +76,25 @@ def index(map_identifier, topic_identifier):
 
     temporals = []
     for temporal_occurrence in temporal_occurrences:
+        temporal_end_date = (
+            temporal_occurrence.get_attribute_by_name("temporal-end-date").value
+            if temporal_type is TemporalType.ERA
+            else None
+        )
+        temporal_end_date_view = ""
+        if temporal_end_date:
+            temporal_end_date_view = maya.parse(temporal_end_date).date.strftime("%a, %d %b %Y")
         temporals.append(
             {
                 "identifier": temporal_occurrence.identifier,
                 "topic_identifier": temporal_occurrence.topic_identifier,
                 "type": temporal_type.name.lower(),
                 "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
+                "start_date_view": maya.parse(temporal_occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
                 "end_date": temporal_occurrence.get_attribute_by_name("temporal-end-date").value
                 if temporal_type is TemporalType.ERA
                 else None,
+                "end_date_view": temporal_end_date_view,
                 "description": temporal_occurrence.resource_data.decode("utf-8")
                 if temporal_occurrence.has_data
                 else None,

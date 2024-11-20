@@ -7,6 +7,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 from itertools import groupby
 
+import maya
 from flask import Blueprint, render_template, request
 from flask_login import current_user
 from topicdb.store.retrievalmode import RetrievalMode
@@ -359,13 +360,20 @@ def temporals(map_identifier, topic_identifier):
             if temporal_type is TemporalType.ERA
             else None
         )
+        temporal_end_date_view = ""
+        if temporal_end_date:
+            temporal_end_date_view = maya.parse(temporal_end_date).date.strftime("%a, %d %b %Y")
         temporals.append(
             {
                 "topic_identifier": temporal_occurrence.topic_identifier,
                 "identifier": temporal_occurrence.identifier,
                 "type": temporal_type.name.lower(),
                 "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
+                "start_date_view": maya.parse(
+                    temporal_occurrence.get_attribute_by_name("temporal-start-date").value
+                ).date.strftime("%a, %d %b %Y"),
                 "end_date": temporal_end_date,
+                "end_date_view": temporal_end_date_view,
                 "description": temporal_occurrence.resource_data.decode("utf-8")
                 if temporal_occurrence.has_data
                 else None,
@@ -379,7 +387,6 @@ def temporals(map_identifier, topic_identifier):
         "resources/temporals.html",
         topic_map=topic_map,
         topic=topic,
-        # temporals=grouped_temporals,
         temporals=sorted_temporals,
         page=page,
         total_pages=total_pages,
@@ -413,7 +420,8 @@ def locations(map_identifier, topic_identifier):
                 "topic_identifier": location_occurrence.topic_identifier,
                 "identifier": location_occurrence.identifier,
                 "name": location_occurrence.get_attribute_by_name("location-name").value,
-                "description": location_occurrence.resource_data.decode("utf-8") if location_occurrence.has_data
+                "description": location_occurrence.resource_data.decode("utf-8")
+                if location_occurrence.has_data
                 else None,
                 "coordinates": location_occurrence.get_attribute_by_name("geographic-coordinates").value,
                 "scope": location_occurrence.scope,
