@@ -40,8 +40,6 @@
     if (scopeFiltered === "") {
         scopeFiltered = 0;
     }
-    var targetIdentifier = getQueryParam("target");
-    console.log("Target identifier: " + targetIdentifier);
 
     if (mapIdentifier !== "") {
         var container = document.getElementById("geographic-map");
@@ -69,6 +67,7 @@
                         .bindPopup(`<b>${location.label}</b> &mdash; <a href="/topics/view/${location.map_identifier}/${location.topic_identifier}">${location.base_name}</a><br /><br />Latitude: ${location.lat}<br /> Longitude: ${location.lng}`) // Add a popup
                 });
 
+                var targetIdentifier = getQueryParam("target");
                 if (targetIdentifier) {
                     const targetLocation = response.data.locations.find(location => location.topic_identifier === targetIdentifier);
                     if (targetLocation) {
