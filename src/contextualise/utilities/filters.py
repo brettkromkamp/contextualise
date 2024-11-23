@@ -8,16 +8,17 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 from ..topic_store import get_topic_store
 
 
-def topic_name(topic_identifier, topic_map_identifier):
-    result = "Undefined"
+def topic_name(topic_identifier: str, topic_map_identifier: int) -> str:
     topic_store = get_topic_store()
     topic = topic_store.get_topic(topic_map_identifier, topic_identifier)
     if topic:
-        result = topic.first_base_name.name
-    return result
+        return topic.first_base_name.name
+
+    parts = [part.capitalize() for part in topic_identifier.split("-")]
+    return " ".join(parts)
 
 
-def bitwise_and(value1, value2):
+def bitwise_and(value1: int, value2: int) -> int:
     return value1 & value2
 
 
