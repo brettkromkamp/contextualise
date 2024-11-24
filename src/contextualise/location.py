@@ -164,6 +164,7 @@ def add(map_identifier, topic_identifier):
             topic=topic,
             location=location,
             location_topic_identifier=topic_identifier,
+            location_name=form_location_name,
             location_description=form_location_description,
             location_coordinates=form_location_coordinates,
             location_scope=form_location_scope,
@@ -171,6 +172,7 @@ def add(map_identifier, topic_identifier):
         )
 
     if location:
+        location_name = location.get_attribute_by_name("location-name").value
         location_description = location.resource_data.decode("utf-8") if location.has_data else None
         location_coordinates = location.get_attribute_by_name("geographic-coordinates").value
         location_scope = location.scope
@@ -182,6 +184,7 @@ def add(map_identifier, topic_identifier):
         topic=topic,
         location=location,
         location_topic_identifier=location.topic_identifier if location else None,
+        location_name=location_name if location else None,
         location_description=location_description if location else None,
         location_coordinates=location_coordinates if location else None,
         location_scope=location_scope if location else None,

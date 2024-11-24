@@ -219,9 +219,8 @@
         {% else %}
         <!-- Topic already defined as a temporal -->
         <div class="mb-3">
-            <label for="temporal-type" class="form-label">Type</label>
-            <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type" readonly
-                type="text" value="{{ temporal_type|capitalize }}">
+            <label class="form-label">Description</label><br />
+            <div class="text-secondary note-text">{{ temporal_description|safe }}</div>
         </div>
         <div class="mb-3">
             <label for="temporal" class="form-label">Temporal</label>
@@ -236,8 +235,9 @@
             </p>
         </div>
         <div class="mb-3">
-            <label class="form-label">Description</label><br />
-            <div class="text-secondary note-text">{{ temporal_description|safe }}</div>
+            <label for="temporal-type" class="form-label">Type</label>
+            <input aria-readonly="true" disabled class="form-control" id="temporal-type" name="temporal-type" readonly
+                type="text" value="{{ temporal_type|capitalize }}">
         </div>
         <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
                 aria-controls="collapseExample">

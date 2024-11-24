@@ -162,7 +162,26 @@
         </form>
         {% else %}
         <!-- Topic already defined as a location -->
-        <p>Topic already defined as a location</p>
+        <div class="mb-3">
+            <label class="form-label">Description</label><br />
+            <div class="text-secondary note-text">{{ location_description|safe }}</div>
+        </div>
+        <div class="mb-3">
+            <label for="temporal" class="form-label">Location</label>
+            <p>
+                <a
+                    href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=location.topic_identifier) }}">{{
+                    location_name }}</a>
+            </p>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Coordinates</label><br />
+            <div class="text-secondary note-text">{{ location_coordinates }}</div>
+        </div>
+        <p><a data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                Toggle options</a>
+        </p>
         <div class="collapse" id="advancedOptions">
             <div class="card">
                 <div class="card-header">
