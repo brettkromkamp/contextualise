@@ -90,7 +90,9 @@ def index(map_identifier, topic_identifier):
                 "topic_identifier": temporal_occurrence.topic_identifier,
                 "type": temporal_type.name.lower(),
                 "start_date": temporal_occurrence.get_attribute_by_name("temporal-start-date").value,
-                "start_date_view": maya.parse(temporal_occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
+                "start_date_view": maya.parse(
+                    temporal_occurrence.get_attribute_by_name("temporal-start-date").value
+                ).date.strftime("%a, %d %b %Y"),
                 "end_date": temporal_occurrence.get_attribute_by_name("temporal-end-date").value
                 if temporal_type is TemporalType.ERA
                 else None,
