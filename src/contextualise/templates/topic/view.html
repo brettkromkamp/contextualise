@@ -503,7 +503,7 @@
         <h5>Notes</h5>
         {% for note in occurrences['notes'] %}
         <a id="note-{{ note.identifier }}"></a>
-        <div class="card text-bg-warning">
+        <div class="card text-bg-light">
             <div class="card-header">
                 <small>{{ note.timestamp }}</small>
             </div>
@@ -517,8 +517,8 @@
             <div class="card-footer">
                 <div class="btn-group my-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Options
                         </button>
                         <ul class="dropdown-menu">
