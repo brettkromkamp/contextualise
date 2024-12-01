@@ -61,6 +61,7 @@ def index(map_identifier, topic_identifier):
         locations.append(
             {
                 "identifier": location_occurrence.identifier,
+                "occurrence_identifier": location_occurrence.identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
                 "name": location_occurrence.get_attribute_by_name("location-name").value,
                 "description": location_occurrence.resource_data.decode("utf-8")
@@ -93,15 +94,6 @@ def add(map_identifier, topic_identifier):
 
     map_notes_count = store.get_topic_occurrences_statistics(map_identifier, "notes")["note"]
     error = 0
-
-    locations = store.get_topic_occurrences(
-        map_identifier=map_identifier,
-        identifier=topic_identifier,
-        instance_of="location",
-        inline_resource_data=RetrievalMode.INLINE_RESOURCE_DATA,
-        resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
-    )
-    location = locations[0] if locations else None
 
     if request.method == "POST":
         form_location_name = request.form.get("location-name")
@@ -162,7 +154,6 @@ def add(map_identifier, topic_identifier):
             error=error,
             topic_map=topic_map,
             topic=topic,
-            location=location,
             location_topic_identifier=topic_identifier,
             location_name=form_location_name,
             location_description=form_location_description,
@@ -170,24 +161,11 @@ def add(map_identifier, topic_identifier):
             location_scope=form_location_scope,
             map_notes_count=map_notes_count,
         )
-
-    if location:
-        location_name = location.get_attribute_by_name("location-name").value
-        location_description = location.resource_data.decode("utf-8") if location.has_data else None
-        location_coordinates = location.get_attribute_by_name("geographic-coordinates").value
-        location_scope = location.scope
-        flash("This topic has already been defined as a location.", "warning")
     return render_template(
         "location/add.html",
         error=error,
         topic_map=topic_map,
         topic=topic,
-        location=location,
-        location_topic_identifier=location.topic_identifier if location else None,
-        location_name=location_name if location else None,
-        location_description=location_description if location else None,
-        location_coordinates=location_coordinates if location else None,
-        location_scope=location_scope if location else None,
         map_notes_count=map_notes_count,
     )
 

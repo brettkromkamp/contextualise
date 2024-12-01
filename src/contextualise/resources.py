@@ -417,6 +417,7 @@ def locations(map_identifier, topic_identifier):
     for location_occurrence in location_occurrences:
         locations.append(
             {
+                "occurrence_identifier": location_occurrence.identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
                 "identifier": location_occurrence.identifier,
                 "name": location_occurrence.get_attribute_by_name("location-name").value,
@@ -427,14 +428,20 @@ def locations(map_identifier, topic_identifier):
                 "scope": location_occurrence.scope,
             }
         )
-    # Sort locations by topic identifier
+
+    # # Sort and group notes by topic identifier, but exclude the "notes" topic
+    # sorted_notes = sorted(notes, key=lambda x: x["topic_identifier"])
+    # grouped_notes = {k: list(v) for k, v in groupby(sorted_notes, key=lambda x: x["topic_identifier"]) if k != "notes"}
+
+    # Sort and group locations by topic identifier
     sorted_locations = sorted(locations, key=lambda x: x["topic_identifier"])
+    grouped_locations = {k: list(v) for k, v in groupby(sorted_locations, key=lambda x: x["topic_identifier"])}
 
     return render_template(
         "resources/locations.html",
         topic_map=topic_map,
         topic=topic,
-        locations=sorted_locations,
+        locations=grouped_locations,
         page=page,
         total_pages=total_pages,
     )

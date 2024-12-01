@@ -663,7 +663,7 @@
         <br />
         <!-- Topic resources -->
         {% if occurrences['images'] or occurrences['3d-scenes'] or occurrences['files'] or
-        occurrences['links'] or occurrences['videos'] or occurrences['temporal-events'] %}
+        occurrences['links'] or occurrences['videos'] or occurrences['temporal-events'] or occurrences['locations'] %}
         <div class="card contextualise-card">
             <div class="card-header">
                 <strong><i class="bi bi-files text-secondary"></i>&nbsp;Topic resources</strong>
@@ -776,15 +776,15 @@
                     {% if occurrences['locations'] %}
                     <li>{% if is_map_owner %}
                         <a
-                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Location</a>
+                            href="{{ url_for('location.index', map_identifier=topic_map.identifier, topic_identifier=topic.identifier) }}">Locations</a>
                         {% else %}
-                        Location
+                        Locations
                         {% endif %}
                         <ul>
                             {% for location in occurrences['locations'] %}
                             <li>
                                 <a
-                                    href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=location.topic_identifier) }}">{{
+                                    href="{{ url_for('visualisation.geographic_map', map_identifier=topic_map.identifier, topic_identifier=topic.identifier, target=location.identifier) }}">{{
                                     location.title }}</a>
                             </li>
                             {% endfor %}

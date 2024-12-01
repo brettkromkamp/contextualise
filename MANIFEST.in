@@ -3,3 +3,4 @@ include README.md
 include pyproject.toml
 graft src/contextualise/static
 graft src/contextualise/templates
+global-include *.typed

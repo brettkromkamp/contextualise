@@ -404,6 +404,7 @@ def get_geographic_map(map_identifier):
         locations.append(
             {
                 "map_identifier": map_identifier,
+                "occurrence_identifier": location_occurrence.identifier,
                 "topic_identifier": location_occurrence.topic_identifier,
                 "base_name": location_topic.first_base_name.name,
                 "description": description,
