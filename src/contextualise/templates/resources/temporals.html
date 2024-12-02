@@ -79,9 +79,9 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" width="20">Temporal</th>
+                    <th scope="col" width="20">Topic</th>
                     <th scope="col" width="10">Type</th>
-                    <th scope="col" width="15">Topic</th>
+                    <th scope="col" width="15">Temporal</th>
                     <th scope="col" width="40">Description</th>
                     <th scope="col" width="15">Scope</th>
                 </tr>
@@ -90,6 +90,12 @@
                 {% for temporal in temporals %}
                 <tr>
                     <td class="align-middle">
+                        <a
+                            href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier) }}">{{
+                            temporal.topic_identifier|topic_name(topic_map.identifier) }}</a>
+                    </td>
+                    <td class="align-middle">{{ temporal.type|capitalize }}</td>
+                    <td class="align-middle">
                         {% if temporal.type == 'event' %}
                         <a
                             href="{{ url_for('visualisation.timeline', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier, _anchor='event-' + temporal.topic_identifier) }}">{{
@@ -97,12 +103,6 @@
                         {% elif temporal.type == 'era' %}
                         {{ temporal.start_date_view }} &rarr; {{ temporal.end_date_view }}
                         {% endif %}
-                    </td>
-                    <td class="align-middle">{{ temporal.type|capitalize }}</td>
-                    <td class="align-middle">
-                        <a
-                            href="{{ url_for('temporal.index', map_identifier=topic_map.identifier, topic_identifier=temporal.topic_identifier) }}">{{
-                            temporal.topic_identifier|topic_name(topic_map.identifier) }}</a>
                     </td>
                     <td class="align-middle">{{ temporal.description|safe|truncate_words(10) }}</td>
                     <td class="align-middle"><a
