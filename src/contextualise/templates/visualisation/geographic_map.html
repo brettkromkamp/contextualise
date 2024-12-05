@@ -93,6 +93,11 @@
                     }
                 }
 
+                $(window).on("resize", function () {
+                    $("#geographic-map").height($(window).height());
+                    map.invalidateSize();
+                }).trigger("resize");
+
             })
             .catch(function (error) {
                 // Handle error
