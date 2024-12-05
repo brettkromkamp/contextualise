@@ -81,7 +81,6 @@
 
                 var targetIdentifier = getQueryParam("target");
                 if (targetIdentifier) {
-                    // const targetLocation = response.data.locations.find(location => location.topic_identifier === targetIdentifier);
                     const targetLocation = response.data.locations.find(location => location.occurrence_identifier === targetIdentifier);
                     if (targetLocation) {
                         map.setView([targetLocation.lat, targetLocation.lng], 10);
@@ -94,7 +93,7 @@
                 }
 
                 $(window).on("resize", function () {
-                    $("#geographic-map").height($(window).height());
+                    $("#geographic-map").height($(window).innerHeight() - 200);
                     map.invalidateSize();
                 }).trigger("resize");
 
