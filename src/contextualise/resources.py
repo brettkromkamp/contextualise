@@ -429,10 +429,6 @@ def locations(map_identifier, topic_identifier):
             }
         )
 
-    # # Sort and group notes by topic identifier, but exclude the "notes" topic
-    # sorted_notes = sorted(notes, key=lambda x: x["topic_identifier"])
-    # grouped_notes = {k: list(v) for k, v in groupby(sorted_notes, key=lambda x: x["topic_identifier"]) if k != "notes"}
-
     # Sort and group locations by topic identifier
     sorted_locations = sorted(locations, key=lambda x: x["topic_identifier"])
     grouped_locations = {k: list(v) for k, v in groupby(sorted_locations, key=lambda x: x["topic_identifier"])}
