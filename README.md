@@ -55,13 +55,13 @@ The following provides an overview of Contextualise's existing (and planned) fea
 * Associative tagging
 * [Augmented Reality](https://en.wikipedia.org/wiki/Augmented_reality) (AR) support for 3D occurrences
 * Syntax highlighing for numerous programming languages based on [Pygments](https://pygments.org/docs/)
+* Map support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand
+* [Timeline](https://timeline.knightlab.com/docs/index.html) support allowing for the navigation between topics using a visual timeline component
 
 ### Post Version 1.0 Features
 
 * Network graph visualisation filtering by association types
 * Full-text search
-* Google Maps support to see a topic within its geographical context on one hand and to be able to navigate between topics by means of a (geographic) map, on the other hand
-* [Timeline](https://timeline.knightlab.com/docs/index.html) support allowing for the navigation between topics using a visual timeline component
 * WikiMedia API integration to automatically enhance existing topics with relevant information from [Wikipedia](https://www.wikipedia.org/)
 
 For a more exhaustive list of planned features take a look at Contextualise's list of [issues](https://github.com/brettkromkamp/contextualise/issues).
