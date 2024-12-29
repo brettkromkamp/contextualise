@@ -77,7 +77,7 @@ def images(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    images_count = len(image_occurrences)
+    images_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="image")
     total_pages = (images_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     images = []
@@ -121,7 +121,7 @@ def files(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    files_count = len(file_occurrences)
+    files_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="file")
     total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     files = []
@@ -165,7 +165,7 @@ def videos(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    videos_count = len(video_occurrences)
+    videos_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="video")
     total_pages = (videos_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     videos = []
@@ -209,7 +209,7 @@ def links(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    links_count = len(link_occurrences)
+    links_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="url")
     total_pages = (links_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     links = []
@@ -253,7 +253,7 @@ def scenes(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    files_count = len(file_occurrences)
+    files_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="3d-scene")
     total_pages = (files_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     files = []
@@ -297,7 +297,7 @@ def notes(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    notes_count = len(note_occurrences)
+    notes_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="note")
     total_pages = (notes_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     notes = []
@@ -349,7 +349,9 @@ def temporals(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    temporals_count = len(temporal_occurrences)
+    temporals_count = store.get_occurrences_count(
+        map_identifier=map_identifier, instance_of="temporal-event"
+    ) + store.get_occurrences_count(map_identifier=map_identifier, instance_of="temporal-era")
     total_pages = (temporals_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     temporals = []
@@ -410,7 +412,7 @@ def locations(map_identifier, topic_identifier):
         resolve_attributes=RetrievalMode.RESOLVE_ATTRIBUTES,
     )
 
-    locations_count = len(location_occurrences)
+    locations_count = store.get_occurrences_count(map_identifier=map_identifier, instance_of="location")
     total_pages = (locations_count + constants.RESOURCE_ITEMS_PER_PAGE - 1) // constants.RESOURCE_ITEMS_PER_PAGE
 
     locations = []
