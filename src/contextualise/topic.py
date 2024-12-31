@@ -234,7 +234,9 @@ def view(map_identifier, topic_identifier):
                     {
                         "identifier": occurrence.identifier,
                         "title": "Temporal Event",
-                        "start_date": maya.parse(occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
+                        "start_date": maya.parse(
+                            occurrence.get_attribute_by_name("temporal-start-date").value
+                        ).date.strftime("%a, %d %b %Y"),
                         "text": occurrence.resource_data.decode(),
                     }
                 )
@@ -243,8 +245,12 @@ def view(map_identifier, topic_identifier):
                     {
                         "identifier": occurrence.identifier,
                         "title": "Temporal Era",
-                        "start_date": maya.parse(occurrence.get_attribute_by_name("temporal-start-date").value).date.strftime("%a, %d %b %Y"),
-                        "end_date": maya.parse(occurrence.get_attribute_by_name("temporal-end-date").value).date.strftime("%a, %d %b %Y"),
+                        "start_date": maya.parse(
+                            occurrence.get_attribute_by_name("temporal-start-date").value
+                        ).date.strftime("%a, %d %b %Y"),
+                        "end_date": maya.parse(
+                            occurrence.get_attribute_by_name("temporal-end-date").value
+                        ).date.strftime("%a, %d %b %Y"),
                         "text": occurrence.resource_data.decode(),
                     }
                 )
