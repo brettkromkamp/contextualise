@@ -7,10 +7,10 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 from datetime import datetime
 
-import maya
+import maya  # type: ignore
 import mistune
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
-from flask_security import current_user, login_required
+from flask_login import current_user, login_required  # type: ignore
 from topicdb.models.attribute import Attribute
 from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.models.datatype import DataType

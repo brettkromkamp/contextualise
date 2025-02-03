@@ -7,9 +7,9 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 
 from itertools import groupby
 
-import maya
+import maya  # type: ignore
 from flask import Blueprint, render_template, request
-from flask_login import current_user
+from flask_login import current_user  # type: ignore
 from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 

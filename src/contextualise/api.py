@@ -9,7 +9,7 @@ from datetime import datetime
 
 import mistune
 from flask import Blueprint, abort, jsonify, render_template, request
-from flask_security import current_user, login_required
+from flask_login import current_user, login_required  # type: ignore
 from slugify import slugify
 from topicdb.models.association import Association
 from topicdb.models.attribute import Attribute

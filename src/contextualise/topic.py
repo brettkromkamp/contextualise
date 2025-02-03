@@ -8,7 +8,7 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 from collections import deque
 from datetime import datetime
 
-import maya
+import maya  # type: ignore
 import mistune
 from flask import (
     Blueprint,
@@ -20,7 +20,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_security import current_user, login_required
+from flask_login import current_user, login_required  # type: ignore
 from topicdb.models.attribute import Attribute
 from topicdb.models.basename import BaseName
 from topicdb.models.datatype import DataType

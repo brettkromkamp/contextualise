@@ -8,10 +8,9 @@ Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 import re
 from datetime import datetime
 
-import maya
+import maya  # type: ignore
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
-from flask_login import current_user
-from flask_security import login_required
+from flask_login import current_user, login_required  # type: ignore
 from topicdb.models.attribute import Attribute
 from topicdb.models.datatype import DataType
 from topicdb.models.occurrence import Occurrence

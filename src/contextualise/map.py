@@ -18,7 +18,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_security import current_user, login_required
+from flask_login import current_user, login_required  # type: ignore
 from topicdb.models.collaborationmode import CollaborationMode
 from topicdb.topicdberror import TopicDbError
 from werkzeug.exceptions import abort

@@ -5,9 +5,9 @@ February 13, 2022
 Brett Alistair Kromkamp (brettkromkamp@gmail.com)
 """
 
-import maya
+import maya  # type: ignore
 from flask import Blueprint, render_template
-from flask_login import current_user
+from flask_login import current_user  # type: ignore
 from topicdb.store.retrievalmode import RetrievalMode
 from werkzeug.exceptions import abort
 
