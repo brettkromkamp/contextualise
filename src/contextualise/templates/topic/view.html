@@ -133,7 +133,7 @@
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes</a>
     {% else %}
     <a class="nav-link" href="{{ url_for('note.index', map_identifier=topic_map.identifier) }}">Notes&nbsp;<span
-            class="badge rounded-pill text-bg-primary">
+            class="badge rounded-pill text-bg-danger">
             {{ map_notes_count }}
         </span>
     </a>
@@ -610,7 +610,7 @@
                                 <p>{{ topic_map.description }}</p>' href="#mapInfo">Info
                             </a></small>
                     </li>
-                    <li>Topic: {{ topic.first_base_name.name }}</li>
+                    <li>Topic: <strong>{{ topic.first_base_name.name }}</strong></li>
                     <li>Scope: <a
                             href="{{ url_for('topic.view', map_identifier=topic_map.identifier, topic_identifier=session['current_scope']) }}">{{
                             session['current_scope']|topic_name(topic_map.identifier) }}</a>
