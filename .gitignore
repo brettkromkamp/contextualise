@@ -145,3 +145,6 @@ logs/
 
 # Application
 settings.cfg
+
+# OS noise
+.DS_Store
